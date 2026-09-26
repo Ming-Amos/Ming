@@ -13,6 +13,10 @@ import {
   RequirementRecord,
   DraftRecord,
   ConfirmationRecord,
+  RepairTaskRecord,
+  RepairTaskStatus,
+  FailedCriteriaSummary,
+  RepairComparison,
 } from "@ming/contracts";
 import { PlanRunner, computeFingerprint } from "@ming/runner";
 import { getProviderStatus, createLiveTransport } from "./provider/index";
@@ -48,6 +52,8 @@ const PROJECTS_DIR = path.join(RUNTIME_DIR, "projects");
 const REQUIREMENTS_DIR = path.join(RUNTIME_DIR, "requirements");
 const DRAFTS_DIR = path.join(RUNTIME_DIR, "drafts");
 const CONFIRMATIONS_DIR = path.join(RUNTIME_DIR, "confirmations");
+// Stage C data dir
+const REPAIR_TASKS_DIR = path.join(RUNTIME_DIR, "repair-tasks");
 
 // 允许的目标地址（限制只能访问本机样例，不提供任意URL执行端点）
 const ALLOWED_VARIANTS: Record<string, { url: string; htmlPath: string }> = {
@@ -62,7 +68,7 @@ const ALLOWED_VARIANTS: Record<string, { url: string; htmlPath: string }> = {
 };
 
 // ── 目录初始化 ────────────────────────────────────────────────────
-[RUNS_DIR, SCREENSHOTS_DIR, PROJECTS_DIR, REQUIREMENTS_DIR, DRAFTS_DIR, CONFIRMATIONS_DIR]
+[RUNS_DIR, SCREENSHOTS_DIR, PROJECTS_DIR, REQUIREMENTS_DIR, DRAFTS_DIR, CONFIRMATIONS_DIR, REPAIR_TASKS_DIR]
   .forEach((d) => fs.mkdirSync(d, { recursive: true }));
 
 // ── 运行状态（内存缓存+文件持久化） ──────────────────────────────
@@ -709,6 +715,501 @@ app.post("/api/run-confirmed", (req: Request, res: Response) => {
 
   res.json({ ok: true, runId });
 });
+
+// ── Stage C Routes ────────────────────────────────────────────────
+
+// POST /api/repair-tasks
+// body: { baselineRunId: string }
+// Creates a repair task from a failed/error run. Prevents duplicate active tasks.
+// Blocker 1 fix: persists an immutable planSnapshot from the run's provenance
+//   (Stage B: loads from confirmation; Stage A: loads fixture at task-creation time).
+app.post("/api/repair-tasks", (req: Request, res: Response) => {
+  const { baselineRunId } = req.body as { baselineRunId?: unknown };
+  if (!baselineRunId || typeof baselineRunId !== "string") {
+    res.status(400).json({ ok: false, error: "baselineRunId 缺失" });
+    return;
+  }
+
+  const run = loadRun(baselineRunId);
+  if (!run) {
+    res.status(404).json({ ok: false, error: `运行 ${baselineRunId} 不存在` });
+    return;
+  }
+
+  // Only create repair tasks for failed or error runs
+  if (run.status === "passed" || run.status === "running" || run.status === "pending") {
+    res.status(400).json({
+      ok: false,
+      error: `运行状态为 "${run.status}"，无需创建修复任务（仅 failed/error 状态可创建）`,
+    });
+    return;
+  }
+
+  // Check for existing active task for this baseline run (prevent duplicates)
+  const existingTasks = listRepairTasks();
+  const active = existingTasks.find(
+    (t) =>
+      t.baselineRunId === baselineRunId &&
+      (t.status === "waiting" || t.status === "claimed" || t.status === "rerunning")
+  );
+  if (active) {
+    res.status(409).json({
+      ok: false,
+      error: `该基准运行已有活跃修复任务 ${active.taskId}（状态：${active.status}），不允许重复创建`,
+      existingTaskId: active.taskId,
+    });
+    return;
+  }
+
+  // ── Blocker 1: resolve original plan snapshot ──────────────────
+  // For Stage B runs (have confirmationId): load immutable confirmation snapshot.
+  // For Stage A fixture runs (no confirmationId): load current fixture and verify fingerprint.
+  // Reject if the plan fingerprint stored in the run doesn't match the snapshot we resolved.
+  let planSnapshot: AcceptancePlan;
+  if (run.confirmationId) {
+    const confirmation = loadJson<ConfirmationRecord>(CONFIRMATIONS_DIR, run.confirmationId);
+    if (!confirmation) {
+      res.status(422).json({
+        ok: false,
+        error: `基准运行引用的确认记录 ${run.confirmationId} 不存在，无法恢复计划快照`,
+      });
+      return;
+    }
+    planSnapshot = confirmation.planSnapshot;
+    // Confirm fingerprint integrity
+    if (planSnapshot.fingerprint !== run.planFingerprint) {
+      res.status(422).json({
+        ok: false,
+        error: `确认记录计划指纹 ${planSnapshot.fingerprint} 与运行记录 ${run.planFingerprint} 不符，无法创建修复任务`,
+      });
+      return;
+    }
+  } else {
+    // Stage A fixture baseline — load current fixture
+    try {
+      planSnapshot = loadPlan();
+    } catch (err) {
+      res.status(500).json({ ok: false, error: `加载夹具计划失败: ${String(err)}` });
+      return;
+    }
+    // Verify the fixture fingerprint still matches what the run recorded
+    if (planSnapshot.fingerprint !== run.planFingerprint) {
+      res.status(422).json({
+        ok: false,
+        error: `当前夹具计划指纹 ${planSnapshot.fingerprint} 与基准运行记录的指纹 ${run.planFingerprint} 不符，计划已变更，需重新运行基准`,
+      });
+      return;
+    }
+  }
+
+  // ── Blocker 2: require known runner fingerprint ─────────────────
+  // The run must have a known (non-"unknown") runnerFingerprint for the repair task to carry
+  // trustworthy provenance. Reject rather than silently storing "unknown".
+  if (!run.runnerFingerprint || run.runnerFingerprint === "unknown") {
+    res.status(422).json({
+      ok: false,
+      error: `基准运行未记录 runner 指纹（runnerFingerprint 缺失或为 "unknown"）。` +
+        `请使用当前版本重新运行基准以获取已知指纹，然后再创建修复任务。`,
+    });
+    return;
+  }
+
+  // Build failed criteria summaries (separate execution errors from business failures)
+  const failedCriteria: FailedCriteriaSummary[] = run.criteria
+    .filter((c) => c.status === "failed" || c.status === "error" || c.status === "blocked")
+    .map((c) => ({
+      criteriaId: c.criteriaId,
+      title: c.title,
+      status: c.status,
+      failedSteps: c.steps
+        .filter((s) => s.status === "failed" || s.status === "error")
+        .map((s) => ({
+          stepId: s.stepId,
+          description: s.description,
+          expected: s.expected,
+          actual: s.actual,
+          error: s.error,
+          screenshotPath: s.screenshotPath,
+        })),
+    }));
+
+  const executionErrors: string[] = [];
+  if (run.fatalError) executionErrors.push(`致命错误: ${run.fatalError}`);
+  run.criteria.forEach((c) => {
+    if (c.status === "error" && c.blockedReason) executionErrors.push(`${c.criteriaId}: ${c.blockedReason}`);
+  });
+
+  const reproductionSteps = [
+    `1. 目标: ${run.targetVariant} (${run.targetUrl})`,
+    `2. 计划: ${run.planId} v${run.planVersion} 指纹 ${run.planFingerprint.slice(0, 12)}…`,
+    `3. 基准运行 ID: ${run.runId}，开始时间: ${run.startedAt}`,
+    `4. 失败标准数: ${failedCriteria.length}/${run.criteria.length}`,
+    failedCriteria.length > 0
+      ? `5. 主要失败: ${failedCriteria.map((c) => c.title).join("；")}`
+      : "5. 无业务失败（仅执行错误）",
+  ].join("\n");
+
+  const taskId = uuidv4();
+  const now = new Date().toISOString();
+  const task: RepairTaskRecord = {
+    taskId,
+    baselineRunId,
+    targetVariant: run.targetVariant,
+    targetUrl: run.targetUrl,
+    planId: run.planId,
+    planVersion: run.planVersion,
+    planFingerprint: run.planFingerprint,
+    planSnapshot,                                // Blocker 1: immutable snapshot
+    baselineTargetFingerprint: run.targetFingerprint,
+    baselineRunnerFingerprint: run.runnerFingerprint, // Blocker 2: known fingerprint
+    requirementId: run.requirementId,
+    confirmationId: run.confirmationId,
+    failedCriteria,
+    executionErrors,
+    reproductionSteps,
+    status: "waiting",
+    createdAt: now,
+    updatedAt: now,
+  };
+  saveJson(REPAIR_TASKS_DIR, taskId, task);
+
+  res.json({ ok: true, task });
+});
+
+// GET /api/repair-tasks  列出所有修复任务
+app.get("/api/repair-tasks", (_req: Request, res: Response) => {
+  const tasks = listRepairTasks().sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+  res.json({ ok: true, tasks });
+});
+
+// GET /api/repair-tasks/:taskId  获取修复任务详情
+app.get("/api/repair-tasks/:taskId", (req: Request, res: Response) => {
+  const task = loadJson<RepairTaskRecord>(REPAIR_TASKS_DIR, req.params.taskId);
+  if (!task) {
+    res.status(404).json({ ok: false, error: `修复任务 ${req.params.taskId} 不存在` });
+    return;
+  }
+  res.json({ ok: true, task });
+});
+
+// POST /api/repair-tasks/:taskId/claim
+// body: { claimedBy: string }
+// Atomically claim a task (only if waiting). Repeat claim by same owner is safe (idempotent).
+app.post("/api/repair-tasks/:taskId/claim", (req: Request, res: Response) => {
+  const task = loadJson<RepairTaskRecord>(REPAIR_TASKS_DIR, req.params.taskId);
+  if (!task) {
+    res.status(404).json({ ok: false, error: `修复任务 ${req.params.taskId} 不存在` });
+    return;
+  }
+
+  const { claimedBy } = req.body as { claimedBy?: unknown };
+  if (!claimedBy || typeof claimedBy !== "string" || !claimedBy.trim()) {
+    res.status(400).json({ ok: false, error: "claimedBy 不能为空" });
+    return;
+  }
+  const owner = claimedBy.trim();
+
+  // Idempotent: same owner re-claiming is safe
+  if (task.status === "claimed" && task.claimedBy === owner) {
+    res.json({ ok: true, task });
+    return;
+  }
+
+  // Reject competing owners
+  if (task.status === "claimed" && task.claimedBy !== owner) {
+    res.status(409).json({
+      ok: false,
+      error: `该任务已被 ${task.claimedBy} 认领，无法被 ${owner} 认领`,
+    });
+    return;
+  }
+
+  if (task.status !== "waiting") {
+    res.status(400).json({
+      ok: false,
+      error: `任务状态为 "${task.status}"，只有 waiting 状态可以认领`,
+    });
+    return;
+  }
+
+  const now = new Date().toISOString();
+  const updated: RepairTaskRecord = { ...task, status: "claimed", claimedBy: owner, claimedAt: now, updatedAt: now };
+  saveJson(REPAIR_TASKS_DIR, task.taskId, updated);
+  res.json({ ok: true, task: updated });
+});
+
+// POST /api/repair-tasks/:taskId/rerun
+// body: { expectedTargetFingerprint: string }  ← Blocker 3: required source binding
+// Starts a rerun of the same plan (from task.planSnapshot) against the same target.
+// Validates: task must be claimed, plan snapshot fingerprint matches, no concurrent rerun,
+// and current source fingerprint matches the caller's expectedTargetFingerprint.
+app.post("/api/repair-tasks/:taskId/rerun", (req: Request, res: Response) => {
+  const task = loadJson<RepairTaskRecord>(REPAIR_TASKS_DIR, req.params.taskId);
+  if (!task) {
+    res.status(404).json({ ok: false, error: `修复任务 ${req.params.taskId} 不存在` });
+    return;
+  }
+
+  if (task.status !== "claimed") {
+    res.status(400).json({
+      ok: false,
+      error: `任务状态为 "${task.status}"，只有已认领（claimed）的任务才能发起重跑`,
+    });
+    return;
+  }
+
+  // Prevent duplicate concurrent reruns
+  if (task.rerunId && runningJobs.has(task.rerunId)) {
+    res.status(409).json({
+      ok: false,
+      error: `该任务已有正在进行的重跑 ${task.rerunId}`,
+    });
+    return;
+  }
+
+  // ── Blocker 3: require caller-supplied expected source fingerprint ──
+  const { expectedTargetFingerprint } = req.body as { expectedTargetFingerprint?: unknown };
+  if (!expectedTargetFingerprint || typeof expectedTargetFingerprint !== "string") {
+    res.status(400).json({
+      ok: false,
+      error: "重跑请求必须提供 expectedTargetFingerprint（修复后目标源码的预期指纹）",
+    });
+    return;
+  }
+
+  // Validate target variant
+  const targetCfg = ALLOWED_VARIANTS[task.targetVariant];
+  if (!targetCfg) {
+    res.status(400).json({
+      ok: false,
+      error: `目标变体 "${task.targetVariant}" 不在允许列表中`,
+    });
+    return;
+  }
+
+  // Compute current source fingerprint and validate it matches the caller's expectation
+  const currentTargetFingerprint = computeTargetFingerprint(targetCfg.htmlPath);
+  if (currentTargetFingerprint === "unknown") {
+    res.status(422).json({
+      ok: false,
+      error: `无法读取目标源文件以计算指纹（路径: ${targetCfg.htmlPath}）`,
+    });
+    return;
+  }
+  if (currentTargetFingerprint !== expectedTargetFingerprint) {
+    res.status(409).json({
+      ok: false,
+      error: `当前目标源码指纹 ${currentTargetFingerprint} 与请求提供的 expectedTargetFingerprint ${expectedTargetFingerprint} 不符。` +
+        `源文件可能在认领后被再次修改，或您提供的指纹有误。请重新检查目标文件后再请求重跑。`,
+      currentFingerprint: currentTargetFingerprint,
+    });
+    return;
+  }
+
+  // ── Blocker 1: use the immutable planSnapshot stored in the task ───
+  const plan = task.planSnapshot;
+  // Double-check fingerprint integrity (planSnapshot.fingerprint was stored at task creation)
+  if (plan.fingerprint !== task.planFingerprint) {
+    res.status(422).json({
+      ok: false,
+      error: `任务内存储的计划快照指纹 ${plan.fingerprint} 与任务基准指纹 ${task.planFingerprint} 不符，数据损坏，拒绝重跑`,
+    });
+    return;
+  }
+
+  const runId = launchRun({
+    plan,
+    variant: task.targetVariant,
+    targetCfg,
+    confirmationId: task.confirmationId,
+    requirementId: task.requirementId,
+  });
+
+  const now = new Date().toISOString();
+  const updated: RepairTaskRecord = {
+    ...task,
+    status: "rerunning",
+    rerunId: runId,
+    repairedTargetFingerprint: currentTargetFingerprint, // bound at launch time
+    updatedAt: now,
+  };
+  saveJson(REPAIR_TASKS_DIR, task.taskId, updated);
+
+  // Asynchronously update task status when run completes
+  const job = runningJobs.get(runId);
+  if (job) {
+    job.then((record) => {
+      const latest = loadJson<RepairTaskRecord>(REPAIR_TASKS_DIR, task.taskId);
+      if (!latest || latest.rerunId !== runId) return; // stale
+
+      let newStatus: RepairTaskStatus;
+      if (record.status === "passed") newStatus = "passed";
+      else if (record.status === "error") newStatus = "error";
+      else newStatus = "failed";
+
+      saveJson(REPAIR_TASKS_DIR, task.taskId, {
+        ...latest,
+        status: newStatus,
+        updatedAt: new Date().toISOString(),
+      });
+    }).catch(() => {
+      const latest = loadJson<RepairTaskRecord>(REPAIR_TASKS_DIR, task.taskId);
+      if (latest && latest.rerunId === runId) {
+        saveJson(REPAIR_TASKS_DIR, task.taskId, {
+          ...latest,
+          status: "error" as RepairTaskStatus,
+          updatedAt: new Date().toISOString(),
+        });
+      }
+    });
+  }
+
+  res.json({ ok: true, runId, taskId: task.taskId });
+});
+
+// GET /api/repair-tasks/:taskId/comparison
+// Returns structured comparison between baseline and rerun.
+app.get("/api/repair-tasks/:taskId/comparison", (req: Request, res: Response) => {
+  const task = loadJson<RepairTaskRecord>(REPAIR_TASKS_DIR, req.params.taskId);
+  if (!task) {
+    res.status(404).json({ ok: false, error: `修复任务 ${req.params.taskId} 不存在` });
+    return;
+  }
+
+  if (!task.rerunId) {
+    res.status(400).json({ ok: false, error: "该修复任务尚未发起重跑" });
+    return;
+  }
+
+  const baseline = loadRun(task.baselineRunId);
+  const rerun = loadRun(task.rerunId);
+
+  if (!baseline) {
+    res.status(404).json({ ok: false, error: `基准运行 ${task.baselineRunId} 不存在` });
+    return;
+  }
+  if (!rerun) {
+    // Rerun may still be in progress
+    const isRunning = runningJobs.has(task.rerunId);
+    res.status(isRunning ? 202 : 404).json({
+      ok: false,
+      error: isRunning ? "重跑仍在进行中，请稍后查询" : `重跑 ${task.rerunId} 不存在`,
+    });
+    return;
+  }
+
+  // ── Build strict comparison (Blocker 2 fix) ────────────────────
+  const blockers: string[] = [];
+
+  // Plan fingerprint must match
+  const planFingerprintMatch = baseline.planFingerprint === rerun.planFingerprint;
+  if (!planFingerprintMatch) {
+    blockers.push(`计划指纹不同：基准 ${baseline.planFingerprint.slice(0,12)}… vs 重跑 ${rerun.planFingerprint.slice(0,12)}…`);
+  }
+
+  // Runner fingerprint: both must be known (non-"unknown") and equal
+  const blRunnerFp = task.baselineRunnerFingerprint ?? baseline.runnerFingerprint ?? "unknown";
+  const rerunRunnerFp = rerun.runnerFingerprint ?? "unknown";
+  const runnerFingerprintKnown = blRunnerFp !== "unknown" && rerunRunnerFp !== "unknown";
+  const runnerFingerprintMatch = runnerFingerprintKnown && blRunnerFp === rerunRunnerFp;
+
+  if (!runnerFingerprintKnown) {
+    blockers.push(
+      `runner 指纹未知（基准: ${blRunnerFp}, 重跑: ${rerunRunnerFp}），无法声明已验证修复。` +
+      `请重新运行基准和重跑以获取已知 runner 指纹。`
+    );
+  } else if (!runnerFingerprintMatch) {
+    blockers.push(`runner 指纹不同：基准 ${blRunnerFp} vs 重跑 ${rerunRunnerFp}`);
+  }
+
+  // Target identity
+  const targetIdentityMatch = baseline.targetVariant === rerun.targetVariant &&
+    baseline.targetUrl === rerun.targetUrl;
+  if (!targetIdentityMatch) {
+    blockers.push(`目标身份不同：基准 ${baseline.targetVariant}@${baseline.targetUrl} vs 重跑 ${rerun.targetVariant}@${rerun.targetUrl}`);
+  }
+
+  // Source fingerprint — must be known (stored at rerun launch time, Blocker 3)
+  const repairedTargetFingerprint = task.repairedTargetFingerprint ?? "unknown";
+  const sourceFingerprintKnown =
+    task.baselineTargetFingerprint !== "unknown" && repairedTargetFingerprint !== "unknown";
+  const targetFingerprintChanged = task.baselineTargetFingerprint !== repairedTargetFingerprint;
+
+  if (!sourceFingerprintKnown) {
+    blockers.push(`目标源码指纹未知（基准: ${task.baselineTargetFingerprint}, 修复后: ${repairedTargetFingerprint}），无法声明已验证修复`);
+  }
+
+  // fatalError check — a run that errored at OS/transport level cannot count as verified repair
+  if (rerun.fatalError) {
+    blockers.push(`重跑存在致命执行错误: ${rerun.fatalError}`);
+  }
+
+  // Criteria comparison
+  const baselineFailedIds = new Set(
+    baseline.criteria
+      .filter((c) => c.status === "failed" || c.status === "error" || c.status === "blocked")
+      .map((c) => c.criteriaId)
+  );
+  const rerunPassedIds = new Set(
+    rerun.criteria.filter((c) => c.status === "passed").map((c) => c.criteriaId)
+  );
+  const rerunFailedIds = new Set(
+    rerun.criteria
+      .filter((c) => c.status === "failed" || c.status === "error" || c.status === "blocked")
+      .map((c) => c.criteriaId)
+  );
+
+  const previouslyFailedNowPassed = [...baselineFailedIds].filter((id) => rerunPassedIds.has(id));
+  const previouslyFailedStillFailing = [...baselineFailedIds].filter((id) => rerunFailedIds.has(id));
+  const newFailures = [...rerunFailedIds].filter((id) => !baselineFailedIds.has(id));
+
+  // verifiedRepair: terminal "passed" status (no fatalError), all criteria passed,
+  // known matching plan/runner fingerprints, target identity match, known source fingerprints,
+  // no blockers.
+  const allPassed = rerun.status === "passed" &&
+    rerun.criteria.every((c) => c.status === "passed") &&
+    !rerun.fatalError;
+  const verifiedRepair = allPassed && blockers.length === 0;
+
+  const comparison: RepairComparison = {
+    taskId: task.taskId,
+    baselineRunId: task.baselineRunId,
+    rerunId: task.rerunId,
+    planFingerprintMatch,
+    runnerFingerprintMatch,
+    runnerFingerprintKnown,
+    targetIdentityMatch,
+    targetFingerprintChanged,
+    sourceFingerprintKnown,
+    baselineTargetFingerprint: task.baselineTargetFingerprint,
+    repairedTargetFingerprint,
+    baselineRunnerFingerprint: blRunnerFp,
+    rerunRunnerFingerprint: rerunRunnerFp,
+    previouslyFailedNowPassed,
+    previouslyFailedStillFailing,
+    newFailures,
+    verifiedRepair,
+    blockers,
+  };
+
+  res.json({ ok: true, comparison });
+});
+
+// ── Stage C helpers ────────────────────────────────────────────────
+function listRepairTasks(): RepairTaskRecord[] {
+  if (!fs.existsSync(REPAIR_TASKS_DIR)) return [];
+  return fs
+    .readdirSync(REPAIR_TASKS_DIR)
+    .filter((f) => f.endsWith(".json"))
+    .map((f) => {
+      try {
+        return JSON.parse(fs.readFileSync(path.join(REPAIR_TASKS_DIR, f), "utf-8")) as RepairTaskRecord;
+      } catch { return null; }
+    })
+    .filter(Boolean) as RepairTaskRecord[];
+}
 
 // ── Admin routes (test-mode only) ────────────────────────────────
 // These endpoints are only accessible when MING_TEST_MODE=1 is set.

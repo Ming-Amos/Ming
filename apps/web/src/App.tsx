@@ -11,6 +11,8 @@ import {
   RequirementRecord,
   DraftRecord,
   ConfirmationRecord,
+  RepairTaskRecord,
+  RepairComparison,
 } from "./types";
 
 // ── API helpers ────────────────────────────────────────────────────

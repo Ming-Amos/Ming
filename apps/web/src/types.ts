@@ -149,3 +149,68 @@ export interface RequirementRecord {
   text: string;
   createdAt: string;
 }
+
+// ── Stage C types ────────────────────────────────────────────────
+
+export type RepairTaskStatus =
+  | "waiting" | "claimed" | "rerunning" | "passed" | "failed" | "error" | "blocked";
+
+export interface FailedCriteriaSummary {
+  criteriaId: string;
+  title: string;
+  status: string;
+  failedSteps: Array<{
+    stepId: string;
+    description: string;
+    expected?: string | number;
+    actual?: string;
+    error?: string;
+    screenshotPath?: string;
+  }>;
+}
+
+export interface RepairTaskRecord {
+  taskId: string;
+  baselineRunId: string;
+  targetVariant: string;
+  targetUrl: string;
+  planId: string;
+  planVersion: string;
+  planFingerprint: string;
+  // planSnapshot omitted from web type (too large to redeclare)
+  baselineTargetFingerprint: string;
+  baselineRunnerFingerprint: string;
+  requirementId?: string;
+  confirmationId?: string;
+  failedCriteria: FailedCriteriaSummary[];
+  executionErrors: string[];
+  reproductionSteps: string;
+  status: RepairTaskStatus;
+  claimedBy?: string;
+  claimedAt?: string;
+  rerunId?: string;
+  repairedTargetFingerprint?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface RepairComparison {
+  taskId: string;
+  baselineRunId: string;
+  rerunId: string;
+  planFingerprintMatch: boolean;
+  runnerFingerprintMatch: boolean;
+  runnerFingerprintKnown: boolean;
+  targetIdentityMatch: boolean;
+  targetFingerprintChanged: boolean;
+  sourceFingerprintKnown: boolean;
+  baselineTargetFingerprint: string;
+  repairedTargetFingerprint: string;
+  baselineRunnerFingerprint: string;
+  rerunRunnerFingerprint: string;
+  previouslyFailedNowPassed: string[];
+  previouslyFailedStillFailing: string[];
+  newFailures: string[];
+  verifiedRepair: boolean;
+  blockers: string[];
+}

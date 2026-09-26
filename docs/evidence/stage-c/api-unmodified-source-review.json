@@ -1,0 +1,589 @@
+{
+  "author": "Codex independent review",
+  "scope": "Real local HTTP API checks using fresh Stage A buggy browser runs; not Bob MCP or live-provider validation",
+  "reviewId": "cab7e0b0-413b-4976-bd6e-c87230ec8d50",
+  "startedAt": "2026-09-26T09:24:54.471Z",
+  "baseUrl": "http://127.0.0.1:4001",
+  "nodeVersion": "v24.14.0",
+  "assumptions": [
+    "Operator already built current code and started Ming on 127.0.0.1:4001",
+    "Buggy target still contains its original persistence defect",
+    "No concurrent edits to target, plan, runner, or service restart during this test"
+  ],
+  "serviceLifecycleManagedByScript": false,
+  "targetOrRunRecordsWrittenByScript": false,
+  "envFilesRead": false,
+  "requests": [
+    {
+      "method": "GET",
+      "route": "/api/plan",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/targets",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/run",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/run/143b3dd0-6a4e-4c5e-b34b-033e27a06e3b/progress",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/run/143b3dd0-6a4e-4c5e-b34b-033e27a06e3b/progress",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/run/143b3dd0-6a4e-4c5e-b34b-033e27a06e3b/progress",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/run/143b3dd0-6a4e-4c5e-b34b-033e27a06e3b/progress",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/run/143b3dd0-6a4e-4c5e-b34b-033e27a06e3b",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/repair-tasks",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/repair-tasks",
+      "status": 409
+    },
+    {
+      "method": "GET",
+      "route": "/api/repair-tasks",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/repair-tasks/5aeb0cce-5983-4f10-862d-fc20860c41eb/claim",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/repair-tasks/5aeb0cce-5983-4f10-862d-fc20860c41eb/claim",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/repair-tasks/5aeb0cce-5983-4f10-862d-fc20860c41eb/claim",
+      "status": 409
+    },
+    {
+      "method": "GET",
+      "route": "/api/repair-tasks/5aeb0cce-5983-4f10-862d-fc20860c41eb",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/repair-tasks/5aeb0cce-5983-4f10-862d-fc20860c41eb/rerun",
+      "status": 409
+    },
+    {
+      "method": "GET",
+      "route": "/api/repair-tasks/5aeb0cce-5983-4f10-862d-fc20860c41eb",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/targets",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "route": "/api/repair-tasks/5aeb0cce-5983-4f10-862d-fc20860c41eb/rerun",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/run/05d83486-6b93-4b3b-9927-8b00df6cda68/progress",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/run/05d83486-6b93-4b3b-9927-8b00df6cda68/progress",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/run/05d83486-6b93-4b3b-9927-8b00df6cda68/progress",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/run/05d83486-6b93-4b3b-9927-8b00df6cda68/progress",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/run/05d83486-6b93-4b3b-9927-8b00df6cda68",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/repair-tasks/5aeb0cce-5983-4f10-862d-fc20860c41eb",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "route": "/api/repair-tasks/5aeb0cce-5983-4f10-862d-fc20860c41eb/comparison",
+      "status": 200
+    }
+  ],
+  "checks": [
+    {
+      "name": "GET /api/plan succeeds",
+      "passed": true
+    },
+    {
+      "name": "GET /api/targets succeeds",
+      "passed": true
+    },
+    {
+      "name": "Stage A fixed fixture has three expected criteria",
+      "passed": true
+    },
+    {
+      "name": "Buggy target has known fingerprint",
+      "passed": true
+    },
+    {
+      "name": "POST /api/run succeeds",
+      "passed": true
+    },
+    {
+      "name": "Fresh baseline run ID returned",
+      "passed": true
+    },
+    {
+      "name": "GET /api/run/143b3dd0-6a4e-4c5e-b34b-033e27a06e3b succeeds",
+      "passed": true
+    },
+    {
+      "name": "Baseline matches requested run, plan, and buggy target",
+      "passed": true
+    },
+    {
+      "name": "Baseline: terminal business failure, no fatal error",
+      "passed": true
+    },
+    {
+      "name": "Baseline: same complete registered criteria",
+      "passed": true
+    },
+    {
+      "name": "Baseline: persistence AC-02 fails and AC-01/AC-03 pass",
+      "passed": true
+    },
+    {
+      "name": "Baseline: failed assertion has saved screenshot evidence",
+      "passed": true
+    },
+    {
+      "name": "Baseline: known runner fingerprint",
+      "passed": true
+    },
+    {
+      "name": "POST /api/repair-tasks succeeds",
+      "passed": true
+    },
+    {
+      "name": "Repair task binds fresh baseline and waits",
+      "passed": true
+    },
+    {
+      "name": "Duplicate creation rejects with original task ID",
+      "passed": true
+    },
+    {
+      "name": "GET /api/repair-tasks succeeds",
+      "passed": true
+    },
+    {
+      "name": "Repeated creation has only one persisted task",
+      "passed": true
+    },
+    {
+      "name": "POST /api/repair-tasks/5aeb0cce-5983-4f10-862d-fc20860c41eb/claim succeeds",
+      "passed": true
+    },
+    {
+      "name": "Claim is persisted for this independent test owner",
+      "passed": true
+    },
+    {
+      "name": "POST /api/repair-tasks/5aeb0cce-5983-4f10-862d-fc20860c41eb/claim succeeds",
+      "passed": true
+    },
+    {
+      "name": "Same-owner claim is idempotent",
+      "passed": true
+    },
+    {
+      "name": "Competing owner is rejected",
+      "passed": true
+    },
+    {
+      "name": "GET /api/repair-tasks/5aeb0cce-5983-4f10-862d-fc20860c41eb succeeds",
+      "passed": true
+    },
+    {
+      "name": "Competing claim did not change owner",
+      "passed": true
+    },
+    {
+      "name": "Wrong expected source fingerprint is rejected",
+      "passed": true
+    },
+    {
+      "name": "GET /api/repair-tasks/5aeb0cce-5983-4f10-862d-fc20860c41eb succeeds",
+      "passed": true
+    },
+    {
+      "name": "Rejected rerun leaves claimed task without run ID",
+      "passed": true
+    },
+    {
+      "name": "Source unchanged before genuine rerun",
+      "passed": true
+    },
+    {
+      "name": "GET /api/targets succeeds",
+      "passed": true
+    },
+    {
+      "name": "Current source fingerprint still matches baseline",
+      "passed": true
+    },
+    {
+      "name": "POST /api/repair-tasks/5aeb0cce-5983-4f10-862d-fc20860c41eb/rerun succeeds",
+      "passed": true
+    },
+    {
+      "name": "Rerun returns a different real run ID",
+      "passed": true
+    },
+    {
+      "name": "GET /api/run/05d83486-6b93-4b3b-9927-8b00df6cda68 succeeds",
+      "passed": true
+    },
+    {
+      "name": "Unmodified-source rerun: terminal business failure, no fatal error",
+      "passed": true
+    },
+    {
+      "name": "Unmodified-source rerun: same complete registered criteria",
+      "passed": true
+    },
+    {
+      "name": "Unmodified-source rerun: persistence AC-02 fails and AC-01/AC-03 pass",
+      "passed": true
+    },
+    {
+      "name": "Unmodified-source rerun: failed assertion has saved screenshot evidence",
+      "passed": true
+    },
+    {
+      "name": "Unmodified-source rerun: known runner fingerprint",
+      "passed": true
+    },
+    {
+      "name": "Rerun preserves plan, runner, target identity, and unchanged source",
+      "passed": true
+    },
+    {
+      "name": "GET /api/repair-tasks/5aeb0cce-5983-4f10-862d-fc20860c41eb succeeds",
+      "passed": true
+    },
+    {
+      "name": "Task links rerun and remains failed",
+      "passed": true
+    },
+    {
+      "name": "GET /api/repair-tasks/5aeb0cce-5983-4f10-862d-fc20860c41eb/comparison succeeds",
+      "passed": true
+    },
+    {
+      "name": "Comparison binds this task and both real runs",
+      "passed": true
+    },
+    {
+      "name": "Comparison cannot declare verified repair",
+      "passed": true
+    },
+    {
+      "name": "Comparison reports equal plan/runner/target and no source change",
+      "passed": true
+    },
+    {
+      "name": "Original persistence failure remains unresolved",
+      "passed": true
+    },
+    {
+      "name": "Original baseline record remains byte-for-byte unchanged",
+      "passed": true
+    },
+    {
+      "name": "Target source unchanged for entire review",
+      "passed": true
+    }
+  ],
+  "ids": {
+    "baselineRunId": "143b3dd0-6a4e-4c5e-b34b-033e27a06e3b",
+    "taskId": "5aeb0cce-5983-4f10-862d-fc20860c41eb",
+    "rerunId": "05d83486-6b93-4b3b-9927-8b00df6cda68"
+  },
+  "targetSourceSha256Before": "2130d782e0c641cb1670021d5aff38bd3b1166a783dfd5d59a682aa062a35b51",
+  "plan": {
+    "planId": "stage-a-daily-report",
+    "version": "1.0.0",
+    "fingerprint": "660582f7fbabccc5"
+  },
+  "baseline": {
+    "runId": "143b3dd0-6a4e-4c5e-b34b-033e27a06e3b",
+    "status": "failed",
+    "startedAt": "2026-09-26T09:24:54.484Z",
+    "finishedAt": "2026-09-26T09:24:55.385Z",
+    "planId": "stage-a-daily-report",
+    "planVersion": "1.0.0",
+    "planFingerprint": "660582f7fbabccc5",
+    "runnerFingerprint": "7dd68e9771fa7141",
+    "targetVariant": "buggy",
+    "targetUrl": "http://localhost:4001/buggy",
+    "targetFingerprint": "4d61d95b3ffbc28d",
+    "hasFatalError": false,
+    "criteria": [
+      {
+        "criteriaId": "AC-01",
+        "status": "passed",
+        "steps": [
+          {
+            "stepId": "AC-01-S1",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-01-S2",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-01-S3",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-01-S4",
+            "status": "passed",
+            "screenshotPath": "143b3dd0-6a4e-4c5e-b34b-033e27a06e3b_AC-01_final.png"
+          }
+        ]
+      },
+      {
+        "criteriaId": "AC-02",
+        "status": "failed",
+        "steps": [
+          {
+            "stepId": "AC-02-S1",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-02-S2",
+            "status": "failed",
+            "screenshotPath": "143b3dd0-6a4e-4c5e-b34b-033e27a06e3b_AC-02-S2_failed.png"
+          }
+        ]
+      },
+      {
+        "criteriaId": "AC-03",
+        "status": "passed",
+        "steps": [
+          {
+            "stepId": "AC-03-S1",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-03-S2",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-03-S3",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-03-S4",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-03-S5",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-03-S6",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-03-S7",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-03-S8",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-03-S9",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-03-S10",
+            "status": "passed",
+            "screenshotPath": "143b3dd0-6a4e-4c5e-b34b-033e27a06e3b_AC-03_final.png"
+          }
+        ]
+      }
+    ]
+  },
+  "baselineRecordSha256Before": "abf22bf757d29eb35540fafea58c24a556077995fdaf5f48dda792bf5ea7db6b",
+  "rerun": {
+    "runId": "05d83486-6b93-4b3b-9927-8b00df6cda68",
+    "status": "failed",
+    "startedAt": "2026-09-26T09:24:55.463Z",
+    "finishedAt": "2026-09-26T09:24:56.384Z",
+    "planId": "stage-a-daily-report",
+    "planVersion": "1.0.0",
+    "planFingerprint": "660582f7fbabccc5",
+    "runnerFingerprint": "7dd68e9771fa7141",
+    "targetVariant": "buggy",
+    "targetUrl": "http://localhost:4001/buggy",
+    "targetFingerprint": "4d61d95b3ffbc28d",
+    "hasFatalError": false,
+    "criteria": [
+      {
+        "criteriaId": "AC-01",
+        "status": "passed",
+        "steps": [
+          {
+            "stepId": "AC-01-S1",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-01-S2",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-01-S3",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-01-S4",
+            "status": "passed",
+            "screenshotPath": "05d83486-6b93-4b3b-9927-8b00df6cda68_AC-01_final.png"
+          }
+        ]
+      },
+      {
+        "criteriaId": "AC-02",
+        "status": "failed",
+        "steps": [
+          {
+            "stepId": "AC-02-S1",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-02-S2",
+            "status": "failed",
+            "screenshotPath": "05d83486-6b93-4b3b-9927-8b00df6cda68_AC-02-S2_failed.png"
+          }
+        ]
+      },
+      {
+        "criteriaId": "AC-03",
+        "status": "passed",
+        "steps": [
+          {
+            "stepId": "AC-03-S1",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-03-S2",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-03-S3",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-03-S4",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-03-S5",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-03-S6",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-03-S7",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-03-S8",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-03-S9",
+            "status": "passed"
+          },
+          {
+            "stepId": "AC-03-S10",
+            "status": "passed",
+            "screenshotPath": "05d83486-6b93-4b3b-9927-8b00df6cda68_AC-03_final.png"
+          }
+        ]
+      }
+    ]
+  },
+  "taskFinalStatus": "failed",
+  "comparison": {
+    "taskId": "5aeb0cce-5983-4f10-862d-fc20860c41eb",
+    "baselineRunId": "143b3dd0-6a4e-4c5e-b34b-033e27a06e3b",
+    "rerunId": "05d83486-6b93-4b3b-9927-8b00df6cda68",
+    "planFingerprintMatch": true,
+    "runnerFingerprintMatch": true,
+    "runnerFingerprintKnown": true,
+    "targetIdentityMatch": true,
+    "targetFingerprintChanged": false,
+    "sourceFingerprintKnown": true,
+    "baselineTargetFingerprint": "4d61d95b3ffbc28d",
+    "repairedTargetFingerprint": "4d61d95b3ffbc28d",
+    "baselineRunnerFingerprint": "7dd68e9771fa7141",
+    "rerunRunnerFingerprint": "7dd68e9771fa7141",
+    "previouslyFailedNowPassed": [],
+    "previouslyFailedStillFailing": [
+      "AC-02"
+    ],
+    "newFailures": [],
+    "verifiedRepair": false,
+    "blockers": []
+  },
+  "baselineRecordSha256After": "abf22bf757d29eb35540fafea58c24a556077995fdaf5f48dda792bf5ea7db6b",
+  "targetSourceSha256After": "2130d782e0c641cb1670021d5aff38bd3b1166a783dfd5d59a682aa062a35b51",
+  "finishedAt": "2026-09-26T09:24:56.407Z",
+  "passedChecks": 49,
+  "failedChecks": 0,
+  "passed": true
+}

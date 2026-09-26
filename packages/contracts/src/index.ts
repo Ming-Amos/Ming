@@ -135,6 +135,12 @@ export interface RunRecord {
   requirementId?: string;
   /** 测试实现版本指纹（runner 代码） */
   runnerFingerprint?: string;
+  // ── Stage C 扩展字段 ────────────────────────────────────────
+  /**
+   * True when the target source file changed between run-start snapshot and run-end re-check.
+   * A verified-repair claim is blocked when this is true.
+   */
+  sourceChangedDuringRun?: boolean;
 }
 
 /** 前端轮询进度用的精简格式 */
@@ -152,6 +158,12 @@ export interface TargetConfig {
   variant: string;
   url: string;
   fingerprint: string;
+  /**
+   * Stage C: captured HTML content at run-start (for self-contained HTML sample targets).
+   * When present, the runner fulfills every navigation request to `url` from this snapshot
+   * instead of fetching live content, binding execution to a specific source version.
+   */
+  htmlSnapshot?: string;
 }
 
 // ============================================================
@@ -274,4 +286,132 @@ export interface ProviderStatus {
   modelId: string;
   /** 未配置时的说明 */
   missingFields: string[];
+}
+
+// ============================================================
+// Stage C 专用类型
+// ============================================================
+
+/**
+ * 修复任务状态:
+ *   waiting  — 已创建，等待 Bob 认领
+ *   claimed  — Bob 已认领，正在修复中
+ *   rerunning — 正在重新执行验收计划
+ *   passed   — 修复后重跑全部通过（已验证修复）
+ *   failed   — 重跑后仍有失败
+ *   error    — 执行错误（非业务失败）
+ *   blocked  — 停止进展（工具错误或两次尝试无进展）
+ */
+export type RepairTaskStatus =
+  | "waiting"
+  | "claimed"
+  | "rerunning"
+  | "passed"
+  | "failed"
+  | "error"
+  | "blocked";
+
+/** 失败标准摘要（含期望/实际值，用于修复任务描述） */
+export interface FailedCriteriaSummary {
+  criteriaId: string;
+  title: string;
+  /** failed / error / blocked */
+  status: string;
+  /** 失败步骤摘要 */
+  failedSteps: Array<{
+    stepId: string;
+    description: string;
+    expected?: string | number;
+    actual?: string;
+    error?: string;
+    screenshotPath?: string;
+  }>;
+}
+
+/** 修复任务记录（不可变基准 + 动态状态） */
+export interface RepairTaskRecord {
+  taskId: string;
+  /** 创建任务的基准运行 ID（不可变引用） */
+  baselineRunId: string;
+  /** 基准运行所属目标变体 */
+  targetVariant: string;
+  /** 目标 URL */
+  targetUrl: string;
+  /** 计划 ID */
+  planId: string;
+  /** 计划版本 */
+  planVersion: string;
+  /** 计划内容指纹（不可变，重跑时必须匹配） */
+  planFingerprint: string;
+  /** 不可变计划快照（重跑时使用，而非重新从磁盘加载） */
+  planSnapshot: AcceptancePlan;
+  /** 基准目标源码指纹（修复前） */
+  baselineTargetFingerprint: string;
+  /** 基准 runner 版本指纹（必须与重跑 runner 匹配才能声明已验证修复） */
+  baselineRunnerFingerprint: string;
+  /** 关联需求 ID（如有） */
+  requirementId?: string;
+  /** 关联确认 ID（如有） */
+  confirmationId?: string;
+  /** 失败标准摘要（含期望/实际值） */
+  failedCriteria: FailedCriteriaSummary[];
+  /** 执行错误（与业务失败分开） */
+  executionErrors: string[];
+  /** 复现步骤说明 */
+  reproductionSteps: string;
+  /** 当前任务状态 */
+  status: RepairTaskStatus;
+  /** 认领者标识（Bob 工具调用 id） */
+  claimedBy?: string;
+  /** 认领时间 */
+  claimedAt?: string;
+  /** 重跑 run ID（修复后执行） */
+  rerunId?: string;
+  /** 修复后目标源码指纹（intentional change, not equal to baseline） */
+  repairedTargetFingerprint?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** 修复对比结果 */
+export interface RepairComparison {
+  taskId: string;
+  baselineRunId: string;
+  rerunId: string;
+  /** 计划指纹相同（必须） */
+  planFingerprintMatch: boolean;
+  /** runner 指纹相同且已知（两侧均非 "unknown"） */
+  runnerFingerprintMatch: boolean;
+  /** 两侧 runner 指纹均已知（非 "unknown"）—— 缺失则无法声明已验证修复 */
+  runnerFingerprintKnown: boolean;
+  /** 目标 ID / 变体相同 */
+  targetIdentityMatch: boolean;
+  /** 目标源码指纹是否变更（修复造成的 intentional change） */
+  targetFingerprintChanged: boolean;
+  /** 目标源码指纹来源已知（非 "unknown"） */
+  sourceFingerprintKnown: boolean;
+  baselineTargetFingerprint: string;
+  repairedTargetFingerprint: string;
+  /** 基准 runner 指纹 */
+  baselineRunnerFingerprint: string;
+  /** 重跑 runner 指纹 */
+  rerunRunnerFingerprint: string;
+  /** 基准失败的标准在重跑中是否通过 */
+  previouslyFailedNowPassed: string[];
+  previouslyFailedStillFailing: string[];
+  /** 重跑新出现的失败 */
+  newFailures: string[];
+  /**
+   * 整体验证修复：
+   *   - 重跑 status === "passed"
+   *   - 无 fatalError
+   *   - 计划指纹相同
+   *   - runner 指纹相同且已知
+   *   - 目标身份相同
+   *   - 目标源码指纹已知（不含 "unknown"）
+   *   - 无 blockers
+   */
+  verifiedRepair: boolean;
+  /** 不可判断或阻止修复声明的原因 */
+  blockers: string[];
 }

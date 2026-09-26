@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "ming-local": {
+      "command": "C:/Program Files/nodejs/node.exe",
+      "args": ["C:/Bob/Projects/Ming/apps/mcp/dist/index.js"],
+      "cwd": "C:/Bob/Projects/Ming",
+      "disabled": false
+    }
+  }
+}

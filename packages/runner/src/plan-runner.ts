@@ -1,6 +1,7 @@
 import { chromium, Browser, BrowserContext, Page } from "playwright";
 import * as path from "path";
 import * as fs from "fs";
+import { createHash } from "crypto";
 import {
   AcceptancePlan,
   AcceptanceCriteria,
@@ -477,6 +478,18 @@ async function runCriteriaWithContext(
   return { result, liveContext };
 }
 
+// ── Runner 自身指纹（plan-runner 实现版本，防止混用不同版本） ──────
+function computeRunnerFingerprint(): string {
+  try {
+    const src = fs.readFileSync(__filename, "utf-8");
+    return createHash("sha256").update(src, "utf-8").digest("hex").slice(0, 16);
+  } catch {
+    return "unknown";
+  }
+}
+
+const RUNNER_FINGERPRINT = computeRunnerFingerprint();
+
 // ── 主执行器 ─────────────────────────────────────────────────────
 export class PlanRunner {
   constructor(private opts: RunnerOptions) {
@@ -611,6 +624,7 @@ export class PlanRunner {
       finishedAt,
       criteria: finalCriteria,
       fatalError,
+      runnerFingerprint: RUNNER_FINGERPRINT,
     };
   }
 }
