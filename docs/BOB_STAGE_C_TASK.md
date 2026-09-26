@@ -1,0 +1,34 @@
+# Bob Stage C: failed run to verified repair
+
+Prepared by **Codex (planning and review)**, 2026-09-26. Bob owns implementation, target-code repair and actual verification. This is a future-stage brief; begin when the operator assigns Stage C, not during Stage A/B.
+
+Read `docs/MING_PRD.md` v0.6, `docs/MING_BUILD_PLAN.md` v0.3, `docs/BOB_MCP_SETUP_NOTE.md`, the latest Stage A/B results and current code first. Preserve their validation, confirmation, provenance, evidence and execution semantics. This brief narrows Stage C; it does not replace the product plan.
+
+## Outcome and scope
+
+Demonstrate one real loop: **failed run -> saved repair task -> Bob reads and claims it through local MCP -> Bob edits the buggy target's source -> same confirmed plan and target rerun -> evidence-backed comparison**.
+
+Reuse Ming's existing server, JSON persistence, restricted plan validator and browser runner. Add only a thin local STDIO MCP adapter, minimal repair-task service/UI and comparison. Work within `C:\Bob\Projects\Ming` and configured local sample targets. No second execution engine, remote arbitrary targets, second business sample, deployment or visual redesign.
+
+MCP itself needs no separate model-provider key. If Stage B live-provider acceptance remains pending credentials, keep that limitation visible. An explicitly labeled, already-confirmed Stage A fixture can validate this repair loop; it does not prove live model generation or complete Stage B.
+
+## Implement and demonstrate
+
+1. **Persist a repair task from a real terminal run with failed assertions.** The web action creates a task referencing immutable baseline run/evidence, requirement version, confirmed plan ID/version/fingerprint, target identity/configuration and baseline source fingerprint, and test-implementation fingerprint. Include failed criteria, expected/observed values, reproduction steps and evidence references from saved results. Separate execution errors from business failures. Repeated creation for the same baseline must not silently create duplicate active work.
+
+2. **Expose bounded service operations through MCP.** Support reading a failed run/evidence, reading a repair task, claiming it, starting its rerun, and querying results/comparison. Use shared server contracts and state; tool names may follow the setup note. Return structured, size-bounded evidence and resolvable screenshot references without arbitrary filesystem access. Claims must persist and reject competing owners; repeat requests from the same owner should be safe. Validate project/run/task relationships and all identifiers server-side. Starting a long run returns its run ID promptly, with polling for actual progress. Prevent duplicate concurrent reruns for one repair task.
+
+3. **Connect the actual Bob IDE.** Build the adapter, then use the verified project-scoped `.bob/mcp.json` workflow with the real build path and Ming working directory. Merge existing configuration and retain normal tool approvals. Keep configuration free of secrets and do not disable workspace protections. Record an actual Connected/Tools view plus Bob's successful tool calls and returned task/run IDs. SDK/HTTP tests alone do not establish Bob integration. The adapter must enforce the Ming project and approved local endpoints; project-scoped registration is not an OS sandbox.
+
+4. **Have Bob perform the repair.** Produce a fresh isolated failing baseline against the deliberately buggy sample and retain its original evidence and source/version snapshot. Instruct the connected Bob task once to retrieve and claim this task by ID; do not manually copy each screenshot or reconstruct reproduction instructions for it. Bob must use the returned evidence to inspect and modify that same buggy target's source. Save the actual diff and changed-file fingerprints. Do not switch to the normal target, copy the normal sample wholesale, route to a healthy replacement, lower assertions or hardcode successful results. Keep the pre-seeded defect clearly labeled.
+
+5. **Rerun and compare with explicit bindings.** Reuse the unchanged confirmed plan and run all its registered checks with fresh test data, preserving dependent scenario context. No repeated standards confirmation is needed for that unchanged plan. The target ID, configured location and project remain the same; its source/content fingerprint should change because Bob repaired it. Store both baseline and repaired fingerprints and tie them to the actual executed snapshots. Validate the expected current fingerprint before execution and reject or flag source changes during a run. Comparison must verify identical plan and test-implementation fingerprints and the same target identity/configuration, while displaying the intentional source-version change. A different plan, target, or test implementation is not an equivalent repair result; show the mismatch instead of a green repair claim. Do not require the before/after source fingerprints to be equal.
+
+6. **Keep the webpage truthful.** Show task created/waiting, claimed, rerun in progress and actual terminal results, with links to both original and new evidence. “Create repair task” must never claim it launched or woke Bob: MCP is initiated by Bob, and the operator must instruct the connected task. Claiming or saving a code change does not establish success. Mark verified repair only after the linked comparable rerun passes all registered checks; retain unresolved, blocked and execution-error states. Stop on tool errors or two repair attempts without progress, preserving the remaining failures.
+
+## Acceptance and handoff
+
+- Prove in Bob: discover the tools, retrieve the baseline evidence, claim the task, edit buggy source and request the linked rerun. Retain real tool-call records, task/run IDs, source diff and connection evidence; capture the genuine Bob session consumption summary.
+- Verify the baseline has the expected persistence failure and the repaired run passes that check while rerunning the previously passing checks. Both reports and their original screenshots remain accessible from the webpage. Do not overwrite old evidence or count a normal-target run as repair.
+- Check the meaningful negative cases: conflicting claim, wrong project/run/task binding, stale plan or target fingerprint, different-target comparison, duplicate rerun request and unavailable service/target. None may create a false verified repair or leave a returned run ID indefinitely running.
+- Run relevant existing regressions and build/type checks. Write `docs/STAGE_C_RESULTS.md` with actual commands, MCP connection/call evidence, baseline/repair/rerun IDs, plan/target/test fingerprints, file changes, results, measured usage and limitations. Clearly distinguish implementation tests, real Bob integration and any still-pending Stage B live-provider acceptance. Stop for Stage C review.

@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>日报系统（预置缺陷版）</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 600px; margin: 40px auto; padding: 0 20px; background: #f8f9fa; }
+    h1 { font-size: 1.4rem; color: #1a1a2e; margin-bottom: 4px; }
+    .badge { display: inline-block; font-size: 0.7rem; background: #dc3545; color: #fff; padding: 2px 8px; border-radius: 10px; margin-bottom: 20px; }
+    .form-area { background: #fff; border: 1px solid #dee2e6; border-radius: 8px; padding: 16px; margin-bottom: 20px; }
+    label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: #333; }
+    textarea { width: 100%; box-sizing: border-box; border: 1px solid #ced4da; border-radius: 4px; padding: 8px; font-size: 0.9rem; resize: vertical; min-height: 80px; }
+    textarea:focus { outline: none; border-color: #3b82f6; }
+    button#submitBtn { margin-top: 10px; background: #3b82f6; color: #fff; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
+    button#submitBtn:disabled { background: #adb5bd; cursor: not-allowed; }
+    .error-msg { color: #dc3545; font-size: 0.82rem; margin-top: 6px; min-height: 18px; }
+    .records { background: #fff; border: 1px solid #dee2e6; border-radius: 8px; padding: 16px; }
+    .records h2 { font-size: 1rem; margin-top: 0; color: #333; }
+    .record-item { border-bottom: 1px solid #f0f0f0; padding: 10px 0; font-size: 0.9rem; }
+    .record-item:last-child { border-bottom: none; }
+    .record-time { font-size: 0.75rem; color: #888; margin-top: 4px; }
+    .empty-tip { color: #aaa; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <h1>📋 日报系统</h1>
+  <span class="badge">预置缺陷版 · 刷新后数据丢失</span>
+
+  <div class="form-area">
+    <label for="reportContent">日报内容</label>
+    <textarea id="reportContent" aria-label="日报内容" placeholder="请输入今日工作内容..."></textarea>
+    <div class="error-msg" id="errorMsg" role="alert" aria-live="polite"></div>
+    <button id="submitBtn" aria-label="提交日报">提交日报</button>
+  </div>
+
+  <div class="records">
+    <h2>已提交日报</h2>
+    <div id="reportList"></div>
+  </div>
+
+  <script>
+    // 预置缺陷：数据仅存于内存，刷新后丢失
+    // BUG: should use localStorage but uses in-memory array instead
+    var memoryReports = [];
+
+    function loadReports() {
+      return memoryReports;
+    }
+
+    function saveReports(reports) {
+      memoryReports = reports;
+      // 故意不持久化到 localStorage
+    }
+
+    function renderList() {
+      var reports = loadReports();
+      var list = document.getElementById('reportList');
+      if (reports.length === 0) {
+        list.innerHTML = '<p class="empty-tip">暂无日报记录</p>';
+        return;
+      }
+      list.innerHTML = reports.slice().reverse().map(function(r) {
+        return '<div class="record-item"><div>' + escapeHtml(r.content) + '</div><div class="record-time">' + r.time + '</div></div>';
+      }).join('');
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    document.getElementById('submitBtn').addEventListener('click', function() {
+      var content = document.getElementById('reportContent').value;
+      var errorMsg = document.getElementById('errorMsg');
+
+      if (!content || !content.trim()) {
+        errorMsg.textContent = '日报内容不能为空';
+        return;
+      }
+
+      errorMsg.textContent = '';
+      var reports = loadReports();
+      reports.push({ content: content.trim(), time: new Date().toLocaleString('zh-CN') });
+      saveReports(reports);
+      document.getElementById('reportContent').value = '';
+      renderList();
+    });
+
+    // 初始渲染
+    renderList();
+  </script>
+</body>
+</html>

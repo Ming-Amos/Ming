@@ -1,0 +1,4 @@
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: #ffffff; }
+code { font-family: "Cascadia Code", "Fira Mono", Consolas, monospace; }
+button:focus-visible { outline: 2px solid #3b82d4; outline-offset: 2px; }

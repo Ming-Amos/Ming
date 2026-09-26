@@ -1,0 +1,28 @@
+# Dependencies and build outputs
+node_modules/
+dist/
+build/
+.vite/
+coverage/
+playwright-report/
+test-results/
+
+# Local secrets; sanitized examples may be committed
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+*credentials*.json
+storage-state*.json
+auth-state*.json
+
+# Raw local run data: publish only deliberately reviewed demo evidence
+/runtime/
+*.log
+*.tsbuildinfo
+.DS_Store
+Thumbs.db
+
+# Do not ignore bob_sessions: required submission evidence goes in Git

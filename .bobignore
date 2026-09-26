@@ -1,0 +1,14 @@
+# Local secrets should not be read as project context
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.sample
+**/*.pem
+**/*.key
+**/*credentials*.json
+**/storage-state*.json
+**/auth-state*.json
+**/node_modules/**
+**/.git/**
+
+# Keep sanitized run evidence available through Ming's tools.
