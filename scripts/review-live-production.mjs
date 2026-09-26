@@ -14,7 +14,7 @@ const origin = 'https://ming-acceptance-proof.amosming.chatgpt.site';
 const out = path.join(root, 'docs/evidence/live-trial');
 const work = path.join(root, 'runtime/live-production-review');
 fs.mkdirSync(out, { recursive: true }); fs.mkdirSync(work, { recursive: true });
-const report = { checkedAt: new Date().toISOString(), checks: [], errors: [], outsideRequests: [], mutations: [], passed: false };
+const report = { checkedAt: new Date().toISOString(), checks: [], errors: [], outsideRequests: [], mutations: [], platformRequests: [], passed: false };
 const check = (name, passed) => { report.checks.push({ name, passed: !!passed }); if (!passed) throw Error(name); };
 const bundle = fs.readFileSync(path.join(root, 'apps/web/dist/index.html'), 'utf8').match(/\/assets\/[^"']+\.js/)[0];
 const browser = await chromium.launch({ headless: true });
@@ -24,7 +24,13 @@ try {
     const req = route.request(), url = req.url();
     if (/^(?:data|blob|about):/.test(url)) return route.continue();
     if (new URL(url).origin !== origin) { report.outsideRequests.push(new URL(url).origin); return route.abort(); }
-    if (!['GET', 'HEAD'].includes(req.method())) report.mutations.push({ method: req.method(), path: new URL(url).pathname });
+    if (!['GET', 'HEAD'].includes(req.method())) {
+      const pathname = new URL(url).pathname;
+      // The hosting edge may run its own browser challenge; retain that observation
+      // separately from Ming's application requests without storing challenge tokens.
+      if (pathname.startsWith('/cdn-cgi/challenge-platform/')) report.platformRequests.push({ method: req.method(), path: '/cdn-cgi/challenge-platform/…', owner: 'hosting-edge' });
+      else report.mutations.push({ method: req.method(), path: pathname });
+    }
     return route.continue({ headers: { ...req.headers(), 'OAI-Sites-Authorization': `Bearer ${token}` } });
   });
   const page = await context.newPage(); page.setDefaultTimeout(20000);
@@ -61,7 +67,7 @@ try {
   await page.getByRole('region', { name: 'Recorded acceptance timeline' }).waitFor();
   check('Original recorded evidence remains accessible', page.url().endsWith('#studio'));
   check('No application JavaScript exceptions', report.errors.length === 0);
-  check('Trial makes no remote or mutation requests', report.outsideRequests.length === 0 && report.mutations.length === 0);
+  check('Trial makes no external-origin or application mutation requests', report.outsideRequests.length === 0 && report.mutations.length === 0);
   report.passed = true;
 } catch (error) { report.error = String(error); process.exitCode = 1; }
 finally { await browser.close(); fs.writeFileSync(path.join(out, 'production-report.json'), JSON.stringify(report, null, 2)); console.log(JSON.stringify(report)); }
