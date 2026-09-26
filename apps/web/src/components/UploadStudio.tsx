@@ -25,6 +25,19 @@ function Badge({ status }: { status: string }) {
 type PlanOrigin = { kind: "manual" | "ai-draft" | "ai-edited"; provider?: string; modelId?: string; generatedAt?: string; projectFingerprint?: string; entry?: string; usage?: { inputTokens: number | null; outputTokens: number | null } };
 type PlannerStatus = { configured: boolean; providerLabel: string; modelId: string | null };
 type PendingDraft = { steps: UploadStep[]; openQuestions: string[]; context: string; origin: PlanOrigin };
+type PlannerFailure = { message: string; code: string; reason?: string; status?: number; usage: { inputTokens: number | null; outputTokens: number | null } };
+const plannerFailureCodes = new Set(["PLANNER_PROVIDER_HTTP", "PLANNER_TIMEOUT", "PLANNER_CANCELLED", "PLANNER_INVALID_DRAFT", "PLANNER_INTERNAL", "PLANNER_RESPONSE_READ", "PLANNER_RESPONSE_JSON"]);
+const plannerFailureReasons = new Set(["SCHEMA_OBJECT", "SCHEMA_ARRAY", "STEP_COUNT", "QUESTION_COUNT", "STEP_OBJECT", "ACTION", "FIELD_TYPE", "FIELD_LIMIT", "FIELD_REQUIRED", "FIELD_CONTROL", "EXPECTED_TEXT", "EXPECTED_COUNT", "NO_ASSERTION", "SECRET_ECHO", "FINISH_REASON", "CONTENT_TYPE", "JSON_SYNTAX"]);
+function draftFailure(value: unknown, status?: number): PlannerFailure {
+  const result = value && typeof value === "object" ? value as { error?: unknown; code?: unknown; reason?: unknown; usage?: { inputTokens?: unknown; outputTokens?: unknown } } : {};
+  const code = typeof result.code === "string" && plannerFailureCodes.has(result.code) ? result.code : "PLANNER_REQUEST_FAILED";
+  const reason = typeof result.reason === "string" && plannerFailureReasons.has(result.reason) ? result.reason : undefined;
+  const tokenCount = (tokens: unknown) => typeof tokens === "number" && Number.isFinite(tokens) && tokens >= 0 ? tokens : null;
+  const message = reason === "JSON_SYNTAX" ? "Doubao returned a response Ming could not read as a draft."
+    : code === "PLANNER_INVALID_DRAFT" ? "Doubao returned a draft Ming could not use."
+    : typeof result.error === "string" ? result.error.slice(0, 500) : "The draft could not be generated.";
+  return { message, code, reason, status, usage: { inputTokens: tokenCount(result.usage?.inputTokens), outputTokens: tokenCount(result.usage?.outputTokens) } };
+}
 function validDraftPayload(value: unknown): value is { ok: true; draft: { steps: UploadStep[]; openQuestions: string[] }; modelId: string; usage: { inputTokens: number | null; outputTokens: number | null } } {
   if (!value || typeof value !== "object") return false;
   const result = value as { ok?: unknown; draft?: { steps?: unknown; openQuestions?: unknown }; modelId?: unknown; usage?: { inputTokens?: unknown; outputTokens?: unknown } };
@@ -61,6 +74,8 @@ export default function UploadStudio() {
   const [plannerStatus, setPlannerStatus] = useState<PlannerStatus | null>(null);
   const [plannerStatusReady, setPlannerStatusReady] = useState(false);
   const [pendingDraft, setPendingDraft] = useState<PendingDraft | null>(null);
+  const [plannerFailure, setPlannerFailure] = useState<PlannerFailure | null>(null);
+  const [diagnosticCopy, setDiagnosticCopy] = useState<"" | "copied" | "manual">("");
   const [planOrigin, setPlanOrigin] = useState<PlanOrigin>({ kind: "manual" });
   const [runOrigins, setRunOrigins] = useState<Record<string, PlanOrigin>>({});
   const [previewReady, setPreviewReady] = useState(false);
@@ -219,12 +234,15 @@ export default function UploadStudio() {
     while (new TextEncoder().encode(body).length > 32000 && payload.elements.length) { payload.elements.pop(); body = JSON.stringify(payload); }
     if (new TextEncoder().encode(body).length > 32000 || !payload.elements.length) { setError("The requirements are too large for a planning request. Shorten them and try again."); return; }
     const abort = new AbortController(); plannerController.current = abort;
-    setPhase("planning"); setError(""); setNotice(""); setPendingDraft(null);
+    setPhase("planning"); setError(""); setNotice(""); setPendingDraft(null); setPlannerFailure(null); setDiagnosticCopy("");
     try {
       const response = await fetch("/api/upload/planner/draft", { method: "POST", headers: { "Content-Type": "application/json" }, body, signal: abort.signal });
       const result: unknown = await response.json();
       if (!result || typeof result !== "object") throw new Error("The planner returned an unreadable response. Your current plan is unchanged.");
-      if (!response.ok || (result as { ok?: boolean }).ok === false) throw new Error(typeof (result as { error?: unknown }).error === "string" ? (result as { error: string }).error : "Doubao could not produce a draft. Your current plan is unchanged.");
+      if (!response.ok || (result as { ok?: boolean }).ok === false) {
+        if (mounted.current && !abort.signal.aborted) setPlannerFailure(draftFailure(result, response.status));
+        return;
+      }
       if (!validDraftPayload(result)) throw new Error("The planner returned a draft that Ming could not review. Your current plan is unchanged.");
       if (!mounted.current || abort.signal.aborted) return;
       setPendingDraft({ steps: result.draft.steps, openQuestions: result.draft.openQuestions, context: draftContext, origin: { kind: "ai-draft", provider: "Doubao", modelId: result.modelId, generatedAt: new Date().toISOString(), projectFingerprint: project.fingerprint, entry, usage: result.usage } });
@@ -232,9 +250,18 @@ export default function UploadStudio() {
     } catch (cause) {
       if (mounted.current) {
         if (abort.signal.aborted) setNotice("Draft generation cancelled. Your current plan is unchanged. The provider may have already processed the request.");
-        else setError(cause instanceof Error ? cause.message : "The draft could not be generated. Your current plan is unchanged.");
+        else setPlannerFailure(draftFailure({ error: cause instanceof Error ? cause.message : "The draft could not be generated." }));
       }
     } finally { if (plannerController.current === abort) plannerController.current = null; if (mounted.current) setPhase("idle"); }
+  }
+  function plannerDiagnostic() {
+    if (!plannerFailure) return "";
+    const { code, reason, status, usage } = plannerFailure;
+    return JSON.stringify({ feature: "Ming acceptance planner", code, reason, status, usage }, null, 2);
+  }
+  async function copyPlannerDiagnostic() {
+    try { await navigator.clipboard.writeText(plannerDiagnostic()); setDiagnosticCopy("copied"); }
+    catch { setDiagnosticCopy("manual"); }
   }
   function applyDraft() {
     if (!pendingDraft || !canApplyDraft) return;
@@ -316,6 +343,14 @@ export default function UploadStudio() {
           <section className="upload-card"><div className="upload-requirement-actions"><h2>What should work?</h2><label className="upload-requirement-file"><FileText size={14} />Import .md / .txt<input type="file" aria-label="Import requirements file" accept=".md,.txt" disabled={busy} onChange={event => { void importRequirement(event.target.files?.[0]); event.target.value = ""; }} /></label></div><label className="upload-field"><span>Requirements</span><textarea aria-label="Requirements" className="upload-requirement-text" rows={5} value={requirement} disabled={planLocked} onChange={event => { setRequirement(event.target.value); markPlanEdited(); }} placeholder="Describe the feature and the boundaries it must satisfy. What should happen after each action? What must never happen?" /></label><p className="upload-help">This text is the source of truth. It is included with the results and repair brief.</p></section>
 
           <section className="upload-card upload-planner-card"><div className="upload-card-heading"><h2>Draft the checks with AI</h2><span className={plannerStatus?.configured ? "upload-planner-ready" : ""}>{!plannerStatusReady ? "Checking availability…" : plannerStatus?.configured ? "DOUBAO READY" : "MANUAL PLAN AVAILABLE"}</span></div><p className="upload-help">Requesting a draft sends your requirements, project name, entry path, and page element labels to Doubao. It uses the configured provider account and may incur charges. Nothing is generated automatically.</p><div className="upload-planner-actions"><button className="upload-secondary" disabled={busy || !plannerStatus?.configured || !project || !previewReady || !requirement.trim() || requirement.length > 8000} onClick={() => void generateDraft()}>{planning ? <CircleNotch className="upload-spin" size={16} /> : <ListChecks size={16} />}Generate draft with Doubao</button>{planning && <button className="upload-github-cancel" aria-label="Cancel draft generation" onClick={() => plannerController.current?.abort()}><Stop size={14} />Cancel</button>}</div>{plannerStatusReady && !plannerStatus?.configured && <p className="upload-planner-note">AI planning is not connected for this session. You can write and run a manual plan below.</p>}{plannerStatus?.configured && (!project || !previewReady || !requirement.trim()) && <p className="upload-planner-note">Load a project and describe its requirements to request a draft.</p>}{requirement.length > 8000 && <p className="upload-planner-note">Use 8,000 characters or fewer for AI draft generation. Manual plans remain available.</p>}{planning && <p className="upload-planner-note" role="status">Doubao is drafting steps for your review. Your current plan is unchanged.</p>}
+            {plannerFailure && <section className="upload-planner-failure" data-testid="planner-failure" role="alert">
+              <div className="upload-planner-failure-title"><WarningCircle size={17} /><h3>The draft could not be prepared</h3></div>
+              <p>{plannerFailure.message}</p><p>Your project, requirements, and existing steps are unchanged. You can continue with a manual plan or choose Generate draft again. Nothing is retried automatically.</p>
+              <p className="upload-planner-usage">Provider-reported usage: <strong>{plannerFailure.usage.inputTokens ?? "Unknown"} input / {plannerFailure.usage.outputTokens ?? "Unknown"} output tokens</strong></p>
+              <details><summary>Technical details</summary><dl><div><dt>Code</dt><dd>{plannerFailure.code}</dd></div>{plannerFailure.reason && <div><dt>Reason</dt><dd>{plannerFailure.reason}</dd></div>}{plannerFailure.status && <div><dt>HTTP status</dt><dd>{plannerFailure.status}</dd></div>}</dl><p>Diagnostic details contain no API key, project files, or requirements.</p></details>
+              <div className="upload-planner-diagnostic-actions"><button className="upload-secondary" onClick={() => void copyPlannerDiagnostic()}><Copy size={14} />Copy diagnostic</button><span role="status">{diagnosticCopy === "copied" ? "Diagnostic copied." : diagnosticCopy === "manual" ? "Select and copy the diagnostic below." : ""}</span></div>
+              {diagnosticCopy === "manual" && <textarea className="upload-planner-diagnostic-text" aria-label="Planner diagnostic" readOnly value={plannerDiagnostic()} onFocus={event => event.currentTarget.select()} />}
+            </section>}
             {pendingDraft && <section className="upload-ai-draft" data-testid="ai-plan-draft" aria-label="AI draft review"><div><h3>Review the proposed steps</h3><span>{pendingDraft.steps.length} steps</span></div><p>Applying this draft replaces the current steps. It does not start a check; you must review and confirm the plan.</p>{draftStale && <div className="upload-draft-warning" role="status"><WarningCircle size={15} /><span>The project, entry page, or requirements changed. Generate a new draft or discard this one.</span></div>}{pendingDraft.openQuestions.length > 0 && <div className="upload-draft-questions"><strong>Resolve these questions before applying</strong><ul aria-label="Unresolved questions">{pendingDraft.openQuestions.map((question, index) => <li key={index}>{question}</li>)}</ul><p>Update the requirements and generate a new draft. These questions are not treated as answered automatically.</p></div>}{draftValidation.length > 0 && <div className="upload-draft-warning" role="status"><WarningCircle size={15} /><span>{draftValidation.join(" ")}</span></div>}<ol className="upload-draft-steps">{pendingDraft.steps.map((step, index) => <li key={`${step.id}-${index}`}><span>{String(index + 1).padStart(2, "0")}</span><div><strong>{step.description || actions.find(action => action.value === step.action)?.label}</strong><code>{actions.find(action => action.value === step.action)?.label}{step.selector ? ` · ${step.selector}` : ""}{usesValue(step.action) ? ` · ${JSON.stringify(step.value)}` : ""}</code></div></li>)}</ol><div className="upload-draft-actions"><button className="upload-primary" disabled={!canApplyDraft} onClick={applyDraft}>Apply draft to plan</button><button className="upload-secondary" disabled={busy} onClick={() => { setPendingDraft(null); setNotice("Draft discarded. Your current steps are unchanged."); }}>Discard draft</button></div><small>{pendingDraft.origin.modelId} · {pendingDraft.origin.usage?.inputTokens ?? "Unknown"} input / {pendingDraft.origin.usage?.outputTokens ?? "Unknown"} output tokens</small></section>}
           </section>
 

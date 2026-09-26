@@ -65,7 +65,16 @@ test('one explicit draft makes one fixed-endpoint request with bounded tokens an
   const sent = JSON.parse(calls[0].options.body);
   assert.equal(calls[0].options.body.includes(secret), false);
   assert.equal(sent.max_tokens, 4096); assert.equal(sent.stream, false); assert.deepEqual(sent.thinking, { type: 'disabled' });
-  assert.deepEqual(sent.response_format, { type: 'json_object' });
+  assert.equal(sent.response_format.type, 'json_schema');
+  assert.equal(sent.response_format.json_schema.strict, true);
+  assert.equal(sent.response_format.json_schema.name, 'ming_acceptance_draft');
+  const schema = sent.response_format.json_schema.schema;
+  assert.equal(schema.additionalProperties, false); assert.deepEqual(schema.required, ['steps', 'openQuestions']);
+  assert.equal(schema.properties.steps.items.additionalProperties, false);
+  assert.deepEqual(schema.properties.steps.items.required, ['action', 'selector', 'value', 'description']);
+  for (const field of ['action', 'selector', 'value', 'description']) assert.equal(schema.properties.steps.items.properties[field].type, 'string');
+  assert.deepEqual(schema.properties.steps.items.properties.action.enum, ['click', 'fill', 'select', 'check', 'uncheck', 'assertText', 'assertCount', 'assertValue', 'reload']);
+  assert.deepEqual(schema.properties.openQuestions, { type: 'array', items: { type: 'string' } });
   const result = await response.json();
   assert.equal(result.draft.steps[0].action, 'assertText'); assert.match(result.draft.steps[0].id, /^draft-1-/);
   assert.deepEqual(result.usage, { inputTokens: 201, outputTokens: 43 });
@@ -209,4 +218,21 @@ test('distinguishes an internal draft-preparation error from provider validation
   assert.equal(data.code, 'PLANNER_INTERNAL'); assert.equal(data.reason, undefined);
   assert.deepEqual(data.usage, { inputTokens: 201, outputTokens: 43 });
   assert.equal(text.includes(secret), false); assert.equal(JSON.stringify(logs).includes(secret), false);
+});
+
+test('structured output still rejects malformed JSON without guessing or retrying and preserves paid usage', async context => {
+  context.mock.method(console, 'warn', () => {});
+  const malformed = ['```json\n' + JSON.stringify(draft) + '\n```', JSON.stringify(draft) + '{}', '{"steps":[', "{steps:[],openQuestions:[]}"];
+  for (const content of malformed) {
+    let calls = 0;
+    const response = await handleUploadPlanner(request(), env, async () => {
+      calls++;
+      return provider(draft, { choices: [{ finish_reason: 'stop', message: { content } }] });
+    });
+    const result = await response.json();
+    assert.equal(response.status, 502); assert.equal(calls, 1);
+    assert.equal(result.code, 'PLANNER_INVALID_DRAFT'); assert.equal(result.reason, 'JSON_SYNTAX');
+    assert.deepEqual(result.usage, { inputTokens: 201, outputTokens: 43 });
+    assert.equal(result.draft, undefined);
+  }
 });

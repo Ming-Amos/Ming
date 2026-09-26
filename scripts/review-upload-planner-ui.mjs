@@ -32,6 +32,15 @@ const ui = {
   discard: page => page.getByRole('button', { name: 'Discard draft', exact: true }),
   run: page => page.getByRole('button', { name: 'Run acceptance checks', exact: true }),
 };
+async function activeState(page) {
+  return {
+    projectFingerprint: await ui.root(page).getAttribute('data-project-fingerprint'),
+    requirement: await ui.requirements(page).inputValue(),
+    steps: await ui.steps(page).evaluateAll(rows => rows.map(row => [...row.querySelectorAll('input,select')].map(field => ({ label: field.getAttribute('aria-label'), value: field.value })))),
+    confirmed: await ui.confirm(page).isChecked(),
+    previewCount: await page.frameLocator('iframe[sandbox]').locator('#count').innerText(),
+  };
+}
 let browser, page, configured = true, mode = 'questions';
 try {
   const response = await fetch(base), html = await response.text();
@@ -47,6 +56,7 @@ try {
       const body = request.postDataJSON(); report.requests.push({ path: url.pathname, method: request.method(), body, origin: request.headers().origin });
       await sleep(250);
       if (mode === 'error') return route.fulfill({ status: 502, json: { ok: false, error: 'Mock provider temporarily unavailable. Please retry.' } });
+      if (mode === 'malformed') return route.fulfill({ status: 502, json: { ok: false, error: 'The model did not return a complete, supported acceptance draft. Review your requirements or use a manual plan. No retry was made.', code: 'PLANNER_INVALID_DRAFT', reason: 'JSON_SYNTAX', usage: { inputTokens: 702, outputTokens: 510 } } });
       return route.fulfill({ json: { ok: true, draft: { steps: draftSteps, openQuestions: mode.startsWith('questions') ? ['Should the count remain after reloading?'] : [] }, usage: mode === 'questions-unknown' ? { inputTokens: null, outputTokens: null } : { inputTokens: 120, outputTokens: 70 }, modelId: 'mock-review-model' } });
     }
     if (!['GET', 'HEAD'].includes(request.method())) { report.requests.push({ path: url.pathname, method: request.method(), unexpected: true }); return route.abort(); }
@@ -77,7 +87,7 @@ try {
   check('Applying the draft still does not execute the application', await page.frameLocator('iframe[sandbox]').locator('#count').innerText() === '0');
   await ui.confirm(page).check(); await ui.run(page).click(); await page.getByRole('button', { name: 'Cancel checks', exact: true }).waitFor(); await page.getByRole('button', { name: 'Cancel checks', exact: true }).waitFor({ state: 'hidden', timeout: 45000 });
   const transfer = page.waitForEvent('download'); await page.getByRole('button', { name: 'Export evidence report', exact: true }).click(); const runFile = path.join(work, 'actual-browser-run.json'); await (await transfer).saveAs(runFile);
-  const run = JSON.parse(fs.readFileSync(runFile, 'utf8')).currentRun;
+  const originalEvidence = JSON.parse(fs.readFileSync(runFile, 'utf8')), run = originalEvidence.currentRun;
   check('Confirmed draft steps perform real browser operations and pass on observed output', run.status === 'passed' && run.steps.length === 2 && run.steps[1].observed === '1' && await page.frameLocator('iframe[sandbox]').locator('#count').innerText() === '1');
   check('Acceptance still produces a real DOM-render capture without another model call', run.steps[1].capture?.startsWith('data:image/png;base64,') && report.requests.length === 2);
   report.run = { id: run.id, status: run.status, planFingerprint: run.planFingerprint, projectFingerprint: run.projectFingerprint, steps: run.steps.map(({ capture, ...step }) => ({ ...step, captureBytes: capture ? Buffer.from(capture.split(',')[1], 'base64').length : 0 })) };
@@ -88,10 +98,26 @@ try {
   await ui.discard(page).click();
   mode = 'error'; await ui.generate(page).click(); await page.getByRole('alert').filter({ hasText: 'Mock provider temporarily unavailable' }).waitFor();
   check('A provider failure leaves the active acceptance plan intact', await ui.steps(page).count() === 2 && report.requests.length === 4);
+  await ui.confirm(page).check(); const beforeMalformed = await activeState(page);
+  mode = 'malformed'; await ui.generate(page).click(); const diagnostic = page.getByTestId('planner-failure'); await diagnostic.waitFor();
+  check('Malformed model JSON has a readable draft-generation diagnostic', (await diagnostic.innerText()).includes('could not read as a draft') && (await diagnostic.innerText()).includes('Nothing is retried automatically.'));
+  check('Failure usage displays the supplied 702 input and 510 output tokens without inventing a zero', (await diagnostic.innerText()).includes('702 input / 510 output tokens'));
+  await diagnostic.getByText('Technical details', { exact: true }).click();
+  const diagnosticText = await diagnostic.innerText();
+  check('Technical details preserve the precise model-format failure and HTTP status', ['PLANNER_INVALID_DRAFT', 'JSON_SYNTAX', '502'].every(value => diagnosticText.includes(value)));
+  check('Displayed failure metadata does not echo the requirements or source', !diagnosticText.includes(requirement) && !diagnosticText.includes(source));
+  assert.deepEqual(await activeState(page), beforeMalformed);
+  check('Malformed output preserves the existing project, requirements, step values, confirmation, and live preview', beforeMalformed.confirmed && await ui.run(page).isEnabled() && await ui.candidate(page).count() === 0);
+  const preservedTransfer = page.waitForEvent('download'); await page.getByRole('button', { name: 'Export evidence report', exact: true }).click(); const preservedFile = path.join(work, 'after-malformed-response.json'); await (await preservedTransfer).saveAs(preservedFile);
+  const preservedEvidence = JSON.parse(fs.readFileSync(preservedFile, 'utf8')); assert.deepEqual(preservedEvidence.baseline, originalEvidence.baseline); assert.deepEqual(preservedEvidence.currentRun, originalEvidence.currentRun);
+  check('A generation failure does not replace or rewrite prior browser evidence', true);
+  await sleep(550); check('Malformed output makes exactly one explicit request and never retries automatically', report.requests.length === 5);
+  await diagnostic.scrollIntoViewIfNeeded(); await page.screenshot({ path: path.join(work, 'planner-failure.png') });
+  report.malformedFixture = { transport: 'Explicitly mocked HTTP 502. These token counts are fixture data, not a paid request.', code: 'PLANNER_INVALID_DRAFT', reason: 'JSON_SYNTAX', usage: { inputTokens: 702, outputTokens: 510 } };
   configured = false; const unavailable = await context.newPage(); await unavailable.goto(base + '/#upload', { waitUntil: 'networkidle' }); await ui.root(unavailable).waitFor();
   await unavailable.getByLabel('Upload HTML or ZIP', { exact: true }).setInputFiles({ name: 'proof-counter.html', mimeType: 'text/html', buffer: Buffer.from(source) });
   await unavailable.waitForFunction(() => document.querySelector('[data-testid="upload-studio"]')?.getAttribute('data-preview-ready') === 'true'); await ui.requirements(unavailable).fill(requirement);
-  check('Unconfigured provider cannot trigger a paid request', await ui.generate(unavailable).isDisabled() && report.requests.length === 4);
+  check('Unconfigured provider cannot trigger a paid request', await ui.generate(unavailable).isDisabled() && report.requests.length === 5);
   check('All draft calls were explicit same-origin actions', report.requests.every(request => request.method === 'POST' && request.path === '/api/upload/planner/draft' && request.body?.confirmedUserAction === true && request.origin === origin));
   check('No provider or other external network was contacted', report.outsideRequests.length === 0);
   check('No uncaught JavaScript errors occurred', report.errors.length === 0);
@@ -99,6 +125,6 @@ try {
 } catch (error) { report.error = String(error.stack || error); process.exitCode = 1; console.error(report.error); if (page && !page.isClosed()) fs.writeFileSync(path.join(work, 'stopped-dom.txt'), await page.locator('body').innerText().catch(() => '')); }
 finally {
   await browser?.close(); report.finishedAt = new Date().toISOString(); const destination = report.passed ? out : work; fs.mkdirSync(destination, { recursive: true });
-  if (report.passed) fs.copyFileSync(path.join(work, 'planner-review.png'), path.join(destination, 'planner-review.png'));
+  if (report.passed) for (const name of ['planner-review.png', 'planner-failure.png']) fs.copyFileSync(path.join(work, name), path.join(destination, name));
   fs.writeFileSync(path.join(destination, 'report.json'), JSON.stringify(report, null, 2)); console.log(JSON.stringify({ passed: report.passed, checks: report.checks.length, report: path.join(destination, 'report.json') }));
 }

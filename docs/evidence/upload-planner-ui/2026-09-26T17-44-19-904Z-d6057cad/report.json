@@ -1,0 +1,306 @@
+{
+  "reviewId": "d6057cad-ce4e-4d27-a094-01c976d1d0cb",
+  "startedAt": "2026-09-26T17:44:19.904Z",
+  "base": "http://127.0.0.1:4192",
+  "transport": "Explicit local Playwright route fixtures. No real provider request or token accounting.",
+  "checks": [
+    {
+      "name": "Planner review uses the current compiled application",
+      "passed": true
+    },
+    {
+      "name": "Opening a project and editing requirements never calls the model automatically",
+      "passed": true
+    },
+    {
+      "name": "A configured provider offers explicit draft generation",
+      "passed": true
+    },
+    {
+      "name": "One explicit generation sends exactly one approved request",
+      "passed": true
+    },
+    {
+      "name": "The draft request contains actual observed elements and project context",
+      "passed": true
+    },
+    {
+      "name": "Questions remain visible and block applying the candidate",
+      "passed": true
+    },
+    {
+      "name": "Generating a draft does not overwrite or execute the existing plan",
+      "passed": true
+    },
+    {
+      "name": "A pending draft also prevents accidentally running the old plan",
+      "passed": true
+    },
+    {
+      "name": "Discard removes the candidate and preserves the manual plan",
+      "passed": true
+    },
+    {
+      "name": "A resolved candidate remains a review draft until explicitly applied",
+      "passed": true
+    },
+    {
+      "name": "Changing requirements invalidates the pending generated draft",
+      "passed": true
+    },
+    {
+      "name": "Applying the reviewed draft changes the plan and invalidates previous confirmation",
+      "passed": true
+    },
+    {
+      "name": "Applying the draft still does not execute the application",
+      "passed": true
+    },
+    {
+      "name": "Confirmed draft steps perform real browser operations and pass on observed output",
+      "passed": true
+    },
+    {
+      "name": "Acceptance still produces a real DOM-render capture without another model call",
+      "passed": true
+    },
+    {
+      "name": "Missing token usage is displayed as unknown rather than zero",
+      "passed": true
+    },
+    {
+      "name": "Restoring the baseline does not bypass an unresolved draft review",
+      "passed": true
+    },
+    {
+      "name": "A provider failure leaves the active acceptance plan intact",
+      "passed": true
+    },
+    {
+      "name": "Malformed model JSON has a readable draft-generation diagnostic",
+      "passed": true
+    },
+    {
+      "name": "Failure usage displays the supplied 702 input and 510 output tokens without inventing a zero",
+      "passed": true
+    },
+    {
+      "name": "Technical details preserve the precise model-format failure and HTTP status",
+      "passed": true
+    },
+    {
+      "name": "Displayed failure metadata does not echo the requirements or source",
+      "passed": true
+    },
+    {
+      "name": "Malformed output preserves the existing project, requirements, step values, confirmation, and live preview",
+      "passed": true
+    },
+    {
+      "name": "A generation failure does not replace or rewrite prior browser evidence",
+      "passed": true
+    },
+    {
+      "name": "Malformed output makes exactly one explicit request and never retries automatically",
+      "passed": true
+    },
+    {
+      "name": "Unconfigured provider cannot trigger a paid request",
+      "passed": true
+    },
+    {
+      "name": "All draft calls were explicit same-origin actions",
+      "passed": true
+    },
+    {
+      "name": "No provider or other external network was contacted",
+      "passed": true
+    },
+    {
+      "name": "No uncaught JavaScript errors occurred",
+      "passed": true
+    }
+  ],
+  "requests": [
+    {
+      "path": "/api/upload/planner/draft",
+      "method": "POST",
+      "body": {
+        "confirmedUserAction": true,
+        "requirement": "Click Increment once. The visible count becomes 1.",
+        "projectName": "proof-counter",
+        "entry": "proof-counter.html",
+        "elements": [
+          {
+            "selector": "#count",
+            "tag": "p",
+            "label": "0",
+            "type": "",
+            "text": "0"
+          },
+          {
+            "selector": "#increment",
+            "tag": "button",
+            "label": "Increment",
+            "type": "",
+            "text": "Increment"
+          }
+        ]
+      },
+      "origin": "http://127.0.0.1:4192"
+    },
+    {
+      "path": "/api/upload/planner/draft",
+      "method": "POST",
+      "body": {
+        "confirmedUserAction": true,
+        "requirement": "Click Increment once. The visible count becomes 1.",
+        "projectName": "proof-counter",
+        "entry": "proof-counter.html",
+        "elements": [
+          {
+            "selector": "#count",
+            "tag": "p",
+            "label": "0",
+            "type": "",
+            "text": "0"
+          },
+          {
+            "selector": "#increment",
+            "tag": "button",
+            "label": "Increment",
+            "type": "",
+            "text": "Increment"
+          }
+        ]
+      },
+      "origin": "http://127.0.0.1:4192"
+    },
+    {
+      "path": "/api/upload/planner/draft",
+      "method": "POST",
+      "body": {
+        "confirmedUserAction": true,
+        "requirement": "Click Increment once. The visible count becomes 1.",
+        "projectName": "proof-counter",
+        "entry": "proof-counter.html",
+        "elements": [
+          {
+            "selector": "#count",
+            "tag": "p",
+            "label": "0",
+            "type": "",
+            "text": "0"
+          },
+          {
+            "selector": "#increment",
+            "tag": "button",
+            "label": "Increment",
+            "type": "",
+            "text": "Increment"
+          }
+        ]
+      },
+      "origin": "http://127.0.0.1:4192"
+    },
+    {
+      "path": "/api/upload/planner/draft",
+      "method": "POST",
+      "body": {
+        "confirmedUserAction": true,
+        "requirement": "Click Increment once. The visible count becomes 1.",
+        "projectName": "proof-counter",
+        "entry": "proof-counter.html",
+        "elements": [
+          {
+            "selector": "#count",
+            "tag": "p",
+            "label": "0",
+            "type": "",
+            "text": "0"
+          },
+          {
+            "selector": "#increment",
+            "tag": "button",
+            "label": "Increment",
+            "type": "",
+            "text": "Increment"
+          }
+        ]
+      },
+      "origin": "http://127.0.0.1:4192"
+    },
+    {
+      "path": "/api/upload/planner/draft",
+      "method": "POST",
+      "body": {
+        "confirmedUserAction": true,
+        "requirement": "Click Increment once. The visible count becomes 1.",
+        "projectName": "proof-counter",
+        "entry": "proof-counter.html",
+        "elements": [
+          {
+            "selector": "#count",
+            "tag": "p",
+            "label": "0",
+            "type": "",
+            "text": "0"
+          },
+          {
+            "selector": "#increment",
+            "tag": "button",
+            "label": "Increment",
+            "type": "",
+            "text": "Increment"
+          }
+        ]
+      },
+      "origin": "http://127.0.0.1:4192"
+    }
+  ],
+  "errors": [],
+  "outsideRequests": [],
+  "passed": true,
+  "run": {
+    "id": "270108aa-130b-4daf-b765-6f0e5fd3b892",
+    "status": "passed",
+    "planFingerprint": "9fcd80d0d33b0c54139efd8863a195771affcaf517b692f5265cda4871bc2101",
+    "projectFingerprint": "5508f46ff4e0f627d5ce4171d3d2961db02c6a20ca728cfe536d50ea806d5c71",
+    "steps": [
+      {
+        "id": "draft-click",
+        "action": "click",
+        "selector": "#increment",
+        "value": "",
+        "description": "Increment the visible counter",
+        "status": "passed",
+        "observed": "Executed click on #increment",
+        "expected": "Increment the visible counter",
+        "durationMs": 268,
+        "captureBytes": 16528
+      },
+      {
+        "id": "draft-count",
+        "action": "assertText",
+        "selector": "#count",
+        "value": "1",
+        "description": "Confirm the increment is visible",
+        "status": "passed",
+        "observed": "1",
+        "expected": "Visible text contains: 1",
+        "durationMs": 9,
+        "captureBytes": 16528
+      }
+    ]
+  },
+  "malformedFixture": {
+    "transport": "Explicitly mocked HTTP 502. These token counts are fixture data, not a paid request.",
+    "code": "PLANNER_INVALID_DRAFT",
+    "reason": "JSON_SYNTAX",
+    "usage": {
+      "inputTokens": 702,
+      "outputTokens": 510
+    }
+  },
+  "finishedAt": "2026-09-26T17:44:27.095Z"
+}
