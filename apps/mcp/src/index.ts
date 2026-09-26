@@ -24,6 +24,22 @@ if (baseUrl.protocol !== "http:" || !["127.0.0.1", "localhost", "[::1]"].include
   throw new Error("MING_BASE_URL must be a local HTTP origin without credentials, path, query or fragment");
 }
 const MAX_EVIDENCE_STEPS = 20; // cap number of steps returned per criteria
+const MAX_EVIDENCE_DIAGNOSTICS = 30;
+
+/** Keep failures and their nearby context instead of hiding late failures. */
+function evidenceSteps<T extends { status: string; screenshotPath?: string }>(steps: T[]): T[] {
+  if (steps.length <= MAX_EVIDENCE_STEPS) return steps;
+  const selected = new Set<number>();
+  const add = (index: number) => { if (index >= 0 && index < steps.length && selected.size < MAX_EVIDENCE_STEPS) selected.add(index); };
+  const failures = steps.flatMap((step, index) => step.status === "failed" || step.status === "error" ? [index] : []);
+  failures.forEach(add);
+  steps.forEach((step, index) => { if (step.screenshotPath) add(index); });
+  failures.forEach(index => { add(index - 2); add(index - 1); add(index + 1); });
+  // Initial navigation/setup is useful when reproducing an otherwise late failure.
+  add(0); add(1); add(2);
+  for (let index = steps.length - 1; index >= 0 && selected.size < MAX_EVIDENCE_STEPS; index--) add(index);
+  return [...selected].sort((a, b) => a - b).map(index => steps[index]);
+}
 
 // ── HTTP helper ───────────────────────────────────────────────────
 
@@ -112,7 +128,8 @@ server.registerTool(
     description:
       "Retrieve size-bounded evidence from a Ming failed or error run. " +
       "Returns plan/target fingerprints, failed criteria with expected/actual values, " +
-      "and resolvable screenshot references. Use to understand what needs to be repaired.",
+      "and resolvable screenshot references. Long criteria retain failure steps and disclose omitted steps. " +
+      "Includes recorded browser diagnostics and source-binding limits. Use to understand what needs to be repaired.",
     inputSchema: {
       runId: z.string().describe("The runId of a failed or error run"),
     },
@@ -134,6 +151,9 @@ server.registerTool(
     }
 
     const run = data.run as Record<string, unknown>;
+    if (!run || !["failed", "error"].includes(String(run.status))) {
+      return toolError(new Error("Use a completed failed or error run. For progress or passing results, call ming_get_run."));
+    }
 
     // Return a bounded summary — full step lists are capped
     type CriteriaResult = {
@@ -157,7 +177,10 @@ server.registerTool(
       title: c.title,
       status: c.status,
       blockedReason: c.blockedReason,
-      steps: (c.steps ?? []).slice(0, MAX_EVIDENCE_STEPS).map((s) => ({
+      totalSteps: (c.steps ?? []).length,
+      omittedSteps: Math.max(0, (c.steps ?? []).length - MAX_EVIDENCE_STEPS),
+      omittedFailureSteps: (c.steps ?? []).filter(s => s.status === "failed" || s.status === "error").length - evidenceSteps(c.steps ?? []).filter(s => s.status === "failed" || s.status === "error").length,
+      steps: evidenceSteps(c.steps ?? []).map((s) => ({
         stepId: s.stepId,
         description: s.description,
         status: s.status,
@@ -166,7 +189,7 @@ server.registerTool(
         error: s.error,
         // Provide resolvable URL rather than bare path
         screenshotUrl: s.screenshotPath
-          ? `${MING_BASE}/api/screenshots/${s.screenshotPath.split(/[\\/]/).pop()}`
+          ? new URL(`/api/screenshots/${encodeURIComponent(s.screenshotPath.split(/[\\/]/).pop()!)}`, MING_BASE).href
           : undefined,
       })),
     }));
@@ -184,6 +207,11 @@ server.registerTool(
       startedAt: run.startedAt,
       finishedAt: run.finishedAt,
       fatalError: run.fatalError,
+      terminationReason: run.terminationReason,
+      sourceBinding: run.sourceBinding,
+      sourceChangedDuringRun: run.sourceChangedDuringRun,
+      diagnostics: Array.isArray(run.diagnostics) ? run.diagnostics.slice(-MAX_EVIDENCE_DIAGNOSTICS) : [],
+      omittedDiagnostics: Array.isArray(run.diagnostics) ? Math.max(0, run.diagnostics.length - MAX_EVIDENCE_DIAGNOSTICS) : 0,
       criteria,
     };
 

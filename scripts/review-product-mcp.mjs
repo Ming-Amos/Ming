@@ -20,7 +20,7 @@ const wait = ms=>new Promise(r=>setTimeout(r,ms));
 function check(label, passed) { report.checks.push({label,passed:Boolean(passed)}); console.log(`${passed?'PASS':'FAIL'} ${label}`); if(!passed) throw Error(label); }
 async function api(method,url,body,status=200) {const r=await fetch(base+url,{method,headers:{'content-type':'application/json'},body:body===undefined?undefined:JSON.stringify(body)});const data=await r.json();if(r.status!==status)throw Error(`${url} ${r.status} ${JSON.stringify(data)}`);return data;}
 let child,browser,client;
-const target=http.createServer((_req,res)=>{res.setHeader('content-type','text/html');res.end('<!doctype html><title>Independent MCP Application</title><h1>Account settings</h1><p id="state">Draft</p><button>Save settings</button>');});
+const target=http.createServer((_req,res)=>{res.setHeader('content-type','text/html');res.end('<!doctype html><title>Independent MCP Application</title><h1>Account settings</h1><p id="state">Draft</p><button>Save settings</button><script>console.error("Independent application diagnostic");</script>');});
 async function tool(name,args={}) {const result=await client.callTool({name,arguments:args});if(result.isError)throw Error(JSON.stringify(result));return JSON.parse(result.content[0].text);}
 async function terminal(runId) {for(let i=0;i<200;i++){const {run}=await tool('ming_get_run',{runId});if(['passed','failed','error'].includes(run.status))return run;await wait(80);}throw Error('Run timeout');}
 try {
@@ -75,5 +75,21 @@ try {
   check('Same AI entry point observes genuine passing acceptance',passing.status==='passed');
   const stale=await client.callTool({name:'ming_run_acceptance',arguments:{confirmationId:confirmation.confirmationId}});
   check('Agent cannot execute superseded human standard',stale.isError===true);
+  const longSteps = [
+    {id:'OPEN',type:'navigate',url:'{{TARGET_URL}}',description:'Open the independent application'},
+    ...Array.from({length:22},(_,i)=>({id:`PRECHECK-${i+1}`,type:'assertVisibleIn',locator:'#state',value:'Draft',description:`Observe draft state ${i+1}`})),
+    {id:'LATE-FAILURE',type:'assertVisibleIn',locator:'#state',value:'Published',description:'The actual failure occurs after the twentieth step'},
+  ];
+  const {draft:longDraft}=await api('POST',`/api/drafts/${nextConfirmation.draftId}/revise`,{projectId:project.projectId,requirementId:requirement.requirementId,plan:{title:'Long real browser acceptance',description:'Validate bounded MCP evidence retains late failures',criteria:[{id:'LONG',title:'Late failure',description:'Check all real observations before the final assertion',steps:longSteps}]}});
+  const {confirmation:longConfirmation}=await api('POST','/api/confirm',{draftId:longDraft.draftId,displayedPlanFingerprint:longDraft.plan.fingerprint});
+  const lateRun=await terminal((await tool('ming_run_acceptance',{confirmationId:longConfirmation.confirmationId})).runId);
+  check('Long supported plan executes its late failure in a real browser',lateRun.status==='failed'&&lateRun.criteria[0].steps.length===24&&lateRun.criteria[0].steps.at(-1).stepId==='LATE-FAILURE');
+  const lateEvidence=await tool('ming_get_failed_run',{runId:lateRun.runId});
+  const lateCriterion=lateEvidence.criteria[0];
+  check('Bounded MCP evidence includes late failure and its actual screenshot',lateCriterion.steps.some(step=>step.stepId==='LATE-FAILURE'&&step.status==='failed'&&step.screenshotUrl)&&lateCriterion.steps.length<=20);
+  check('Evidence truncation is explicit and retains initial navigation',lateCriterion.totalSteps===24&&lateCriterion.omittedSteps===4&&lateCriterion.steps.some(step=>step.stepId==='OPEN'));
+  check('AI receives source-binding and real browser diagnostic context',lateEvidence.sourceBinding==='live-url-observed'&&lateEvidence.diagnostics.some(item=>item.message.includes('Independent application diagnostic')));
+  const passedAsFailure=await client.callTool({name:'ming_get_failed_run',arguments:{runId:passing.runId}});
+  check('Failure evidence tool rejects a passing run',passedAsFailure.isError===true);
   report.success=true;
 }catch(e){report.error=e.stack;process.exitCode=1;console.error(e);}finally{await client?.close();await browser?.close();await new Promise(r=>target.close(r));if(child&&child.exitCode===null){const end=new Promise(r=>child.once('exit',r));child.kill();await end;}report.finishedAt=new Date().toISOString();fs.writeFileSync(path.join(runtime,'review-report.json'),JSON.stringify(report,null,2));console.log(path.join(runtime,'review-report.json'));}

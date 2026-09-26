@@ -1,0 +1,140 @@
+{
+  "runId": "c018b013-8086-4988-a4cb-8e87f017fdb5",
+  "planId": "09c6d5cf-3de1-4126-bf3a-dca593f208c8",
+  "planVersion": "1",
+  "planFingerprint": "a7b9cb028c1d3729",
+  "targetVariant": "custom-d4da0b32-ded9-4955-87de-8cc2890d8c9f",
+  "targetUrl": "http://127.0.0.1:4473/",
+  "targetFingerprint": "unknown",
+  "status": "error",
+  "startedAt": "2026-09-26T11:58:08.037Z",
+  "confirmationId": "1f1cfb6e-d86d-4e19-9abb-a88a40f81b5b",
+  "requirementId": "cb0a0012-261c-44ea-87a9-0a589e0b76ae",
+  "planSnapshot": {
+    "planId": "09c6d5cf-3de1-4126-bf3a-dca593f208c8",
+    "version": "1",
+    "source": "manual",
+    "title": "Clear Tasks · My working app · Acceptance plan",
+    "description": "Check user actions and expected outcomes against the project requirements.",
+    "criteria": [
+      {
+        "id": "AC-01",
+        "title": "A new task appears immediately",
+        "description": "After submitting a new task, the list shows this run’s unique task.",
+        "requirementRef": "the new task appears in the list",
+        "expectedBehavior": "After submitting a new task, the list shows this run’s unique task.",
+        "contextMode": "fresh",
+        "openQuestions": [],
+        "steps": [
+          {
+            "id": "AC-01-S1",
+            "type": "navigate",
+            "description": "Open the project page",
+            "url": "{{TARGET_URL}}"
+          },
+          {
+            "id": "AC-01-S2",
+            "type": "fill",
+            "description": "Enter text",
+            "locator": "Task name",
+            "value": "{{UNIQUE_CONTENT}}"
+          },
+          {
+            "id": "AC-01-S3",
+            "type": "click",
+            "description": "Click a button or link",
+            "locator": "Add task"
+          },
+          {
+            "id": "AC-01-S4",
+            "type": "assertVisible",
+            "description": "Text should be visible",
+            "value": "{{UNIQUE_CONTENT}}"
+          }
+        ]
+      },
+      {
+        "id": "AC-02",
+        "title": "The task survives a reload",
+        "description": "After reloading, the task added in this run remains.",
+        "requirementRef": "After reloading, the same task remains",
+        "expectedBehavior": "After reloading, the task added in this run remains.",
+        "contextMode": "inherit",
+        "openQuestions": [],
+        "steps": [
+          {
+            "id": "AC-02-S1",
+            "type": "reload",
+            "description": "Reload the page"
+          },
+          {
+            "id": "AC-02-S2",
+            "type": "assertVisible",
+            "description": "Text should be visible",
+            "value": "{{UNIQUE_CONTENT}}"
+          }
+        ],
+        "dependsOn": [
+          "AC-01"
+        ]
+      }
+    ],
+    "fingerprint": "a7b9cb028c1d3729",
+    "createdAt": "2026-09-26T11:58:07.864Z",
+    "projectId": "733cb222-abd4-46ca-a1e1-33ddbe8f7efe",
+    "requirementId": "cb0a0012-261c-44ea-87a9-0a589e0b76ae",
+    "originalRequirement": "After entering a task name and clicking Add task, the new task appears in the list. After reloading, the same task remains. Blank tasks must not be added."
+  },
+  "sourceBinding": "live-url-observed",
+  "criteria": [
+    {
+      "criteriaId": "AC-01",
+      "title": "A new task appears immediately",
+      "status": "not_run",
+      "steps": [
+        {
+          "stepId": "AC-01-S1",
+          "description": "Open the project page",
+          "status": "skipped"
+        },
+        {
+          "stepId": "AC-01-S2",
+          "description": "Enter text",
+          "status": "skipped"
+        },
+        {
+          "stepId": "AC-01-S3",
+          "description": "Click a button or link",
+          "status": "skipped"
+        },
+        {
+          "stepId": "AC-01-S4",
+          "description": "Text should be visible",
+          "status": "skipped"
+        }
+      ],
+      "blockedReason": "EPERM: operation not permitted, rename 'C:\\Bob\\Projects\\Ming\\runtime\\product-ui-7f73cff5-8e51-4a7a-9409-8efdb9a0d356\\runs\\c018b013-8086-4988-a4cb-8e87f017fdb5.json.tmp' -> 'C:\\Bob\\Projects\\Ming\\runtime\\product-ui-7f73cff5-8e51-4a7a-9409-8efdb9a0d356\\runs\\c018b013-8086-4988-a4cb-8e87f017fdb5.json'"
+    },
+    {
+      "criteriaId": "AC-02",
+      "title": "The task survives a reload",
+      "status": "not_run",
+      "steps": [
+        {
+          "stepId": "AC-02-S1",
+          "description": "Reload the page",
+          "status": "skipped"
+        },
+        {
+          "stepId": "AC-02-S2",
+          "description": "Text should be visible",
+          "status": "skipped"
+        }
+      ],
+      "blockedReason": "EPERM: operation not permitted, rename 'C:\\Bob\\Projects\\Ming\\runtime\\product-ui-7f73cff5-8e51-4a7a-9409-8efdb9a0d356\\runs\\c018b013-8086-4988-a4cb-8e87f017fdb5.json.tmp' -> 'C:\\Bob\\Projects\\Ming\\runtime\\product-ui-7f73cff5-8e51-4a7a-9409-8efdb9a0d356\\runs\\c018b013-8086-4988-a4cb-8e87f017fdb5.json'"
+    }
+  ],
+  "finishedAt": "2026-09-26T11:58:08.039Z",
+  "fatalError": "EPERM: operation not permitted, rename 'C:\\Bob\\Projects\\Ming\\runtime\\product-ui-7f73cff5-8e51-4a7a-9409-8efdb9a0d356\\runs\\c018b013-8086-4988-a4cb-8e87f017fdb5.json.tmp' -> 'C:\\Bob\\Projects\\Ming\\runtime\\product-ui-7f73cff5-8e51-4a7a-9409-8efdb9a0d356\\runs\\c018b013-8086-4988-a4cb-8e87f017fdb5.json'",
+  "sourceChangedDuringRun": false
+}

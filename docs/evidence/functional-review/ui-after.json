@@ -1,0 +1,82 @@
+{
+  "startedAt": "2026-09-26T11:57:45.167Z",
+  "checks": [
+    {
+      "label": "An unfinished requirements edit is recovered while its original version remains current",
+      "passed": true
+    },
+    {
+      "label": "Opening current requirements does not replace a newer server version with an old saved browser copy",
+      "passed": true
+    },
+    {
+      "label": "Server accepts the prerequisite-bearing plan used by the browser import test",
+      "passed": true
+    },
+    {
+      "label": "Plan JSON import accepts the shared-contract text prerequisite field",
+      "passed": true
+    },
+    {
+      "label": "Command shortcut preserves the active plan editor and its unsaved edits",
+      "passed": true
+    },
+    {
+      "label": "Manual editor saves empty-value assertions and empty select options",
+      "passed": true
+    },
+    {
+      "label": "Importing a complete plan keeps server-owned identities out of the new draft",
+      "passed": true
+    },
+    {
+      "label": "The confirmed empty-field plan passes all six real browser operations without a model",
+      "passed": true
+    },
+    {
+      "label": "The backend exposes completed steps while a later navigation is still waiting",
+      "passed": true
+    },
+    {
+      "label": "Completed actions and a captured screenshot appear before the run finishes",
+      "passed": true
+    },
+    {
+      "label": "The live timeline excludes pending future actions",
+      "passed": true
+    },
+    {
+      "label": "Automatic recorded replay is disabled during a live run",
+      "passed": true
+    },
+    {
+      "label": "Refreshing live results preserves the selected criterion and step",
+      "passed": true
+    },
+    {
+      "label": "Reload recovers the same live run and its already recorded actions",
+      "passed": true
+    },
+    {
+      "label": "Cancellation preserves completed criteria and completed steps in the unfinished criterion",
+      "passed": true
+    },
+    {
+      "label": "Cancelled replay counts only actions with actual results and excludes skipped steps",
+      "passed": true
+    },
+    {
+      "label": "No uncaught browser exceptions across the regression flows",
+      "passed": true
+    }
+  ],
+  "pageErrors": [],
+  "ids": {
+    "projectId": "3df92191-0683-4eae-8813-a359d7fc9bf5",
+    "draftId": "8292e15c-4c65-453d-8ae7-6c6a4a9df1fc",
+    "runId": "c5331f0b-6477-4a06-bc73-fe9b12448cc8",
+    "cancelledLiveRunId": "d49023e8-4350-4402-b315-33b5a7499285"
+  },
+  "finishedAt": "2026-09-26T11:57:55.364Z",
+  "passed": true
+}

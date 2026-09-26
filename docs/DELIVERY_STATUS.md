@@ -2,6 +2,8 @@
 
 Checkpoint: 2026-09-26. The current presentation is the English **Evidence Studio**, with new Shipboard execution evidence. This checklist separates implementation, recorded proof, earlier validation, and work still awaiting review. No automatic competition submission or public publication has occurred.
 
+**Latest functional audit:** [FUNCTIONAL_COMPLETENESS_REVIEW](FUNCTIONAL_COMPLETENESS_REVIEW.md) records 12 reproduced defects and fixes, including Windows storage locks, live evidence, interruption recovery, screenshot identity, editor/import state and late failures in AI handoffs. Final own-project UI **32/32**, editor/live UI **17/17**, lifecycle **17/17**, storage durability **14/14**, and compiled viewer **50/50** passed. Type checking and build passed; the local launcher serves `index-BIVHrbt9.js`. This audit used no Bob or commercial model calls. The version-3 details below remain a historical publication checkpoint.
+
 Still needed for the current submission: record a current-interface video and refresh the deck, user approval for public repository/site access, organizer confirmation of account eligibility, and the final submission review. An external model key and a real generation/review/run are also needed if the entry will claim demonstrated live plan generation; manual acceptance already works without one.
 
 ## Updated local product
@@ -18,12 +20,12 @@ Still needed for the current submission: record a current-interface video and re
 - [x] Record a new real source repair through actual stdio MCP: **21/21 evidence checks passed**, all three rerun criteria passed, `verifiedRepair: true`, and no blockers. Original plan, runner and target identities match; old evidence remains byte-identical.
 - [x] Visually inspect actual Shipboard before/after and validation screenshots. Separate 390px app check confirms persistence after reload, English text, no overflow and no browser errors.
 - [x] Current English own-project workflow: **32/32 browser checks passed**, with no browser exceptions.
-- [x] Current Evidence Studio and compiled read-only viewer: **47/47 checks passed**, including playback, focus, keyboard commands, direct comparison-slider interaction, original-image identity and 390px layout.
-- [x] Full type checking, production build and **7 Worker unit tests** passed. Reviewed frontend bundle: `index-Cw3An0o5.js`.
+- [x] Current Evidence Studio and compiled read-only viewer: **50/50 checks passed**, including playback, focus, keyboard commands, direct comparison-slider interaction, original-image identity and 390px layout. [Final report](evidence/functional-review/evidence-studio.json).
+- [x] Full type checking and production build passed. **7 Worker unit tests** passed. Current frontend bundle: `index-BIVHrbt9.js`.
 - [x] Bounded publication review: **270 candidate files**, **60 evidence hashes** (26 legacy + 34 new), unchanged Bob files and no findings.
 - [x] Updated the existing owner-private Sites preview to English Evidence Studio **version 3**, with deployment status **succeeded** at 2026-09-26 11:31 UTC. Source: `a25103de008777601c08bcac80b46f29e483ce19`; deployment: `appgdep_6ab7ad01c1dc8191b1627324e4b96ad8`. This source checkpoint includes the reviewed application, 20-route bundle and 12 original screenshots. Later documentation-only changes record the release outcome.
 
-## Current English verification
+## Earlier English visual-release verification
 
 - **47/47 Evidence Studio and compiled read-only checks:** original evidence, recorded-step playback, focus, command navigation, mouse and keyboard image comparison, project/history navigation and 390px layouts. No browser errors, missing resources, external requests or mutation requests; reviewed text contrast is at least 4.5:1. Report and captured screens: [English Studio review](evidence/english-studio/review-report.json), [desktop baseline](evidence/english-studio/01-featured-baseline.png), [repair comparison](evidence/english-studio/03-repair-comparison.png), [mobile workspace](evidence/english-studio/05-mobile-workspace.png).
 - **32/32 own-project browser checks:** registration, Markdown PRD upload, model-missing fallback, manual plans, confirmation, real runs, immutable revisions, history, reload recovery, cancellation and 390px layout. No browser exceptions. Report: [English own-project review](evidence/english-product-ui/review-report.json).

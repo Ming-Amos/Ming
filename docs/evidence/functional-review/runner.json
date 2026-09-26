@@ -1,0 +1,679 @@
+{
+  "checks": [
+    {
+      "name": "Multi-file app, asynchronous backend, forms and same-origin navigation pass",
+      "passed": true
+    },
+    {
+      "name": "Real backend POST executed exactly once",
+      "passed": true
+    },
+    {
+      "name": "Live URL is explicitly observed, not an HTML snapshot",
+      "passed": true
+    },
+    {
+      "name": "Console diagnostic is real and sensitive token is redacted",
+      "passed": true
+    },
+    {
+      "name": "Outside-origin subresource never reaches destination",
+      "passed": true
+    },
+    {
+      "name": "HTTP redirect to another origin is blocked before destination request",
+      "passed": true
+    },
+    {
+      "name": "Blocked redirect has actionable real diagnostic",
+      "passed": true
+    },
+    {
+      "name": "Cancellation terminates browser promptly without a pass",
+      "passed": true
+    },
+    {
+      "name": "Whole-run deadline has a distinct terminal reason",
+      "passed": true
+    },
+    {
+      "name": "Already-cancelled run performs no acceptance steps",
+      "passed": true
+    },
+    {
+      "name": "Self-contained snapshot binding still works",
+      "passed": true
+    },
+    {
+      "name": "Frozen document cannot load an external asset",
+      "passed": true
+    },
+    {
+      "name": "Unsafe screenshot step IDs are rejected before execution",
+      "passed": true
+    }
+  ],
+  "records": [
+    {
+      "runId": "ab51af91-ee67-4a3c-a2d3-43d55bbcacb3",
+      "planId": "8123f22a-4f01-45bf-862a-1d29fddd26b9",
+      "planVersion": "1",
+      "planFingerprint": "beab64e102094544",
+      "targetVariant": "own-project",
+      "targetUrl": "http://127.0.0.1:57038",
+      "targetFingerprint": "unknown",
+      "status": "passed",
+      "startedAt": "2026-09-26T11:51:23.670Z",
+      "finishedAt": "2026-09-26T11:51:24.478Z",
+      "criteria": [
+        {
+          "criteriaId": "AC-01",
+          "title": "Real form",
+          "status": "passed",
+          "steps": [
+            {
+              "stepId": "S-1",
+              "description": "navigate",
+              "status": "passed",
+              "actual": "Navigated to http://127.0.0.1:57038/",
+              "durationMs": 27
+            },
+            {
+              "stepId": "S-2",
+              "description": "fill",
+              "status": "passed",
+              "actual": "Entered text (5 characters)",
+              "durationMs": 32
+            },
+            {
+              "stepId": "S-3",
+              "description": "selectOption",
+              "status": "passed",
+              "actual": "Page action completed",
+              "durationMs": 5
+            },
+            {
+              "stepId": "S-4",
+              "description": "check",
+              "status": "passed",
+              "actual": "Page action completed",
+              "durationMs": 35
+            },
+            {
+              "stepId": "S-5",
+              "description": "click",
+              "status": "passed",
+              "actual": "Clicked \"css=#save\"",
+              "durationMs": 36
+            },
+            {
+              "stepId": "S-6",
+              "description": "assertVisibleIn",
+              "status": "passed",
+              "expected": "Alice blue yes",
+              "actual": "Text \"Alice blue yes\" is visible within \"css=#result\"",
+              "durationMs": 218
+            },
+            {
+              "stepId": "S-7",
+              "description": "assertValue",
+              "status": "passed",
+              "expected": "Alice",
+              "actual": "Alice",
+              "durationMs": 3
+            },
+            {
+              "stepId": "S-8",
+              "description": "uncheck",
+              "status": "passed",
+              "actual": "Page action completed",
+              "durationMs": 24
+            },
+            {
+              "stepId": "S-9",
+              "description": "assertCount",
+              "status": "passed",
+              "expected": 0,
+              "actual": "0",
+              "durationMs": 1
+            },
+            {
+              "stepId": "S-10",
+              "description": "click",
+              "status": "passed",
+              "actual": "Clicked \"Next\"",
+              "durationMs": 42
+            },
+            {
+              "stepId": "S-11",
+              "description": "assertUrl",
+              "status": "passed",
+              "expected": "/detail",
+              "actual": "http://127.0.0.1:57038/detail",
+              "durationMs": 0,
+              "screenshotPath": "ab51af91-ee67-4a3c-a2d3-43d55bbcacb3_c5_AC-01_s5_AC-01_final.png"
+            }
+          ]
+        }
+      ],
+      "runnerFingerprint": "5e2c41b59c7e2776",
+      "planSnapshot": {
+        "planId": "8123f22a-4f01-45bf-862a-1d29fddd26b9",
+        "version": "1",
+        "source": "manual",
+        "title": "Independent real app acceptance",
+        "description": "Test-only plan",
+        "createdAt": "2026-09-26T11:51:23.669Z",
+        "criteria": [
+          {
+            "id": "AC-01",
+            "title": "Real form",
+            "description": "User-owned app flow",
+            "steps": [
+              {
+                "id": "S-1",
+                "description": "navigate",
+                "type": "navigate",
+                "url": "{{TARGET_URL}}"
+              },
+              {
+                "id": "S-2",
+                "description": "fill",
+                "type": "fill",
+                "locator": "Name",
+                "value": "Alice"
+              },
+              {
+                "id": "S-3",
+                "description": "selectOption",
+                "type": "selectOption",
+                "locator": "Color",
+                "value": "blue"
+              },
+              {
+                "id": "S-4",
+                "description": "check",
+                "type": "check",
+                "locator": "Subscribe"
+              },
+              {
+                "id": "S-5",
+                "description": "click",
+                "type": "click",
+                "locator": "css=#save"
+              },
+              {
+                "id": "S-6",
+                "description": "assertVisibleIn",
+                "type": "assertVisibleIn",
+                "locator": "css=#result",
+                "value": "Alice blue yes"
+              },
+              {
+                "id": "S-7",
+                "description": "assertValue",
+                "type": "assertValue",
+                "locator": "Name",
+                "value": "Alice"
+              },
+              {
+                "id": "S-8",
+                "description": "uncheck",
+                "type": "uncheck",
+                "locator": "Subscribe"
+              },
+              {
+                "id": "S-9",
+                "description": "assertCount",
+                "type": "assertCount",
+                "locator": "input:checked",
+                "expected": 0
+              },
+              {
+                "id": "S-10",
+                "description": "click",
+                "type": "click",
+                "locator": "Next"
+              },
+              {
+                "id": "S-11",
+                "description": "assertUrl",
+                "type": "assertUrl",
+                "value": "/detail"
+              }
+            ]
+          }
+        ],
+        "fingerprint": "beab64e102094544"
+      },
+      "sourceBinding": "live-url-observed",
+      "diagnostics": [
+        {
+          "kind": "network",
+          "message": "net::ERR_BLOCKED_BY_CLIENT.Inspector",
+          "url": "http://127.0.0.1:57037/outside",
+          "at": "2026-09-26T11:51:23.949Z"
+        },
+        {
+          "kind": "console",
+          "level": "error",
+          "message": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+          "at": "2026-09-26T11:51:23.949Z"
+        },
+        {
+          "kind": "console",
+          "level": "error",
+          "message": "token=[REDACTED]",
+          "at": "2026-09-26T11:51:24.250Z"
+        }
+      ]
+    },
+    {
+      "runId": "7b5e38a6-4460-4b06-bf30-8ce73ca3f215",
+      "planId": "09e3194c-33f2-4e31-8a38-33ea9c5903c1",
+      "planVersion": "1",
+      "planFingerprint": "69df64ba3443f932",
+      "targetVariant": "own-project",
+      "targetUrl": "http://127.0.0.1:57038/redirect",
+      "targetFingerprint": "unknown",
+      "status": "error",
+      "startedAt": "2026-09-26T11:51:24.479Z",
+      "finishedAt": "2026-09-26T11:51:24.978Z",
+      "criteria": [
+        {
+          "criteriaId": "AC-01",
+          "title": "Real form",
+          "status": "error",
+          "steps": [
+            {
+              "stepId": "S-1",
+              "description": "navigate",
+              "status": "error",
+              "error": "page.goto: net::ERR_BLOCKED_BY_RESPONSE at http://127.0.0.1:57038/redirect\nCall log:\n  - navigating to \"http://127.0.0.1:57038/redirect\", waiting until \"domcontentloaded\"\n",
+              "actual": "Execution error: page.goto: net::ERR_BLOCKED_BY_RESPONSE at http://127.0.0.1:57038/redirect\nCall log:\n  - navigating to \"http://127.0.0.1:57038/redirect\", waiting until \"domcontentloaded\"\n",
+              "durationMs": 7,
+              "screenshotPath": "7b5e38a6-4460-4b06-bf30-8ce73ca3f215_c5_AC-01_s3_S-1_error.png"
+            },
+            {
+              "stepId": "S-2",
+              "description": "assertVisible",
+              "status": "skipped"
+            }
+          ]
+        }
+      ],
+      "runnerFingerprint": "5e2c41b59c7e2776",
+      "planSnapshot": {
+        "planId": "09e3194c-33f2-4e31-8a38-33ea9c5903c1",
+        "version": "1",
+        "source": "manual",
+        "title": "Independent real app acceptance",
+        "description": "Test-only plan",
+        "createdAt": "2026-09-26T11:51:24.478Z",
+        "criteria": [
+          {
+            "id": "AC-01",
+            "title": "Real form",
+            "description": "User-owned app flow",
+            "steps": [
+              {
+                "id": "S-1",
+                "description": "navigate",
+                "type": "navigate",
+                "url": "{{TARGET_URL}}"
+              },
+              {
+                "id": "S-2",
+                "description": "assertVisible",
+                "type": "assertVisible",
+                "value": "Unauthorized destination"
+              }
+            ]
+          }
+        ],
+        "fingerprint": "69df64ba3443f932"
+      },
+      "sourceBinding": "live-url-observed",
+      "diagnostics": [
+        {
+          "kind": "network",
+          "message": "HTTP redirect blocked. Connect the final local page URL; this runner does not follow server redirects.",
+          "status": 302,
+          "url": "http://127.0.0.1:57038/redirect",
+          "at": "2026-09-26T11:51:24.751Z"
+        },
+        {
+          "kind": "network",
+          "message": "net::ERR_BLOCKED_BY_RESPONSE",
+          "url": "http://127.0.0.1:57038/redirect",
+          "at": "2026-09-26T11:51:24.752Z"
+        }
+      ]
+    },
+    {
+      "runId": "34bdbfab-5afd-4cb7-b776-39e78e62ab3a",
+      "planId": "8cfb62b7-9580-42f3-aecb-4c0e32bf8269",
+      "planVersion": "1",
+      "planFingerprint": "24196d87fe2c4f4f",
+      "targetVariant": "own-project",
+      "targetUrl": "http://127.0.0.1:57038/slow",
+      "targetFingerprint": "unknown",
+      "status": "error",
+      "startedAt": "2026-09-26T11:51:24.978Z",
+      "finishedAt": "2026-09-26T11:51:25.347Z",
+      "criteria": [
+        {
+          "criteriaId": "AC-01",
+          "title": "Real form",
+          "status": "error",
+          "steps": [
+            {
+              "stepId": "S-1",
+              "description": "navigate",
+              "status": "passed",
+              "actual": "Navigated to http://127.0.0.1:57038/slow",
+              "durationMs": 10
+            },
+            {
+              "stepId": "S-2",
+              "description": "click",
+              "status": "error",
+              "error": "locator.click: Target page, context or browser has been closed\nCall log:\n  - waiting for getByRole('button', { name: 'Never enabled', exact: true })\n    - locator resolved to <button disabled>Never enabled</button>\n  - attempting click action\n    - waiting for element to be visible, enabled and stable\n    - element is not enabled\n  - retrying click action\n    - waiting for element to be visible, enabled and stable\n",
+              "actual": "Execution error: locator.click: Target page, context or browser has been closed\nCall log:\n  - waiting for getByRole('button', { name: 'Never enabled', exact: true })\n    - locator resolved to <button disabled>Never enabled</button>\n  - attempting click action\n    - waiting for element to be visible, enabled and stable\n    - element is not enabled\n  - retrying click action\n    - waiting for element to be visible, enabled and stable\n",
+              "durationMs": 96
+            },
+            {
+              "stepId": "S-3",
+              "description": "assertVisible",
+              "status": "skipped"
+            }
+          ]
+        }
+      ],
+      "fatalError": "Acceptance run cancelled. Unexecuted steps are not marked as passed.",
+      "runnerFingerprint": "5e2c41b59c7e2776",
+      "planSnapshot": {
+        "planId": "8cfb62b7-9580-42f3-aecb-4c0e32bf8269",
+        "version": "1",
+        "source": "manual",
+        "title": "Independent real app acceptance",
+        "description": "Test-only plan",
+        "createdAt": "2026-09-26T11:51:24.978Z",
+        "criteria": [
+          {
+            "id": "AC-01",
+            "title": "Real form",
+            "description": "User-owned app flow",
+            "steps": [
+              {
+                "id": "S-1",
+                "description": "navigate",
+                "type": "navigate",
+                "url": "{{TARGET_URL}}"
+              },
+              {
+                "id": "S-2",
+                "description": "click",
+                "type": "click",
+                "locator": "Never enabled"
+              },
+              {
+                "id": "S-3",
+                "description": "assertVisible",
+                "type": "assertVisible",
+                "value": "Impossible"
+              }
+            ]
+          }
+        ],
+        "fingerprint": "24196d87fe2c4f4f"
+      },
+      "sourceBinding": "live-url-observed",
+      "terminationReason": "cancelled",
+      "diagnostics": []
+    },
+    {
+      "runId": "c5f35d8e-29c5-4b4a-b920-43ff1ca88c1a",
+      "planId": "8cfb62b7-9580-42f3-aecb-4c0e32bf8269",
+      "planVersion": "1",
+      "planFingerprint": "24196d87fe2c4f4f",
+      "targetVariant": "own-project",
+      "targetUrl": "http://127.0.0.1:57038/slow",
+      "targetFingerprint": "unknown",
+      "status": "error",
+      "startedAt": "2026-09-26T11:51:25.348Z",
+      "finishedAt": "2026-09-26T11:51:26.361Z",
+      "criteria": [
+        {
+          "criteriaId": "AC-01",
+          "title": "Real form",
+          "status": "error",
+          "steps": [
+            {
+              "stepId": "S-1",
+              "description": "navigate",
+              "status": "passed",
+              "actual": "Navigated to http://127.0.0.1:57038/slow",
+              "durationMs": 9
+            },
+            {
+              "stepId": "S-2",
+              "description": "click",
+              "status": "error",
+              "error": "locator.click: Target page, context or browser has been closed\nCall log:\n  - waiting for getByRole('button', { name: 'Never enabled', exact: true })\n    - locator resolved to <button disabled>Never enabled</button>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is not enabled\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is not enabled\n    - retrying click action\n      - waiting 100ms\n    - waiting for element to be visible, enabled and stable\n    - element is not enabled\n  - retrying click action\n    - waiting 500ms\n",
+              "actual": "Execution error: locator.click: Target page, context or browser has been closed\nCall log:\n  - waiting for getByRole('button', { name: 'Never enabled', exact: true })\n    - locator resolved to <button disabled>Never enabled</button>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is not enabled\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is not enabled\n    - retrying click action\n      - waiting 100ms\n    - waiting for element to be visible, enabled and stable\n    - element is not enabled\n  - retrying click action\n    - waiting 500ms\n",
+              "durationMs": 743
+            },
+            {
+              "stepId": "S-3",
+              "description": "assertVisible",
+              "status": "skipped"
+            }
+          ]
+        }
+      ],
+      "fatalError": "Acceptance run timed out. Reduce the scope or check the page response before retrying.",
+      "runnerFingerprint": "5e2c41b59c7e2776",
+      "planSnapshot": {
+        "planId": "8cfb62b7-9580-42f3-aecb-4c0e32bf8269",
+        "version": "1",
+        "source": "manual",
+        "title": "Independent real app acceptance",
+        "description": "Test-only plan",
+        "createdAt": "2026-09-26T11:51:24.978Z",
+        "criteria": [
+          {
+            "id": "AC-01",
+            "title": "Real form",
+            "description": "User-owned app flow",
+            "steps": [
+              {
+                "id": "S-1",
+                "description": "navigate",
+                "type": "navigate",
+                "url": "{{TARGET_URL}}"
+              },
+              {
+                "id": "S-2",
+                "description": "click",
+                "type": "click",
+                "locator": "Never enabled"
+              },
+              {
+                "id": "S-3",
+                "description": "assertVisible",
+                "type": "assertVisible",
+                "value": "Impossible"
+              }
+            ]
+          }
+        ],
+        "fingerprint": "24196d87fe2c4f4f"
+      },
+      "sourceBinding": "live-url-observed",
+      "terminationReason": "deadline",
+      "diagnostics": []
+    },
+    {
+      "runId": "3351217e-e85d-46d9-a403-6d6030e9745b",
+      "planId": "8cfb62b7-9580-42f3-aecb-4c0e32bf8269",
+      "planVersion": "1",
+      "planFingerprint": "24196d87fe2c4f4f",
+      "targetVariant": "own-project",
+      "targetUrl": "http://127.0.0.1:57038/slow",
+      "targetFingerprint": "unknown",
+      "status": "error",
+      "startedAt": "2026-09-26T11:51:26.362Z",
+      "finishedAt": "2026-09-26T11:51:26.362Z",
+      "criteria": [
+        {
+          "criteriaId": "AC-01",
+          "title": "Real form",
+          "status": "not_run",
+          "blockedReason": "Fatal error before execution: Acceptance run cancelled. Unexecuted steps are not marked as passed.",
+          "steps": [
+            {
+              "stepId": "S-1",
+              "description": "navigate",
+              "status": "skipped"
+            },
+            {
+              "stepId": "S-2",
+              "description": "click",
+              "status": "skipped"
+            },
+            {
+              "stepId": "S-3",
+              "description": "assertVisible",
+              "status": "skipped"
+            }
+          ]
+        }
+      ],
+      "fatalError": "Acceptance run cancelled. Unexecuted steps are not marked as passed.",
+      "runnerFingerprint": "5e2c41b59c7e2776",
+      "planSnapshot": {
+        "planId": "8cfb62b7-9580-42f3-aecb-4c0e32bf8269",
+        "version": "1",
+        "source": "manual",
+        "title": "Independent real app acceptance",
+        "description": "Test-only plan",
+        "createdAt": "2026-09-26T11:51:24.978Z",
+        "criteria": [
+          {
+            "id": "AC-01",
+            "title": "Real form",
+            "description": "User-owned app flow",
+            "steps": [
+              {
+                "id": "S-1",
+                "description": "navigate",
+                "type": "navigate",
+                "url": "{{TARGET_URL}}"
+              },
+              {
+                "id": "S-2",
+                "description": "click",
+                "type": "click",
+                "locator": "Never enabled"
+              },
+              {
+                "id": "S-3",
+                "description": "assertVisible",
+                "type": "assertVisible",
+                "value": "Impossible"
+              }
+            ]
+          }
+        ],
+        "fingerprint": "24196d87fe2c4f4f"
+      },
+      "sourceBinding": "live-url-observed",
+      "terminationReason": "cancelled",
+      "diagnostics": []
+    },
+    {
+      "runId": "6a76dc06-4048-41ce-886e-117a29ea9723",
+      "planId": "effad7d3-0c14-4d59-b8af-fce2f4e516c5",
+      "planVersion": "1",
+      "planFingerprint": "ef866efcdb237772",
+      "targetVariant": "own-project",
+      "targetUrl": "http://127.0.0.1:57038",
+      "targetFingerprint": "35653d1bf70c598b",
+      "status": "passed",
+      "startedAt": "2026-09-26T11:51:26.363Z",
+      "finishedAt": "2026-09-26T11:51:26.904Z",
+      "criteria": [
+        {
+          "criteriaId": "AC-01",
+          "title": "Real form",
+          "status": "passed",
+          "steps": [
+            {
+              "stepId": "S-1",
+              "description": "navigate",
+              "status": "passed",
+              "actual": "Navigated to http://127.0.0.1:57038/",
+              "durationMs": 13
+            },
+            {
+              "stepId": "S-2",
+              "description": "assertVisible",
+              "status": "passed",
+              "expected": "Frozen HTML",
+              "actual": "Text \"Frozen HTML\" is visible",
+              "durationMs": 21,
+              "screenshotPath": "6a76dc06-4048-41ce-886e-117a29ea9723_c5_AC-01_s5_AC-01_final.png"
+            }
+          ]
+        }
+      ],
+      "runnerFingerprint": "5e2c41b59c7e2776",
+      "planSnapshot": {
+        "planId": "effad7d3-0c14-4d59-b8af-fce2f4e516c5",
+        "version": "1",
+        "source": "manual",
+        "title": "Independent real app acceptance",
+        "description": "Test-only plan",
+        "createdAt": "2026-09-26T11:51:26.362Z",
+        "criteria": [
+          {
+            "id": "AC-01",
+            "title": "Real form",
+            "description": "User-owned app flow",
+            "steps": [
+              {
+                "id": "S-1",
+                "description": "navigate",
+                "type": "navigate",
+                "url": "{{TARGET_URL}}"
+              },
+              {
+                "id": "S-2",
+                "description": "assertVisible",
+                "type": "assertVisible",
+                "value": "Frozen HTML"
+              }
+            ]
+          }
+        ],
+        "fingerprint": "ef866efcdb237772"
+      },
+      "sourceBinding": "self-contained-html-snapshot",
+      "diagnostics": [
+        {
+          "kind": "network",
+          "message": "net::ERR_BLOCKED_BY_CLIENT.Inspector",
+          "url": "http://127.0.0.1:57037/outside-snapshot",
+          "at": "2026-09-26T11:51:26.638Z"
+        },
+        {
+          "kind": "console",
+          "level": "error",
+          "message": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector",
+          "at": "2026-09-26T11:51:26.639Z"
+        }
+      ]
+    }
+  ]
+}

@@ -7,7 +7,8 @@
     "dev": "ts-node src/index.ts",
     "build": "tsc",
     "typecheck": "tsc --noEmit",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "test": "ts-node src/provider/provider-settings.test.ts && node ../../scripts/review-storage-durability.mjs"
   },
   "dependencies": {
     "@ming/contracts": "workspace:*",

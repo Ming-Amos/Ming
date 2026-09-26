@@ -422,19 +422,27 @@ export default function App() {
   }, [criteria, criterionId]);
   useEffect(() => {
     if (!session.runId || !running) return;
+    const runId = session.runId;
+    const epoch = loadEpoch.current;
     let disposed = false;
     let timer: ReturnType<typeof setTimeout>;
     const poll = async () => {
       try {
-        const { progress: p } = await api<{ progress: RunProgress }>(
-          `/api/run/${session.runId}/progress`,
-        );
-        if (disposed) return;
-        setProgress(p);
-        if (p.status !== "running" && p.status !== "pending") {
-          await showRun(session.runId!, false);
+        const [{ progress: p }, { run }] = await Promise.all([
+          api<{ progress: RunProgress }>(`/api/run/${runId}/progress`),
+          api<{ run: RunRecord }>(`/api/run/${runId}`),
+        ]);
+        if (disposed || epoch !== loadEpoch.current) return;
+        if (run.status !== "running" && run.status !== "pending") {
+          await showRun(runId, false);
           await refreshLists();
-        } else timer = setTimeout(poll, 900);
+        } else {
+          // Refresh recorded observations without reopening the run or changing
+          // the criterion, step, or project the user is currently inspecting.
+          setRecord(run);
+          setProgress({ ...p, status: run.status });
+          timer = setTimeout(poll, 900);
+        }
       } catch (e) {
         if (!disposed) {
           setError((e as Error).message);
@@ -788,7 +796,11 @@ export default function App() {
 
   useEffect(() => {
     const handle = (event: KeyboardEvent) => {
-      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") { event.preventDefault(); setSheet(s => s === "commands" ? null : "commands"); }
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        // A global shortcut must not unmount an editor or an in-flight request.
+        if (!sheet || sheet === "commands") setSheet(s => s === "commands" ? null : "commands");
+      }
       if (event.key === "Escape" && !sheet) setFocusMode(false);
     };
     window.addEventListener("keydown", handle);
@@ -1116,7 +1128,7 @@ export default function App() {
                     The browser is interacting with your app. {progress?.finishedCriteria}{" "}
                     / {progress?.totalCriteria} checks complete
                     {progress?.currentCriteria
-                      ? ` · Last completed: ${progress.currentCriteria}`
+                      ? ` · Checking: ${progress.currentCriteria}`
                       : ""}
                   </span>
                   <progress

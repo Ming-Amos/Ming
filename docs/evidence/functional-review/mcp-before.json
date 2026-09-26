@@ -1,0 +1,80 @@
+{
+  "startedAt": "2026-09-26T11:47:53.407Z",
+  "checks": [
+    {
+      "label": "SDK discovers all twelve actual MCP tools",
+      "passed": true
+    },
+    {
+      "label": "MCP lists registered own project",
+      "passed": true
+    },
+    {
+      "label": "MCP discovers actual application target",
+      "passed": true
+    },
+    {
+      "label": "Agent reads saved requirements and human confirmation",
+      "passed": true
+    },
+    {
+      "label": "MCP starts and observes actual browser failure",
+      "passed": true
+    },
+    {
+      "label": "Existing bounded failure tool returns genuine run",
+      "passed": true
+    },
+    {
+      "label": "AI creates and claims evidence-backed repair task",
+      "passed": true
+    },
+    {
+      "label": "Malformed record identifiers return tool errors",
+      "passed": true
+    },
+    {
+      "label": "HTML export contains actual embedded PNG evidence and escaped requirements",
+      "passed": true
+    },
+    {
+      "label": "JSON export retains exact original run and requirement",
+      "passed": true
+    },
+    {
+      "label": "Markdown export preserves actual results and escapes embedded HTML",
+      "passed": true
+    },
+    {
+      "label": "Report API rejects unknown formats and missing records",
+      "passed": true
+    },
+    {
+      "label": "Standalone report renders original images without external traffic or script execution",
+      "passed": true
+    },
+    {
+      "label": "MCP cancels real browser work and preserves terminal evidence",
+      "passed": true
+    },
+    {
+      "label": "Same AI entry point observes genuine passing acceptance",
+      "passed": true
+    },
+    {
+      "label": "Agent cannot execute superseded human standard",
+      "passed": true
+    },
+    {
+      "label": "Long supported plan executes its late failure in a real browser",
+      "passed": true
+    },
+    {
+      "label": "Bounded MCP evidence includes late failure and its actual screenshot",
+      "passed": false
+    }
+  ],
+  "scope": "Actual SDK tool calls, local independent target, original browser screenshots and report rendering. No model/Bob.",
+  "error": "Error: Bounded MCP evidence includes late failure and its actual screenshot\n    at check (file:///C:/Bob/Projects/Ming/scripts/review-product-mcp.mjs:20:152)\n    at file:///C:/Bob/Projects/Ming/scripts/review-product-mcp.mjs:89:3\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)",
+  "finishedAt": "2026-09-26T11:48:03.205Z"
+}

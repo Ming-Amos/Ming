@@ -1,0 +1,66 @@
+{
+  "runtime": "C:\\Bob\\Projects\\Ming\\runtime\\storage-durability-f7327613-ceb0-4c9d-94a3-36c79eea9cd6",
+  "platform": "win32",
+  "startedAt": "2026-09-26T12:04:42.705Z",
+  "checks": [
+    {
+      "label": "Initial save creates one complete valid record",
+      "passed": true
+    },
+    {
+      "label": "Actual Windows sharing lock reproduces the former rename failure",
+      "passed": true
+    },
+    {
+      "label": "Persistent sharing lock fails within a bounded retry window",
+      "passed": true
+    },
+    {
+      "label": "Failed replacement preserves the exact original evidence bytes",
+      "passed": true
+    },
+    {
+      "label": "Failed replacement cleans only its own temporary file",
+      "passed": true
+    },
+    {
+      "label": "Transient actual Windows lock is retried until replacement succeeds",
+      "passed": true
+    },
+    {
+      "label": "Non-transient disk errors surface immediately without retries",
+      "passed": true
+    },
+    {
+      "label": "Serialization failure cannot modify an existing record",
+      "passed": true
+    },
+    {
+      "label": "Concurrent readers see complete JSON through 150 rapid replacements",
+      "passed": true
+    },
+    {
+      "label": "Successful writes leave no temporary files",
+      "passed": true
+    },
+    {
+      "label": "Persistent final-write failure returns an explicit unsaved terminal error",
+      "passed": true
+    },
+    {
+      "label": "Persistent final-write failure does not crash the server",
+      "passed": true
+    },
+    {
+      "label": "Unsaved terminal failure is consistent in progress and history",
+      "passed": true
+    },
+    {
+      "label": "API fallback preserves the original on-disk record without claiming persistence",
+      "passed": true
+    }
+  ],
+  "finishedAt": "2026-09-26T12:04:51.768Z",
+  "passed": 14,
+  "total": 14
+}

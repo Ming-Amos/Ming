@@ -1,5 +1,9 @@
 # Ming Application X-ray — design QA
 
+## Functional follow-up, 2026-09-26
+
+The same English composition now shows completed browser observations during a running check, preserves the selected step, and excludes unexecuted steps from replay. Open editors also survive the global command shortcut. The compiled viewer passed **50/50** checks; editor/live-progress regressions passed **17/17**. Root visually inspected the actual running-state captures. See [functional review](docs/FUNCTIONAL_COMPLETENESS_REVIEW.md) for the wider lifecycle audit and its scope. The sections below retain their dated visual-release results.
+
 ## English Evidence Studio — current review, 2026-09-26
 
 **Final result: passed.** The latest revision retains the selected three-column Application X-ray composition and adds an English editorial project hub, an actual recorded-step timeline, evidence focus, command navigation and direct before/after image comparison. The earlier sections below describe historical checkpoints, including their original Chinese UI; they do not describe the current interface.

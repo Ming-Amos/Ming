@@ -8,7 +8,6 @@ import {
   RunRecord,
   RunProgress,
   TargetConfig,
-  CriteriaStatus,
   ProjectRecord,
   RequirementRecord,
   DraftRecord,
@@ -27,6 +26,7 @@ import { TargetRegistry, RegisteredTarget, RequestError, captureTarget, targetFi
 import { mountProviderRoutes } from "./provider-routes";
 import { recordProviderUsage } from "./provider/index";
 import { mountRunReportRoutes } from "./report-routes";
+import { writeJsonAtomicSync } from "./atomic-json";
 
 // Allow injecting a test transport (used by integration tests via MING_TEST_TRANSPORT env)
 // The test transport is set at module level by the integration test harness.
@@ -105,6 +105,9 @@ interface LiveProgress {
   currentCriteria?: string;
 }
 const liveProgress = new Map<string, LiveProgress>();
+// A failed final write must not reject an unobserved browser job or claim that
+// its result reached disk. Keep the explicit storage error readable this session.
+const unsavedTerminalRuns = new Map<string, RunRecord>();
 
 function saveRun(record: RunRecord): void {
   saveJson(RUNS_DIR, record.runId, record);
@@ -112,6 +115,8 @@ function saveRun(record: RunRecord): void {
 
 function loadRun(runId: string): RunRecord | null {
   if (!/^[a-zA-Z0-9_-]+$/.test(runId)) return null;
+  const unsaved = unsavedTerminalRuns.get(runId);
+  if (unsaved) return unsaved;
   const filePath = path.join(RUNS_DIR, `${runId}.json`);
   if (!fs.existsSync(filePath)) return null;
   try {
@@ -123,7 +128,7 @@ function loadRun(runId: string): RunRecord | null {
 
 function listRuns(): RunRecord[] {
   if (!fs.existsSync(RUNS_DIR)) return [];
-  return fs
+  const persisted = fs
     .readdirSync(RUNS_DIR)
     .filter((f) => f.endsWith(".json"))
     .map((f) => {
@@ -134,6 +139,7 @@ function listRuns(): RunRecord[] {
       }
     })
     .filter(Boolean) as RunRecord[];
+  return [...persisted.filter(run => !unsavedTerminalRuns.has(run.runId)), ...unsavedTerminalRuns.values()];
 }
 
 // ── 加载计划 ─────────────────────────────────────────────────────
@@ -149,9 +155,7 @@ function loadPlan(variant = "normal"): AcceptancePlan {
 // ── 目标指纹（基于 HTML 内容） ───────────────────────────────────
 // ── Stage B: JSON 文件存取辅助 ────────────────────────────────────
 function saveJson<T>(dir: string, id: string, data: T): void {
-  const file = path.join(dir, `${id}.json`), temporary = `${file}.tmp`;
-  fs.writeFileSync(temporary, JSON.stringify(data, null, 2), "utf-8");
-  fs.renameSync(temporary, file);
+  writeJsonAtomicSync(path.join(dir, `${id}.json`), data);
 }
 function loadJson<T>(dir: string, id: string): T | null {
   if (typeof id !== "string" || !/^[a-zA-Z0-9_-]+$/.test(id)) return null;
@@ -219,6 +223,15 @@ function assertRunCapacity(variant: string): void {
   if (runControllers.size + inspectingTargets.size >= 2) throw new RequestError(429, "Two browser tasks are already active. Try again after one finishes");
 }
 
+function interruptedCriteria(criteria: RunRecord["criteria"], reason: string): RunRecord["criteria"] {
+  return criteria.map(criterion => {
+    if (criterion.status !== "pending" && criterion.status !== "running") return criterion;
+    const observed = criterion.steps.some(step => !["pending", "running", "skipped"].includes(step.status));
+    return { ...criterion, status: observed ? "error" : "not_run", blockedReason: reason,
+      steps: criterion.steps.map(step => step.status === "pending" || step.status === "running" ? { ...step, status: "skipped" } : step) };
+  });
+}
+
 function launchRun(opts: {
   plan: AcceptancePlan;
   variant: string;
@@ -245,10 +258,12 @@ function launchRun(opts: {
   saveRun(pending);
   runControllers.set(runId, { variant, controller });
   liveProgress.set(runId, { totalCriteria: plan.criteria.length, finishedCriteria: 0 });
+  const liveRecord: RunRecord = { ...pending, status: "running" };
   // Defer execution until maps are populated, including synchronous validation failures.
   const job = Promise.resolve().then(async (): Promise<RunRecord> => {
     let sourceChanged = false;
     let watcher: fs.FSWatcher | undefined;
+    let completedRecord: RunRecord | undefined;
     try {
       if (targetCfg.kind === "html" && targetCfg.htmlPath) {
         watcher = fs.watch(path.dirname(targetCfg.htmlPath), (_event, filename) => {
@@ -257,15 +272,30 @@ function launchRun(opts: {
         watcher.on("error", () => { sourceChanged = true; });
       }
       if (targetFingerprint(targetCfg) !== target.fingerprint) sourceChanged = true;
-      saveRun({ ...pending, status: "running" });
+      saveRun(liveRecord);
       const runner = new PlanRunner({
         screenshotDir: SCREENSHOTS_DIR, runId, signal: controller.signal,
-        onCriteriaComplete: (criteriaId: string, _status: CriteriaStatus) => {
+        onCriteriaStart: (criteriaId: string) => {
           const lp = liveProgress.get(runId);
-          if (lp) { lp.finishedCriteria += 1; lp.currentCriteria = criteriaId; }
+          if (lp) lp.currentCriteria = criteriaId;
+          const criterion = liveRecord.criteria.find(c => c.criteriaId === criteriaId);
+          if (criterion) criterion.status = "running";
+          saveRun(liveRecord);
+        },
+        onStepComplete: (criteriaId, step) => {
+          const criterion = liveRecord.criteria.find(c => c.criteriaId === criteriaId);
+          if (criterion) criterion.steps = criterion.steps.map(previous => previous.stepId === step.stepId ? { ...step } : previous);
+          saveRun(liveRecord);
+        },
+        onCriteriaComplete: (criteriaId, _status, result) => {
+          const lp = liveProgress.get(runId);
+          if (lp) { lp.finishedCriteria += 1; lp.currentCriteria = undefined; }
+          liveRecord.criteria = liveRecord.criteria.map(previous => previous.criteriaId === criteriaId ? result : previous);
+          saveRun(liveRecord);
         },
       });
       const record = await runner.run(plan, target, `Ming check ${runId.slice(0, 8)}`);
+      completedRecord = record;
       record.sourceBinding = target.sourceBinding;
       record.sourceChangedDuringRun = sourceChanged || targetFingerprint(targetCfg) !== target.fingerprint;
       if (controller.signal.aborted) {
@@ -280,12 +310,17 @@ function launchRun(opts: {
     } catch (error) {
       const fatalError = controller.signal.aborted ? "You cancelled this acceptance run. Incomplete checks are not passes." : error instanceof Error ? error.message : String(error);
       const record: RunRecord = {
-        ...pending, status: "error", finishedAt: new Date().toISOString(), fatalError,
+        ...(completedRecord ?? liveRecord), status: "error", finishedAt: new Date().toISOString(), fatalError,
         terminationReason: controller.signal.aborted ? "cancelled" : undefined,
         sourceChangedDuringRun: sourceChanged || targetFingerprint(targetCfg) !== target.fingerprint,
-        criteria: pending.criteria.map(c => ({ ...c, status: "not_run", blockedReason: fatalError, steps: c.steps.map(step => ({ ...step, status: "skipped" })) })),
+        criteria: interruptedCriteria((completedRecord ?? liveRecord).criteria, fatalError),
       };
-      saveRun(record);
+      try { saveRun(record); }
+      catch (storageError) {
+        record.fatalError = `${fatalError} The terminal run record could not be saved. This result is available only until the service restarts. Storage error: ${storageError instanceof Error ? storageError.message : String(storageError)}`;
+        unsavedTerminalRuns.set(runId, record);
+        console.error(`[run ${runId}] The terminal error is available in memory; persistence failed.`);
+      }
       return record;
     } finally {
       watcher?.close();
@@ -322,7 +357,7 @@ function assertCurrentDraft(draft: DraftRecord): void {
 if (process.env.MING_PUBLIC_DEMO !== "1") {
   for (const run of listRuns()) {
     if (run.status !== "running" && run.status !== "pending") continue;
-    saveRun({ ...run, status: "error", terminationReason: "interrupted", finishedAt: new Date().toISOString(), fatalError: "The service restarted and interrupted this run. Start a new run.", criteria: run.criteria.map(c => ({ ...c, status: "not_run", blockedReason: "The service restarted before complete results were available", steps: c.steps.map(step => ({ ...step, status: "skipped" })) })) });
+    saveRun({ ...run, status: "error", terminationReason: "interrupted", finishedAt: new Date().toISOString(), fatalError: "The service restarted and interrupted this run. Start a new run.", criteria: interruptedCriteria(run.criteria, "The service restarted before this criterion completed") });
   }
   for (const task of listJson<RepairTaskRecord>(REPAIR_TASKS_DIR)) {
     if (task.status === "rerunning") saveJson(REPAIR_TASKS_DIR, task.taskId, { ...task, status: "error", blockedReason: "The service restarted and interrupted the repair rerun.", updatedAt: new Date().toISOString() });

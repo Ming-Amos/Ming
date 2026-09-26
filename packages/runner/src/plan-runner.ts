@@ -18,8 +18,9 @@ import { computeFingerprint } from "./fingerprint";
 export interface RunnerOptions {
   screenshotDir: string;
   runId: string;
+  onCriteriaStart?: (criteriaId: string) => void;
   /** Optional callback fired after each criterion completes (for live progress). */
-  onCriteriaComplete?: (criteriaId: string, status: CriteriaStatus) => void;
+  onCriteriaComplete?: (criteriaId: string, status: CriteriaStatus, result: CriteriaResult) => void;
   onStepComplete?: (criteriaId: string, step: StepResult) => void;
   signal?: AbortSignal;
   deadlineMs?: number;
@@ -213,11 +214,14 @@ async function takeScreenshot(
   page: Page,
   screenshotDir: string,
   runId: string,
+  criteriaId: string,
   stepId: string,
   label: string
 ): Promise<string | undefined> {
   try {
-    const filename = `${runId}_${stepId}_${label}`.replace(/[^A-Za-z0-9_-]/g, "_") + ".png";
+    // Step IDs are scoped to a criterion. Include both lengths so even IDs with
+    // underscores cannot collide with another criterion/step pair.
+    const filename = `${runId}_c${criteriaId.length}_${criteriaId}_s${stepId.length}_${stepId}_${label}`.replace(/[^A-Za-z0-9_-]/g, "_") + ".png";
     const fullPath = path.join(screenshotDir, filename);
     await page.screenshot({ path: fullPath, fullPage: false, timeout: 4000,
       mask: [page.locator('input[type="password"], input[name*="token" i], input[name*="api_key" i], input[name*="secret" i]')] });
@@ -262,7 +266,8 @@ async function executeStep(
   step: AcceptanceCriteria["steps"][0],
   vars: Record<string, string>,
   screenshotDir: string,
-  runId: string
+  runId: string,
+  criteriaId: string
 ): Promise<StepResult> {
   const start = Date.now();
   const result: StepResult = {
@@ -425,7 +430,7 @@ async function executeStep(
   // Screenshot on failure or error
   if (result.status === "failed" || result.status === "error") {
     result.screenshotPath = await takeScreenshot(
-      page, screenshotDir, runId, step.id, result.status
+      page, screenshotDir, runId, criteriaId, step.id, result.status
     );
   }
 
@@ -526,16 +531,17 @@ async function runCriteriaWithContext(
 
   const stepResults: StepResult[] = [];
   let criteriaStatus: CriteriaStatus = "passed";
+  let blockedReason: string | undefined;
 
   try {
     for (const step of criteria.steps) {
       if (lifecycle?.stopReason()) throw new Error(lifecycle.stopReason());
-      const stepResult = await executeStep(page, step, vars, screenshotDir, runId);
+      const stepResult = await executeStep(page, step, vars, screenshotDir, runId, criteria.id);
       stepResults.push(stepResult);
       lifecycle?.onStepComplete?.(criteria.id, stepResult);
 
       if (stepResult.status === "failed" || stepResult.status === "error") {
-        const shot = await takeScreenshot(page, screenshotDir, runId, step.id, "failure_scene");
+        const shot = await takeScreenshot(page, screenshotDir, runId, criteria.id, step.id, "failure_scene");
         if (shot && !stepResult.screenshotPath) stepResult.screenshotPath = shot;
         criteriaStatus = stepResult.status === "failed" ? "failed" : "error";
         // Mark remaining steps as skipped
@@ -552,15 +558,24 @@ async function runCriteriaWithContext(
     }
 
     // Final state screenshot attached to last step
-    const finalShot = await takeScreenshot(page, screenshotDir, runId, criteria.id, "final");
+    const finalShot = await takeScreenshot(page, screenshotDir, runId, criteria.id, criteria.id, "final");
     if (finalShot && stepResults.length > 0) {
       const last = [...stepResults].reverse().find(step => step.status !== "skipped");
       if (last && !last.screenshotPath) last.screenshotPath = finalShot;
     }
+  } catch (error) {
+    // Cancellation may happen between steps, after a real action completed.
+    // Preserve those observations instead of replacing the whole criterion
+    // with an unexecuted placeholder in the outer run error handler.
+    criteriaStatus = "error";
+    blockedReason = lifecycle?.stopReason() ?? safeMessage(error instanceof Error ? error.message : String(error));
+    for (const step of criteria.steps.slice(stepResults.length)) {
+      stepResults.push({ stepId: step.id, description: step.description, status: "skipped" });
+    }
   } finally {
     // If we own the context and it failed, close it now (no point passing it on)
     if (weOwnContext && criteriaStatus !== "passed") {
-      await context.close();
+      await context.close().catch(() => undefined);
       weOwnContext = false;
     }
   }
@@ -569,6 +584,7 @@ async function runCriteriaWithContext(
     criteriaId: criteria.id,
     title: criteria.title,
     status: criteriaStatus,
+    blockedReason,
     steps: stepResults,
   };
 
@@ -642,6 +658,7 @@ export class PlanRunner {
       for (let i = 0; i < plan.criteria.length; i++) {
         if (stopReason()) throw new Error(stopReason());
         const criteria = plan.criteria[i];
+        this.opts.onCriteriaStart?.(criteria.id);
 
         const depFailed =
           criteria.dependsOn != null &&
@@ -664,7 +681,7 @@ export class PlanRunner {
         );
 
         criteriaResults.push(outcome.result);
-        this.opts.onCriteriaComplete?.(criteria.id, outcome.result.status);
+        this.opts.onCriteriaComplete?.(criteria.id, outcome.result.status, outcome.result);
 
         if (outcome.result.status === "passed") {
           passedIds.add(criteria.id);

@@ -6,7 +6,7 @@ Ming exposes a local **stdio MCP server with 12 tools**. A connected coding agen
 
 1. Install/build Ming using the [README](../README.md), start it, and open **http://127.0.0.1:4001**.
 2. Start your development application. Register it in Ming, save its requirements and confirm an acceptance plan. A manual plan works without a model API.
-3. Open **让编码 AI 调用 Ming** in the UI, or add the following server to an MCP-capable coding tool. Change the absolute adapter path when moving the repository.
+3. Open **Connect AI** in the UI, or add the following server to an MCP-capable coding tool. Change the absolute adapter path when moving the repository.
 
 ```json
 {
@@ -65,7 +65,7 @@ You normally save and confirm the requirements once, then reuse that active conf
 | `ming_get_run` | Read a `runId`'s progress and actual results. |
 | `ming_create_repair_task` | Create a repair handoff from a completed failed `runId`. |
 | `ming_cancel_run` | Stop remaining work for a `runId`; already performed browser actions are not undone. |
-| `ming_get_failed_run` | Read bounded failure observations and screenshot references for a `runId`. |
+| `ming_get_failed_run` | Read bounded failure observations, real browser diagnostics and screenshot references for a completed failed/error `runId`. Long criteria retain late failures and disclose omitted steps; use `ming_get_run` for the full bounded record. |
 | `ming_get_repair_task` | Read the task's immutable original plan and repair context. |
 | `ming_claim_repair_task` | Claim a waiting task with the actual agent/session identity. |
 | `ming_rerun_plan` | Rerun the claimed task's original standard with the current expected target fingerprint. |
@@ -89,4 +89,4 @@ Ming's browser and MCP tools do not call a language model. Optional plan generat
 - Keep the target app running. Its page, scripts and backend requests must be same-origin; use a development proxy for a separate backend. HTTP redirects and cross-origin requests are blocked.
 - The Sites preview is read-only and remains private; it cannot run checks on your computer.
 
-The earlier genuine Codex MCP repair is recorded in [demo evidence](demo-evidence/README.md). The expanded 12-tool workflow passed 16 actual-SDK MCP/report checks; a passing live-URL rerun remains “复验通过 · 待确认” with `verifiedRepair: false`. Current validation is tracked separately in [delivery status](DELIVERY_STATUS.md).
+The English Codex MCP repair is recorded in [judge evidence](judge-evidence/README.md), with the earlier example retained in [demo evidence](demo-evidence/README.md). A passing live-URL rerun remains acceptance evidence requiring review, with `verifiedRepair: false`. Current validation is tracked separately in [delivery status](DELIVERY_STATUS.md).

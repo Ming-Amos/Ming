@@ -184,7 +184,11 @@ export default function PlanEditor({
           problems.push(`${c.id}, step ${n + 1}: add a description.`);
         if (LOCATOR_ACTIONS.has(s.type) && !s.locator?.trim())
           problems.push(`${c.id}, step ${n + 1}: specify a control or region.`);
-        if (VALUE_ACTIONS.has(s.type) && s.type !== "fill" && !s.value?.trim())
+        if (
+          VALUE_ACTIONS.has(s.type) &&
+          !["fill", "assertValue", "selectOption"].includes(s.type) &&
+          !s.value?.trim()
+        )
           problems.push(`${c.id}, step ${n + 1}: enter the expected content.`);
         if (
           s.type === "assertCount" &&
@@ -257,16 +261,17 @@ export default function PlanEditor({
           "description",
           "requirementRef",
           "expectedBehavior",
+          "prerequisites",
         ] as const)
           if (c[field] !== undefined && typeof c[field] !== "string")
             throw new Error("Criterion descriptions and requirement references must be text.");
-        for (const list of [c.openQuestions, c.dependsOn, c.prerequisites])
+        for (const list of [c.openQuestions, c.dependsOn])
           if (
             list !== undefined &&
             (!Array.isArray(list) ||
               list.some((value) => typeof value !== "string"))
           )
-            throw new Error("Open questions, prerequisites, and dependencies must be lists of text.");
+            throw new Error("Open questions and dependencies must be lists of text.");
         if (
           c.contextMode !== undefined &&
           !["fresh", "inherit"].includes(c.contextMode)
@@ -295,7 +300,7 @@ export default function PlanEditor({
       });
       if (stepCount > 120)
         throw new Error("A plan can contain up to 120 steps. Split larger plans by feature.");
-      setPlan(parsed);
+      setPlan({ title: parsed.title, description: parsed.description, criteria: parsed.criteria });
       setActive(0);
       setErrors([]);
       setAdvanced("");
@@ -574,6 +579,12 @@ export default function PlanEditor({
                         }
                       />
                     </label>
+                  )}
+                  {s.type === "assertValue" && (
+                    <p className="field-help">Leave expected content blank to check that the field is empty.</p>
+                  )}
+                  {s.type === "selectOption" && (
+                    <p className="field-help">Use the option's value. Leave it blank to select an option with an empty value.</p>
                   )}
                   {s.type === "navigate" && (
                     <p className="field-help">

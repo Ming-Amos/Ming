@@ -1,0 +1,162 @@
+{
+  "reviewId": "038ecbdd-f3b4-4ccf-9d81-319879a2e355",
+  "startedAt": "2026-09-26T11:49:47.548Z",
+  "runtime": "C:\\Bob\\Projects\\Ming\\runtime\\real-targets-038ecbdd-f3b4-4ccf-9d81-319879a2e355",
+  "source": "C:\\Users\\han20\\AppData\\Local\\Temp\\ming-real-project-vkpfhf",
+  "scope": "Real third multi-file local web project, manual plan lifecycle, URL observation, cancellation, archive, restart. No live model or Bob.",
+  "checks": [
+    {
+      "label": "Reject remote/credential/privileged/Ming addresses",
+      "passed": true
+    },
+    {
+      "label": "Register an independent multi-file local project",
+      "passed": true
+    },
+    {
+      "label": "Custom target has no fabricated sample plan",
+      "passed": true
+    },
+    {
+      "label": "Custom target cannot bypass confirmation through fixture API",
+      "passed": true
+    },
+    {
+      "label": "Actual target probe returns page title and accessible control",
+      "passed": true
+    },
+    {
+      "label": "Source observation excludes .env contents",
+      "passed": true
+    },
+    {
+      "label": "Manual plan cannot save a criterion without an assertion",
+      "passed": true
+    },
+    {
+      "label": "Manual plan rejects oversized work and path-like criterion identifiers",
+      "passed": true
+    },
+    {
+      "label": "Manual draft links original requirement and claims no model generation",
+      "passed": true
+    },
+    {
+      "label": "Real multi-file project passes manual acceptance and persistence",
+      "passed": true
+    },
+    {
+      "label": "URL execution is explicitly observed, not frozen source",
+      "passed": true
+    },
+    {
+      "label": "Revision creates a new immutable draft/version",
+      "passed": true
+    },
+    {
+      "label": "Old confirmation cannot execute newly revised standards",
+      "passed": true
+    },
+    {
+      "label": "Old confirmation and run remain unchanged for historical evidence",
+      "passed": true
+    },
+    {
+      "label": "Workspace restores persisted requirements, latest drafts and inactive confirmation",
+      "passed": true
+    },
+    {
+      "label": "Revised standards require and accept new explicit confirmation",
+      "passed": true
+    },
+    {
+      "label": "Real URL assertion failure is recorded",
+      "passed": true
+    },
+    {
+      "label": "Changed live project can pass rerun without falsely claiming frozen repair",
+      "passed": true
+    },
+    {
+      "label": "Passed live URL acceptance enters review instead of failed",
+      "passed": true
+    },
+    {
+      "label": "Same owner can retry once; all-pass second attempt stays review",
+      "passed": true
+    },
+    {
+      "label": "Review status does not bypass the two-attempt limit",
+      "passed": true
+    },
+    {
+      "label": "GET during a long run returns its persisted snapshot within one second",
+      "passed": true
+    },
+    {
+      "label": "No overlapping run or archive while a target is active",
+      "passed": true
+    },
+    {
+      "label": "Cancellation is persisted as error, never success",
+      "passed": true
+    },
+    {
+      "label": "Page probe never follows a redirect to an unregistered origin",
+      "passed": true
+    },
+    {
+      "label": "An explicit HTML outside the Ming repository can be registered",
+      "passed": true
+    },
+    {
+      "label": "Imported HTML executes against the captured document snapshot",
+      "passed": true
+    },
+    {
+      "label": "Global concurrency cap rejects a third browser run",
+      "passed": true
+    },
+    {
+      "label": "In-flight run is persisted before browser completion",
+      "passed": true
+    },
+    {
+      "label": "Restart converts unfinished run to explicit interrupted error",
+      "passed": true
+    },
+    {
+      "label": "Restart recovers an actual in-flight repair task without fake completion",
+      "passed": true
+    },
+    {
+      "label": "Custom target and project workspace survive restart",
+      "passed": true
+    },
+    {
+      "label": "New requirement versions invalidate earlier confirmation for new runs",
+      "passed": true
+    },
+    {
+      "label": "Archive retains target identity and original evidence",
+      "passed": true
+    },
+    {
+      "label": "Archived target rejects fresh execution",
+      "passed": true
+    },
+    {
+      "label": "Project list includes registered real projects",
+      "passed": true
+    }
+  ],
+  "ids": {
+    "projectId": "8eac9a9c-e0c2-4ed5-8acd-46f77f76f426",
+    "variant": "custom-5e4115fe-ef34-4dc9-830f-626bd3e3dbf2",
+    "firstRunId": "c9089939-cacb-46e0-b4f2-1220bdd2a1ad",
+    "unboundComparisonTaskId": "5091e9ec-3735-42a0-84d5-d6f44a3e84fa"
+  },
+  "inFlightSnapshotMs": 19,
+  "success": true,
+  "finishedAt": "2026-09-26T11:50:02.209Z"
+}

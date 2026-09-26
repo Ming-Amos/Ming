@@ -1,0 +1,78 @@
+{
+  "startedAt": "2026-09-26T11:54:31.227Z",
+  "checks": [
+    {
+      "label": "An unfinished requirements edit is recovered while its original version remains current",
+      "passed": true
+    },
+    {
+      "label": "Opening current requirements does not replace a newer server version with an old saved browser copy",
+      "passed": true
+    },
+    {
+      "label": "Server accepts the prerequisite-bearing plan used by the browser import test",
+      "passed": true
+    },
+    {
+      "label": "Plan JSON import accepts the shared-contract text prerequisite field",
+      "passed": true
+    },
+    {
+      "label": "Command shortcut preserves the active plan editor and its unsaved edits",
+      "passed": true
+    },
+    {
+      "label": "Manual editor saves empty-value assertions and empty select options",
+      "passed": true
+    },
+    {
+      "label": "Importing a complete plan keeps server-owned identities out of the new draft",
+      "passed": true
+    },
+    {
+      "label": "The confirmed empty-field plan passes all six real browser operations without a model",
+      "passed": true
+    },
+    {
+      "label": "The backend exposes completed steps while a later navigation is still waiting",
+      "passed": true
+    },
+    {
+      "label": "Completed actions and a captured screenshot appear before the run finishes",
+      "passed": false
+    },
+    {
+      "label": "The live timeline excludes pending future actions",
+      "passed": false
+    },
+    {
+      "label": "Automatic recorded replay is disabled during a live run",
+      "passed": false
+    },
+    {
+      "label": "Reload recovers the same live run and its already recorded actions",
+      "passed": false
+    },
+    {
+      "label": "Cancellation preserves completed criteria and completed steps in the unfinished criterion",
+      "passed": true
+    },
+    {
+      "label": "Cancelled replay counts only actions with actual results and excludes skipped steps",
+      "passed": false
+    },
+    {
+      "label": "No uncaught browser exceptions across the regression flows",
+      "passed": true
+    }
+  ],
+  "pageErrors": [],
+  "ids": {
+    "projectId": "d56719a2-6766-4d29-ae43-6813e068de54",
+    "draftId": "5eaad960-9834-4169-b5f9-c0fc6090b557",
+    "runId": "d50e2eea-fa46-4c57-9b07-d66d753a5823",
+    "cancelledLiveRunId": "530ed3ce-c5e7-4ff1-b82e-0c4b196c9016"
+  },
+  "finishedAt": "2026-09-26T11:54:44.434Z",
+  "passed": false
+}

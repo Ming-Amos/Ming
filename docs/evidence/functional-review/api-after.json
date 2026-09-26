@@ -1,0 +1,82 @@
+{
+  "reviewId": "b981b0f9-192e-4efe-bae9-7efc036c9567",
+  "runtime": "C:\\Bob\\Projects\\Ming\\runtime\\functional-api-gaps-b981b0f9-192e-4efe-bae9-7efc036c9567",
+  "startedAt": "2026-09-26T12:05:06.822Z",
+  "checks": [
+    {
+      "label": "Both independent criteria record actual assertion failures",
+      "passed": true
+    },
+    {
+      "label": "Repeated step IDs retain different original screenshot paths",
+      "passed": true
+    },
+    {
+      "label": "Repeated step IDs retain each distinct rendered failure scene",
+      "passed": true
+    },
+    {
+      "label": "Runner captures real console, page, and HTTP error diagnostics",
+      "passed": true
+    },
+    {
+      "label": "Network diagnostic URLs omit query values",
+      "passed": true
+    },
+    {
+      "label": "Cancellation between steps preserves the completed navigation",
+      "passed": true
+    },
+    {
+      "label": "Live progress identifies the first currently executing criterion",
+      "passed": true
+    },
+    {
+      "label": "Live run record exposes completed criteria and original captures",
+      "passed": true
+    },
+    {
+      "label": "Progress advances to the active second criterion",
+      "passed": true
+    },
+    {
+      "label": "Export refuses incomplete runs",
+      "passed": true
+    },
+    {
+      "label": "API cancellation preserves completed first-criterion evidence",
+      "passed": true
+    },
+    {
+      "label": "Cancelling an already finished run is idempotent",
+      "passed": true
+    },
+    {
+      "label": "Restart makes an interrupted run terminal without claiming success",
+      "passed": true
+    },
+    {
+      "label": "Restart retains completed criterion results and screenshots",
+      "passed": true
+    },
+    {
+      "label": "Restart retains finished steps in an incomplete criterion",
+      "passed": true
+    },
+    {
+      "label": "JSON report preserves interrupted-run outcomes and evidence identity",
+      "passed": true
+    },
+    {
+      "label": "Markdown and standalone HTML reports export real terminal evidence",
+      "passed": true
+    }
+  ],
+  "ids": {
+    "cancelledRunId": "0aefe1c9-0afe-4b14-90b8-af571c73d5f9",
+    "interruptedRunId": "f55ae0a9-2612-457d-8f1c-d7c0184355f0"
+  },
+  "finishedAt": "2026-09-26T12:05:17.656Z",
+  "passed": 17,
+  "total": 17
+}

@@ -34,7 +34,9 @@ export default function RequirementEditor({
   providerConfigured: boolean;
   readOnly: boolean;
 }) {
-  const storageKey = `ming.requirement-editor.${project.projectId}`;
+  // An unfinished edit belongs to the requirement version it was based on.
+  // A later version saved by another browser or coding agent must stay visible.
+  const storageKey = `ming.requirement-editor.${project.projectId}.${requirement?.requirementId || "new"}`;
   const [text, setText] = useState(() => {
     if (readOnly) return requirement?.text || "";
     try {
@@ -60,12 +62,17 @@ export default function RequirementEditor({
     if (!text.trim()) throw new Error("Describe the feature you want to check first.");
     if (text.length > 20_000)
       throw new Error("Requirements can contain up to 20,000 characters. Split larger documents by feature.");
-    if (saved?.text === text.trim()) return saved;
+    if (saved?.text === text.trim()) {
+      try { localStorage.removeItem(storageKey); } catch { /* Storage is optional. */ }
+      return saved;
+    }
     const response = await api<{ requirement: RequirementRecord }>(
       `/api/projects/${project.projectId}/requirements`,
       { text: text.trim() },
     );
     setSaved(response.requirement);
+    setText(response.requirement.text);
+    try { localStorage.removeItem(storageKey); } catch { /* Storage is optional. */ }
     onSaved(response.requirement);
     return response.requirement;
   }

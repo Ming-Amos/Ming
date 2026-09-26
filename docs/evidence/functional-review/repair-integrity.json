@@ -1,0 +1,174 @@
+{
+  "author": "Codex",
+  "scope": "Real local browser / isolated copied source; adversarial record mutations explicitly test integrity rejection",
+  "checks": [
+    {
+      "label": "Copied buggy target produces actual failed assertion",
+      "passed": true
+    },
+    {
+      "label": "Baseline binds captured HTML and exact plan",
+      "passed": true
+    },
+    {
+      "label": "Tampered plan content rejected despite unchanged stored fingerprint",
+      "passed": true
+    },
+    {
+      "label": "Stale expected source fingerprint rejected",
+      "passed": true
+    },
+    {
+      "label": "Real browser repair comparison verifies and task agrees",
+      "passed": true
+    },
+    {
+      "label": "Plan and runner remain identical while source changes",
+      "passed": true
+    },
+    {
+      "label": "Baseline evidence bytes preserved",
+      "passed": true
+    },
+    {
+      "label": "Strict comparison blocks unknown runner",
+      "passed": true
+    },
+    {
+      "label": "Strict comparison blocks fatal cleanup error",
+      "passed": true
+    },
+    {
+      "label": "Strict comparison blocks missing criterion",
+      "passed": true
+    },
+    {
+      "label": "Strict comparison blocks missing step",
+      "passed": true
+    },
+    {
+      "label": "Strict comparison blocks duplicate criterion",
+      "passed": true
+    },
+    {
+      "label": "Strict comparison blocks source changed during run",
+      "passed": true
+    },
+    {
+      "label": "Strict comparison blocks unknown source binding",
+      "passed": true
+    },
+    {
+      "label": "Strict comparison blocks wrong requirement",
+      "passed": true
+    },
+    {
+      "label": "Strict comparison blocks wrong target identity",
+      "passed": true
+    },
+    {
+      "label": "Strict comparison blocks infrastructure-only baseline",
+      "passed": true
+    },
+    {
+      "label": "All browser contexts/reloads execute captured HTML",
+      "passed": true
+    },
+    {
+      "label": "Concurrent source change is recorded and cannot count as verified",
+      "passed": true
+    },
+    {
+      "label": "Runner itself rejects mismatched HTML snapshot hash",
+      "passed": true
+    },
+    {
+      "label": "Two unsuccessful reruns stop at blocked with retained attempt IDs",
+      "passed": true
+    },
+    {
+      "label": "Third attempt cannot be claimed",
+      "passed": true
+    },
+    {
+      "label": "Generated confirmed baseline retains original plan and requirement",
+      "passed": true
+    },
+    {
+      "label": "Confirmed execution rejects tampered snapshot content",
+      "passed": true
+    },
+    {
+      "label": "Repair creation rejects tampered snapshot content",
+      "passed": true
+    },
+    {
+      "label": "Confirmed execution rejects tampered requirement link",
+      "passed": true
+    },
+    {
+      "label": "Repair creation rejects tampered requirement link",
+      "passed": true
+    },
+    {
+      "label": "Confirmed execution rejects tampered project link",
+      "passed": true
+    },
+    {
+      "label": "Repair creation rejects tampered project link",
+      "passed": true
+    },
+    {
+      "label": "Confirmed execution rejects tampered target link",
+      "passed": true
+    },
+    {
+      "label": "Repair creation rejects tampered target link",
+      "passed": true
+    },
+    {
+      "label": "Valid generated baseline creates repair task using same confirmed plan",
+      "passed": true
+    }
+  ],
+  "runs": [
+    {
+      "runId": "8f56deb1-0ada-48a8-b192-502d39ae6d25",
+      "status": "failed",
+      "sourceChangedDuringRun": false
+    },
+    {
+      "runId": "973248ee-febc-4d5f-aa6d-42c1ad7a3498",
+      "status": "passed",
+      "sourceChangedDuringRun": false
+    },
+    {
+      "runId": "c25f3e7d-32ef-4983-9e76-d2cad956e4d3",
+      "status": "passed",
+      "sourceChangedDuringRun": true
+    },
+    {
+      "runId": "0aed67d2-f749-4033-b131-33375b42e127",
+      "status": "failed",
+      "sourceChangedDuringRun": false
+    },
+    {
+      "runId": "1bab769e-6b8e-4661-9fd1-33670bdad6c0",
+      "status": "failed",
+      "sourceChangedDuringRun": false
+    },
+    {
+      "runId": "c91f7dae-7da8-44de-a813-b7bdac19ad9b",
+      "status": "failed",
+      "sourceChangedDuringRun": false
+    },
+    {
+      "runId": "b886b755-723b-4d6d-bc35-0ab9422f8ad7",
+      "status": "failed",
+      "sourceChangedDuringRun": false
+    }
+  ],
+  "startedAt": "2026-09-26T11:50:09.879Z",
+  "passed": true,
+  "finishedAt": "2026-09-26T11:50:36.314Z"
+}

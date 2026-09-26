@@ -78,20 +78,22 @@ Read-only packaging and `MING_PUBLIC_DEMO=1` startup use `docs/judge-evidence`. 
 
 ## Validation and delivery
 
+The latest [functional completeness review](docs/FUNCTIONAL_COMPLETENESS_REVIEW.md) goes beyond the visual audit: it records reproduced defects, fixes, current checks and the limits of the local workflow. In particular, evidence now survives cancellation/restart, screenshots cannot collide across criterion IDs, the editor accepts valid empty-value checks, and bounded AI handoffs retain late failures.
+
 The new English Shipboard recording passed **21/21 evidence checks**, including strict repair verification, English-only judge-facing records, and preservation of the old evidence. Its 390px application capture also showed no horizontal overflow or browser errors. These validate the captured application and repair, not every interaction in the new Evidence Studio.
 
-The current English own-project workflow passed **32/32 browser checks**, including registration, PRD upload, manual plans, real acceptance, versioning, history, reload recovery and cancellation. Fresh English suites also passed: **13 provider, 36 backend integration, 13 runner, 32 repair-integrity, and 16 actual-SDK MCP/report checks**. No Bob or commercial model calls were made.
+The English own-project workflow covers registration, PRD upload, manual plans, real acceptance, versioning, history, reload recovery and cancellation. Current validation reports and exact remaining limits are maintained in the [functional review](docs/FUNCTIONAL_COMPLETENESS_REVIEW.md). No Bob or commercial model calls were made in that audit.
 
-The current Evidence Studio and compiled read-only viewer passed **47/47 checks**, covering recorded playback, focus, keyboard commands, direct image-slider interaction, original evidence identity and 390px layout. No browser errors, missing resources, external requests or mutation requests were observed. See the [Studio review](docs/evidence/english-studio/review-report.json) and [own-project review](docs/evidence/english-product-ui/review-report.json). Full type checking, the production build and **7 Worker unit tests** also passed.
+The current Evidence Studio and compiled read-only viewer passed **50/50 checks**, covering recorded playback, focus, keyboard commands, direct image-slider interaction, original evidence identity and 390px layout. No browser errors, missing resources, external requests or mutation requests were observed. See the [current Studio report](docs/evidence/functional-review/evidence-studio.json). The [earlier Studio review](docs/evidence/english-studio/review-report.json) remains its visual-release checkpoint.
 
 ```text
 pnpm typecheck
-pnpm build
-pnpm --filter @ming/server exec ts-node src/provider/provider-settings.test.ts
-node apps/web/src/components/ProviderSettings.smoke.mjs
-node scripts/review-product-runner.mjs
-node scripts/review-real-targets.mjs
+pnpm test
+pnpm test:integration
+pnpm test:ui
 ```
+
+`pnpm test` builds the workspace first, then runs the actual MCP, runner, provider and read-only adapter suites. Integration and UI checks use that compiled build, isolated test applications and their own runtime folders; they do not call Bob or a commercial model.
 
 IBM Bob built the initial runner, evidence/history, provider, plan validation/confirmation and repair/MCP foundations. After its trial quota ended, the user authorized **Codex** to complete and extend the application, including the new project workflow and model settings. [Original Bob session summaries](bob_sessions/README.md) remain unchanged; Codex's work and the recorded source repair are not attributed to Bob.
 
