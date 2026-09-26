@@ -6,13 +6,15 @@
   "scripts": {
     "build": "pnpm -r run build",
     "typecheck": "pnpm -r run typecheck",
-    "test": "pnpm -r run test"
+    "test": "pnpm -r run test",
+    "start": "node scripts/start.mjs"
   },
   "devDependencies": {
     "typescript": "^5.4.5"
   },
   "engines": {
-    "node": ">=18",
-    "pnpm": ">=9"
-  }
+    "node": ">=24",
+    "pnpm": ">=11"
+  },
+  "packageManager": "pnpm@11.2.2"
 }

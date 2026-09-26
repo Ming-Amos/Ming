@@ -1,5 +1,7 @@
 # Ming 本届比赛提交清单
 
+> 2026-09-26 实施更新：以下保留原始准备清单。已制作材料和最新完成情况请看 [DELIVERY_STATUS.md](DELIVERY_STATUS.md) 与 [submission/fields.md](submission/fields.md)；原文“待办”不是最新交付状态。
+
 更新：2026-09-25。来源：用户本轮提供的六张 IBM Bob 2.0 Hackathon 提交页面截图，已保存在 `research/submission-requirements-20260925/`。下文区分截图明确要求、我们的安排、尚未明确的细则。本文件是准备清单，不表示材料已经制作或提交。
 
 ## 1. 已明确的提交项目

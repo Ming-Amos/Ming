@@ -16,7 +16,6 @@ import {
   RepairTaskRecord,
   RepairTaskStatus,
   FailedCriteriaSummary,
-  RepairComparison,
 } from "@ming/contracts";
 import { PlanRunner, computeFingerprint } from "@ming/runner";
 import { getProviderStatus, createLiveTransport } from "./provider/index";
@@ -24,6 +23,7 @@ import { TestFixtureTransport, buildEndpointUrl } from "./provider/openai-transp
 import { inspectPage } from "./inspector/page-inspector";
 import { validateDraftPlan } from "./validator/draft-validator";
 import type { ProviderTransport } from "./provider/types";
+import { compareRepair, planIntegrity } from "./repair-integrity";
 
 // Allow injecting a test transport (used by integration tests via MING_TEST_TRANSPORT env)
 // The test transport is set at module level by the integration test harness.
@@ -36,16 +36,43 @@ function getTransport(): ProviderTransport | null {
 }
 
 const app: Application = express();
-app.use(cors());
+function trustedBrowserOrigin(origin: string): boolean {
+  if (process.env.MING_PUBLIC_DEMO === "1") return true; // Public evidence is intentionally readable.
+  try {
+    const parsed = new URL(origin);
+    return parsed.protocol === "http:" && ["localhost", "127.0.0.1", "[::1]"].includes(parsed.hostname) &&
+      ["4000", String(PORT)].includes(parsed.port) && parsed.origin === origin;
+  } catch { return false; }
+}
+app.use((req, res, next) => {
+  const isApi = req.path.startsWith("/api/") || req.path.startsWith("/admin/");
+  const origin = req.headers.origin;
+  let localHost = false;
+  try { localHost = ["localhost", "127.0.0.1", "[::1]"].includes(new URL(`http://${req.headers.host}`).hostname); } catch { /* Invalid host. */ }
+  if (process.env.MING_PUBLIC_DEMO !== "1" && isApi &&
+      (!localHost || (origin !== undefined && !trustedBrowserOrigin(origin)) || (!origin && req.headers["sec-fetch-site"] === "cross-site"))) {
+    res.status(403).json({ ok: false, error: "仅允许本机 Ming 页面或本地工具访问此开发接口。" });
+    return;
+  }
+  next();
+});
+app.use(cors({ origin: (origin, callback) => callback(null, !origin || trustedBrowserOrigin(origin)) }));
 app.use(express.json());
+app.use((req, res, next) => {
+  if (process.env.MING_PUBLIC_DEMO === "1" && !["GET", "HEAD", "OPTIONS"].includes(req.method)) {
+    res.status(403).json({ ok: false, error: "此公开演示仅展示已记录的真实运行。请在本地启动 Ming 执行新验收。" });
+    return;
+  }
+  next();
+});
 
 // ── 路径配置 ──────────────────────────────────────────────────────
 const PROJECT_ROOT = path.resolve(__dirname, "../../..");
-const RUNTIME_DIR = path.join(PROJECT_ROOT, "runtime");
+const RUNTIME_DIR = process.env.MING_RUNTIME_DIR ? path.resolve(process.env.MING_RUNTIME_DIR) : path.join(PROJECT_ROOT, "runtime");
+const PORT = parseInt(process.env.PORT ?? "4001", 10);
 const RUNS_DIR = path.join(RUNTIME_DIR, "runs");
 const SCREENSHOTS_DIR = path.join(RUNTIME_DIR, "screenshots");
 const FIXTURES_DIR = path.join(PROJECT_ROOT, "fixtures");
-const EXAMPLES_DIR = path.join(PROJECT_ROOT, "examples", "daily-report");
 
 // Stage B data dirs
 const PROJECTS_DIR = path.join(RUNTIME_DIR, "projects");
@@ -56,16 +83,33 @@ const CONFIRMATIONS_DIR = path.join(RUNTIME_DIR, "confirmations");
 const REPAIR_TASKS_DIR = path.join(RUNTIME_DIR, "repair-tasks");
 
 // 允许的目标地址（限制只能访问本机样例，不提供任意URL执行端点）
-const ALLOWED_VARIANTS: Record<string, { url: string; htmlPath: string }> = {
-  normal: {
-    url: "http://localhost:4001/normal",
-    htmlPath: path.join(EXAMPLES_DIR, "normal", "index.html"),
-  },
-  buggy: {
-    url: "http://localhost:4001/buggy",
-    htmlPath: path.join(EXAMPLES_DIR, "buggy", "index.html"),
-  },
-};
+interface RegisteredTarget { url: string; htmlPath: string; label: string; planPath: string; route: string }
+const ALLOWED_VARIANTS: Record<string, RegisteredTarget> = Object.create(null) as Record<string, RegisteredTarget>;
+function resolveRepoFile(relativePath: string): string {
+  if (typeof relativePath !== "string" || path.isAbsolute(relativePath)) throw new Error("Registry paths must be repo-relative");
+  const resolved = path.resolve(PROJECT_ROOT, relativePath);
+  const relative = path.relative(PROJECT_ROOT, resolved);
+  if (!relative || relative.startsWith("..") || path.isAbsolute(relative)) throw new Error("Registry path escapes repository");
+  return resolved;
+}
+const registryPath = process.env.MING_TARGET_REGISTRY ? path.resolve(process.env.MING_TARGET_REGISTRY) : path.join(FIXTURES_DIR, "targets.json");
+const defaultTargets = [
+  { variant: "normal", route: "/normal", label: "日报 · 正常示例", htmlPath: "examples/daily-report/normal/index.html", planPath: "fixtures/stage-a-plan.json" },
+  { variant: "buggy", route: "/buggy", label: "日报 · 缺陷示例", htmlPath: "examples/daily-report/buggy/index.html", planPath: "fixtures/stage-a-plan.json" },
+];
+const registry: typeof defaultTargets = fs.existsSync(registryPath) ? JSON.parse(fs.readFileSync(registryPath, "utf-8")) : defaultTargets;
+const registeredRoutes = new Set<string>();
+for (const entry of registry) {
+  if (!/^[a-z][a-z0-9-]{0,63}$/.test(entry.variant) || !/^\/[a-z][a-z0-9-]{0,63}$/.test(entry.route) ||
+      ["/api", "/admin"].includes(entry.route) || ALLOWED_VARIANTS[entry.variant] || registeredRoutes.has(entry.route)) {
+    throw new Error("Invalid or duplicate target registration");
+  }
+  registeredRoutes.add(entry.route);
+  ALLOWED_VARIANTS[entry.variant] = {
+    url: `http://localhost:${PORT}${entry.route}`, htmlPath: resolveRepoFile(entry.htmlPath), label: entry.label,
+    planPath: resolveRepoFile(entry.planPath ?? "fixtures/stage-a-plan.json"), route: entry.route,
+  };
+}
 
 // ── 目录初始化 ────────────────────────────────────────────────────
 [RUNS_DIR, SCREENSHOTS_DIR, PROJECTS_DIR, REQUIREMENTS_DIR, DRAFTS_DIR, CONFIRMATIONS_DIR, REPAIR_TASKS_DIR]
@@ -88,6 +132,7 @@ function saveRun(record: RunRecord): void {
 }
 
 function loadRun(runId: string): RunRecord | null {
+  if (!/^[a-zA-Z0-9_-]+$/.test(runId)) return null;
   const filePath = path.join(RUNS_DIR, `${runId}.json`);
   if (!fs.existsSync(filePath)) return null;
   try {
@@ -113,8 +158,8 @@ function listRuns(): RunRecord[] {
 }
 
 // ── 加载计划 ─────────────────────────────────────────────────────
-function loadPlan(): AcceptancePlan {
-  const planPath = path.join(FIXTURES_DIR, "stage-a-plan.json");
+function loadPlan(variant = "normal"): AcceptancePlan {
+  const planPath = ALLOWED_VARIANTS[variant]?.planPath ?? path.join(FIXTURES_DIR, "stage-a-plan.json");
   const raw = JSON.parse(fs.readFileSync(planPath, "utf-8")) as AcceptancePlan;
   raw.fingerprint = computeFingerprint(raw);
   return raw;
@@ -135,9 +180,52 @@ function saveJson<T>(dir: string, id: string, data: T): void {
   fs.writeFileSync(path.join(dir, `${id}.json`), JSON.stringify(data, null, 2), "utf-8");
 }
 function loadJson<T>(dir: string, id: string): T | null {
+  if (typeof id !== "string" || !/^[a-zA-Z0-9_-]+$/.test(id)) return null;
   const p = path.join(dir, `${id}.json`);
   if (!fs.existsSync(p)) return null;
   try { return JSON.parse(fs.readFileSync(p, "utf-8")) as T; } catch { return null; }
+}
+
+function validateConfirmation(confirmation: ConfirmationRecord): string | null {
+  const plan = confirmation.planSnapshot;
+  const draft = loadJson<DraftRecord>(DRAFTS_DIR, confirmation.draftId);
+  const requirement = loadJson<RequirementRecord>(REQUIREMENTS_DIR, confirmation.requirementId);
+  const project = loadJson<ProjectRecord>(PROJECTS_DIR, confirmation.projectId);
+  if (!planIntegrity(plan, confirmation.planFingerprint) || plan.planId !== confirmation.planId || plan.version !== confirmation.planVersion) {
+    return "确认计划快照内容或指纹不一致";
+  }
+  if (!draft || !requirement || !project || draft.draftId !== confirmation.draftId ||
+      project.projectId !== confirmation.projectId || requirement.requirementId !== confirmation.requirementId ||
+      draft.projectId !== project.projectId || draft.requirementId !== requirement.requirementId || requirement.projectId !== project.projectId ||
+      plan.projectId !== project.projectId || plan.requirementId !== requirement.requirementId || plan.originalRequirement !== requirement.text ||
+      !planIntegrity(draft.plan, confirmation.planFingerprint) || project.targetVariant !== confirmation.targetVariant ||
+      project.targetUrl !== ALLOWED_VARIANTS[confirmation.targetVariant]?.url) {
+    return "确认、草稿、原始需求、项目或目标的关联不一致";
+  }
+  const errors = validateDraftPlan(plan);
+  if (errors.length || plan.criteria.some(c => c.openQuestions?.some(q => q.trim()))) return "确认计划仍存在校验错误或待确认问题";
+  return null;
+}
+
+function resolveRunPlan(run: RunRecord): AcceptancePlan {
+  const cfg = ALLOWED_VARIANTS[run.targetVariant];
+  if (!cfg || cfg.url !== run.targetUrl) throw new Error("基准运行目标不再匹配已登记目标");
+  let plan: AcceptancePlan;
+  if (run.confirmationId) {
+    const confirmation = loadJson<ConfirmationRecord>(CONFIRMATIONS_DIR, run.confirmationId);
+    if (!confirmation || confirmation.confirmationId !== run.confirmationId) throw new Error("原始确认记录缺失");
+    const error = validateConfirmation(confirmation);
+    if (error) throw new Error(error);
+    if (run.requirementId !== confirmation.requirementId || run.targetVariant !== confirmation.targetVariant) throw new Error("运行与确认记录关联不一致");
+    plan = confirmation.planSnapshot;
+  } else {
+    if (run.requirementId) throw new Error("缺少确认记录，不能作为夹具运行处理");
+    plan = run.planSnapshot ?? loadPlan(run.targetVariant);
+    if (plan.source !== "fixture" || plan.projectId || plan.requirementId) throw new Error("无确认记录的运行必须来自明确的夹具计划");
+  }
+  if (!planIntegrity(plan, run.planFingerprint) || plan.planId !== run.planId || plan.version !== run.planVersion ||
+      (run.planSnapshot && !planIntegrity(run.planSnapshot, run.planFingerprint))) throw new Error("原始运行计划的内容、标识或版本不匹配");
+  return JSON.parse(JSON.stringify(plan)) as AcceptancePlan;
 }
 
 // ── 启动运行的内部函数（Stage A 和 Stage B 共用） ────────────────
@@ -147,14 +235,20 @@ function launchRun(opts: {
   targetCfg: { url: string; htmlPath: string };
   confirmationId?: string;
   requirementId?: string;
+  capturedTarget?: TargetConfig;
 }): string {
   const { plan, variant, targetCfg, confirmationId, requirementId } = opts;
   const runId = uuidv4();
-  const target: TargetConfig = {
-    variant,
-    url: targetCfg.url,
-    fingerprint: computeTargetFingerprint(targetCfg.htmlPath),
+  const htmlSnapshot = opts.capturedTarget?.htmlSnapshot ?? fs.readFileSync(targetCfg.htmlPath, "utf-8");
+  const target: TargetConfig = opts.capturedTarget ?? {
+    variant, url: targetCfg.url, fingerprint: computeFingerprint(htmlSnapshot), htmlSnapshot,
   };
+  let sourceChanged = false;
+  const watcher = fs.watch(path.dirname(targetCfg.htmlPath), (_event, filename) => {
+    if (!filename || filename.toString() === path.basename(targetCfg.htmlPath)) sourceChanged = true;
+  });
+  watcher.on("error", () => { sourceChanged = true; });
+  if (computeTargetFingerprint(targetCfg.htmlPath) !== target.fingerprint) sourceChanged = true;
   const uniqueContent = `Ming测试-${variant}-${Date.now()}`;
 
   liveProgress.set(runId, {
@@ -176,6 +270,7 @@ function launchRun(opts: {
         },
       });
       const record = await runner.run(plan, target, uniqueContent);
+      record.sourceChangedDuringRun = sourceChanged || computeTargetFingerprint(targetCfg.htmlPath) !== target.fingerprint;
       // Attach Stage B linkage
       if (confirmationId) record.confirmationId = confirmationId;
       if (requirementId) record.requirementId = requirementId;
@@ -208,10 +303,14 @@ function launchRun(opts: {
         fatalError,
         confirmationId,
         requirementId,
+        planSnapshot: plan,
+        sourceBinding: "self-contained-html-snapshot",
+        sourceChangedDuringRun: sourceChanged || computeTargetFingerprint(targetCfg.htmlPath) !== target.fingerprint,
       };
       saveRun(errorRecord);
       return errorRecord;
     } finally {
+      watcher.close();
       runningJobs.delete(runId);
       liveProgress.delete(runId);
     }
@@ -222,11 +321,16 @@ function launchRun(opts: {
 }
 
 // ── API 路由 ─────────────────────────────────────────────────────
+app.get("/api/capabilities", (_req: Request, res: Response) => {
+  res.json({ ok: true, readOnly: process.env.MING_PUBLIC_DEMO === "1", sourceBinding: "self-contained-html-snapshot" });
+});
 
 // GET /api/plan  返回固定计划（含真实指纹）
-app.get("/api/plan", (_req: Request, res: Response) => {
+app.get("/api/plan", (req: Request, res: Response) => {
   try {
-    const plan = loadPlan();
+    const variant = typeof req.query.variant === "string" ? req.query.variant : "normal";
+    if (!ALLOWED_VARIANTS[variant]) { res.status(400).json({ ok: false, error: "未知目标" }); return; }
+    const plan = loadPlan(variant);
     res.json({ ok: true, plan });
   } catch (err: unknown) {
     res.status(500).json({ ok: false, error: String(err) });
@@ -238,7 +342,7 @@ app.get("/api/targets", (_req: Request, res: Response) => {
   const targets = Object.entries(ALLOWED_VARIANTS).map(([variant, cfg]) => ({
     variant,
     url: cfg.url,
-    label: variant === "normal" ? "正常版（localStorage持久化）" : "预置缺陷版（刷新后丢失）",
+    label: cfg.label,
     fingerprint: computeTargetFingerprint(cfg.htmlPath),
   }));
   res.json({ ok: true, targets });
@@ -272,7 +376,7 @@ app.post("/api/run", (req: Request, res: Response) => {
 
   let plan: AcceptancePlan;
   try {
-    plan = loadPlan();
+    plan = loadPlan(variant);
   } catch (err: unknown) {
     res.status(500).json({ ok: false, error: `计划加载失败：${String(err)}` });
     return;
@@ -442,6 +546,10 @@ app.get("/api/projects/:projectId", (req: Request, res: Response) => {
 
 // GET /api/projects/:projectId/context  检查目标页面结构
 app.get("/api/projects/:projectId/context", async (req: Request, res: Response) => {
+  if (process.env.MING_PUBLIC_DEMO === "1") {
+    res.status(403).json({ ok: false, error: "公开演示仅提供已保存证据，不执行新的浏览器检查。" });
+    return;
+  }
   const project = loadJson<ProjectRecord>(PROJECTS_DIR, req.params.projectId);
   if (!project) { res.status(404).json({ ok: false, error: "项目不存在" }); return; }
   const targetCfg = ALLOWED_VARIANTS[project.targetVariant];
@@ -620,7 +728,7 @@ app.post("/api/confirm", (req: Request, res: Response) => {
   if (!draft) { res.status(404).json({ ok: false, error: "草稿不存在" }); return; }
 
   // Validate fingerprint match (ensures user confirmed the exact displayed plan)
-  if (draft.plan.fingerprint !== displayedPlanFingerprint) {
+  if (!planIntegrity(draft.plan, displayedPlanFingerprint)) {
     res.status(400).json({
       ok: false,
       error: `指纹不匹配（展示：${displayedPlanFingerprint}，草稿：${draft.plan.fingerprint}）`,
@@ -662,6 +770,8 @@ app.post("/api/confirm", (req: Request, res: Response) => {
     confirmedAt: new Date().toISOString(),
     planSnapshot: draft.plan,
   };
+  const integrityError = validateConfirmation(confirmation);
+  if (integrityError) { res.status(422).json({ ok: false, error: integrityError }); return; }
   saveJson(CONFIRMATIONS_DIR, confirmationId, confirmation);
 
   res.json({ ok: true, confirmation });
@@ -695,6 +805,8 @@ app.post("/api/run-confirmed", (req: Request, res: Response) => {
     return;
   }
 
+  const integrityError = validateConfirmation(confirmation);
+  if (integrityError) { res.status(422).json({ ok: false, error: integrityError }); return; }
   // Re-validate plan at run boundary (plan snapshot is immutable, but re-check for safety)
   const errors = validateDraftPlan(confirmation.planSnapshot);
   if (errors.length > 0) {
@@ -761,46 +873,9 @@ app.post("/api/repair-tasks", (req: Request, res: Response) => {
     return;
   }
 
-  // ── Blocker 1: resolve original plan snapshot ──────────────────
-  // For Stage B runs (have confirmationId): load immutable confirmation snapshot.
-  // For Stage A fixture runs (no confirmationId): load current fixture and verify fingerprint.
-  // Reject if the plan fingerprint stored in the run doesn't match the snapshot we resolved.
   let planSnapshot: AcceptancePlan;
-  if (run.confirmationId) {
-    const confirmation = loadJson<ConfirmationRecord>(CONFIRMATIONS_DIR, run.confirmationId);
-    if (!confirmation) {
-      res.status(422).json({
-        ok: false,
-        error: `基准运行引用的确认记录 ${run.confirmationId} 不存在，无法恢复计划快照`,
-      });
-      return;
-    }
-    planSnapshot = confirmation.planSnapshot;
-    // Confirm fingerprint integrity
-    if (planSnapshot.fingerprint !== run.planFingerprint) {
-      res.status(422).json({
-        ok: false,
-        error: `确认记录计划指纹 ${planSnapshot.fingerprint} 与运行记录 ${run.planFingerprint} 不符，无法创建修复任务`,
-      });
-      return;
-    }
-  } else {
-    // Stage A fixture baseline — load current fixture
-    try {
-      planSnapshot = loadPlan();
-    } catch (err) {
-      res.status(500).json({ ok: false, error: `加载夹具计划失败: ${String(err)}` });
-      return;
-    }
-    // Verify the fixture fingerprint still matches what the run recorded
-    if (planSnapshot.fingerprint !== run.planFingerprint) {
-      res.status(422).json({
-        ok: false,
-        error: `当前夹具计划指纹 ${planSnapshot.fingerprint} 与基准运行记录的指纹 ${run.planFingerprint} 不符，计划已变更，需重新运行基准`,
-      });
-      return;
-    }
-  }
+  try { planSnapshot = resolveRunPlan(run); }
+  catch (err) { res.status(422).json({ ok: false, error: String(err) }); return; }
 
   // ── Blocker 2: require known runner fingerprint ─────────────────
   // The run must have a known (non-"unknown") runnerFingerprint for the repair task to carry
@@ -868,6 +943,7 @@ app.post("/api/repair-tasks", (req: Request, res: Response) => {
     executionErrors,
     reproductionSteps,
     status: "waiting",
+    attemptCount: 0, maxAttempts: 2, attemptRunIds: [],
     createdAt: now,
     updatedAt: now,
   };
@@ -926,6 +1002,11 @@ app.post("/api/repair-tasks/:taskId/claim", (req: Request, res: Response) => {
     return;
   }
 
+  if ((task.status === "failed" || task.status === "error") && task.claimedBy === owner && (task.attemptCount ?? 0) < 2) {
+    const updated: RepairTaskRecord = { ...task, status: "claimed", updatedAt: new Date().toISOString() };
+    saveJson(REPAIR_TASKS_DIR, task.taskId, updated);
+    res.json({ ok: true, task: updated }); return;
+  }
   if (task.status !== "waiting") {
     res.status(400).json({
       ok: false,
@@ -960,6 +1041,7 @@ app.post("/api/repair-tasks/:taskId/rerun", (req: Request, res: Response) => {
     return;
   }
 
+  if ((task.attemptCount ?? 0) >= 2) { res.status(409).json({ ok: false, error: "最多允许两次修复重跑，请检查证据后重新规划" }); return; }
   // Prevent duplicate concurrent reruns
   if (task.rerunId && runningJobs.has(task.rerunId)) {
     res.status(409).json({
@@ -990,7 +1072,10 @@ app.post("/api/repair-tasks/:taskId/rerun", (req: Request, res: Response) => {
   }
 
   // Compute current source fingerprint and validate it matches the caller's expectation
-  const currentTargetFingerprint = computeTargetFingerprint(targetCfg.htmlPath);
+  let capturedHtml: string;
+  try { capturedHtml = fs.readFileSync(targetCfg.htmlPath, "utf-8"); }
+  catch { res.status(422).json({ ok: false, error: "无法读取目标源文件" }); return; }
+  const currentTargetFingerprint = computeFingerprint(capturedHtml);
   if (currentTargetFingerprint === "unknown") {
     res.status(422).json({
       ok: false,
@@ -1008,16 +1093,19 @@ app.post("/api/repair-tasks/:taskId/rerun", (req: Request, res: Response) => {
     return;
   }
 
-  // ── Blocker 1: use the immutable planSnapshot stored in the task ───
   const plan = task.planSnapshot;
-  // Double-check fingerprint integrity (planSnapshot.fingerprint was stored at task creation)
-  if (plan.fingerprint !== task.planFingerprint) {
-    res.status(422).json({
-      ok: false,
-      error: `任务内存储的计划快照指纹 ${plan.fingerprint} 与任务基准指纹 ${task.planFingerprint} 不符，数据损坏，拒绝重跑`,
-    });
-    return;
-  }
+  const baseline = loadRun(task.baselineRunId);
+  try {
+    if (!baseline) throw new Error("基准运行不存在");
+    const originalPlan = resolveRunPlan(baseline);
+    if (!planIntegrity(plan, task.planFingerprint) || originalPlan.fingerprint !== task.planFingerprint ||
+        task.planId !== baseline.planId || task.planVersion !== baseline.planVersion ||
+        task.targetVariant !== baseline.targetVariant || task.targetUrl !== baseline.targetUrl || task.targetUrl !== targetCfg.url ||
+        task.confirmationId !== baseline.confirmationId || task.requirementId !== baseline.requirementId ||
+        task.baselineTargetFingerprint !== baseline.targetFingerprint || task.baselineRunnerFingerprint !== baseline.runnerFingerprint) {
+      throw new Error("修复任务与原始基准的计划或来源不一致");
+    }
+  } catch (err) { res.status(422).json({ ok: false, error: String(err) }); return; }
 
   const runId = launchRun({
     plan,
@@ -1025,6 +1113,7 @@ app.post("/api/repair-tasks/:taskId/rerun", (req: Request, res: Response) => {
     targetCfg,
     confirmationId: task.confirmationId,
     requirementId: task.requirementId,
+    capturedTarget: { variant: task.targetVariant, url: targetCfg.url, fingerprint: currentTargetFingerprint, htmlSnapshot: capturedHtml },
   });
 
   const now = new Date().toISOString();
@@ -1033,6 +1122,9 @@ app.post("/api/repair-tasks/:taskId/rerun", (req: Request, res: Response) => {
     status: "rerunning",
     rerunId: runId,
     repairedTargetFingerprint: currentTargetFingerprint, // bound at launch time
+    attemptCount: (task.attemptCount ?? 0) + 1,
+    maxAttempts: 2,
+    attemptRunIds: [...(task.attemptRunIds ?? []), runId],
     updatedAt: now,
   };
   saveJson(REPAIR_TASKS_DIR, task.taskId, updated);
@@ -1044,14 +1136,18 @@ app.post("/api/repair-tasks/:taskId/rerun", (req: Request, res: Response) => {
       const latest = loadJson<RepairTaskRecord>(REPAIR_TASKS_DIR, task.taskId);
       if (!latest || latest.rerunId !== runId) return; // stale
 
+      const base = loadRun(latest.baselineRunId);
+      const comparison = base ? compareRepair(latest, base, record) : null;
       let newStatus: RepairTaskStatus;
-      if (record.status === "passed") newStatus = "passed";
+      if (comparison?.verifiedRepair) newStatus = "passed";
+      else if ((latest.attemptCount ?? 0) >= 2) newStatus = "blocked";
       else if (record.status === "error") newStatus = "error";
       else newStatus = "failed";
 
       saveJson(REPAIR_TASKS_DIR, task.taskId, {
         ...latest,
         status: newStatus,
+        blockedReason: newStatus === "blocked" ? "两次修复尝试后仍未验证通过，请人工检查失败证据。" : undefined,
         updatedAt: new Date().toISOString(),
       });
     }).catch(() => {
@@ -1100,99 +1196,7 @@ app.get("/api/repair-tasks/:taskId/comparison", (req: Request, res: Response) =>
     return;
   }
 
-  // ── Build strict comparison (Blocker 2 fix) ────────────────────
-  const blockers: string[] = [];
-
-  // Plan fingerprint must match
-  const planFingerprintMatch = baseline.planFingerprint === rerun.planFingerprint;
-  if (!planFingerprintMatch) {
-    blockers.push(`计划指纹不同：基准 ${baseline.planFingerprint.slice(0,12)}… vs 重跑 ${rerun.planFingerprint.slice(0,12)}…`);
-  }
-
-  // Runner fingerprint: both must be known (non-"unknown") and equal
-  const blRunnerFp = task.baselineRunnerFingerprint ?? baseline.runnerFingerprint ?? "unknown";
-  const rerunRunnerFp = rerun.runnerFingerprint ?? "unknown";
-  const runnerFingerprintKnown = blRunnerFp !== "unknown" && rerunRunnerFp !== "unknown";
-  const runnerFingerprintMatch = runnerFingerprintKnown && blRunnerFp === rerunRunnerFp;
-
-  if (!runnerFingerprintKnown) {
-    blockers.push(
-      `runner 指纹未知（基准: ${blRunnerFp}, 重跑: ${rerunRunnerFp}），无法声明已验证修复。` +
-      `请重新运行基准和重跑以获取已知 runner 指纹。`
-    );
-  } else if (!runnerFingerprintMatch) {
-    blockers.push(`runner 指纹不同：基准 ${blRunnerFp} vs 重跑 ${rerunRunnerFp}`);
-  }
-
-  // Target identity
-  const targetIdentityMatch = baseline.targetVariant === rerun.targetVariant &&
-    baseline.targetUrl === rerun.targetUrl;
-  if (!targetIdentityMatch) {
-    blockers.push(`目标身份不同：基准 ${baseline.targetVariant}@${baseline.targetUrl} vs 重跑 ${rerun.targetVariant}@${rerun.targetUrl}`);
-  }
-
-  // Source fingerprint — must be known (stored at rerun launch time, Blocker 3)
-  const repairedTargetFingerprint = task.repairedTargetFingerprint ?? "unknown";
-  const sourceFingerprintKnown =
-    task.baselineTargetFingerprint !== "unknown" && repairedTargetFingerprint !== "unknown";
-  const targetFingerprintChanged = task.baselineTargetFingerprint !== repairedTargetFingerprint;
-
-  if (!sourceFingerprintKnown) {
-    blockers.push(`目标源码指纹未知（基准: ${task.baselineTargetFingerprint}, 修复后: ${repairedTargetFingerprint}），无法声明已验证修复`);
-  }
-
-  // fatalError check — a run that errored at OS/transport level cannot count as verified repair
-  if (rerun.fatalError) {
-    blockers.push(`重跑存在致命执行错误: ${rerun.fatalError}`);
-  }
-
-  // Criteria comparison
-  const baselineFailedIds = new Set(
-    baseline.criteria
-      .filter((c) => c.status === "failed" || c.status === "error" || c.status === "blocked")
-      .map((c) => c.criteriaId)
-  );
-  const rerunPassedIds = new Set(
-    rerun.criteria.filter((c) => c.status === "passed").map((c) => c.criteriaId)
-  );
-  const rerunFailedIds = new Set(
-    rerun.criteria
-      .filter((c) => c.status === "failed" || c.status === "error" || c.status === "blocked")
-      .map((c) => c.criteriaId)
-  );
-
-  const previouslyFailedNowPassed = [...baselineFailedIds].filter((id) => rerunPassedIds.has(id));
-  const previouslyFailedStillFailing = [...baselineFailedIds].filter((id) => rerunFailedIds.has(id));
-  const newFailures = [...rerunFailedIds].filter((id) => !baselineFailedIds.has(id));
-
-  // verifiedRepair: terminal "passed" status (no fatalError), all criteria passed,
-  // known matching plan/runner fingerprints, target identity match, known source fingerprints,
-  // no blockers.
-  const allPassed = rerun.status === "passed" &&
-    rerun.criteria.every((c) => c.status === "passed") &&
-    !rerun.fatalError;
-  const verifiedRepair = allPassed && blockers.length === 0;
-
-  const comparison: RepairComparison = {
-    taskId: task.taskId,
-    baselineRunId: task.baselineRunId,
-    rerunId: task.rerunId,
-    planFingerprintMatch,
-    runnerFingerprintMatch,
-    runnerFingerprintKnown,
-    targetIdentityMatch,
-    targetFingerprintChanged,
-    sourceFingerprintKnown,
-    baselineTargetFingerprint: task.baselineTargetFingerprint,
-    repairedTargetFingerprint,
-    baselineRunnerFingerprint: blRunnerFp,
-    rerunRunnerFingerprint: rerunRunnerFp,
-    previouslyFailedNowPassed,
-    previouslyFailedStillFailing,
-    newFailures,
-    verifiedRepair,
-    blockers,
-  };
+  const comparison = compareRepair(task, baseline, rerun);
 
   res.json({ ok: true, comparison });
 });
@@ -1275,8 +1279,17 @@ app.get("/admin/test-endpoint-url", (req: Request, res: Response) => {
 });
 
 // ── 静态文件服务（玩具日报样例） ──────────────────────────────────
-app.use("/normal", express.static(path.join(EXAMPLES_DIR, "normal")));
-app.use("/buggy", express.static(path.join(EXAMPLES_DIR, "buggy")));
+for (const cfg of Object.values(ALLOWED_VARIANTS)) {
+  app.get(cfg.route, (_req: Request, res: Response) => res.sendFile(cfg.htmlPath));
+}
+const webDist = path.join(PROJECT_ROOT, "apps", "web", "dist");
+if (fs.existsSync(path.join(webDist, "index.html"))) {
+  app.use(express.static(webDist));
+  app.get("*", (req: Request, res: Response) => {
+    if (req.path.startsWith("/api/") || req.path.startsWith("/admin/")) { res.status(404).json({ ok: false, error: "Not found" }); return; }
+    res.sendFile(path.join(webDist, "index.html"));
+  });
+}
 
 // ── 错误处理 ──────────────────────────────────────────────────────
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
@@ -1284,8 +1297,7 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   res.status(500).json({ ok: false, error: err.message });
 });
 
-const PORT = parseInt(process.env.PORT ?? "4001", 10);
-app.listen(PORT, "127.0.0.1", () => {
+app.listen(PORT, process.env.HOST ?? "127.0.0.1", () => {
   console.log(`[Ming Server] 已启动：http://127.0.0.1:${PORT}`);
   console.log(`  日报样例（正常版）：http://127.0.0.1:${PORT}/normal`);
   console.log(`  日报样例（缺陷版）：http://127.0.0.1:${PORT}/buggy`);

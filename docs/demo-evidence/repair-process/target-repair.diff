@@ -1,0 +1,49 @@
+diff --git a/runtime/demo-proof/before.html b/runtime/demo-proof/after.html
+index 710408f..6f3a754 100644
+--- a/runtime/demo-proof/before.html
++++ b/runtime/demo-proof/after.html
+@@ -3,7 +3,7 @@
+ <head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+-  <title>日报系统（预置缺陷版）</title>
++  <title>日报系统（修复工作区）</title>
+   <style>
+     body { font-family: system-ui, sans-serif; max-width: 600px; margin: 40px auto; padding: 0 20px; background: #f8f9fa; }
+     h1 { font-size: 1.4rem; color: #1a1a2e; margin-bottom: 4px; }
+@@ -25,7 +25,7 @@
+ </head>
+ <body>
+   <h1>📋 日报系统</h1>
+-  <span class="badge">预置缺陷版 · 刷新后数据丢失</span>
++  <span class="badge">AI 修复工作区 · 本地验收样例</span>
+ 
+   <div class="form-area">
+     <label for="reportContent">日报内容</label>
+@@ -40,17 +40,20 @@
+   </div>
+ 
+   <script>
+-    // 预置缺陷：数据仅存于内存，刷新后丢失
+-    // BUG: should use localStorage but uses in-memory array instead
+-    var memoryReports = [];
++    // Codex repair: preserve reports across reloads in this target's browser context.
++    var storageKey = 'ming-repair-demo-reports';
+ 
+     function loadReports() {
+-      return memoryReports;
++      try {
++        var stored = JSON.parse(localStorage.getItem(storageKey) || '[]');
++        return Array.isArray(stored) ? stored : [];
++      } catch (_) {
++        return [];
++      }
+     }
+ 
+     function saveReports(reports) {
+-      memoryReports = reports;
+-      // 故意不持久化到 localStorage
++      localStorage.setItem(storageKey, JSON.stringify(reports));
+     }
+ 
+     function renderList() {

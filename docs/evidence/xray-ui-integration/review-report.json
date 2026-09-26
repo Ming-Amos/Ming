@@ -1,0 +1,192 @@
+{
+  "author": "Codex",
+  "reviewId": "cf8050fb-eca7-483f-8446-f2bc6db26482",
+  "startedAt": "2026-09-26T09:50:53.286Z",
+  "base": "http://127.0.0.1:4416",
+  "scope": "Real UI and browser runs; local explicitly labelled test transport; no live model or Bob calls; no sample source mutations",
+  "checks": [
+    {
+      "label": "Initial sample target is buggy",
+      "passed": true
+    },
+    {
+      "label": "Execution disabled until explicit confirmation",
+      "passed": true
+    },
+    {
+      "label": "Fixture provenance visible before execution",
+      "passed": true
+    },
+    {
+      "label": "Confirmation enables execution",
+      "passed": true
+    },
+    {
+      "label": "UI sends explicit plan confirmation",
+      "passed": true
+    },
+    {
+      "label": "Buggy browser run fails persistence only",
+      "passed": true
+    },
+    {
+      "label": "UI selects real AC-02 failure",
+      "passed": true
+    },
+    {
+      "label": "Buggy run: loaded screenshot URLs belong to displayed run",
+      "passed": true
+    },
+    {
+      "label": "Buggy run: actual PNG evidence is served",
+      "passed": true
+    },
+    {
+      "label": "Buggy run: actual PNG evidence is served",
+      "passed": true
+    },
+    {
+      "label": "Repair creation records waiting, not repaired",
+      "passed": true
+    },
+    {
+      "label": "English handoff includes exact task, baseline and plan",
+      "passed": true
+    },
+    {
+      "label": "UI makes agent handoff explicit",
+      "passed": true
+    },
+    {
+      "label": "Reload restores task status and baseline",
+      "passed": true
+    },
+    {
+      "label": "Reload retains prior confirmed sample plan for a matching rerun",
+      "passed": true
+    },
+    {
+      "label": "Restored baseline: loaded screenshot URLs belong to displayed run",
+      "passed": true
+    },
+    {
+      "label": "Restored baseline: actual PNG evidence is served",
+      "passed": true
+    },
+    {
+      "label": "Restored baseline: actual PNG evidence is served",
+      "passed": true
+    },
+    {
+      "label": "Narrow workspace has no horizontal page overflow",
+      "passed": true
+    },
+    {
+      "label": "Missing model returns explicit 503 without fallback",
+      "passed": true
+    },
+    {
+      "label": "Missing model message visible inside setup",
+      "passed": true
+    },
+    {
+      "label": "Draft retains test provenance and requirement",
+      "passed": true
+    },
+    {
+      "label": "UI labels generated test plan as non-live",
+      "passed": true
+    },
+    {
+      "label": "Draft exposes all three criteria for review",
+      "passed": true
+    },
+    {
+      "label": "Generated plan also cannot run before confirmation",
+      "passed": true
+    },
+    {
+      "label": "UI confirms the exact displayed fingerprint",
+      "passed": true
+    },
+    {
+      "label": "Confirmed generated test plan passes all real browser checks",
+      "passed": true
+    },
+    {
+      "label": "Real run links exact requirement and confirmation",
+      "passed": true
+    },
+    {
+      "label": "Generated plan run: loaded screenshot URLs belong to displayed run",
+      "passed": true
+    },
+    {
+      "label": "Generated plan run: actual PNG evidence is served",
+      "passed": true
+    },
+    {
+      "label": "Repeat acceptance remains enabled",
+      "passed": true
+    },
+    {
+      "label": "Rerun uses same confirmation but creates a new run",
+      "passed": true
+    },
+    {
+      "label": "Rerun passes same complete plan and runner",
+      "passed": true
+    },
+    {
+      "label": "First generated run evidence remains unchanged",
+      "passed": true
+    },
+    {
+      "label": "Generated rerun: loaded screenshot URLs belong to displayed run",
+      "passed": true
+    },
+    {
+      "label": "Generated rerun: actual PNG evidence is served",
+      "passed": true
+    },
+    {
+      "label": "History restores fixture target and provenance",
+      "passed": true
+    },
+    {
+      "label": "History does not borrow generated requirement",
+      "passed": true
+    },
+    {
+      "label": "Generated history restores matching target and provenance",
+      "passed": true
+    },
+    {
+      "label": "Generated history restores the original requirement text",
+      "passed": true
+    },
+    {
+      "label": "Generated confirmation and rerun ability survive reload",
+      "passed": true
+    },
+    {
+      "label": "No browser JavaScript exceptions",
+      "passed": true
+    },
+    {
+      "label": "Original buggy sample source was never changed",
+      "passed": true
+    }
+  ],
+  "ids": {
+    "buggyRun": "0ebf668c-047b-4c7d-b3f0-6bd6dbf0bf10",
+    "repairTask": "e1326af6-42dd-469d-a34c-1efad697d79d",
+    "draft": "2ed06ac0-c306-419d-8bf3-ef3345c92294",
+    "confirmation": "062de44c-3a38-4b61-91b2-250aaa8d2a75",
+    "generatedFirst": "30014ca4-a758-42ef-847f-6798084f7e68",
+    "generatedRerun": "da11f32a-ab64-4325-9881-cbddeb7ec6a2"
+  },
+  "pageErrors": [],
+  "passed": true,
+  "finishedAt": "2026-09-26T09:51:11.467Z"
+}

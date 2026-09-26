@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: ming-proof
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/capabilities
+    envVars:
+      - key: MING_PUBLIC_DEMO
+        value: "1"
+      - key: HOST
+        value: "0.0.0.0"

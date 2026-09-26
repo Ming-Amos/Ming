@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\n  \"runId\": \"2cf3cc33-507f-41c2-8b9f-6a16c712a7ae\",\n  \"taskId\": \"7ed27f84-aa14-43f8-90e2-f84702dc21b0\",\n  \"progressUrl\": \"http://127.0.0.1:4001/api/run/2cf3cc33-507f-41c2-8b9f-6a16c712a7ae/progress\"\n}"
+    }
+  ]
+}

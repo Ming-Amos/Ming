@@ -389,7 +389,8 @@ async function runCriteriaWithContext(
   screenshotDir: string,
   runId: string,
   dependencyFailed: boolean,
-  inheritedContext?: { context: BrowserContext; page: Page }
+  inheritedContext?: { context: BrowserContext; page: Page },
+  target?: TargetConfig
 ): Promise<CriteriaRunOutcome> {
   if (dependencyFailed) {
     return {
@@ -418,7 +419,18 @@ async function runCriteriaWithContext(
     page = inheritedContext.page;
   } else {
     // Fresh isolated context
-    context = await browser.newContext({ storageState: undefined });
+    context = await browser.newContext({ storageState: undefined, serviceWorkers: "block" });
+    if (target?.htmlSnapshot !== undefined) {
+      const documentUrl = new URL(target.url);
+      documentUrl.hash = "";
+      await context.route((url) => url.href === documentUrl.href, async (route) => {
+        if (route.request().isNavigationRequest()) {
+          await route.fulfill({ status: 200, contentType: "text/html; charset=utf-8", body: target.htmlSnapshot });
+        } else {
+          await route.continue();
+        }
+      });
+    }
     page = await context.newPage();
     weOwnContext = true;
   }
@@ -481,7 +493,7 @@ async function runCriteriaWithContext(
 // ── Runner 自身指纹（plan-runner 实现版本，防止混用不同版本） ──────
 function computeRunnerFingerprint(): string {
   try {
-    const src = fs.readFileSync(__filename, "utf-8");
+    const src = fs.readFileSync(__filename, "utf-8") + fs.readFileSync(require.resolve("./fingerprint"), "utf-8");
     return createHash("sha256").update(src, "utf-8").digest("hex").slice(0, 16);
   } catch {
     return "unknown";
@@ -503,6 +515,9 @@ export class PlanRunner {
   ): Promise<RunRecord> {
     // Validate plan structure BEFORE launching a browser or assigning a runId result
     validatePlan(plan);
+    if (target.htmlSnapshot !== undefined && computeFingerprint(target.htmlSnapshot) !== target.fingerprint) {
+      throw new Error("Captured HTML does not match the expected target fingerprint");
+    }
 
     const startedAt = new Date().toISOString();
     // Hash the whole plan (computeFingerprint excludes the "fingerprint" key itself)
@@ -541,7 +556,8 @@ export class PlanRunner {
           this.opts.screenshotDir,
           this.opts.runId,
           depFailed,
-          passedInContext
+          passedInContext,
+          target
         );
 
         criteriaResults.push(outcome.result);
@@ -578,7 +594,10 @@ export class PlanRunner {
     } catch (err: unknown) {
       fatalError = err instanceof Error ? err.message : String(err);
     } finally {
-      if (browser) await browser.close();
+      if (browser) {
+        try { await browser.close(); }
+        catch (err) { fatalError = fatalError ?? (err instanceof Error ? err.message : String(err)); }
+      }
     }
 
     const finishedAt = new Date().toISOString();
@@ -625,6 +644,8 @@ export class PlanRunner {
       criteria: finalCriteria,
       fatalError,
       runnerFingerprint: RUNNER_FINGERPRINT,
+      planSnapshot: JSON.parse(JSON.stringify(plan)) as AcceptancePlan,
+      sourceBinding: target.htmlSnapshot !== undefined ? "self-contained-html-snapshot" : undefined,
     };
   }
 }

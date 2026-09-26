@@ -1,0 +1,37 @@
+[
+  {
+    "variant": "normal",
+    "label": "日报 · 正常示例",
+    "route": "/normal",
+    "htmlPath": "examples/daily-report/normal/index.html",
+    "planPath": "fixtures/stage-a-plan.json"
+  },
+  {
+    "variant": "buggy",
+    "label": "日报 · 缺陷示例",
+    "route": "/buggy",
+    "htmlPath": "examples/daily-report/buggy/index.html",
+    "planPath": "fixtures/stage-a-plan.json"
+  },
+  {
+    "variant": "repair-demo",
+    "label": "日报 · AI 修复工作区",
+    "route": "/repair-demo",
+    "htmlPath": "examples/daily-report/repair/index.html",
+    "planPath": "fixtures/stage-a-plan.json"
+  },
+  {
+    "variant": "todo-normal",
+    "label": "Focus · 正常示例",
+    "route": "/todo-normal",
+    "htmlPath": "examples/todo/normal/index.html",
+    "planPath": "fixtures/todo-plan.json"
+  },
+  {
+    "variant": "todo-buggy",
+    "label": "Focus · 缺陷示例",
+    "route": "/todo-buggy",
+    "htmlPath": "examples/todo/buggy/index.html",
+    "planPath": "fixtures/todo-plan.json"
+  }
+]

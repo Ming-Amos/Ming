@@ -16,49 +16,46 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod/v4";
-import * as https from "https";
-import * as http from "http";
 
 const MING_BASE = "http://127.0.0.1:4001";
 const MAX_EVIDENCE_STEPS = 20; // cap number of steps returned per criteria
 
 // ── HTTP helper ───────────────────────────────────────────────────
 
-function mingFetch(
+async function mingFetch(
   path: string,
   opts: { method?: string; body?: unknown } = {}
 ): Promise<unknown> {
-  return new Promise((resolve, reject) => {
-    const bodyStr = opts.body !== undefined ? JSON.stringify(opts.body) : undefined;
-    const url = new URL(path, MING_BASE);
-    const options: http.RequestOptions = {
-      hostname: url.hostname,
-      port: url.port,
-      path: url.pathname + url.search,
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 20_000);
+  try {
+    const response = await fetch(new URL(path, MING_BASE), {
       method: opts.method ?? "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        ...(bodyStr ? { "Content-Length": String(Buffer.byteLength(bodyStr)) } : {}),
-      },
-    };
-
-    const lib = url.protocol === "https:" ? https : http;
-    const req = lib.request(options, (res) => {
-      const chunks: Buffer[] = [];
-      res.on("data", (c: Buffer) => chunks.push(c));
-      res.on("end", () => {
-        try {
-          resolve(JSON.parse(Buffer.concat(chunks).toString("utf-8")));
-        } catch {
-          reject(new Error("Non-JSON response from Ming server"));
-        }
-      });
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: opts.body === undefined ? undefined : JSON.stringify(opts.body),
+      signal: controller.signal,
+      redirect: "error",
     });
-    req.on("error", reject);
-    if (bodyStr) req.write(bodyStr);
-    req.end();
-  });
+    if (!response.body) throw new Error("Empty response from Ming server");
+    const reader = response.body.getReader();
+    const chunks: Uint8Array[] = [];
+    let bytes = 0;
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      bytes += value.byteLength;
+      if (bytes > 1024 * 1024) {
+        controller.abort();
+        throw new Error("Ming response exceeds the 1 MiB evidence limit");
+      }
+      chunks.push(value);
+    }
+    let data: Record<string, unknown>;
+    try { data = JSON.parse(Buffer.concat(chunks).toString("utf8")); }
+    catch { throw new Error("Non-JSON response from Ming server"); }
+    if (!response.ok) throw new Error(`HTTP ${response.status}: ${String(data?.error ?? "Ming request failed")}`);
+    return data;
+  } finally { clearTimeout(timer); }
 }
 
 // ── Server setup ──────────────────────────────────────────────────
@@ -83,18 +80,18 @@ server.registerTool(
   },
   async ({ runId }: { runId: string }) => {
     if (!runId || typeof runId !== "string" || !/^[0-9a-f-]{36}$/.test(runId)) {
-      return { content: [{ type: "text" as const, text: "Error: runId must be a UUID" }] };
+      return { isError: true, content: [{ type: "text" as const, text: "Error: runId must be a UUID" }] };
     }
 
     let data: Record<string, unknown>;
     try {
       data = (await mingFetch(`/api/run/${runId}`)) as Record<string, unknown>;
     } catch (err) {
-      return { content: [{ type: "text" as const, text: `Error contacting Ming server: ${String(err)}` }] };
+      return { isError: true, content: [{ type: "text" as const, text: `Error contacting Ming server: ${String(err)}` }] };
     }
 
     if (!data.ok) {
-      return { content: [{ type: "text" as const, text: `Ming error: ${data.error}` }] };
+      return { isError: true, content: [{ type: "text" as const, text: `Ming error: ${data.error}` }] };
     }
 
     const run = data.run as Record<string, unknown>;
@@ -171,18 +168,18 @@ server.registerTool(
   },
   async ({ taskId }: { taskId: string }) => {
     if (!taskId || !/^[0-9a-f-]{36}$/.test(taskId)) {
-      return { content: [{ type: "text" as const, text: "Error: taskId must be a UUID" }] };
+      return { isError: true, content: [{ type: "text" as const, text: "Error: taskId must be a UUID" }] };
     }
 
     let data: Record<string, unknown>;
     try {
       data = (await mingFetch(`/api/repair-tasks/${taskId}`)) as Record<string, unknown>;
     } catch (err) {
-      return { content: [{ type: "text" as const, text: `Error contacting Ming server: ${String(err)}` }] };
+      return { isError: true, content: [{ type: "text" as const, text: `Error contacting Ming server: ${String(err)}` }] };
     }
 
     if (!data.ok) {
-      return { content: [{ type: "text" as const, text: `Ming error: ${data.error}` }] };
+      return { isError: true, content: [{ type: "text" as const, text: `Ming error: ${data.error}` }] };
     }
 
     return {
@@ -197,7 +194,7 @@ server.registerTool(
   "ming_claim_repair_task",
   {
     description:
-      "Claim a waiting repair task so Bob can work on it. " +
+      "Claim a waiting repair task so the connected coding agent can work on it. " +
       "Repeat claims from the same owner are idempotent. " +
       "Competing owners are rejected with HTTP 409.",
     inputSchema: {
@@ -209,10 +206,10 @@ server.registerTool(
   },
   async ({ taskId, claimedBy }: { taskId: string; claimedBy: string }) => {
     if (!taskId || !/^[0-9a-f-]{36}$/.test(taskId)) {
-      return { content: [{ type: "text" as const, text: "Error: taskId must be a UUID" }] };
+      return { isError: true, content: [{ type: "text" as const, text: "Error: taskId must be a UUID" }] };
     }
     if (!claimedBy || !claimedBy.trim()) {
-      return { content: [{ type: "text" as const, text: "Error: claimedBy must not be empty" }] };
+      return { isError: true, content: [{ type: "text" as const, text: "Error: claimedBy must not be empty" }] };
     }
 
     let data: Record<string, unknown>;
@@ -222,11 +219,11 @@ server.registerTool(
         body: { claimedBy: claimedBy.trim() },
       })) as Record<string, unknown>;
     } catch (err) {
-      return { content: [{ type: "text" as const, text: `Error contacting Ming server: ${String(err)}` }] };
+      return { isError: true, content: [{ type: "text" as const, text: `Error contacting Ming server: ${String(err)}` }] };
     }
 
     if (!data.ok) {
-      return { content: [{ type: "text" as const, text: `Ming error: ${data.error}` }] };
+      return { isError: true, content: [{ type: "text" as const, text: `Ming error: ${data.error}` }] };
     }
 
     return {
@@ -253,7 +250,7 @@ server.registerTool(
       expectedTargetFingerprint: z
         .string()
         .describe(
-          "SHA-256 prefix of the repaired target source file (baselineTargetFingerprint from " +
+          "Ming fingerprint of the repaired HTML source: SHA-256 of JSON.stringify(UTF-8 file text), first 16 hex characters (baselineTargetFingerprint from " +
           "the repair task if no change yet, or newly computed after your edit). " +
           "Binds the rerun to the exact source version you repaired."
         ),
@@ -261,10 +258,10 @@ server.registerTool(
   },
   async ({ taskId, expectedTargetFingerprint }: { taskId: string; expectedTargetFingerprint: string }) => {
     if (!taskId || !/^[0-9a-f-]{36}$/.test(taskId)) {
-      return { content: [{ type: "text" as const, text: "Error: taskId must be a UUID" }] };
+      return { isError: true, content: [{ type: "text" as const, text: "Error: taskId must be a UUID" }] };
     }
     if (!expectedTargetFingerprint || !expectedTargetFingerprint.trim()) {
-      return { content: [{ type: "text" as const, text: "Error: expectedTargetFingerprint must not be empty" }] };
+      return { isError: true, content: [{ type: "text" as const, text: "Error: expectedTargetFingerprint must not be empty" }] };
     }
 
     let data: Record<string, unknown>;
@@ -274,11 +271,11 @@ server.registerTool(
         body: { expectedTargetFingerprint: expectedTargetFingerprint.trim() },
       })) as Record<string, unknown>;
     } catch (err) {
-      return { content: [{ type: "text" as const, text: `Error contacting Ming server: ${String(err)}` }] };
+      return { isError: true, content: [{ type: "text" as const, text: `Error contacting Ming server: ${String(err)}` }] };
     }
 
     if (!data.ok) {
-      return { content: [{ type: "text" as const, text: `Ming error: ${data.error}` }] };
+      return { isError: true, content: [{ type: "text" as const, text: `Ming error: ${data.error}` }] };
     }
 
     return {
@@ -312,18 +309,18 @@ server.registerTool(
   },
   async ({ taskId }: { taskId: string }) => {
     if (!taskId || !/^[0-9a-f-]{36}$/.test(taskId)) {
-      return { content: [{ type: "text" as const, text: "Error: taskId must be a UUID" }] };
+      return { isError: true, content: [{ type: "text" as const, text: "Error: taskId must be a UUID" }] };
     }
 
     let data: Record<string, unknown>;
     try {
       data = (await mingFetch(`/api/repair-tasks/${taskId}/comparison`)) as Record<string, unknown>;
     } catch (err) {
-      return { content: [{ type: "text" as const, text: `Error contacting Ming server: ${String(err)}` }] };
+      return { isError: true, content: [{ type: "text" as const, text: `Error contacting Ming server: ${String(err)}` }] };
     }
 
     if (!data.ok) {
-      return { content: [{ type: "text" as const, text: `Ming error: ${data.error}` }] };
+      return { isError: true, content: [{ type: "text" as const, text: `Ming error: ${data.error}` }] };
     }
 
     return {

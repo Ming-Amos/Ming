@@ -1,0 +1,302 @@
+{
+  "runId": "ce672efe-38e4-4d67-84f9-2174e8a5b5e2",
+  "planId": "stage-a-daily-report",
+  "planVersion": "1.0.0",
+  "planFingerprint": "660582f7fbabccc5",
+  "targetVariant": "buggy",
+  "targetUrl": "http://localhost:4001/buggy",
+  "targetFingerprint": "4d61d95b3ffbc28d",
+  "status": "failed",
+  "startedAt": "2026-09-26T09:40:09.148Z",
+  "finishedAt": "2026-09-26T09:40:09.929Z",
+  "criteria": [
+    {
+      "criteriaId": "AC-01",
+      "title": "非空内容可提交并显示",
+      "status": "passed",
+      "steps": [
+        {
+          "stepId": "AC-01-S1",
+          "description": "打开目标日报页面",
+          "status": "passed",
+          "actual": "已导航到 http://localhost:4001/buggy",
+          "durationMs": 9
+        },
+        {
+          "stepId": "AC-01-S2",
+          "description": "在日报内容输入框填入唯一测试内容",
+          "status": "passed",
+          "actual": "已填入内容（长度=26）",
+          "durationMs": 51
+        },
+        {
+          "stepId": "AC-01-S3",
+          "description": "点击提交日报按钮",
+          "status": "passed",
+          "actual": "已点击 \"提交日报\"",
+          "durationMs": 45
+        },
+        {
+          "stepId": "AC-01-S4",
+          "description": "断言唯一内容出现在日报记录列表中（而非仅在输入框或其他区域）",
+          "status": "passed",
+          "expected": "Ming测试-buggy-1790415609148",
+          "actual": "文本 \"Ming测试-buggy-1790415609148\" 在 \"#reportList\" 中可见",
+          "durationMs": 2,
+          "screenshotPath": "ce672efe-38e4-4d67-84f9-2174e8a5b5e2_AC-01_final.png"
+        }
+      ]
+    },
+    {
+      "criteriaId": "AC-02",
+      "title": "刷新后同一条内容仍存在",
+      "status": "failed",
+      "steps": [
+        {
+          "stepId": "AC-02-S1",
+          "description": "刷新页面（继承AC-01的浏览器上下文，不是新页面）",
+          "status": "passed",
+          "actual": "页面已刷新",
+          "durationMs": 6
+        },
+        {
+          "stepId": "AC-02-S2",
+          "description": "断言刷新后唯一内容仍在记录列表中",
+          "status": "failed",
+          "expected": "Ming测试-buggy-1790415609148",
+          "actual": "文本 \"Ming测试-buggy-1790415609148\" 在 \"#reportList\" 中不可见",
+          "error": "预期 \"#reportList\" 内文本 \"Ming测试-buggy-1790415609148\" 可见，但未找到",
+          "durationMs": 13,
+          "screenshotPath": "ce672efe-38e4-4d67-84f9-2174e8a5b5e2_AC-02-S2_failed.png"
+        }
+      ]
+    },
+    {
+      "criteriaId": "AC-03",
+      "title": "空内容不可新增记录",
+      "status": "passed",
+      "steps": [
+        {
+          "stepId": "AC-03-S1",
+          "description": "打开目标日报页面（独立场景）",
+          "status": "passed",
+          "actual": "已导航到 http://localhost:4001/buggy",
+          "durationMs": 8
+        },
+        {
+          "stepId": "AC-03-S2",
+          "description": "确认初始无记录（新上下文，与AC-01/02隔离）",
+          "status": "passed",
+          "expected": 0,
+          "actual": "0",
+          "durationMs": 44
+        },
+        {
+          "stepId": "AC-03-S3",
+          "description": "输入框保持为空（空字符串场景）",
+          "status": "passed",
+          "actual": "已填入内容（长度=0）",
+          "durationMs": 5
+        },
+        {
+          "stepId": "AC-03-S4",
+          "description": "点击提交按钮（空字符串场景）",
+          "status": "passed",
+          "actual": "已点击 \"提交日报\"",
+          "durationMs": 31
+        },
+        {
+          "stepId": "AC-03-S5",
+          "description": "断言出现校验提示（空字符串场景）",
+          "status": "passed",
+          "expected": "日报内容不能为空",
+          "actual": "文本 \"日报内容不能为空\" 可见",
+          "durationMs": 2
+        },
+        {
+          "stepId": "AC-03-S6",
+          "description": "断言列表没有新增记录（空字符串场景）",
+          "status": "passed",
+          "expected": 0,
+          "actual": "0",
+          "durationMs": 1
+        },
+        {
+          "stepId": "AC-03-S7",
+          "description": "输入纯空白字符（纯空白场景）",
+          "status": "passed",
+          "actual": "已填入内容（长度=3）",
+          "durationMs": 3
+        },
+        {
+          "stepId": "AC-03-S8",
+          "description": "点击提交按钮（纯空白场景）",
+          "status": "passed",
+          "actual": "已点击 \"提交日报\"",
+          "durationMs": 28
+        },
+        {
+          "stepId": "AC-03-S9",
+          "description": "断言出现校验提示（纯空白场景）",
+          "status": "passed",
+          "expected": "日报内容不能为空",
+          "actual": "文本 \"日报内容不能为空\" 可见",
+          "durationMs": 1
+        },
+        {
+          "stepId": "AC-03-S10",
+          "description": "断言列表没有新增记录（纯空白场景）",
+          "status": "passed",
+          "expected": 0,
+          "actual": "0",
+          "durationMs": 0,
+          "screenshotPath": "ce672efe-38e4-4d67-84f9-2174e8a5b5e2_AC-03_final.png"
+        }
+      ]
+    }
+  ],
+  "runnerFingerprint": "b3ad939dcb5d51b5",
+  "planSnapshot": {
+    "planId": "stage-a-daily-report",
+    "version": "1.0.0",
+    "source": "fixture",
+    "title": "日报系统验收计划（开发验证样例，尚未接入模型生成）",
+    "description": "阶段A固定验收夹具。验证：非空提交可见、刷新后仍存在、空内容不可提交。source=fixture 表示本计划为开发阶段手工编写，不由模型生成。",
+    "fingerprint": "660582f7fbabccc5",
+    "createdAt": "2026-09-26T00:00:00.000Z",
+    "criteria": [
+      {
+        "id": "AC-01",
+        "title": "非空内容可提交并显示",
+        "description": "输入本轮唯一内容、提交，断言该内容真实出现在记录列表中",
+        "contextMode": "fresh",
+        "steps": [
+          {
+            "id": "AC-01-S1",
+            "type": "navigate",
+            "url": "{{TARGET_URL}}",
+            "description": "打开目标日报页面"
+          },
+          {
+            "id": "AC-01-S2",
+            "type": "fill",
+            "locator": "日报内容",
+            "value": "{{UNIQUE_CONTENT}}",
+            "description": "在日报内容输入框填入唯一测试内容"
+          },
+          {
+            "id": "AC-01-S3",
+            "type": "click",
+            "locator": "提交日报",
+            "description": "点击提交日报按钮"
+          },
+          {
+            "id": "AC-01-S4",
+            "type": "assertVisibleIn",
+            "locator": "#reportList",
+            "value": "{{UNIQUE_CONTENT}}",
+            "description": "断言唯一内容出现在日报记录列表中（而非仅在输入框或其他区域）"
+          }
+        ]
+      },
+      {
+        "id": "AC-02",
+        "title": "刷新后同一条内容仍存在",
+        "description": "依赖AC-01成功；在同一浏览器上下文中刷新页面，断言同一内容仍在列表中",
+        "dependsOn": [
+          "AC-01"
+        ],
+        "contextMode": "inherit",
+        "steps": [
+          {
+            "id": "AC-02-S1",
+            "type": "reload",
+            "description": "刷新页面（继承AC-01的浏览器上下文，不是新页面）"
+          },
+          {
+            "id": "AC-02-S2",
+            "type": "assertVisibleIn",
+            "locator": "#reportList",
+            "value": "{{UNIQUE_CONTENT}}",
+            "description": "断言刷新后唯一内容仍在记录列表中"
+          }
+        ]
+      },
+      {
+        "id": "AC-03",
+        "title": "空内容不可新增记录",
+        "description": "独立场景：空字符串和纯空白提交不能新增记录，应有校验提示或按钮禁用",
+        "contextMode": "fresh",
+        "steps": [
+          {
+            "id": "AC-03-S1",
+            "type": "navigate",
+            "url": "{{TARGET_URL}}",
+            "description": "打开目标日报页面（独立场景）"
+          },
+          {
+            "id": "AC-03-S2",
+            "type": "assertCount",
+            "locator": ".record-item",
+            "expected": 0,
+            "description": "确认初始无记录（新上下文，与AC-01/02隔离）"
+          },
+          {
+            "id": "AC-03-S3",
+            "type": "fill",
+            "locator": "日报内容",
+            "value": "",
+            "description": "输入框保持为空（空字符串场景）"
+          },
+          {
+            "id": "AC-03-S4",
+            "type": "click",
+            "locator": "提交日报",
+            "description": "点击提交按钮（空字符串场景）"
+          },
+          {
+            "id": "AC-03-S5",
+            "type": "assertVisible",
+            "value": "日报内容不能为空",
+            "description": "断言出现校验提示（空字符串场景）"
+          },
+          {
+            "id": "AC-03-S6",
+            "type": "assertCount",
+            "locator": ".record-item",
+            "expected": 0,
+            "description": "断言列表没有新增记录（空字符串场景）"
+          },
+          {
+            "id": "AC-03-S7",
+            "type": "fill",
+            "locator": "日报内容",
+            "value": "   ",
+            "description": "输入纯空白字符（纯空白场景）"
+          },
+          {
+            "id": "AC-03-S8",
+            "type": "click",
+            "locator": "提交日报",
+            "description": "点击提交按钮（纯空白场景）"
+          },
+          {
+            "id": "AC-03-S9",
+            "type": "assertVisible",
+            "value": "日报内容不能为空",
+            "description": "断言出现校验提示（纯空白场景）"
+          },
+          {
+            "id": "AC-03-S10",
+            "type": "assertCount",
+            "locator": ".record-item",
+            "expected": 0,
+            "description": "断言列表没有新增记录（纯空白场景）"
+          }
+        ]
+      }
+    ]
+  },
+  "sourceBinding": "self-contained-html-snapshot",
+  "sourceChangedDuringRun": false
+}

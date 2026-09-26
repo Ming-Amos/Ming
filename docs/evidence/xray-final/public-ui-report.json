@@ -1,0 +1,45 @@
+{
+  "results": [
+    {
+      "name": "Public mode is visibly labelled read-only",
+      "passed": true
+    },
+    {
+      "name": "Live execution button disabled",
+      "passed": true
+    },
+    {
+      "name": "Evidence images belong to selected real baseline",
+      "passed": true
+    },
+    {
+      "name": "Comparison contains actual before and after images",
+      "passed": true
+    },
+    {
+      "name": "Switching to rerun preserves comparison access",
+      "passed": true
+    },
+    {
+      "name": "Reload restores selected rerun",
+      "passed": true
+    },
+    {
+      "name": "Second project renders its own criteria",
+      "passed": true
+    },
+    {
+      "name": "Mobile has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "Public server rejects execution",
+      "passed": true
+    },
+    {
+      "name": "No frontend JavaScript errors",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

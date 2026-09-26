@@ -1,0 +1,12 @@
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.pdf binary
+*.mp4 binary
+*.wav binary
+
+# Preserve the exact bytes reviewed by the evidence manifest.
+docs/demo-evidence/** -text
+examples/** -text

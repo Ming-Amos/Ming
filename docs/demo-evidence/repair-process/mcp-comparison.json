@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\n  \"taskId\": \"7ed27f84-aa14-43f8-90e2-f84702dc21b0\",\n  \"baselineRunId\": \"65aece9c-b145-4045-8096-60331a4c6ae1\",\n  \"rerunId\": \"2cf3cc33-507f-41c2-8b9f-6a16c712a7ae\",\n  \"planFingerprintMatch\": true,\n  \"runnerFingerprintMatch\": true,\n  \"runnerFingerprintKnown\": true,\n  \"targetIdentityMatch\": true,\n  \"targetFingerprintChanged\": true,\n  \"sourceFingerprintKnown\": true,\n  \"baselineTargetFingerprint\": \"4d61d95b3ffbc28d\",\n  \"repairedTargetFingerprint\": \"29ebdc69fb588289\",\n  \"baselineRunnerFingerprint\": \"b3ad939dcb5d51b5\",\n  \"rerunRunnerFingerprint\": \"b3ad939dcb5d51b5\",\n  \"previouslyFailedNowPassed\": [\n    \"AC-02\"\n  ],\n  \"previouslyFailedStillFailing\": [],\n  \"newFailures\": [],\n  \"verifiedRepair\": true,\n  \"blockers\": []\n}"
+    }
+  ]
+}

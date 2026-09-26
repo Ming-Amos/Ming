@@ -1,0 +1,294 @@
+{
+  "runId": "a35c69f6-cb5c-4293-90df-2a82d96eb067",
+  "planId": "focus-todo-acceptance",
+  "planVersion": "1.0.0",
+  "planFingerprint": "b1e9d201233646c0",
+  "targetVariant": "todo-normal",
+  "targetUrl": "http://localhost:4001/todo-normal",
+  "targetFingerprint": "3d5ab2f080a9b027",
+  "status": "passed",
+  "startedAt": "2026-09-26T09:40:56.531Z",
+  "finishedAt": "2026-09-26T09:40:57.114Z",
+  "criteria": [
+    {
+      "criteriaId": "TODO-01",
+      "title": "A new task appears in the task list",
+      "status": "passed",
+      "steps": [
+        {
+          "stepId": "TODO-01-S1",
+          "description": "Open the selected Focus application",
+          "status": "passed",
+          "actual": "已导航到 http://localhost:4001/todo-normal",
+          "durationMs": 9
+        },
+        {
+          "stepId": "TODO-01-S2",
+          "description": "Enter the unique task name for this run",
+          "status": "passed",
+          "actual": "已填入内容（长度=32）",
+          "durationMs": 38
+        },
+        {
+          "stepId": "TODO-01-S3",
+          "description": "Create the task",
+          "status": "passed",
+          "actual": "已点击 \"Add task\"",
+          "durationMs": 55
+        },
+        {
+          "stepId": "TODO-01-S4",
+          "description": "Verify the exact task text is visible in the task list",
+          "status": "passed",
+          "expected": "Ming测试-todo-normal-1790415656531",
+          "actual": "文本 \"Ming测试-todo-normal-1790415656531\" 在 \"#task-items .task-title\" 中可见",
+          "durationMs": 2
+        },
+        {
+          "stepId": "TODO-01-S5",
+          "description": "Verify exactly one task was created",
+          "status": "passed",
+          "expected": 1,
+          "actual": "1",
+          "durationMs": 1,
+          "screenshotPath": "a35c69f6-cb5c-4293-90df-2a82d96eb067_TODO-01_final.png"
+        }
+      ]
+    },
+    {
+      "criteriaId": "TODO-02",
+      "title": "Completing a task displays its completed state",
+      "status": "passed",
+      "steps": [
+        {
+          "stepId": "TODO-02-S1",
+          "description": "Mark the created task complete",
+          "status": "passed",
+          "actual": "已点击 \"Mark complete\"",
+          "durationMs": 40
+        },
+        {
+          "stepId": "TODO-02-S2",
+          "description": "Verify exactly one task is completed",
+          "status": "passed",
+          "expected": 1,
+          "actual": "1",
+          "durationMs": 1
+        },
+        {
+          "stepId": "TODO-02-S3",
+          "description": "Verify the original task remains visible in the list",
+          "status": "passed",
+          "expected": "Ming测试-todo-normal-1790415656531",
+          "actual": "文本 \"Ming测试-todo-normal-1790415656531\" 在 \"#task-items\" 中可见",
+          "durationMs": 2
+        },
+        {
+          "stepId": "TODO-02-S4",
+          "description": "Verify the task row displays Completed",
+          "status": "passed",
+          "expected": "Completed",
+          "actual": "文本 \"Completed\" 在 \"#task-items .task-state\" 中可见",
+          "durationMs": 1,
+          "screenshotPath": "a35c69f6-cb5c-4293-90df-2a82d96eb067_TODO-02_final.png"
+        }
+      ]
+    },
+    {
+      "criteriaId": "TODO-03",
+      "title": "Refreshing preserves the task and its completed state",
+      "status": "passed",
+      "steps": [
+        {
+          "stepId": "TODO-03-S1",
+          "description": "Reload the same page without changing browser context",
+          "status": "passed",
+          "actual": "页面已刷新",
+          "durationMs": 7
+        },
+        {
+          "stepId": "TODO-03-S2",
+          "description": "Verify exactly one task remains completed after reload",
+          "status": "passed",
+          "expected": 1,
+          "actual": "1",
+          "durationMs": 11
+        },
+        {
+          "stepId": "TODO-03-S3",
+          "description": "Verify the original task text remains visible after reload",
+          "status": "passed",
+          "expected": "Ming测试-todo-normal-1790415656531",
+          "actual": "文本 \"Ming测试-todo-normal-1790415656531\" 在 \"#task-items\" 中可见",
+          "durationMs": 2
+        },
+        {
+          "stepId": "TODO-03-S4",
+          "description": "Verify the persisted Completed label",
+          "status": "passed",
+          "expected": "Completed",
+          "actual": "文本 \"Completed\" 在 \"#task-items .task-state\" 中可见",
+          "durationMs": 2
+        },
+        {
+          "stepId": "TODO-03-S5",
+          "description": "Verify reload did not duplicate or lose the task",
+          "status": "passed",
+          "expected": 1,
+          "actual": "1",
+          "durationMs": 0,
+          "screenshotPath": "a35c69f6-cb5c-4293-90df-2a82d96eb067_TODO-03_final.png"
+        }
+      ]
+    }
+  ],
+  "runnerFingerprint": "b3ad939dcb5d51b5",
+  "planSnapshot": {
+    "planId": "focus-todo-acceptance",
+    "version": "1.0.0",
+    "source": "fixture",
+    "title": "Focus — task creation, completion, and persistence",
+    "description": "Hand-authored acceptance fixture for an independent todo application. This plan was not generated by a language model. Each criterion names its source requirement in docs/TODO_REQUIREMENTS.md.",
+    "fingerprint": "b1e9d201233646c0",
+    "createdAt": "2026-09-26T00:00:00.000Z",
+    "criteria": [
+      {
+        "id": "TODO-01",
+        "title": "A new task appears in the task list",
+        "description": "Create one uniquely named task and verify the real list contains exactly one task.",
+        "requirementRef": "R1: Adding a non-empty task displays that task in Your tasks.",
+        "expectedBehavior": "The submitted task is visible in the task list, not only in the input.",
+        "prerequisites": "A fresh browser context with no saved tasks.",
+        "openQuestions": [],
+        "contextMode": "fresh",
+        "steps": [
+          {
+            "id": "TODO-01-S1",
+            "type": "navigate",
+            "url": "{{TARGET_URL}}",
+            "description": "Open the selected Focus application"
+          },
+          {
+            "id": "TODO-01-S2",
+            "type": "fill",
+            "locator": "New task",
+            "value": "{{UNIQUE_CONTENT}}",
+            "description": "Enter the unique task name for this run"
+          },
+          {
+            "id": "TODO-01-S3",
+            "type": "click",
+            "locator": "Add task",
+            "description": "Create the task"
+          },
+          {
+            "id": "TODO-01-S4",
+            "type": "assertVisibleIn",
+            "locator": "#task-items .task-title",
+            "value": "{{UNIQUE_CONTENT}}",
+            "description": "Verify the exact task text is visible in the task list"
+          },
+          {
+            "id": "TODO-01-S5",
+            "type": "assertCount",
+            "locator": "#task-items .task-row",
+            "expected": 1,
+            "description": "Verify exactly one task was created"
+          }
+        ]
+      },
+      {
+        "id": "TODO-02",
+        "title": "Completing a task displays its completed state",
+        "description": "Continue in the same browser context, complete the created task, and inspect its visible state.",
+        "requirementRef": "R2: Marking a task complete visibly identifies that same task as Completed.",
+        "expectedBehavior": "The same unique task has the Completed label.",
+        "prerequisites": "TODO-01 passed and its page remains open.",
+        "openQuestions": [],
+        "dependsOn": [
+          "TODO-01"
+        ],
+        "contextMode": "inherit",
+        "steps": [
+          {
+            "id": "TODO-02-S1",
+            "type": "click",
+            "locator": "Mark complete",
+            "description": "Mark the created task complete"
+          },
+          {
+            "id": "TODO-02-S2",
+            "type": "assertCount",
+            "locator": "#task-items .task-row.is-complete",
+            "expected": 1,
+            "description": "Verify exactly one task is completed"
+          },
+          {
+            "id": "TODO-02-S3",
+            "type": "assertVisibleIn",
+            "locator": "#task-items",
+            "value": "{{UNIQUE_CONTENT}}",
+            "description": "Verify the original task remains visible in the list"
+          },
+          {
+            "id": "TODO-02-S4",
+            "type": "assertVisibleIn",
+            "locator": "#task-items .task-state",
+            "value": "Completed",
+            "description": "Verify the task row displays Completed"
+          }
+        ]
+      },
+      {
+        "id": "TODO-03",
+        "title": "Refreshing preserves the task and its completed state",
+        "description": "Reload the same page and verify the original task is still completed without duplicates.",
+        "requirementRef": "R3: Refreshing the browser preserves both task text and its completion state.",
+        "expectedBehavior": "The original unique task remains visible, completed, and appears only once after reload.",
+        "prerequisites": "TODO-02 passed; keep the same browser context and local storage.",
+        "openQuestions": [],
+        "dependsOn": [
+          "TODO-02"
+        ],
+        "contextMode": "inherit",
+        "steps": [
+          {
+            "id": "TODO-03-S1",
+            "type": "reload",
+            "description": "Reload the same page without changing browser context"
+          },
+          {
+            "id": "TODO-03-S2",
+            "type": "assertCount",
+            "locator": "#task-items .task-row.is-complete",
+            "expected": 1,
+            "description": "Verify exactly one task remains completed after reload"
+          },
+          {
+            "id": "TODO-03-S3",
+            "type": "assertVisibleIn",
+            "locator": "#task-items",
+            "value": "{{UNIQUE_CONTENT}}",
+            "description": "Verify the original task text remains visible after reload"
+          },
+          {
+            "id": "TODO-03-S4",
+            "type": "assertVisibleIn",
+            "locator": "#task-items .task-state",
+            "value": "Completed",
+            "description": "Verify the persisted Completed label"
+          },
+          {
+            "id": "TODO-03-S5",
+            "type": "assertCount",
+            "locator": "#task-items .task-row",
+            "expected": 1,
+            "description": "Verify reload did not duplicate or lose the task"
+          }
+        ]
+      }
+    ]
+  },
+  "sourceBinding": "self-contained-html-snapshot",
+  "sourceChangedDuringRun": false
+}

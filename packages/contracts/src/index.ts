@@ -141,6 +141,10 @@ export interface RunRecord {
    * A verified-repair claim is blocked when this is true.
    */
   sourceChangedDuringRun?: boolean;
+  /** Exact execution plan retained for provenance and later repair. */
+  planSnapshot?: AcceptancePlan;
+  /** Only the captured document is frozen; this does not cover external assets/APIs. */
+  sourceBinding?: "self-contained-html-snapshot";
 }
 
 /** 前端轮询进度用的精简格式 */
@@ -369,6 +373,10 @@ export interface RepairTaskRecord {
   rerunId?: string;
   /** 修复后目标源码指纹（intentional change, not equal to baseline） */
   repairedTargetFingerprint?: string;
+  attemptCount?: number;
+  maxAttempts?: number;
+  attemptRunIds?: string[];
+  blockedReason?: string;
   createdAt: string;
   updatedAt: string;
 }

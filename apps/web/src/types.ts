@@ -39,6 +39,10 @@ export interface RunRecord {
   fatalError?: string;
   confirmationId?: string;
   requirementId?: string;
+  runnerFingerprint?: string;
+  sourceChangedDuringRun?: boolean;
+  sourceBinding?: string;
+  planSnapshot?: PlanInfo;
 }
 
 export interface RunProgress {
@@ -58,6 +62,9 @@ export interface AcceptanceCriteriaInfo {
   requirementRef?: string;
   expectedBehavior?: string;
   openQuestions?: string[];
+  prerequisites?: string;
+  contextMode?: "fresh" | "inherit";
+  steps?: Array<{ id: string; type: string; description: string; expected?: string | number; locator?: string; value?: string }>;
 }
 
 export interface PlanInfo {
@@ -192,6 +199,11 @@ export interface RepairTaskRecord {
   repairedTargetFingerprint?: string;
   createdAt: string;
   updatedAt: string;
+  planSnapshot?: PlanInfo;
+  attemptCount?: number;
+  maxAttempts?: number;
+  blockedReason?: string;
+  attemptRunIds?: string[];
 }
 
 export interface RepairComparison {
