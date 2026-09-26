@@ -1,24 +1,13 @@
 {
-  "reviewId": "bb49a894-83b1-49b7-b6ac-9b9223059f6a",
-  "startedAt": "2026-09-26T16:58:27.239Z",
+  "reviewId": "666c61cf-1ce4-4889-86bd-a7148bc1189a",
+  "startedAt": "2026-09-26T17:12:15.979Z",
   "origin": "https://ming-acceptance-proof.amosming.chatgpt.site",
   "expectedBundle": "/assets/index-CN1km-0X.js",
-  "passed": false,
+  "mode": "planner-only",
+  "passed": true,
   "checks": [
     {
       "name": "Private deployment serves the exact compiled UI",
-      "passed": true
-    },
-    {
-      "name": "Real imported MDN heading is visible",
-      "passed": true
-    },
-    {
-      "name": "The real GitHub source passes its confirmed heading check with capture and pinned commit",
-      "passed": true
-    },
-    {
-      "name": "Import and manual checks do not invoke a model",
       "passed": true
     },
     {
@@ -27,124 +16,162 @@
     },
     {
       "name": "Exactly one real Doubao Seed 2.0 Pro request returns a reviewable draft",
-      "passed": false
+      "passed": true
+    },
+    {
+      "name": "The draft has no unresolved questions",
+      "passed": true
+    },
+    {
+      "name": "Read-only review confirms one increment followed by a count-of-one assertion",
+      "passed": true
+    },
+    {
+      "name": "Applying a draft requires separate confirmation and has not run it",
+      "passed": true
+    },
+    {
+      "name": "The actual browser executes the generated plan and observes count one",
+      "passed": true
+    },
+    {
+      "name": "The exported provenance preserves actual model, tokens, and reviewed draft",
+      "passed": true
+    },
+    {
+      "name": "No retries, unexpected network, or browser exceptions occurred",
+      "passed": true
     }
   ],
   "runs": [
     {
-      "id": "fb03a1c2-edbb-415b-8e8c-65b01501cc6e",
-      "projectName": "beginner-html-site",
-      "projectFingerprint": "379fc79a54fb1d800f15a4ce7d221a536557096a12b7dfc04f2a6efe80494e1d",
-      "source": {
-        "kind": "github",
-        "url": "https://github.com/mdn/beginner-html-site",
-        "commit": "6cf801f2ce32e60e3be46038b85f0ee5f9dd0ef9",
-        "ref": "main",
-        "directory": ""
-      },
-      "entry": "index.html",
-      "planFingerprint": "84e0c097e5b9500f0abdd5cdcd7b15af54fe7867db737a7b35ba406f8c7fdeea",
-      "requirement": "The imported public starter page displays the heading: Mozilla is cool",
-      "startedAt": "2026-09-26T16:58:39.306Z",
-      "finishedAt": "2026-09-26T16:58:39.474Z",
+      "id": "16eaf959-dead-4c58-8f06-326915e1f41a",
+      "projectName": "proof-counter",
+      "projectFingerprint": "5508f46ff4e0f627d5ce4171d3d2961db02c6a20ca728cfe536d50ea806d5c71",
+      "entry": "proof-counter.html",
+      "planFingerprint": "be1bfb685256c022d0e2592532f873d81998ccc1214b38e4f68cd7e9512c7967",
+      "requirement": "Click Increment exactly once. The visible count must change from 0 to 1. Do not reload the page; persistence is not required.",
+      "startedAt": "2026-09-26T17:12:32.389Z",
+      "finishedAt": "2026-09-26T17:12:32.819Z",
       "status": "passed",
       "runner": "isolated-browser-dom",
       "captureKind": "dom-render",
       "storage": "isolated-session-adapter",
-      "diagnostics": [
-        "Links to other pages are disabled. Select each HTML entry separately to inspect it."
-      ],
+      "diagnostics": [],
       "steps": [
         {
-          "id": "e2cfe694-1b27-49bd-b820-d66cfa65db29",
+          "id": "draft-1-5900a54f-928d-4085-be5e-1c1f7b1bdb59",
           "action": "assertText",
-          "selector": "h1",
-          "value": "Mozilla is cool",
-          "description": "",
+          "selector": "#count",
+          "value": "0",
+          "description": "Verify the initial visible count is 0 before any interaction",
           "status": "passed",
-          "observed": "Mozilla is cool",
-          "expected": "Visible text contains: Mozilla is cool",
-          "durationMs": 32,
+          "observed": "0",
+          "expected": "Visible text contains: 0",
+          "durationMs": 13,
           "capture": {
-            "file": "bb49a894-mdn-manual-step-1.png",
-            "bytes": 104366,
+            "file": "666c61cf-doubao-counter-step-1.png",
+            "bytes": 16832,
             "width": 676,
-            "height": 635,
-            "sha256": "3381ccc5fc9d8701baa2db58110bc473911881f70caaa1919716f040495dece3"
+            "height": 450,
+            "sha256": "e6a0e3f8e08de698e012f3a2270ff9bdb3fadb7cb80a2c5e59f206887ce75a2a"
+          }
+        },
+        {
+          "id": "draft-2-19bfe54a-bc85-4865-90c6-6e4563a05215",
+          "action": "click",
+          "selector": "#increment",
+          "value": "",
+          "description": "Click the Increment button exactly one time",
+          "status": "passed",
+          "observed": "Executed click on #increment",
+          "expected": "Click the Increment button exactly one time",
+          "durationMs": 269,
+          "capture": {
+            "file": "666c61cf-doubao-counter-step-2.png",
+            "bytes": 16528,
+            "width": 676,
+            "height": 450,
+            "sha256": "1c7006b8d66e5087d2ef92b1516a0364152c7ac27037084c1721d33106982749"
+          }
+        },
+        {
+          "id": "draft-3-8336e019-ac34-4bde-ac54-13d0285b45e5",
+          "action": "assertText",
+          "selector": "#count",
+          "value": "1",
+          "description": "Verify the visible count updates to 1 after the single increment click",
+          "status": "passed",
+          "observed": "1",
+          "expected": "Visible text contains: 1",
+          "durationMs": 7,
+          "capture": {
+            "file": "666c61cf-doubao-counter-step-3.png",
+            "bytes": 16528,
+            "width": 676,
+            "height": 450,
+            "sha256": "1c7006b8d66e5087d2ef92b1516a0364152c7ac27037084c1721d33106982749"
           }
         }
       ],
-      "export": "bb49a894-mdn-manual.json",
+      "export": "666c61cf-doubao-counter.json",
       "planOrigin": {
-        "kind": "manual"
+        "kind": "ai-draft",
+        "provider": "Doubao",
+        "modelId": "doubao-seed-2-0-pro-260215",
+        "generatedAt": "2026-09-26T17:12:32.104Z",
+        "projectFingerprint": "5508f46ff4e0f627d5ce4171d3d2961db02c6a20ca728cfe536d50ea806d5c71",
+        "entry": "proof-counter.html",
+        "usage": {
+          "inputTokens": 489,
+          "outputTokens": 163
+        }
       }
     }
   ],
-  "githubRequests": [
-    {
-      "host": "api.github.com",
-      "path": "/repos/mdn/beginner-html-site",
-      "method": "GET",
-      "approved": true,
-      "credentialsAbsent": true
-    },
-    {
-      "host": "api.github.com",
-      "path": "/repos/mdn/beginner-html-site/commits/main",
-      "method": "GET",
-      "approved": true,
-      "credentialsAbsent": true
-    },
-    {
-      "host": "api.github.com",
-      "path": "/repos/mdn/beginner-html-site/git/trees/cd24771802ec33a324616d19ea0cdc65d6798972",
-      "method": "GET",
-      "approved": true,
-      "credentialsAbsent": true
-    },
-    {
-      "host": "raw.githubusercontent.com",
-      "path": "/mdn/beginner-html-site/6cf801f2ce32e60e3be46038b85f0ee5f9dd0ef9/Firefox-icon.png",
-      "method": "GET",
-      "approved": true,
-      "credentialsAbsent": true
-    },
-    {
-      "host": "raw.githubusercontent.com",
-      "path": "/mdn/beginner-html-site/6cf801f2ce32e60e3be46038b85f0ee5f9dd0ef9/images/firefox-icon.png",
-      "method": "GET",
-      "approved": true,
-      "credentialsAbsent": true
-    },
-    {
-      "host": "raw.githubusercontent.com",
-      "path": "/mdn/beginner-html-site/6cf801f2ce32e60e3be46038b85f0ee5f9dd0ef9/index.html",
-      "method": "GET",
-      "approved": true,
-      "credentialsAbsent": true
-    },
-    {
-      "host": "raw.githubusercontent.com",
-      "path": "/mdn/beginner-html-site/6cf801f2ce32e60e3be46038b85f0ee5f9dd0ef9/prettierrc.json",
-      "method": "GET",
-      "approved": true,
-      "credentialsAbsent": true
-    }
-  ],
+  "githubRequests": [],
   "blockedRequests": [],
   "errors": [],
   "screenshots": [
-    "bb49a894-mdn-import-accepted.png",
-    "bb49a894-stopped-state.png"
+    "666c61cf-doubao-draft-review.png",
+    "666c61cf-doubao-real-acceptance.png"
   ],
   "draftRequests": 1,
-  "scope": "Real public MDN import and manual heading visibility check; one actual Doubao Seed 2.0 Pro draft for an owned counter, reviewed then executed in the isolated visitor browser. No mocks, source repair, Bob usage, or retries.",
+  "scope": "Planner-only review; unchanged MDN GitHub smoke is intentionally skipped. One actual Doubao Seed 2.0 Pro draft for an owned counter, reviewed then executed in the isolated visitor browser. No mocks, source repair, Bob usage, or retries.",
   "planner": {
-    "status": 502,
-    "ok": false,
-    "error": "The model did not return a complete, supported acceptance draft. Review your requirements or use a manual plan. No retry was made.",
-    "code": "PLANNER_INVALID_DRAFT"
+    "status": 200,
+    "ok": true,
+    "draft": {
+      "steps": [
+        {
+          "id": "draft-1-5900a54f-928d-4085-be5e-1c1f7b1bdb59",
+          "action": "assertText",
+          "selector": "#count",
+          "value": "0",
+          "description": "Verify the initial visible count is 0 before any interaction"
+        },
+        {
+          "id": "draft-2-19bfe54a-bc85-4865-90c6-6e4563a05215",
+          "action": "click",
+          "selector": "#increment",
+          "value": "",
+          "description": "Click the Increment button exactly one time"
+        },
+        {
+          "id": "draft-3-8336e019-ac34-4bde-ac54-13d0285b45e5",
+          "action": "assertText",
+          "selector": "#count",
+          "value": "1",
+          "description": "Verify the visible count updates to 1 after the single increment click"
+        }
+      ],
+      "openQuestions": []
+    },
+    "usage": {
+      "inputTokens": 489,
+      "outputTokens": 163
+    },
+    "modelId": "doubao-seed-2-0-pro-260215"
   },
-  "error": "Error: Exactly one real Doubao Seed 2.0 Pro request returns a reviewable draft\n    at check (file:///C:/Bob/Projects/Ming/scripts/review-github-doubao-production.mjs:20:161)\n    at file:///C:/Bob/Projects/Ming/scripts/review-github-doubao-production.mjs:71:3",
-  "finishedAt": "2026-09-26T16:58:57.100Z"
+  "finishedAt": "2026-09-26T17:12:33.748Z"
 }

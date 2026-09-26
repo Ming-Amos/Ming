@@ -1,0 +1,35 @@
+{
+  "status": 200,
+  "ok": true,
+  "draft": {
+    "steps": [
+      {
+        "id": "draft-1-5900a54f-928d-4085-be5e-1c1f7b1bdb59",
+        "action": "assertText",
+        "selector": "#count",
+        "value": "0",
+        "description": "Verify the initial visible count is 0 before any interaction"
+      },
+      {
+        "id": "draft-2-19bfe54a-bc85-4865-90c6-6e4563a05215",
+        "action": "click",
+        "selector": "#increment",
+        "value": "",
+        "description": "Click the Increment button exactly one time"
+      },
+      {
+        "id": "draft-3-8336e019-ac34-4bde-ac54-13d0285b45e5",
+        "action": "assertText",
+        "selector": "#count",
+        "value": "1",
+        "description": "Verify the visible count updates to 1 after the single increment click"
+      }
+    ],
+    "openQuestions": []
+  },
+  "usage": {
+    "inputTokens": 489,
+    "outputTokens": 163
+  },
+  "modelId": "doubao-seed-2-0-pro-260215"
+}

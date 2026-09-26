@@ -1,5 +1,6 @@
 /** Actual private-site GitHub + Doubao review. Run only after deployment. One paid draft, no retries or mocks.
- * Existing MING_SITE_REVIEW_TOKEN is used only for this site's origin and never persisted or logged. */
+ * Existing MING_SITE_REVIEW_TOKEN is used only for this site's origin and never persisted or logged.
+ * MING_REVIEW_PLANNER_ONLY=1 skips the unchanged GitHub smoke and reviews only the real draft workflow. */
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -10,13 +11,14 @@ const root = fileURLToPath(new URL('..', import.meta.url)), { chromium } = creat
 const token = process.env.MING_SITE_REVIEW_TOKEN; delete process.env.MING_SITE_REVIEW_TOKEN;
 if (!token) throw Error('The existing authorized private-site review credential is required.');
 const origin = 'https://ming-acceptance-proof.amosming.chatgpt.site', repo = 'https://github.com/mdn/beginner-html-site';
+const plannerOnly = process.env.MING_REVIEW_PLANNER_ONLY === '1';
 const reviewId = randomUUID(), tag = reviewId.slice(0, 8), out = path.join(root, 'docs/evidence/github-doubao');
 fs.mkdirSync(out, { recursive: true });
 const bundle = fs.readFileSync(path.join(root, 'apps/web/dist/index.html'), 'utf8').match(/\/assets\/[^"']+\.js/)?.[0];
 assert.ok(bundle, 'Build the frontend before checking the exact deployment.');
 const redact = value => String(value).split(token).join('[REDACTED]'), save = (name, value) => fs.writeFileSync(path.join(out, name), redact(JSON.stringify(value, null, 2)));
-const report = { reviewId, startedAt: new Date().toISOString(), origin, expectedBundle: bundle, passed: false, checks: [], runs: [], githubRequests: [], blockedRequests: [], errors: [], screenshots: [], draftRequests: 0,
-  scope: 'Real public MDN import and manual heading visibility check; one actual Doubao Seed 2.0 Pro draft for an owned counter, reviewed then executed in the isolated visitor browser. No mocks, source repair, Bob usage, or retries.' };
+const report = { reviewId, startedAt: new Date().toISOString(), origin, expectedBundle: bundle, mode: plannerOnly ? 'planner-only' : 'github-and-planner', passed: false, checks: [], runs: [], githubRequests: [], blockedRequests: [], errors: [], screenshots: [], draftRequests: 0,
+  scope: `${plannerOnly ? 'Planner-only review; unchanged MDN GitHub smoke is intentionally skipped.' : 'Real public MDN import and manual heading visibility check;'} One actual Doubao Seed 2.0 Pro draft for an owned counter, reviewed then executed in the isolated visitor browser. No mocks, source repair, Bob usage, or retries.` };
 const check = (name, passed) => { report.checks.push({ name, passed: Boolean(passed) }); console.log(`${passed ? 'PASS' : 'FAIL'} ${name}`); if (!passed) throw Error(name); };
 const button = (page, name) => page.getByRole('button', { name, exact: true }), confirm = page => page.getByRole('checkbox', { name: 'I reviewed these requirements and steps for this project.', exact: true });
 const ready = page => page.waitForFunction(() => { const node = document.querySelector('[data-testid="upload-studio"]'); return node?.dataset.previewReady === 'true' && node.dataset.phase === 'idle'; }, null, { timeout: 45000 });
@@ -53,6 +55,7 @@ try {
   });
   page = await context.newPage(); page.setDefaultTimeout(30000); const response = await page.goto(origin + '/#upload', { waitUntil: 'networkidle' });
   check('Private deployment serves the exact compiled UI', response.ok() && (await response.text()).includes(bundle));
+  if (!plannerOnly) {
   await page.getByRole('tab', { name: 'GitHub', exact: true }).click(); await page.getByRole('textbox', { name: 'Public repository URL', exact: true }).fill(repo); await button(page, 'Inspect repository').click();
   const folders = page.getByRole('combobox', { name: 'Static folder to import', exact: true }); await folders.waitFor();
   const options = await folders.locator('option').evaluateAll(nodes => nodes.map(node => ({ value: node.value, disabled: node.disabled }))), chosen = options.find(option => !option.disabled && option.value === '') || options.find(option => !option.disabled); assert.ok(chosen, 'MDN has an importable static folder');
@@ -64,6 +67,7 @@ try {
   check('The real GitHub source passes its confirmed heading check with capture and pinned commit', mdn.status === 'passed' && mdn.source?.url === repo && /^[a-f\d]{40}$/i.test(mdn.source.commit) && mdn.steps[0].capture?.startsWith('data:image/png;base64,'));
   check('Import and manual checks do not invoke a model', report.draftRequests === 0); await shot(page, 'mdn-import-accepted');
   page = await context.newPage(); page.setDefaultTimeout(30000); await page.goto(origin + '/#upload', { waitUntil: 'networkidle' });
+  }
   await page.getByLabel('Upload HTML or ZIP', { exact: true }).setInputFiles({ name: 'proof-counter.html', mimeType: 'text/html', buffer: Buffer.from(source) }); await ready(page);
   await page.getByRole('textbox', { name: 'Requirements', exact: true }).fill(requirement); check('No automatic generation occurs before the explicit click', report.draftRequests === 0);
   const modelResponse = page.waitForResponse(res => new URL(res.url()).origin === origin && new URL(res.url()).pathname === '/api/upload/planner/draft' && res.request().method() === 'POST', { timeout: 75000 });

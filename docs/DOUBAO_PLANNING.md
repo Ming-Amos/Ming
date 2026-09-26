@@ -28,3 +28,7 @@ The request contains requirements, project name, entry path and up to 80 observe
 Generated output is treated as an untrusted draft, validated against the supported browser-action schema, and never executed as JavaScript or shell commands. Drafts may still miss a requirement or choose an unsuitable selector: the review step is part of the product. Each run preserves its plan origin and source identity. A passing result proves only that the confirmed checks passed on that imported snapshot.
 
 Model and API references: [Volcengine model list](https://docs.volcengine.com/docs/ark/model-list?lang=zh), [chat API](https://docs.volcengine.com/docs/ark/chat-api?lang=zh&redirect=1).
+
+## Live verification
+
+On 2026-09-26 UTC, the existing private site completed a real Seed 2.0 Pro generation/review/confirmation/browser-run sequence. The model proposed initial count 0, one Increment click, and expected count 1. The actual isolated browser executed all three steps successfully with DOM captures and exported provenance. The generation reported 489 input and 163 output tokens. [Production report](evidence/github-doubao/production-report.json). This verifies one concrete workflow; other requirements still need review and may produce a rejected or incomplete draft.
