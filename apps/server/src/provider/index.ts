@@ -184,6 +184,12 @@ export function createLiveTransport(): ProviderTransport | null {
   const config = activeConfig().config;
   return new OpenAICompatibleTransport({ label: config.providerLabel, baseUrl: validateProviderBaseUrl(config.baseUrl), modelId: config.modelId, apiKey: config.apiKey });
 }
+/** Server-only adapter: credentials never appear in status or browser responses. */
+export function getUploadPlannerEnvironment(): { MING_DOUBAO_API_KEY?: string; MING_DOUBAO_MODEL?: string } {
+  const { config } = activeConfig();
+  if (config.baseUrl.replace(/\/+$/, '') !== 'https://ark.cn-beijing.volces.com/api/v3' || !config.apiKey) return {};
+  return { MING_DOUBAO_API_KEY: config.apiKey, MING_DOUBAO_MODEL: config.modelId };
+}
 /** Called only by the explicit local Test connection action. No retries or redirects. */
 export async function testProviderConnection(): Promise<ConnectionTestResult> {
   if (!getProviderStatus().configured) throw new ProviderConfigError("Save a complete API URL, model ID, and API key first.", 409);
@@ -193,7 +199,8 @@ export async function testProviderConnection(): Promise<ConnectionTestResult> {
   const started = Date.now(); const testedAt = new Date().toISOString();
   let result: ConnectionTestResult = { ok: false, testedAt, durationMs: 0, inputTokens: null, outputTokens: null, message: "Connection failed." };
   try {
-    const body = JSON.stringify({ model: config.modelId, messages: [{ role: "user", content: "Reply with OK." }], max_tokens: 8 });
+    const body = JSON.stringify({ model: config.modelId, messages: [{ role: "user", content: "Reply with OK." }], max_tokens: 8,
+      ...(config.baseUrl.replace(/\/+$/, '') === 'https://ark.cn-beijing.volces.com/api/v3' && config.modelId.startsWith('doubao-seed-2-') ? { thinking: { type: 'disabled' } } : {}) });
     const response = await httpRequest({ url: buildEndpointUrl(validateProviderBaseUrl(config.baseUrl), "chat/completions"), method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${config.apiKey}`, "Content-Length": String(Buffer.byteLength(body)) },
       body, wallClockMs: 10_000, socketIdleMs: 10_000, maxBytes: 32 * 1024 });

@@ -34,9 +34,21 @@ test('keeps recorded APIs read-only and advertises a separate browser-owned live
   const capabilities = await (await worker.fetch(request('/api/capabilities'), unusedAssets)).json();
   assert.equal(capabilities.readOnly, true);
   assert.equal(capabilities.demoMode, 'recorded-evidence');
+  assert.deepEqual(capabilities.uploadedProjects.github, { available: true, visibility: 'public', build: false, commitPinned: true, serverUpload: false });
+  assert.equal(capabilities.uploadedProjects.modelCalls, 'explicit-draft-only');
+  assert.equal(capabilities.uploadedProjects.planner.confirmedUserActionRequired, true);
   assert.deepEqual(capabilities.liveTrial, { available: true, path: '/#trial', execution: 'visitor-browser', scope: 'bundled-shipboard', captureKind: 'dom-render', modelCalls: false });
   const provider = await (await worker.fetch(request('/api/provider/status'), unusedAssets)).json();
   assert.equal(provider.status.configured, false);
+});
+
+test('dispatches the optional planner before recorded-route write guards without enabling other writes', async () => {
+  const status = await (await worker.fetch(request('/api/upload/planner/status'), unusedAssets)).json();
+  assert.equal(status.configured, false);
+  const unconfigured = await worker.fetch(request('/api/upload/planner/draft', { method: 'POST', headers: { origin: 'https://example.test', 'content-type': 'application/json' }, body: '{}' }), unusedAssets);
+  assert.equal(unconfigured.status, 503);
+  assert.match((await unconfigured.json()).error, /manual plan/i);
+  assert.equal((await worker.fetch(request('/api/plan', { method: 'POST', body: '{}' }), unusedAssets)).status, 403);
 });
 
 test('a missing trial document never falls back to the application shell', async () => {

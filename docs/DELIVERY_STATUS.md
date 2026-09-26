@@ -1,5 +1,15 @@
 # Ming delivery status
 
+## GitHub import and Doubao planning — 2026-09-27 (Asia/Shanghai)
+
+The own-project workspace now imports public GitHub static folders pinned to an exact commit, with bounded downloads and Git blob verification. Repository/ref/commit/folder provenance is preserved in runs and repair briefs. Optional **Doubao Seed 2.0 Pro** drafting is configured through a server-side secret. Generating a draft is explicit; questions and steps must be reviewed before Apply, confirmation and real browser execution. Imports, manual planning and checks consume no model calls. [GitHub workflow](GITHUB_IMPORT.md) · [Doubao workflow](DOUBAO_PLANNING.md).
+
+Current implementation validation: **37/37 GitHub fixture checks**, **3/3 real public MDN repository checks**, **22/22 planner UI checks** (explicitly mocked provider responses, real browser execution), **24/24 backend tests**, and **47/47 HTML/ZIP regression checks**. Full build and type checking passed. The real repository test exposed a compressed Content-Length mismatch on a tiny file; the correction keeps separate transport/decoded limits and exact blob verification. Frontend: `index-CN1km-0X.js`. A minimal actual provider connectivity request succeeded (49 input / 1 output token); this alone is not a plan-quality test. Hosted live-generation results will be recorded after deployment.
+
+Reports: [GitHub import](evidence/github-import/2026-09-26T16-40-47-312Z-65b28fc3/report.json), [real public repository](evidence/github-import/2026-09-26T16-40-47-312Z-65b28fc3/live-public-report.json), [planner UI](evidence/upload-planner-ui/2026-09-26T16-30-33-173Z-e48798c1/report.json), [HTML/ZIP regression](evidence/upload-studio/2026-09-26T16-31-35-226Z-0c71cc55/report.json). All 60 historical evidence hashes and original Bob files are unchanged. Exact-key scanning found no configured secret in Git candidates or the uncompressed deployment files. Credentials remain in ignored local runtime configuration and the hosting secret store. The site audience and GitHub repository remain private.
+
+The sections below are historical checkpoints; their missing-model and manual-only statements describe those earlier versions.
+
 Checkpoint: 2026-09-26. The current presentation is the English **Evidence Studio**, with new Shipboard execution evidence. This checklist separates implementation, recorded proof, earlier validation, and work still awaiting review. No automatic competition submission or public publication has occurred.
 
 **Own-project upload update:** Start now opens `/#upload`. Visitors can import an actual HTML file or static website ZIP, provide requirements, define and confirm up to 30 actions/assertions, run isolated browser DOM checks, inspect images/observations, copy a repair brief and export evidence. A revised upload is compared against the same acceptance plan while preserving the baseline. No Bob or external model calls occur. Requirements are manually translated into checks; this page does not automatically plan or repair with AI. Browser-ready files only: full-stack projects continue to use the local runner. [Scope and workflow](UPLOADED_PROJECTS.md).

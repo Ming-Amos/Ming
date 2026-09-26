@@ -24,6 +24,7 @@ import type { ProviderTransport } from "./provider/types";
 import { compareRepair, planIntegrity } from "./repair-integrity";
 import { TargetRegistry, RegisteredTarget, RequestError, captureTarget, targetFingerprint, inspectRegisteredTarget } from "./target-registry";
 import { mountProviderRoutes } from "./provider-routes";
+import { mountUploadPlannerRoutes } from "./upload-planner-routes";
 import { recordProviderUsage } from "./provider/index";
 import { mountRunReportRoutes } from "./report-routes";
 import { writeJsonAtomicSync } from "./atomic-json";
@@ -365,6 +366,7 @@ if (process.env.MING_PUBLIC_DEMO !== "1") {
 }
 
 mountProviderRoutes(app, RUNTIME_DIR);
+mountUploadPlannerRoutes(app);
 mountRunReportRoutes(app, { loadRun, screenshotsDir: SCREENSHOTS_DIR });
 
 // ── API 路由 ─────────────────────────────────────────────────────

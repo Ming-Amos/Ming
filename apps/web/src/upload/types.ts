@@ -1,7 +1,9 @@
 export interface UploadedFile { path: string; mime: string; bytes: Uint8Array; }
+export interface GitHubSource { kind: 'github'; url: string; commit: string; ref: string; directory: string; }
 export interface UploadedProject {
   id: string; name: string; fingerprint: string; files: UploadedFile[];
   entries: string[]; entry: string; totalBytes: number; warnings: string[];
+  source?: GitHubSource;
 }
 export interface PreparedDocument { html: string; scripts: Array<{ code: string; module: boolean }>; warnings: string[]; }
 export type UploadAction = 'click' | 'fill' | 'select' | 'check' | 'uncheck' | 'assertText' | 'assertCount' | 'assertValue' | 'reload';
@@ -18,6 +20,7 @@ export interface UploadRun {
   status: 'passed' | 'failed' | 'error' | 'cancelled'; steps: UploadStepResult[];
   error?: string; runner: 'isolated-browser-dom'; captureKind: 'dom-render';
   storage: 'isolated-session-adapter'; diagnostics: string[];
+  source?: GitHubSource;
 }
 export interface UploadProgress { completed: number; total: number; description: string; steps: UploadStepResult[]; }
 export interface UploadPreview { elements: PageElement[]; warnings: string[]; }

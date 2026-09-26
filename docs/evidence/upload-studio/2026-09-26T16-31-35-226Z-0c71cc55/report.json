@@ -1,0 +1,1116 @@
+{
+  "reviewId": "0c71cc55-2b2f-409e-85e5-7ca1401f6f5f",
+  "startedAt": "2026-09-26T16:31:35.227Z",
+  "base": "http://127.0.0.1:4192",
+  "checks": [
+    {
+      "name": "Compiled upload preview is available",
+      "passed": true
+    },
+    {
+      "name": "Upload studio mounts its real project input",
+      "passed": true
+    },
+    {
+      "name": "A user-selected self-contained HTML file opens for inspection",
+      "passed": true
+    },
+    {
+      "name": "Requirements file import uses the supplied Markdown text",
+      "passed": true
+    },
+    {
+      "name": "Execution requires explicit review of the uploaded project and manual plan",
+      "passed": true
+    },
+    {
+      "name": "Human confirmation enables the configured check",
+      "passed": true
+    },
+    {
+      "name": "Changing the requirements invalidates confirmation",
+      "passed": true
+    },
+    {
+      "name": "Actual uploaded HTML adds the task, then fails its real persistence check",
+      "passed": true
+    },
+    {
+      "name": "Run export binds the original requirement, source, entry, and plan",
+      "passed": true
+    },
+    {
+      "name": "Failure evidence includes a non-empty DOM-render PNG",
+      "passed": true
+    },
+    {
+      "name": "The failed observation reports the uploaded task requirement",
+      "passed": true
+    },
+    {
+      "name": "Repair brief exports this actual failure and its unchanged standard",
+      "passed": true
+    },
+    {
+      "name": "Uploaded application cannot overwrite unrelated parent storage or markup",
+      "passed": true
+    },
+    {
+      "name": "Uploading revised code preserves the editable requirement and same plan",
+      "passed": true
+    },
+    {
+      "name": "Uploaded fixed source passes the same real operations after reloading",
+      "passed": true
+    },
+    {
+      "name": "Fixed upload has a new source and run but the identical acceptance plan",
+      "passed": true
+    },
+    {
+      "name": "Original failing run is unchanged in the comparison export",
+      "passed": true
+    },
+    {
+      "name": "Revision comparison requires the same entry and plan plus changed source and a fresh passing result",
+      "passed": true
+    },
+    {
+      "name": "Changing a check also invalidates prior human confirmation",
+      "passed": true
+    },
+    {
+      "name": "A non-matching user expectation fails even against the fixed app",
+      "passed": true
+    },
+    {
+      "name": "Cancellation records incomplete checks without claiming a pass",
+      "passed": true
+    },
+    {
+      "name": "Retry runs a fresh acceptance after cancellation",
+      "passed": true
+    },
+    {
+      "name": "Uploaded ZIP JavaScript really runs inside the preview",
+      "passed": true
+    },
+    {
+      "name": "Nested ZIP root-relative CSS is loaded",
+      "passed": true
+    },
+    {
+      "name": "Uploaded ZIP image asset is resolved and decoded",
+      "passed": true
+    },
+    {
+      "name": "A real multi-file static ZIP passes interaction and reload checks",
+      "passed": true
+    },
+    {
+      "name": "390px upload workflow has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "Uploaded ZIP application remains present after the mobile resize",
+      "passed": true
+    },
+    {
+      "name": "HTML with a head-like comment still initializes the isolated project",
+      "passed": true
+    },
+    {
+      "name": "Visible text assertions compare the full expectation beyond 1000 characters",
+      "passed": true
+    },
+    {
+      "name": "An empty value assertion against a non-form element produces an explicit error",
+      "passed": true
+    },
+    {
+      "name": "Archive path traversal is rejected before execution",
+      "passed": true,
+      "detail": "Unsafe archive path: ../outside.html. Parent traversal and ambiguous paths are not supported."
+    },
+    {
+      "name": "Duplicate archive paths including case collisions are rejected",
+      "passed": true,
+      "detail": "Duplicate archive path: INDEX.html. File names must be unique, including letter case."
+    },
+    {
+      "name": "Encrypted archive entries are rejected explicitly",
+      "passed": true,
+      "detail": "Encrypted ZIP files are not supported. Export an unencrypted static build."
+    },
+    {
+      "name": "Malformed archives produce a readable import error",
+      "passed": true,
+      "detail": "This ZIP has no valid end record. Re-create it as a standard ZIP archive."
+    },
+    {
+      "name": "Oversized input is rejected without mounting an application",
+      "passed": true,
+      "detail": "The upload exceeds the 10 MB input limit."
+    },
+    {
+      "name": "Compressed content exceeding the unpacked size limit is rejected",
+      "passed": true,
+      "detail": "The unpacked project exceeds the 20 MB limit."
+    },
+    {
+      "name": "Source-only project uploads explain that a built static output is required",
+      "passed": true,
+      "detail": "Unsupported file: src/App.tsx. Build the project first, then ZIP the generated dist/build folder, or upload one self-contained HTML file. Server code and uncompiled source cannot run in this online browser sandbox."
+    },
+    {
+      "name": "Rejected files never become the active project",
+      "passed": true
+    },
+    {
+      "name": "Opaque sandbox blocks parent DOM, cookies, parent storage, and network access while supporting isolated app storage",
+      "passed": true
+    },
+    {
+      "name": "Parent DOM, cookie, and local storage remain unchanged after explicit hostile attempts",
+      "passed": true
+    },
+    {
+      "name": "Uploaded top-navigation attempt cannot leave the Ming route",
+      "passed": true
+    },
+    {
+      "name": "Fetch, image, top-navigation and frame-navigation attempts never reach the actual HTTP trap",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "Frame-navigation attempts preserve the host route and parent data",
+      "passed": true
+    },
+    {
+      "name": "Uploads and checks make no server mutation or model request",
+      "passed": true
+    },
+    {
+      "name": "No unexpected requests leave the compiled local preview",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "No uncaught application or parent JavaScript errors",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "runs": [
+    {
+      "id": "d5d957fd-a2cd-430e-845c-8881a378bc9b",
+      "projectName": "field-notes",
+      "projectFingerprint": "0c388799caa3701dfa09c138c1529e335a96a6a79191f2fbce4787b804c8ee3d",
+      "entry": "field-notes.html",
+      "planFingerprint": "3d7eab251910d07f2a0fe0c5b535fe63ea393012ce357768c4d6ad94788b732c",
+      "requirement": "After adding Uploaded proof 0c71cc55, it appears in the list and remains after a reload.",
+      "startedAt": "2026-09-26T16:31:37.571Z",
+      "finishedAt": "2026-09-26T16:31:39.894Z",
+      "status": "failed",
+      "runner": "isolated-browser-dom",
+      "captureKind": "dom-render",
+      "storage": "isolated-session-adapter",
+      "diagnostics": [],
+      "steps": [
+        {
+          "id": "78ac5978-900b-44fc-ab37-45367ca7ee78",
+          "action": "fill",
+          "selector": "#taskName",
+          "value": "Uploaded proof 0c71cc55",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed fill on #taskName",
+          "expected": "fill",
+          "durationMs": 274,
+          "capture": {
+            "bytes": 23056,
+            "width": 676,
+            "height": 450,
+            "sha256": "82c0f66cd9f80f367359d390d5301a05e8f7242371f7bc06da9d971cbcfdd0e3"
+          }
+        },
+        {
+          "id": "ec4640ca-2b3c-4cc8-98ad-d2397089fdbc",
+          "action": "click",
+          "selector": "#addTask",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed click on #addTask",
+          "expected": "click",
+          "durationMs": 276,
+          "capture": {
+            "bytes": 26362,
+            "width": 676,
+            "height": 523,
+            "sha256": "34f14dec66bbd69cdf10f73019aa4f4e18efaff82532bc63eb2fbf780a84b853"
+          }
+        },
+        {
+          "id": "4fbe7a1b-37b4-4903-ab64-744e8f950ea1",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Uploaded proof 0c71cc55",
+          "description": "",
+          "status": "passed",
+          "observed": "Uploaded proof 0c71cc55",
+          "expected": "Visible text contains: Uploaded proof 0c71cc55",
+          "durationMs": 14,
+          "capture": {
+            "bytes": 26362,
+            "width": 676,
+            "height": 523,
+            "sha256": "34f14dec66bbd69cdf10f73019aa4f4e18efaff82532bc63eb2fbf780a84b853"
+          }
+        },
+        {
+          "id": "547db916-2bee-481e-b033-d9c11f531fa6",
+          "action": "reload",
+          "selector": "body",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Reopened the uploaded document with the same isolated storage adapter.",
+          "expected": "Reload the isolated page",
+          "durationMs": 154,
+          "capture": {
+            "bytes": 21083,
+            "width": 676,
+            "height": 450,
+            "sha256": "364a98b4c4090fe005401416d36ba3167ef86f0ad064aeb6ea52aacd6e090ffc"
+          }
+        },
+        {
+          "id": "e4174f3e-d6e2-4cce-a2a4-73bde97fc1cf",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Uploaded proof 0c71cc55",
+          "description": "",
+          "status": "failed",
+          "observed": "(no visible text)",
+          "expected": "Visible text contains: Uploaded proof 0c71cc55",
+          "durationMs": 1459,
+          "capture": {
+            "bytes": 21083,
+            "width": 676,
+            "height": 450,
+            "sha256": "364a98b4c4090fe005401416d36ba3167ef86f0ad064aeb6ea52aacd6e090ffc"
+          }
+        }
+      ]
+    },
+    {
+      "id": "50408304-ddeb-43ad-a191-9530b0e68ade",
+      "projectName": "field-notes",
+      "projectFingerprint": "fef6fb0ddee9cde4e461fd94b10b2e494ffd56104c00bc8fc67098f6c1194c59",
+      "entry": "field-notes.html",
+      "planFingerprint": "3d7eab251910d07f2a0fe0c5b535fe63ea393012ce357768c4d6ad94788b732c",
+      "requirement": "After adding Uploaded proof 0c71cc55, it appears in the list and remains after a reload.",
+      "startedAt": "2026-09-26T16:31:40.653Z",
+      "finishedAt": "2026-09-26T16:31:41.517Z",
+      "status": "passed",
+      "runner": "isolated-browser-dom",
+      "captureKind": "dom-render",
+      "storage": "isolated-session-adapter",
+      "diagnostics": [],
+      "steps": [
+        {
+          "id": "78ac5978-900b-44fc-ab37-45367ca7ee78",
+          "action": "fill",
+          "selector": "#taskName",
+          "value": "Uploaded proof 0c71cc55",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed fill on #taskName",
+          "expected": "fill",
+          "durationMs": 270,
+          "capture": {
+            "bytes": 23056,
+            "width": 676,
+            "height": 450,
+            "sha256": "82c0f66cd9f80f367359d390d5301a05e8f7242371f7bc06da9d971cbcfdd0e3"
+          }
+        },
+        {
+          "id": "ec4640ca-2b3c-4cc8-98ad-d2397089fdbc",
+          "action": "click",
+          "selector": "#addTask",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed click on #addTask",
+          "expected": "click",
+          "durationMs": 271,
+          "capture": {
+            "bytes": 26362,
+            "width": 676,
+            "height": 523,
+            "sha256": "34f14dec66bbd69cdf10f73019aa4f4e18efaff82532bc63eb2fbf780a84b853"
+          }
+        },
+        {
+          "id": "4fbe7a1b-37b4-4903-ab64-744e8f950ea1",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Uploaded proof 0c71cc55",
+          "description": "",
+          "status": "passed",
+          "observed": "Uploaded proof 0c71cc55",
+          "expected": "Visible text contains: Uploaded proof 0c71cc55",
+          "durationMs": 13,
+          "capture": {
+            "bytes": 26362,
+            "width": 676,
+            "height": 523,
+            "sha256": "34f14dec66bbd69cdf10f73019aa4f4e18efaff82532bc63eb2fbf780a84b853"
+          }
+        },
+        {
+          "id": "547db916-2bee-481e-b033-d9c11f531fa6",
+          "action": "reload",
+          "selector": "body",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Reopened the uploaded document with the same isolated storage adapter.",
+          "expected": "Reload the isolated page",
+          "durationMs": 153,
+          "capture": {
+            "bytes": 24148,
+            "width": 676,
+            "height": 487,
+            "sha256": "9c011c5c6e8b7c832e9a63633f363412745d47426c076d43b803da069a74e317"
+          }
+        },
+        {
+          "id": "e4174f3e-d6e2-4cce-a2a4-73bde97fc1cf",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Uploaded proof 0c71cc55",
+          "description": "",
+          "status": "passed",
+          "observed": "Uploaded proof 0c71cc55",
+          "expected": "Visible text contains: Uploaded proof 0c71cc55",
+          "durationMs": 16,
+          "capture": {
+            "bytes": 24148,
+            "width": 676,
+            "height": 487,
+            "sha256": "9c011c5c6e8b7c832e9a63633f363412745d47426c076d43b803da069a74e317"
+          }
+        }
+      ]
+    },
+    {
+      "id": "4850cf47-7206-4b84-98e2-16f6dd44cd6a",
+      "projectName": "field-notes",
+      "projectFingerprint": "fef6fb0ddee9cde4e461fd94b10b2e494ffd56104c00bc8fc67098f6c1194c59",
+      "entry": "field-notes.html",
+      "planFingerprint": "7d396e0908e7c2de31e14875acef1fa15b2e64a34c79cd752d80fb3dbd57ea8e",
+      "requirement": "After adding Uploaded proof 0c71cc55, it appears in the list and remains after a reload.",
+      "startedAt": "2026-09-26T16:31:42.336Z",
+      "finishedAt": "2026-09-26T16:31:44.637Z",
+      "status": "failed",
+      "runner": "isolated-browser-dom",
+      "captureKind": "dom-render",
+      "storage": "isolated-session-adapter",
+      "diagnostics": [],
+      "steps": [
+        {
+          "id": "78ac5978-900b-44fc-ab37-45367ca7ee78",
+          "action": "fill",
+          "selector": "#taskName",
+          "value": "Uploaded proof 0c71cc55",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed fill on #taskName",
+          "expected": "fill",
+          "durationMs": 281,
+          "capture": {
+            "bytes": 23056,
+            "width": 676,
+            "height": 450,
+            "sha256": "82c0f66cd9f80f367359d390d5301a05e8f7242371f7bc06da9d971cbcfdd0e3"
+          }
+        },
+        {
+          "id": "ec4640ca-2b3c-4cc8-98ad-d2397089fdbc",
+          "action": "click",
+          "selector": "#addTask",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed click on #addTask",
+          "expected": "click",
+          "durationMs": 265,
+          "capture": {
+            "bytes": 26362,
+            "width": 676,
+            "height": 523,
+            "sha256": "34f14dec66bbd69cdf10f73019aa4f4e18efaff82532bc63eb2fbf780a84b853"
+          }
+        },
+        {
+          "id": "4fbe7a1b-37b4-4903-ab64-744e8f950ea1",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Uploaded proof 0c71cc55",
+          "description": "",
+          "status": "passed",
+          "observed": "Uploaded proof 0c71cc55",
+          "expected": "Visible text contains: Uploaded proof 0c71cc55",
+          "durationMs": 14,
+          "capture": {
+            "bytes": 26362,
+            "width": 676,
+            "height": 523,
+            "sha256": "34f14dec66bbd69cdf10f73019aa4f4e18efaff82532bc63eb2fbf780a84b853"
+          }
+        },
+        {
+          "id": "547db916-2bee-481e-b033-d9c11f531fa6",
+          "action": "reload",
+          "selector": "body",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Reopened the uploaded document with the same isolated storage adapter.",
+          "expected": "Reload the isolated page",
+          "durationMs": 141,
+          "capture": {
+            "bytes": 24148,
+            "width": 676,
+            "height": 487,
+            "sha256": "9c011c5c6e8b7c832e9a63633f363412745d47426c076d43b803da069a74e317"
+          }
+        },
+        {
+          "id": "e4174f3e-d6e2-4cce-a2a4-73bde97fc1cf",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "This exact phrase never appears",
+          "description": "",
+          "status": "failed",
+          "observed": "Uploaded proof 0c71cc55",
+          "expected": "Visible text contains: This exact phrase never appears",
+          "durationMs": 1454,
+          "capture": {
+            "bytes": 24148,
+            "width": 676,
+            "height": 487,
+            "sha256": "9c011c5c6e8b7c832e9a63633f363412745d47426c076d43b803da069a74e317"
+          }
+        }
+      ]
+    },
+    {
+      "id": "b8b9d5ec-19c6-4485-9ae2-d7da06ec4ea5",
+      "projectName": "field-notes",
+      "projectFingerprint": "fef6fb0ddee9cde4e461fd94b10b2e494ffd56104c00bc8fc67098f6c1194c59",
+      "entry": "field-notes.html",
+      "planFingerprint": "3d7eab251910d07f2a0fe0c5b535fe63ea393012ce357768c4d6ad94788b732c",
+      "requirement": "After adding Uploaded proof 0c71cc55, it appears in the list and remains after a reload.",
+      "startedAt": "2026-09-26T16:31:44.903Z",
+      "finishedAt": "2026-09-26T16:31:44.953Z",
+      "status": "cancelled",
+      "runner": "isolated-browser-dom",
+      "captureKind": "dom-render",
+      "storage": "isolated-session-adapter",
+      "diagnostics": [],
+      "steps": [
+        {
+          "id": "78ac5978-900b-44fc-ab37-45367ca7ee78",
+          "action": "fill",
+          "selector": "#taskName",
+          "value": "Uploaded proof 0c71cc55",
+          "description": "",
+          "status": "unchecked",
+          "observed": "Not checked",
+          "expected": "Uploaded proof 0c71cc55",
+          "durationMs": 0
+        },
+        {
+          "id": "ec4640ca-2b3c-4cc8-98ad-d2397089fdbc",
+          "action": "click",
+          "selector": "#addTask",
+          "value": "",
+          "description": "",
+          "status": "unchecked",
+          "observed": "Not checked",
+          "expected": "click",
+          "durationMs": 0
+        },
+        {
+          "id": "4fbe7a1b-37b4-4903-ab64-744e8f950ea1",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Uploaded proof 0c71cc55",
+          "description": "",
+          "status": "unchecked",
+          "observed": "Not checked",
+          "expected": "Uploaded proof 0c71cc55",
+          "durationMs": 0
+        },
+        {
+          "id": "547db916-2bee-481e-b033-d9c11f531fa6",
+          "action": "reload",
+          "selector": "body",
+          "value": "",
+          "description": "",
+          "status": "unchecked",
+          "observed": "Not checked",
+          "expected": "reload",
+          "durationMs": 0
+        },
+        {
+          "id": "e4174f3e-d6e2-4cce-a2a4-73bde97fc1cf",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Uploaded proof 0c71cc55",
+          "description": "",
+          "status": "unchecked",
+          "observed": "Not checked",
+          "expected": "Uploaded proof 0c71cc55",
+          "durationMs": 0
+        }
+      ],
+      "error": "Checks cancelled."
+    },
+    {
+      "id": "29cdf1db-b9e5-428b-bd33-ea576cb005d1",
+      "projectName": "field-notes",
+      "projectFingerprint": "fef6fb0ddee9cde4e461fd94b10b2e494ffd56104c00bc8fc67098f6c1194c59",
+      "entry": "field-notes.html",
+      "planFingerprint": "3d7eab251910d07f2a0fe0c5b535fe63ea393012ce357768c4d6ad94788b732c",
+      "requirement": "After adding Uploaded proof 0c71cc55, it appears in the list and remains after a reload.",
+      "startedAt": "2026-09-26T16:31:45.120Z",
+      "finishedAt": "2026-09-26T16:31:45.995Z",
+      "status": "passed",
+      "runner": "isolated-browser-dom",
+      "captureKind": "dom-render",
+      "storage": "isolated-session-adapter",
+      "diagnostics": [],
+      "steps": [
+        {
+          "id": "78ac5978-900b-44fc-ab37-45367ca7ee78",
+          "action": "fill",
+          "selector": "#taskName",
+          "value": "Uploaded proof 0c71cc55",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed fill on #taskName",
+          "expected": "fill",
+          "durationMs": 279,
+          "capture": {
+            "bytes": 23056,
+            "width": 676,
+            "height": 450,
+            "sha256": "82c0f66cd9f80f367359d390d5301a05e8f7242371f7bc06da9d971cbcfdd0e3"
+          }
+        },
+        {
+          "id": "ec4640ca-2b3c-4cc8-98ad-d2397089fdbc",
+          "action": "click",
+          "selector": "#addTask",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed click on #addTask",
+          "expected": "click",
+          "durationMs": 273,
+          "capture": {
+            "bytes": 26362,
+            "width": 676,
+            "height": 523,
+            "sha256": "34f14dec66bbd69cdf10f73019aa4f4e18efaff82532bc63eb2fbf780a84b853"
+          }
+        },
+        {
+          "id": "4fbe7a1b-37b4-4903-ab64-744e8f950ea1",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Uploaded proof 0c71cc55",
+          "description": "",
+          "status": "passed",
+          "observed": "Uploaded proof 0c71cc55",
+          "expected": "Visible text contains: Uploaded proof 0c71cc55",
+          "durationMs": 16,
+          "capture": {
+            "bytes": 26362,
+            "width": 676,
+            "height": 523,
+            "sha256": "34f14dec66bbd69cdf10f73019aa4f4e18efaff82532bc63eb2fbf780a84b853"
+          }
+        },
+        {
+          "id": "547db916-2bee-481e-b033-d9c11f531fa6",
+          "action": "reload",
+          "selector": "body",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Reopened the uploaded document with the same isolated storage adapter.",
+          "expected": "Reload the isolated page",
+          "durationMs": 149,
+          "capture": {
+            "bytes": 24148,
+            "width": 676,
+            "height": 487,
+            "sha256": "9c011c5c6e8b7c832e9a63633f363412745d47426c076d43b803da069a74e317"
+          }
+        },
+        {
+          "id": "e4174f3e-d6e2-4cce-a2a4-73bde97fc1cf",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Uploaded proof 0c71cc55",
+          "description": "",
+          "status": "passed",
+          "observed": "Uploaded proof 0c71cc55",
+          "expected": "Visible text contains: Uploaded proof 0c71cc55",
+          "durationMs": 12,
+          "capture": {
+            "bytes": 24148,
+            "width": 676,
+            "height": 487,
+            "sha256": "9c011c5c6e8b7c832e9a63633f363412745d47426c076d43b803da069a74e317"
+          }
+        }
+      ]
+    },
+    {
+      "id": "2c9554e3-14f2-46c5-8e34-efed20760958",
+      "projectName": "field-notes-static",
+      "projectFingerprint": "735586ecb57da46052b80f769ee0271f41d117952353053157abfbdf62d78b76",
+      "entry": "release/dist/index.html",
+      "planFingerprint": "18a4d1674372476c06a48991a536a5045f8876dffd5032fff5557164ff6fa628",
+      "requirement": "After adding Uploaded proof 0c71cc55, it appears in the list and remains after a reload.",
+      "startedAt": "2026-09-26T16:31:47.753Z",
+      "finishedAt": "2026-09-26T16:31:48.630Z",
+      "status": "passed",
+      "runner": "isolated-browser-dom",
+      "captureKind": "dom-render",
+      "storage": "isolated-session-adapter",
+      "diagnostics": [],
+      "steps": [
+        {
+          "id": "b63b9497-82b1-4dbd-8bf5-13583770a9c4",
+          "action": "fill",
+          "selector": "#taskName",
+          "value": "Uploaded proof 0c71cc55",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed fill on #taskName",
+          "expected": "fill",
+          "durationMs": 279,
+          "capture": {
+            "bytes": 23056,
+            "width": 676,
+            "height": 450,
+            "sha256": "82c0f66cd9f80f367359d390d5301a05e8f7242371f7bc06da9d971cbcfdd0e3"
+          }
+        },
+        {
+          "id": "fc1a8cec-539f-43ac-a46e-7c391631f6ac",
+          "action": "click",
+          "selector": "#addTask",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed click on #addTask",
+          "expected": "click",
+          "durationMs": 273,
+          "capture": {
+            "bytes": 26362,
+            "width": 676,
+            "height": 523,
+            "sha256": "34f14dec66bbd69cdf10f73019aa4f4e18efaff82532bc63eb2fbf780a84b853"
+          }
+        },
+        {
+          "id": "c8dbec01-832e-4be8-84b4-248ae2c73c4e",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Uploaded proof 0c71cc55",
+          "description": "",
+          "status": "passed",
+          "observed": "Uploaded proof 0c71cc55",
+          "expected": "Visible text contains: Uploaded proof 0c71cc55",
+          "durationMs": 15,
+          "capture": {
+            "bytes": 26362,
+            "width": 676,
+            "height": 523,
+            "sha256": "34f14dec66bbd69cdf10f73019aa4f4e18efaff82532bc63eb2fbf780a84b853"
+          }
+        },
+        {
+          "id": "a26689e0-3124-4f00-8d3d-d65c99b52b52",
+          "action": "reload",
+          "selector": "body",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Reopened the uploaded document with the same isolated storage adapter.",
+          "expected": "Reload the isolated page",
+          "durationMs": 151,
+          "capture": {
+            "bytes": 24148,
+            "width": 676,
+            "height": 487,
+            "sha256": "9c011c5c6e8b7c832e9a63633f363412745d47426c076d43b803da069a74e317"
+          }
+        },
+        {
+          "id": "726f4bb8-af30-4152-b9ab-232e72fc1739",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Uploaded proof 0c71cc55",
+          "description": "",
+          "status": "passed",
+          "observed": "Uploaded proof 0c71cc55",
+          "expected": "Visible text contains: Uploaded proof 0c71cc55",
+          "durationMs": 12,
+          "capture": {
+            "bytes": 24148,
+            "width": 676,
+            "height": 487,
+            "sha256": "9c011c5c6e8b7c832e9a63633f363412745d47426c076d43b803da069a74e317"
+          }
+        }
+      ]
+    },
+    {
+      "id": "929461a5-6811-4c43-ad48-3b7241235896",
+      "projectName": "html-parser-and-assertions",
+      "projectFingerprint": "20d5082fa77f709b293c72ad7fb3dbcc346cb2034107fb59317be58f0ebb7198",
+      "entry": "html-parser-and-assertions.html",
+      "planFingerprint": "f7ea34b53cb06aed196658c6cca944a004b8bf4a7a335f3c6bb6d9b39b3148a0",
+      "requirement": "All expected visible text must be checked even beyond the observation display limit.",
+      "startedAt": "2026-09-26T16:31:50.488Z",
+      "finishedAt": "2026-09-26T16:31:50.657Z",
+      "status": "passed",
+      "runner": "isolated-browser-dom",
+      "captureKind": "dom-render",
+      "storage": "isolated-session-adapter",
+      "diagnostics": [],
+      "steps": [
+        {
+          "id": "9addc01e-7264-4233-8f3d-780d102ec783",
+          "action": "assertText",
+          "selector": "#long-evidence",
+          "value": "Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Full text ends here.",
+          "description": "",
+          "status": "passed",
+          "observed": "Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible accept",
+          "expected": "Visible text contains: Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Visible acceptance evidence. Full text ends here.",
+          "durationMs": 24,
+          "capture": {
+            "bytes": 112717,
+            "width": 676,
+            "height": 819,
+            "sha256": "eb7f5cc06289fff22327b5812998dfa5e9cba355126e66b150e71aba107eaedc"
+          }
+        }
+      ]
+    },
+    {
+      "id": "6279cb60-5c94-4679-8ac4-c77643b6a020",
+      "projectName": "html-parser-and-assertions",
+      "projectFingerprint": "20d5082fa77f709b293c72ad7fb3dbcc346cb2034107fb59317be58f0ebb7198",
+      "entry": "html-parser-and-assertions.html",
+      "planFingerprint": "73bc11fe006fa3b17dd6a81ae3f73a8e916b167181061849d379b847320c09cc",
+      "requirement": "Value assertions must target form controls.",
+      "startedAt": "2026-09-26T16:31:50.919Z",
+      "finishedAt": "2026-09-26T16:31:51.068Z",
+      "status": "error",
+      "runner": "isolated-browser-dom",
+      "captureKind": "dom-render",
+      "storage": "isolated-session-adapter",
+      "diagnostics": [],
+      "steps": [
+        {
+          "id": "9addc01e-7264-4233-8f3d-780d102ec783",
+          "action": "assertValue",
+          "selector": "#not-a-form-control",
+          "value": "",
+          "description": "",
+          "status": "error",
+          "observed": "Assert value requires an input, textarea, or select element.",
+          "expected": "assertValue",
+          "durationMs": 0
+        }
+      ],
+      "error": "Assert value requires an input, textarea, or select element."
+    },
+    {
+      "id": "1e732e60-f000-41b3-8ab6-98dbe447ea38",
+      "projectName": "sandbox-boundary-review",
+      "projectFingerprint": "203b5b57655aae9420b0daf0c2966f2e9c1a621f887570d1d5384c33804d6c1e",
+      "entry": "sandbox-boundary-review.html",
+      "planFingerprint": "eff8c3f45cfb32b6b18a1679f395d569dc17b60c13ab8d565f906c343aa64fdd",
+      "requirement": "Synthetic boundary fixture cannot access its parent, cookies, or the network.",
+      "startedAt": "2026-09-26T16:31:53.220Z",
+      "finishedAt": "2026-09-26T16:31:53.691Z",
+      "status": "passed",
+      "runner": "isolated-browser-dom",
+      "captureKind": "dom-render",
+      "storage": "isolated-session-adapter",
+      "diagnostics": [
+        "sandbox-boundary-review.html references fetch. Networking and workers are blocked in this preview; applications that need them require the local runner.",
+        "Blocked connect-src: http://127.0.0.1:52775/fetch",
+        "Blocked img-src: http://127.0.0.1:52775/image"
+      ],
+      "steps": [
+        {
+          "id": "78ac5978-900b-44fc-ab37-45367ca7ee78",
+          "action": "click",
+          "selector": "#probe",
+          "value": "Uploaded proof 0c71cc55",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed click on #probe",
+          "expected": "click",
+          "durationMs": 274,
+          "capture": {
+            "bytes": 36792,
+            "width": 676,
+            "height": 450,
+            "sha256": "47e2067f7ffe1c1b86ab799efafa0255d8fee3b2791ede69073684b0cd6e7a39"
+          }
+        },
+        {
+          "id": "ad73faa1-28ed-4ea1-bbd5-de37234291b2",
+          "action": "assertText",
+          "selector": "#securityResults",
+          "value": "PARENT_BLOCKED",
+          "description": "",
+          "status": "passed",
+          "observed": "PARENT_BLOCKED | COOKIE_BLOCKED | PARENT_STORAGE_BLOCKED | CHILD_STORAGE_OWN | TOP_BLOCKED | NETWORK_BLOCKED",
+          "expected": "Visible text contains: PARENT_BLOCKED",
+          "durationMs": 12,
+          "capture": {
+            "bytes": 36792,
+            "width": 676,
+            "height": 450,
+            "sha256": "47e2067f7ffe1c1b86ab799efafa0255d8fee3b2791ede69073684b0cd6e7a39"
+          }
+        },
+        {
+          "id": "5a42f92f-1885-46b2-9d0a-c91fe3703d66",
+          "action": "assertText",
+          "selector": "#securityResults",
+          "value": "COOKIE_BLOCKED",
+          "description": "",
+          "status": "passed",
+          "observed": "PARENT_BLOCKED | COOKIE_BLOCKED | PARENT_STORAGE_BLOCKED | CHILD_STORAGE_OWN | TOP_BLOCKED | NETWORK_BLOCKED",
+          "expected": "Visible text contains: COOKIE_BLOCKED",
+          "durationMs": 10,
+          "capture": {
+            "bytes": 36792,
+            "width": 676,
+            "height": 450,
+            "sha256": "47e2067f7ffe1c1b86ab799efafa0255d8fee3b2791ede69073684b0cd6e7a39"
+          }
+        },
+        {
+          "id": "bac8682f-c3c4-4da3-846a-6b069e661df3",
+          "action": "assertText",
+          "selector": "#securityResults",
+          "value": "PARENT_STORAGE_BLOCKED",
+          "description": "",
+          "status": "passed",
+          "observed": "PARENT_BLOCKED | COOKIE_BLOCKED | PARENT_STORAGE_BLOCKED | CHILD_STORAGE_OWN | TOP_BLOCKED | NETWORK_BLOCKED",
+          "expected": "Visible text contains: PARENT_STORAGE_BLOCKED",
+          "durationMs": 10,
+          "capture": {
+            "bytes": 36792,
+            "width": 676,
+            "height": 450,
+            "sha256": "47e2067f7ffe1c1b86ab799efafa0255d8fee3b2791ede69073684b0cd6e7a39"
+          }
+        },
+        {
+          "id": "ea857475-2aa6-48e8-8c6e-9d56927364f8",
+          "action": "assertText",
+          "selector": "#securityResults",
+          "value": "CHILD_STORAGE_OWN",
+          "description": "",
+          "status": "passed",
+          "observed": "PARENT_BLOCKED | COOKIE_BLOCKED | PARENT_STORAGE_BLOCKED | CHILD_STORAGE_OWN | TOP_BLOCKED | NETWORK_BLOCKED",
+          "expected": "Visible text contains: CHILD_STORAGE_OWN",
+          "durationMs": 9,
+          "capture": {
+            "bytes": 36792,
+            "width": 676,
+            "height": 450,
+            "sha256": "47e2067f7ffe1c1b86ab799efafa0255d8fee3b2791ede69073684b0cd6e7a39"
+          }
+        },
+        {
+          "id": "01ddba77-69f8-4111-aef8-1a7e241d92b4",
+          "action": "assertText",
+          "selector": "#securityResults",
+          "value": "NETWORK_BLOCKED",
+          "description": "",
+          "status": "passed",
+          "observed": "PARENT_BLOCKED | COOKIE_BLOCKED | PARENT_STORAGE_BLOCKED | CHILD_STORAGE_OWN | TOP_BLOCKED | NETWORK_BLOCKED",
+          "expected": "Visible text contains: NETWORK_BLOCKED",
+          "durationMs": 10,
+          "capture": {
+            "bytes": 36792,
+            "width": 676,
+            "height": 450,
+            "sha256": "47e2067f7ffe1c1b86ab799efafa0255d8fee3b2791ede69073684b0cd6e7a39"
+          }
+        }
+      ]
+    },
+    {
+      "id": "8beac574-72fb-4375-ad2d-df1cd52bedf5",
+      "projectName": "sandbox-boundary-review",
+      "projectFingerprint": "203b5b57655aae9420b0daf0c2966f2e9c1a621f887570d1d5384c33804d6c1e",
+      "entry": "sandbox-boundary-review.html",
+      "planFingerprint": "4e3982262f94d517898a94ae0de57b323272a69b8acee561d97bbc111d46438b",
+      "requirement": "A user-uploaded application must not navigate its frame to the network.",
+      "startedAt": "2026-09-26T16:31:54.486Z",
+      "finishedAt": "2026-09-26T16:32:03.632Z",
+      "status": "error",
+      "runner": "isolated-browser-dom",
+      "captureKind": "dom-render",
+      "storage": "isolated-session-adapter",
+      "diagnostics": [
+        "sandbox-boundary-review.html references fetch. Networking and workers are blocked in this preview; applications that need them require the local runner."
+      ],
+      "steps": [
+        {
+          "id": "78ac5978-900b-44fc-ab37-45367ca7ee78",
+          "action": "click",
+          "selector": "#selfNavigate",
+          "value": "Uploaded proof 0c71cc55",
+          "description": "",
+          "status": "error",
+          "observed": "The isolated page did not respond in time. Check for unsupported scripts or navigation.",
+          "expected": "Uploaded proof 0c71cc55",
+          "durationMs": 0
+        },
+        {
+          "id": "6f28c505-ce5a-4fe1-a589-f5ee02a35aee",
+          "action": "assertText",
+          "selector": "#securityResults",
+          "value": "Not checked",
+          "description": "",
+          "status": "unchecked",
+          "observed": "Not checked",
+          "expected": "Not checked",
+          "durationMs": 0
+        }
+      ],
+      "error": "The isolated page did not respond in time. Check for unsupported scripts or navigation."
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "01-uploaded-html-failure.png",
+      "sha256": "56e10e7350db5c2ff614d4b61e6475fccc4c3571a0c27eaa4c422fe174193b0f"
+    },
+    {
+      "file": "02-uploaded-revision-passed.png",
+      "sha256": "dfae69ca0964ae286b9fc4adbc9a34bbe35c7f0ce504931c23438451a09ee34e"
+    },
+    {
+      "file": "03-static-zip-accepted.png",
+      "sha256": "5f50274b1225db6b1dd54a200a5ad3eeec0291da391029193768df3256df1ad2"
+    },
+    {
+      "file": "04-upload-studio-mobile.png",
+      "sha256": "5f3a96965534b75c078aa829abdf788f5bd16d9bc9a8e123cf4d1dda971f990c"
+    }
+  ],
+  "pageErrors": [],
+  "outsideRequests": [],
+  "blockedRequestEvents": [
+    "http://127.0.0.1:52775/image",
+    "http://127.0.0.1:52775/image",
+    "http://127.0.0.1:52775/image",
+    "http://127.0.0.1:52775/image",
+    "http://127.0.0.1:52775/image",
+    "http://127.0.0.1:52775/image",
+    "http://127.0.0.1:52775/image"
+  ],
+  "requests": [
+    {
+      "path": "/",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/index-dq5iu9Do.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/index-tVgPVPRT.css",
+      "method": "GET"
+    },
+    {
+      "path": "/api/upload/planner/status",
+      "method": "GET"
+    },
+    {
+      "path": "/",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/index-dq5iu9Do.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/index-tVgPVPRT.css",
+      "method": "GET"
+    },
+    {
+      "path": "/api/upload/planner/status",
+      "method": "GET"
+    },
+    {
+      "path": "/",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/index-dq5iu9Do.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/index-tVgPVPRT.css",
+      "method": "GET"
+    },
+    {
+      "path": "/api/upload/planner/status",
+      "method": "GET"
+    },
+    {
+      "path": "/",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/index-dq5iu9Do.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/index-tVgPVPRT.css",
+      "method": "GET"
+    },
+    {
+      "path": "/api/upload/planner/status",
+      "method": "GET"
+    }
+  ],
+  "trapHits": [],
+  "passed": true,
+  "finishedAt": "2026-09-26T16:32:04.385Z"
+}

@@ -103,6 +103,7 @@ export function createUploadRuntime(iframe: HTMLIFrameElement): UploadRuntime {
       const issues = validateUploadPlan(plan); if (issues.length) throw new Error(issues.join(' '));
       const frozen = structuredClone(plan); active = true;
       const run: UploadRun = { id: crypto.randomUUID(), projectName: project.name, projectFingerprint: project.fingerprint,
+        ...(project.source ? { source: structuredClone(project.source) } : {}),
         entry, planFingerprint: await fingerprint(frozen), requirement: frozen.requirement, startedAt: new Date().toISOString(), finishedAt: '',
         status: 'error', runner: 'isolated-browser-dom', captureKind: 'dom-render', storage: 'isolated-session-adapter', diagnostics: [],
         steps: frozen.steps.map(step => ({ ...step, status: 'unchecked', observed: 'Not checked', expected: step.value || step.description || step.action, durationMs: 0 })) };
@@ -142,6 +143,7 @@ export function createUploadRuntime(iframe: HTMLIFrameElement): UploadRuntime {
 
 export function makeUploadRepairBrief(run: UploadRun): string {
   return [`# Ming acceptance feedback`, `Project: ${run.projectName}`, `Source fingerprint: ${run.projectFingerprint}`, `Plan fingerprint: ${run.planFingerprint}`,
+    ...(run.source ? [`GitHub repository: ${run.source.url}`, `Imported commit: ${run.source.commit}`, `Ref: ${run.source.ref}`, `Static folder: ${run.source.directory || '(repository root)'}`] : []),
     `Run: ${run.id} (${run.status})`, `Requirement: ${run.requirement}`, '', 'Observed in an isolated browser DOM check. Storage uses a session adapter; captures are DOM renders. No AI repair has been performed.',
     ...run.steps.filter(step => step.status !== 'passed').map(step => `\n${step.description || step.action} [${step.status}]\nAction: ${step.action}\nTarget: ${step.selector || '(page)'}\nValue: ${step.value}\nExpected: ${step.expected}\nObserved: ${step.observed}`),
     '', 'Fix the uploaded source against these requirements, then rerun the same confirmed plan. Do not change assertions to hide failures.',

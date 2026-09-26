@@ -1,0 +1,130 @@
+{
+  "startedAt": "2026-09-26T16:41:00.650Z",
+  "repository": "https://github.com/mdn/beginner-html-site",
+  "transport": "real unauthenticated GitHub API and raw GET requests",
+  "checks": [
+    {
+      "name": "Live public MDN repository imports and renders its actual heading",
+      "passed": true,
+      "heading": "Mozilla is cool"
+    },
+    {
+      "name": "Actual imported MDN page passes a user-confirmed assertion with DOM evidence",
+      "passed": true
+    },
+    {
+      "name": "Live smoke uses only allowlisted public GitHub reads without JavaScript exceptions",
+      "passed": true
+    }
+  ],
+  "requests": [
+    {
+      "host": "api.github.com",
+      "path": "/repos/mdn/beginner-html-site",
+      "method": "GET",
+      "allowed": true
+    },
+    {
+      "host": "api.github.com",
+      "path": "/repos/mdn/beginner-html-site/commits/main",
+      "method": "GET",
+      "allowed": true
+    },
+    {
+      "host": "api.github.com",
+      "path": "/repos/mdn/beginner-html-site/git/trees/cd24771802ec33a324616d19ea0cdc65d6798972",
+      "method": "GET",
+      "allowed": true
+    },
+    {
+      "host": "raw.githubusercontent.com",
+      "path": "/mdn/beginner-html-site/6cf801f2ce32e60e3be46038b85f0ee5f9dd0ef9/Firefox-icon.png",
+      "method": "GET",
+      "allowed": true
+    },
+    {
+      "host": "raw.githubusercontent.com",
+      "path": "/mdn/beginner-html-site/6cf801f2ce32e60e3be46038b85f0ee5f9dd0ef9/images/firefox-icon.png",
+      "method": "GET",
+      "allowed": true
+    },
+    {
+      "host": "raw.githubusercontent.com",
+      "path": "/mdn/beginner-html-site/6cf801f2ce32e60e3be46038b85f0ee5f9dd0ef9/index.html",
+      "method": "GET",
+      "allowed": true
+    },
+    {
+      "host": "raw.githubusercontent.com",
+      "path": "/mdn/beginner-html-site/6cf801f2ce32e60e3be46038b85f0ee5f9dd0ef9/prettierrc.json",
+      "method": "GET",
+      "allowed": true
+    }
+  ],
+  "responses": [
+    {
+      "host": "api.github.com",
+      "path": "/repos/mdn/beginner-html-site",
+      "status": 200,
+      "contentLength": "1635",
+      "contentEncoding": "gzip"
+    },
+    {
+      "host": "api.github.com",
+      "path": "/repos/mdn/beginner-html-site/commits/main",
+      "status": 200,
+      "contentLength": "2113",
+      "contentEncoding": "gzip"
+    },
+    {
+      "host": "api.github.com",
+      "path": "/repos/mdn/beginner-html-site/git/trees/cd24771802ec33a324616d19ea0cdc65d6798972",
+      "status": 200,
+      "contentLength": "1166",
+      "contentEncoding": "gzip"
+    },
+    {
+      "host": "raw.githubusercontent.com",
+      "path": "/mdn/beginner-html-site/6cf801f2ce32e60e3be46038b85f0ee5f9dd0ef9/Firefox-icon.png",
+      "status": 200,
+      "contentLength": "81909"
+    },
+    {
+      "host": "raw.githubusercontent.com",
+      "path": "/mdn/beginner-html-site/6cf801f2ce32e60e3be46038b85f0ee5f9dd0ef9/images/firefox-icon.png",
+      "status": 200,
+      "contentLength": "61894"
+    },
+    {
+      "host": "raw.githubusercontent.com",
+      "path": "/mdn/beginner-html-site/6cf801f2ce32e60e3be46038b85f0ee5f9dd0ef9/index.html",
+      "status": 200,
+      "contentLength": "601",
+      "contentEncoding": "gzip"
+    },
+    {
+      "host": "raw.githubusercontent.com",
+      "path": "/mdn/beginner-html-site/6cf801f2ce32e60e3be46038b85f0ee5f9dd0ef9/prettierrc.json",
+      "status": 200,
+      "contentLength": "23",
+      "contentEncoding": "gzip"
+    }
+  ],
+  "failedRequests": [],
+  "passed": true,
+  "run": {
+    "id": "9a2e5a46-e3be-4d47-9fef-f40ef4c153d3",
+    "status": "passed",
+    "source": {
+      "kind": "github",
+      "url": "https://github.com/mdn/beginner-html-site",
+      "commit": "6cf801f2ce32e60e3be46038b85f0ee5f9dd0ef9",
+      "ref": "main",
+      "directory": ""
+    },
+    "planFingerprint": "4e69d0534ed185e3d80fe2a3e5bcbfa1a35e951ff067793d93d97edf357e1e33",
+    "projectFingerprint": "379fc79a54fb1d800f15a4ce7d221a536557096a12b7dfc04f2a6efe80494e1d",
+    "captureAvailable": true
+  },
+  "finishedAt": "2026-09-26T16:41:07.068Z"
+}

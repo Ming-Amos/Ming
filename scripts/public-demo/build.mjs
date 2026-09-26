@@ -80,6 +80,7 @@ checkScreenshots(data.responses);
 const workerSource = fs.readFileSync(new URL('./worker.mjs', import.meta.url), 'utf8');
 const bundle = JSON.stringify({ schemaVersion: 1, responses: data.responses, screenshots });
 fs.writeFileSync(path.join(output, 'server', 'index.js'), workerSource + '\nexport default createWorker(' + bundle + ');\n');
+fs.copyFileSync(new URL('./upload-planner.mjs', import.meta.url), path.join(output, 'server', 'upload-planner.mjs'));
 fs.writeFileSync(path.join(output, '.openai', 'hosting.json'), JSON.stringify(hosting, null, 2) + '\n');
 console.log(JSON.stringify({ output, recordedRoutes: Object.keys(data.responses).length, screenshots: screenshots.length }));
 
@@ -92,7 +93,7 @@ if (archive) {
     fs.mkdirSync(path.dirname(archive), { recursive: true });
     execFileSync('tar', ['-czf', archive, '-C', stage, 'dist'], { stdio: 'pipe' });
     const entries = execFileSync('tar', ['-tzf', archive], { encoding: 'utf8' }).split(/\r?\n/);
-    for (const required of ['dist/server/index.js', 'dist/client/index.html', 'dist/.openai/hosting.json']) {
+    for (const required of ['dist/server/index.js', 'dist/server/upload-planner.mjs', 'dist/client/index.html', 'dist/.openai/hosting.json']) {
       if (!entries.includes(required)) throw new Error('Archive missing ' + required);
     }
     console.log(JSON.stringify({ archive, files: entries.filter(Boolean).length }));

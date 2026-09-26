@@ -1,0 +1,871 @@
+{
+  "reviewId": "65b28fc3-837d-4994-bfaa-8f0689ab6f7b",
+  "startedAt": "2026-09-26T16:40:47.312Z",
+  "base": "http://127.0.0.1:4192",
+  "checks": [
+    {
+      "name": "The local preview serves the exact compiled UI",
+      "passed": true
+    },
+    {
+      "name": "Repository inspection finds the requested static folder",
+      "passed": true
+    },
+    {
+      "name": "Inspection does not execute the project before import",
+      "passed": true
+    },
+    {
+      "name": "Changing the requested revision clears stale inspection results",
+      "passed": true
+    },
+    {
+      "name": "Selected repository JavaScript executes in the isolated preview",
+      "passed": true
+    },
+    {
+      "name": "Selected-folder root-relative CSS resolves",
+      "passed": true
+    },
+    {
+      "name": "Selected-folder image asset is decoded",
+      "passed": true
+    },
+    {
+      "name": "Imported broken code fails its actual persistence assertion",
+      "passed": true
+    },
+    {
+      "name": "Export records the public repository, immutable commit and selected folder",
+      "passed": true
+    },
+    {
+      "name": "Repository acceptance produces real DOM-render failure evidence",
+      "passed": true
+    },
+    {
+      "name": "Importing another commit invalidates approval without changing the plan",
+      "passed": true
+    },
+    {
+      "name": "The updated repository commit passes the same acceptance plan",
+      "passed": true
+    },
+    {
+      "name": "Original failed repository evidence remains unchanged",
+      "passed": true
+    },
+    {
+      "name": "The comparison verifies a changed source in the same repository and folder with unchanged entry/plan",
+      "passed": true
+    },
+    {
+      "name": "GitHub import and provenance fit a 390px screen",
+      "passed": true
+    },
+    {
+      "name": "Cancelling inspection preserves the active project and cannot complete later",
+      "passed": true
+    },
+    {
+      "name": "Cancelling a file download never replaces the current project with partial content",
+      "passed": true
+    },
+    {
+      "name": "A missing or inaccessible repository receives a useful error",
+      "passed": true,
+      "detail": "GitHub could not find this public repository, branch, or file. Check the URL and branch. Private repositories are not supported; upload a static ZIP instead."
+    },
+    {
+      "name": "Private repositories are rejected",
+      "passed": true,
+      "detail": "Only public GitHub repositories can be imported. For a private project, upload its static HTML or ZIP locally; no GitHub token is accepted."
+    },
+    {
+      "name": "GitHub rate limits are reported explicitly",
+      "passed": true,
+      "detail": "GitHub denied or rate-limited this request. Anonymous GitHub access has limits; wait and retry, or download the static folder and upload its ZIP. Do not paste an access token."
+    },
+    {
+      "name": "Repositories without HTML explain the required static output",
+      "passed": true,
+      "detail": "This repository has no browser-ready HTML entry. Import a browser-ready HTML site or select its committed dist/build folder. Ming does not install dependencies, compile source, or start a backend. Build it locally first and upload the static output if it is not in the repository."
+    },
+    {
+      "name": "Uncompiled source repositories receive build guidance",
+      "passed": true,
+      "detail": "This repository has no browser-ready HTML entry. Import a browser-ready HTML site or select its committed dist/build folder. Ming does not install dependencies, compile source, or start a backend. Build it locally first and upload the static output if it is not in the repository."
+    },
+    {
+      "name": "Oversized repository output cannot be imported and shows its limit",
+      "passed": true
+    },
+    {
+      "name": "A symbolic-link HTML entry cannot be imported",
+      "passed": true
+    },
+    {
+      "name": "A selected folder above the 100-file limit cannot be imported",
+      "passed": true
+    },
+    {
+      "name": "Ambiguous repository tree paths are rejected",
+      "passed": true,
+      "detail": "The repository contains an unsupported or unsafe file path. Use ordinary relative static-file paths without traversal or encoded segments."
+    },
+    {
+      "name": "A tree response must match the resolved commit",
+      "passed": true,
+      "detail": "GitHub returned a tree that does not match the pinned commit. Inspect the repository again."
+    },
+    {
+      "name": "A GitHub-looking hostname is rejected without a network request",
+      "passed": true
+    },
+    {
+      "name": "Downloaded file bytes must match the pinned Git tree",
+      "passed": true
+    },
+    {
+      "name": "A decoded three-byte file with larger gzip wire metadata imports correctly",
+      "passed": true
+    },
+    {
+      "name": "A decoded body exceeding its declared Git blob size is still rejected",
+      "passed": true
+    },
+    {
+      "name": "Private configuration paths are excluded before downloading",
+      "passed": true
+    },
+    {
+      "name": "Every mocked GitHub request is an unauthenticated GET",
+      "passed": true
+    },
+    {
+      "name": "Repository assets are downloaded only using immutable commits",
+      "passed": true
+    },
+    {
+      "name": "A branch containing a slash is resolved without path confusion",
+      "passed": true
+    },
+    {
+      "name": "No application mutations, model requests or unexpected origins",
+      "passed": true
+    },
+    {
+      "name": "No uncaught JavaScript exceptions occurred",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "runs": [
+    {
+      "id": "0b7f4868-6bf0-4da9-a81f-19ca9f8697a0",
+      "projectName": "public-static / docs/site",
+      "projectFingerprint": "0204f6f300b940c7c6b129758ed8ed918f40ccf83a9093aa14496986b3a3808f",
+      "source": {
+        "kind": "github",
+        "url": "https://github.com/ming-review/public-static",
+        "commit": "1111111111111111111111111111111111111111",
+        "ref": "feature/demo",
+        "directory": "docs/site"
+      },
+      "entry": "index.html",
+      "planFingerprint": "cb267478e0fbb7579397e782fc257d1f639dbe6428fdc49b0e4031b9a5adde3d",
+      "requirement": "Add GitHub acceptance 65b28fc3, then verify it remains visible after reload.",
+      "startedAt": "2026-09-26T16:40:49.099Z",
+      "finishedAt": "2026-09-26T16:40:51.411Z",
+      "status": "failed",
+      "runner": "isolated-browser-dom",
+      "captureKind": "dom-render",
+      "storage": "isolated-session-adapter",
+      "diagnostics": [],
+      "steps": [
+        {
+          "id": "c142d6b4-e9ca-4d78-9660-02994b23bdf1",
+          "action": "fill",
+          "selector": "#taskName",
+          "value": "GitHub acceptance 65b28fc3",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed fill on #taskName",
+          "expected": "fill",
+          "durationMs": 285,
+          "capture": {
+            "bytes": 23733,
+            "sha256": "a366c55152d1e419598328eb4dfaf237335a293afef9b404548e2611d17f181e"
+          }
+        },
+        {
+          "id": "855ecb9b-cc25-477d-8b51-00ccaa690447",
+          "action": "click",
+          "selector": "#addTask",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed click on #addTask",
+          "expected": "click",
+          "durationMs": 279,
+          "capture": {
+            "bytes": 24421,
+            "sha256": "45b06eb4508f93c7db89d89bb103e3ded975da62c6141d45b00a83f4aa8c1fd5"
+          }
+        },
+        {
+          "id": "866703c7-3eeb-44c9-a57e-d74ce00f4941",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "GitHub acceptance 65b28fc3",
+          "description": "",
+          "status": "passed",
+          "observed": "GitHub acceptance 65b28fc3",
+          "expected": "Visible text contains: GitHub acceptance 65b28fc3",
+          "durationMs": 14,
+          "capture": {
+            "bytes": 24421,
+            "sha256": "45b06eb4508f93c7db89d89bb103e3ded975da62c6141d45b00a83f4aa8c1fd5"
+          }
+        },
+        {
+          "id": "ab53bf21-7d37-46d3-805f-e47d311cb229",
+          "action": "reload",
+          "selector": "body",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Reopened the uploaded document with the same isolated storage adapter.",
+          "expected": "Reload the isolated page",
+          "durationMs": 154,
+          "capture": {
+            "bytes": 21613,
+            "sha256": "a8bd51778e1a22bb3ce60e7e82faeddf6e840865cd61b8507a6df4abd57fb0a0"
+          }
+        },
+        {
+          "id": "e9f174b1-19d0-42c1-80c6-d981b33b4f4c",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "GitHub acceptance 65b28fc3",
+          "description": "",
+          "status": "failed",
+          "observed": "(no visible text)",
+          "expected": "Visible text contains: GitHub acceptance 65b28fc3",
+          "durationMs": 1434,
+          "capture": {
+            "bytes": 21613,
+            "sha256": "a8bd51778e1a22bb3ce60e7e82faeddf6e840865cd61b8507a6df4abd57fb0a0"
+          }
+        }
+      ]
+    },
+    {
+      "id": "29756ea1-cb66-4126-8b56-df1c8529a300",
+      "projectName": "public-static / docs/site",
+      "projectFingerprint": "a3f6bc3a7a2c8cfec4513d951796ce7c5dc64fcfa99965b204bcdbd8d1f55e6e",
+      "source": {
+        "kind": "github",
+        "url": "https://github.com/ming-review/public-static",
+        "commit": "2222222222222222222222222222222222222222",
+        "ref": "fixed",
+        "directory": "docs/site"
+      },
+      "entry": "index.html",
+      "planFingerprint": "cb267478e0fbb7579397e782fc257d1f639dbe6428fdc49b0e4031b9a5adde3d",
+      "requirement": "Add GitHub acceptance 65b28fc3, then verify it remains visible after reload.",
+      "startedAt": "2026-09-26T16:40:52.282Z",
+      "finishedAt": "2026-09-26T16:40:53.144Z",
+      "status": "passed",
+      "runner": "isolated-browser-dom",
+      "captureKind": "dom-render",
+      "storage": "isolated-session-adapter",
+      "diagnostics": [],
+      "steps": [
+        {
+          "id": "c142d6b4-e9ca-4d78-9660-02994b23bdf1",
+          "action": "fill",
+          "selector": "#taskName",
+          "value": "GitHub acceptance 65b28fc3",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed fill on #taskName",
+          "expected": "fill",
+          "durationMs": 277,
+          "capture": {
+            "bytes": 23733,
+            "sha256": "a366c55152d1e419598328eb4dfaf237335a293afef9b404548e2611d17f181e"
+          }
+        },
+        {
+          "id": "855ecb9b-cc25-477d-8b51-00ccaa690447",
+          "action": "click",
+          "selector": "#addTask",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed click on #addTask",
+          "expected": "click",
+          "durationMs": 268,
+          "capture": {
+            "bytes": 24421,
+            "sha256": "45b06eb4508f93c7db89d89bb103e3ded975da62c6141d45b00a83f4aa8c1fd5"
+          }
+        },
+        {
+          "id": "866703c7-3eeb-44c9-a57e-d74ce00f4941",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "GitHub acceptance 65b28fc3",
+          "description": "",
+          "status": "passed",
+          "observed": "GitHub acceptance 65b28fc3",
+          "expected": "Visible text contains: GitHub acceptance 65b28fc3",
+          "durationMs": 14,
+          "capture": {
+            "bytes": 24421,
+            "sha256": "45b06eb4508f93c7db89d89bb103e3ded975da62c6141d45b00a83f4aa8c1fd5"
+          }
+        },
+        {
+          "id": "ab53bf21-7d37-46d3-805f-e47d311cb229",
+          "action": "reload",
+          "selector": "body",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Reopened the uploaded document with the same isolated storage adapter.",
+          "expected": "Reload the isolated page",
+          "durationMs": 146,
+          "capture": {
+            "bytes": 24315,
+            "sha256": "c2b4fca4289e8ee2dc0e42e72330257130ad046127748fc2f0252fac5b0dd02d"
+          }
+        },
+        {
+          "id": "e9f174b1-19d0-42c1-80c6-d981b33b4f4c",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "GitHub acceptance 65b28fc3",
+          "description": "",
+          "status": "passed",
+          "observed": "GitHub acceptance 65b28fc3",
+          "expected": "Visible text contains: GitHub acceptance 65b28fc3",
+          "durationMs": 11,
+          "capture": {
+            "bytes": 24315,
+            "sha256": "c2b4fca4289e8ee2dc0e42e72330257130ad046127748fc2f0252fac5b0dd02d"
+          }
+        }
+      ]
+    },
+    {
+      "id": "9a2e5a46-e3be-4d47-9fef-f40ef4c153d3",
+      "projectName": "beginner-html-site",
+      "projectFingerprint": "379fc79a54fb1d800f15a4ce7d221a536557096a12b7dfc04f2a6efe80494e1d",
+      "source": {
+        "kind": "github",
+        "url": "https://github.com/mdn/beginner-html-site",
+        "commit": "6cf801f2ce32e60e3be46038b85f0ee5f9dd0ef9",
+        "ref": "main",
+        "directory": ""
+      },
+      "entry": "index.html",
+      "planFingerprint": "4e69d0534ed185e3d80fe2a3e5bcbfa1a35e951ff067793d93d97edf357e1e33",
+      "requirement": "The imported public starter page shows its own heading.",
+      "startedAt": "2026-09-26T16:41:06.514Z",
+      "finishedAt": "2026-09-26T16:41:06.707Z",
+      "status": "passed",
+      "runner": "isolated-browser-dom",
+      "captureKind": "dom-render",
+      "storage": "isolated-session-adapter",
+      "diagnostics": [
+        "Links to other pages are disabled. Select each HTML entry separately to inspect it."
+      ],
+      "steps": [
+        {
+          "id": "f6e5771a-450d-43b0-a52b-95820f6b624f",
+          "action": "assertText",
+          "selector": "h1",
+          "value": "Mozilla is cool",
+          "description": "",
+          "status": "passed",
+          "observed": "Mozilla is cool",
+          "expected": "Visible text contains: Mozilla is cool",
+          "durationMs": 50,
+          "capture": {
+            "bytes": 104366,
+            "sha256": "d8c43e8a9f4b25e39d3a88d498afde627806f91410aae0b75e5ecbda541ba6c4"
+          }
+        }
+      ]
+    }
+  ],
+  "githubRequests": [
+    {
+      "path": "/repos/ming-review/public-static",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/public-static/commits/feature%2Fdemo",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/public-static/git/trees/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/public-static",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/public-static/commits/feature%2Fdemo",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/public-static/git/trees/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/ming-review/public-static/1111111111111111111111111111111111111111/docs/site/index.html",
+      "host": "raw.githubusercontent.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/ming-review/public-static/1111111111111111111111111111111111111111/docs/site/assets/style.css",
+      "host": "raw.githubusercontent.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/ming-review/public-static/1111111111111111111111111111111111111111/docs/site/assets/app.js",
+      "host": "raw.githubusercontent.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/ming-review/public-static/1111111111111111111111111111111111111111/docs/site/assets/logo.svg",
+      "host": "raw.githubusercontent.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/ming-review/public-static/1111111111111111111111111111111111111111/docs/site/assets/tiny.json",
+      "host": "raw.githubusercontent.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/public-static",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/public-static/commits/fixed",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/public-static/git/trees/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/ming-review/public-static/2222222222222222222222222222222222222222/docs/site/index.html",
+      "host": "raw.githubusercontent.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/ming-review/public-static/2222222222222222222222222222222222222222/docs/site/assets/style.css",
+      "host": "raw.githubusercontent.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/ming-review/public-static/2222222222222222222222222222222222222222/docs/site/assets/app.js",
+      "host": "raw.githubusercontent.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/ming-review/public-static/2222222222222222222222222222222222222222/docs/site/assets/logo.svg",
+      "host": "raw.githubusercontent.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/ming-review/public-static/2222222222222222222222222222222222222222/docs/site/assets/tiny.json",
+      "host": "raw.githubusercontent.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/slow",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/slow-download",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/slow-download/commits/fixed",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/slow-download/git/trees/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/ming-review/slow-download/2222222222222222222222222222222222222222/docs/site/index.html",
+      "host": "raw.githubusercontent.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/missing",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/private",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/rate-limited",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/no-html",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/no-html/commits/feature%2Fdemo",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/no-html/git/trees/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/source-only",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/source-only/commits/feature%2Fdemo",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/source-only/git/trees/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/oversized",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/oversized/commits/feature%2Fdemo",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/oversized/git/trees/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/symlink",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/symlink/commits/feature%2Fdemo",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/symlink/git/trees/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/too-many-files",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/too-many-files/commits/feature%2Fdemo",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/too-many-files/git/trees/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/unsafe-tree",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/unsafe-tree/commits/feature%2Fdemo",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/unsafe-tree/git/trees/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/wrong-tree",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/wrong-tree/commits/feature%2Fdemo",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/wrong-tree/git/trees/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/corrupt-blob",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/corrupt-blob/commits/fixed",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/corrupt-blob/git/trees/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/ming-review/corrupt-blob/2222222222222222222222222222222222222222/docs/site/index.html",
+      "host": "raw.githubusercontent.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/ming-review/corrupt-blob/2222222222222222222222222222222222222222/docs/site/assets/style.css",
+      "host": "raw.githubusercontent.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/ming-review/corrupt-blob/2222222222222222222222222222222222222222/docs/site/assets/app.js",
+      "host": "raw.githubusercontent.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/compressed-blob",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/compressed-blob/commits/fixed",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/compressed-blob/git/trees/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/ming-review/compressed-blob/2222222222222222222222222222222222222222/docs/site/index.html",
+      "host": "raw.githubusercontent.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/ming-review/compressed-blob/2222222222222222222222222222222222222222/docs/site/assets/style.css",
+      "host": "raw.githubusercontent.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/ming-review/compressed-blob/2222222222222222222222222222222222222222/docs/site/assets/app.js",
+      "host": "raw.githubusercontent.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/ming-review/compressed-blob/2222222222222222222222222222222222222222/docs/site/assets/logo.svg",
+      "host": "raw.githubusercontent.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/ming-review/compressed-blob/2222222222222222222222222222222222222222/docs/site/assets/tiny.json",
+      "host": "raw.githubusercontent.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/expanded-blob",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/expanded-blob/commits/fixed",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/repos/ming-review/expanded-blob/git/trees/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "host": "api.github.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/ming-review/expanded-blob/2222222222222222222222222222222222222222/docs/site/index.html",
+      "host": "raw.githubusercontent.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/ming-review/expanded-blob/2222222222222222222222222222222222222222/docs/site/assets/style.css",
+      "host": "raw.githubusercontent.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/ming-review/expanded-blob/2222222222222222222222222222222222222222/docs/site/assets/app.js",
+      "host": "raw.githubusercontent.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/ming-review/expanded-blob/2222222222222222222222222222222222222222/docs/site/assets/logo.svg",
+      "host": "raw.githubusercontent.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    },
+    {
+      "path": "/ming-review/expanded-blob/2222222222222222222222222222222222222222/docs/site/assets/tiny.json",
+      "host": "raw.githubusercontent.com",
+      "method": "GET",
+      "credentialsAbsent": true
+    }
+  ],
+  "requests": [
+    {
+      "path": "/",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/index-CN1km-0X.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/index-tVgPVPRT.css",
+      "method": "GET"
+    },
+    {
+      "path": "/api/upload/planner/status",
+      "method": "GET"
+    },
+    {
+      "path": "/",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/index-CN1km-0X.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/index-tVgPVPRT.css",
+      "method": "GET"
+    },
+    {
+      "path": "/api/upload/planner/status",
+      "method": "GET"
+    }
+  ],
+  "errors": [],
+  "outsideRequests": [],
+  "screenshots": [
+    "01-github-baseline.png",
+    "02-github-fixed-commit.png",
+    "03-github-mobile.png",
+    "04-live-mdn-import.png"
+  ],
+  "passed": true,
+  "scope": "Deterministic GitHub API/raw response fixtures; real repository inspection UI, imported code execution, browser actions and DOM captures. Live MDN smoke is separately labelled when enabled.",
+  "finishedAt": "2026-09-26T16:41:07.185Z"
+}

@@ -1,4 +1,6 @@
 /** Recorded-evidence API plus a bundled, independently executed browser trial. */
+import { handleUploadPlanner } from './upload-planner.mjs';
+
 export function createWorker(bundle) {
   if (bundle?.schemaVersion !== 1 || !bundle.responses || !Array.isArray(bundle.screenshots)) {
     throw new Error('Invalid reviewed public-demo bundle');
@@ -22,13 +24,15 @@ export function createWorker(bundle) {
   return {
     async fetch(request, env) {
       const url = new URL(request.url);
+      const plannerResponse = await handleUploadPlanner(request, env);
+      if (plannerResponse) return plannerResponse;
       const head = request.method === 'HEAD';
       if (!['GET', 'HEAD'].includes(request.method)) {
         return json({ ok: false, error: 'Hosted API records are read-only. Upload a static project for browser checks, try the live sample, or run Ming locally for server-backed applications.' }, 403);
       }
 
       if (url.pathname === '/api/capabilities') {
-        return json({ ok: true, readOnly: true, sourceBinding: 'self-contained-html-snapshot', demoMode: 'recorded-evidence', uploadedProjects: { available: true, path: '/#upload', formats: ['html', 'static-zip'], execution: 'isolated-visitor-browser', planning: 'manually-confirmed', captureKind: 'dom-render', modelCalls: false }, liveTrial: { available: true, path: '/#trial', execution: 'visitor-browser', scope: 'bundled-shipboard', captureKind: 'dom-render', modelCalls: false } }, 200, head);
+        return json({ ok: true, readOnly: true, sourceBinding: 'self-contained-html-snapshot', demoMode: 'recorded-evidence', uploadedProjects: { available: true, path: '/#upload', formats: ['html', 'static-zip'], github: { available: true, visibility: 'public', build: false, commitPinned: true, serverUpload: false }, execution: 'isolated-visitor-browser', planning: 'human-confirmed', planner: { statusUrl: '/api/upload/planner/status', draftUrl: '/api/upload/planner/draft', confirmedUserActionRequired: true, serverSide: true }, captureKind: 'dom-render', modelCalls: 'explicit-draft-only' }, liveTrial: { available: true, path: '/#trial', execution: 'visitor-browser', scope: 'bundled-shipboard', captureKind: 'dom-render', modelCalls: false } }, 200, head);
       }
       if (url.pathname === '/api/provider/status') {
         return json({ ok: true, status: { configured: false, providerLabel: 'Recorded evidence demo — model calls disabled', baseUrl: '(disabled)', modelId: '(disabled)', missingFields: ['LOCAL_MODEL_CONFIGURATION_REQUIRED'] } }, 200, head);

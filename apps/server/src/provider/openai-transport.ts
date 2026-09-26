@@ -333,6 +333,7 @@ export class OpenAICompatibleTransport implements ProviderTransport {
       ],
       temperature: 0.2,
       max_tokens: 4096,
+      ...(this.baseUrl.replace(/\/+$/, '') === 'https://ark.cn-beijing.volces.com/api/v3' && this.modelId.startsWith('doubao-seed-2-') ? { thinking: { type: 'disabled' } } : {}),
     });
 
     // Fix 3: build endpoint from explicit API root (no blind /v1 append)
