@@ -1,0 +1,26 @@
+{
+  "checks": [
+    {
+      "name": "Private production serves the reviewed frontend",
+      "passed": true
+    },
+    {
+      "name": "Production opens with the Ming Start cover",
+      "passed": true
+    },
+    {
+      "name": "Production preserves the exact original animation",
+      "passed": true
+    },
+    {
+      "name": "Production Start enters the recorded evidence",
+      "passed": true
+    },
+    {
+      "name": "No browser exceptions",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "passed": true
+}
