@@ -57,7 +57,7 @@ const payloads = {
 const ui = {
   root: page => page.locator('[data-testid="upload-studio"]'),
   requirements: page => page.getByRole('textbox', { name: 'Requirements', exact: true }),
-  confirm: page => page.getByRole('checkbox', { name: 'I reviewed these requirements and steps for this project.', exact: true }),
+  confirm: page => page.getByRole('checkbox', { name: 'These checks match my requirements.', exact: true }),
   run: page => page.getByRole('button', { name: 'Run acceptance checks', exact: true }),
   cancel: page => page.getByRole('button', { name: 'Cancel checks', exact: true }),
   steps: page => page.locator('[data-testid="upload-step"]'),
@@ -69,6 +69,7 @@ async function upload(page, payload, revised = false) {
 }
 async function plan(page, requirement, task) {
   await ui.requirements(page).fill(requirement);
+  const editor = page.getByTestId('plan-technical-editor'); if (!(await editor.evaluate(node => node.open))) await editor.locator('summary').click();
   const steps = [{ action: 'fill', selector: '#taskName', value: task }, { action: 'click', selector: '#addTask' }, { action: 'assertText', selector: '#taskList', value: task }, { action: 'reload' }, { action: 'assertText', selector: '#taskList', value: task }];
   for (let index = 0; index < steps.length; index++) {
     if (index) await page.getByRole('button', { name: 'Add step', exact: true }).click();

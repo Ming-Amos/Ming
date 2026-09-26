@@ -31,7 +31,10 @@
   function inventory() {
     return [...document.querySelectorAll('input,button,select,textarea,[role="button"],[id],[data-testid]')]
       .filter(visible).slice(0, 80).map(element => ({ selector: selectorFor(element), tag: element.tagName.toLowerCase(),
-        label: bounded(element.getAttribute('aria-label') || element.getAttribute('placeholder') || element.innerText || element.id).slice(0, 100),
+        label: bounded(element.getAttribute('aria-label')
+          || (element.getAttribute('aria-labelledby') || '').split(/\s+/).filter(Boolean).map(id => document.getElementById(id)?.textContent?.trim() || '').filter(Boolean).join(' ')
+          || (['INPUT', 'SELECT', 'TEXTAREA', 'BUTTON', 'OUTPUT', 'METER', 'PROGRESS'].includes(element.tagName) ? Array.from(element.labels || []) : []).map(label => (label.innerText || label.textContent || '').trim()).filter(Boolean).join(' ')
+          || element.getAttribute('placeholder') || element.innerText || element.id).slice(0, 100),
         type: element.getAttribute('type') || '', text: bounded(element.innerText).slice(0, 160) }));
   }
   function storageAdapter(initial) {

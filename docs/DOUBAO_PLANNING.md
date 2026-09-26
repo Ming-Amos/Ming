@@ -6,9 +6,9 @@ Ming's own-project workspace supports **Doubao Seed 2.0 Pro**, model `doubao-see
 
 1. Import a project and wait for its actual page elements to appear.
 2. Enter explicit requirements and expected outcomes.
-3. Choose **Generate draft with Doubao**. This is the only action in this workspace that calls the model.
+3. Choose **Generate draft with Doubao**, or **Create my checklist** in an empty plan. Both buttons invoke the same explicit draft-generation action. Only requesting a draft calls the model.
 4. Review the proposed steps and unresolved questions. Clarify requirements and regenerate if needed, or discard the draft and write a manual plan. An unresolved or stale draft cannot be applied.
-5. Choose **Apply draft to plan**, edit if necessary, and confirm the final requirements and steps.
+5. Review the plain-language cards: **Ming will** describes the actions and **Passes when** states the expected results. Choose **Use this checklist**, then confirm **These checks match my requirements.** The optional **Edit technical steps** disclosure contains the original selector/action editor. Editing a step updates the cards and requires confirmation again.
 6. Run acceptance checks. Ming executes browser operations, collects actual observations and creates DOM-rendered snapshots. The model does not decide which checks passed.
 
 Opening the app, importing files, editing requirements, applying a draft, checking a project, comparing runs and exporting reports do not call a model. A pending draft also blocks accidentally running an older plan until it is applied or discarded. Changing the project, entry, requirements or steps requires renewed confirmation.

@@ -1,6 +1,14 @@
 # Ming delivery status
 
-## Latest: Shipboard model-format correction — 2026-09-27 (Asia/Shanghai)
+## Latest: readable acceptance checklists — 2026-09-27 (Asia/Shanghai)
+
+The uploaded-project workspace now presents each action sequence and its expected results as readable **Ming will / Passes when** cards. The original action and selector editor remains available under **Edit technical steps**. Draft selection is labeled **Use this checklist**, followed by **These checks match my requirements.** No plan executes until that separate confirmation. Stale drafts and unresolved questions still block applying; summary cards never claim complete requirements coverage or predict success.
+
+Validation: full build, **8/8** summary tests, **33/33** review/apply/confirmation regressions, and **14/14** final browser/visual checks on frontend `index-BEsZ1ggY.js`. The original nine-step Shipboard plan is preserved exactly, with eight observed passes and the intended reload-persistence failure. Associated field labels are preferred over placeholders, including a real-browser regression for a form input named `labels`. Desktop and 390px mobile captures were inspected. No paid model or Bob calls were made for this update. [Final review](evidence/upload-plan-ux/2026-09-26T18-31-58-125Z-after-02840253/audit.md) · [Final report](evidence/upload-plan-ux/2026-09-26T18-31-58-125Z-after-02840253/report.json).
+
+The publication below is the preceding checkpoint; the new private deployment record is added after deployment succeeds. Historical evidence and original Bob records remain unchanged.
+
+## Shipboard model-format correction — 2026-09-27 (Asia/Shanghai)
 
 The user's actual task-board draft failed JSON parsing despite the earlier simple counter succeeding. The integration now requests strict JSON Schema output while retaining independent validation and manual confirmation. Generation failures show reported token usage and safe diagnostic details without discarding the user's project or plan. Full build passed, backend tests **30/30**, UI regression **29/29**, and actual deployed Shipboard workflow **15/15**: one real generated nine-step plan found the buggy source's persistence failure and passed unchanged against the corrected source. [Incident and evidence](PLANNER_FORMAT_INCIDENT.md).
 

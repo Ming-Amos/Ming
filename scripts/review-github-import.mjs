@@ -47,7 +47,7 @@ const ui = {
   cancelImport: page => page.getByRole('button', { name: 'Cancel GitHub import', exact: true }),
   requirements: page => page.getByRole('textbox', { name: 'Requirements', exact: true }),
   steps: page => page.locator('[data-testid="upload-step"]'),
-  confirm: page => page.getByRole('checkbox', { name: 'I reviewed these requirements and steps for this project.', exact: true }),
+  confirm: page => page.getByRole('checkbox', { name: 'These checks match my requirements.', exact: true }),
   run: page => page.getByRole('button', { name: 'Run acceptance checks', exact: true }),
   cancelRun: page => page.getByRole('button', { name: 'Cancel checks', exact: true }),
 };
@@ -68,6 +68,7 @@ async function importSelected(current, directory = 'docs/site') {
 }
 async function configurePlan(current, task) {
   await ui.requirements(current).fill(`Add ${task}, then verify it remains visible after reload.`);
+  const editor = current.getByTestId('plan-technical-editor'); if (!(await editor.evaluate(node => node.open))) await editor.locator('summary').click();
   const steps = [{ action: 'fill', selector: '#taskName', value: task }, { action: 'click', selector: '#addTask' }, { action: 'assertText', selector: '#taskList', value: task }, { action: 'reload' }, { action: 'assertText', selector: '#taskList', value: task }];
   for (let index = 0; index < steps.length; index++) {
     if (index) await current.getByRole('button', { name: 'Add step', exact: true }).click();
@@ -240,7 +241,7 @@ try {
     await importSelected(current, selected.value); const liveFrame = current.frameLocator('iframe[sandbox]');
     const heading = await liveFrame.locator('h1').innerText(); assert.ok(heading.trim());
     liveReport.checks.push({ name: 'Live public MDN repository imports and renders its actual heading', passed: true, heading });
-    await ui.requirements(current).fill('The imported public starter page shows its own heading.'); await ui.steps(current).first().getByLabel('CSS selector', { exact: true }).fill('h1'); await ui.steps(current).first().getByLabel('Expected text', { exact: true }).fill(heading); await ui.confirm(current).check();
+    await ui.requirements(current).fill('The imported public starter page shows its own heading.'); await current.getByTestId('plan-technical-editor').locator('summary').click(); await ui.steps(current).first().getByLabel('CSS selector', { exact: true }).fill('h1'); await ui.steps(current).first().getByLabel('Expected text', { exact: true }).fill(heading); await ui.confirm(current).check();
     const accepted = await run(current, 'live-mdn'); assert.equal(accepted.currentRun.status, 'passed'); assert.equal(accepted.currentRun.source?.kind, 'github');
     liveReport.run = { id: accepted.currentRun.id, status: accepted.currentRun.status, source: accepted.currentRun.source, planFingerprint: accepted.currentRun.planFingerprint, projectFingerprint: accepted.currentRun.projectFingerprint, captureAvailable: Boolean(accepted.currentRun.steps[0].capture) };
     liveReport.checks.push({ name: 'Actual imported MDN page passes a user-confirmed assertion with DOM evidence', passed: Boolean(accepted.currentRun.steps[0].capture) });

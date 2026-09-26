@@ -20,7 +20,7 @@ const redact = value => String(value).split(token).join('[REDACTED]'), save = (n
 const report = { reviewId, startedAt: new Date().toISOString(), origin, expectedBundle: bundle, mode: plannerOnly ? 'planner-only' : 'github-and-planner', passed: false, checks: [], runs: [], githubRequests: [], blockedRequests: [], errors: [], screenshots: [], draftRequests: 0,
   scope: `${plannerOnly ? 'Planner-only review; unchanged MDN GitHub smoke is intentionally skipped.' : 'Real public MDN import and manual heading visibility check;'} One actual Doubao Seed 2.0 Pro draft for an owned counter, reviewed then executed in the isolated visitor browser. No mocks, source repair, Bob usage, or retries.` };
 const check = (name, passed) => { report.checks.push({ name, passed: Boolean(passed) }); console.log(`${passed ? 'PASS' : 'FAIL'} ${name}`); if (!passed) throw Error(name); };
-const button = (page, name) => page.getByRole('button', { name, exact: true }), confirm = page => page.getByRole('checkbox', { name: 'I reviewed these requirements and steps for this project.', exact: true });
+const button = (page, name) => page.getByRole('button', { name, exact: true }), confirm = page => page.getByRole('checkbox', { name: 'These checks match my requirements.', exact: true });
 const ready = page => page.waitForFunction(() => { const node = document.querySelector('[data-testid="upload-studio"]'); return node?.dataset.previewReady === 'true' && node.dataset.phase === 'idle'; }, null, { timeout: 45000 });
 async function shot(page, name) { await page.evaluate(() => scrollTo(0, 0)); await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))); const file = `${tag}-${name}.png`; await page.screenshot({ path: path.join(out, file), fullPage: true }); report.screenshots.push(file); }
 async function run(page, name) {
@@ -62,7 +62,7 @@ try {
   await folders.selectOption(chosen.value); await button(page, 'Import selected folder').click(); await ready(page);
   const heading = await page.frameLocator('iframe[sandbox]').locator('h1').innerText(); check('Real imported MDN heading is visible', Boolean(heading.trim()));
   await page.getByRole('textbox', { name: 'Requirements', exact: true }).fill(`The imported public starter page displays the heading: ${heading}`);
-  const step = page.locator('[data-testid="upload-step"]').first(); await step.getByLabel('CSS selector', { exact: true }).fill('h1'); await step.getByLabel('Expected text', { exact: true }).fill(heading);
+  await page.getByTestId('plan-technical-editor').locator('summary').click(); const step = page.locator('[data-testid="upload-step"]').first(); await step.getByLabel('CSS selector', { exact: true }).fill('h1'); await step.getByLabel('Expected text', { exact: true }).fill(heading);
   const mdn = (await run(page, 'mdn-manual')).currentRun;
   check('The real GitHub source passes its confirmed heading check with capture and pinned commit', mdn.status === 'passed' && mdn.source?.url === repo && /^[a-f\d]{40}$/i.test(mdn.source.commit) && mdn.steps[0].capture?.startsWith('data:image/png;base64,'));
   check('Import and manual checks do not invoke a model', report.draftRequests === 0); await shot(page, 'mdn-import-accepted');
@@ -77,7 +77,7 @@ try {
   const proposed = draft.draft.steps, frame = page.frameLocator('iframe[sandbox]'); let clicks = 0, provesOne = false;
   for (const item of proposed) { assert.ok(['click', 'assertText', 'assertCount', 'assertValue'].includes(item.action), 'Review rejects unrelated or destructive operations'); const target = frame.locator(item.selector); assert.equal(await target.count(), 1, 'Reviewed selector resolves uniquely'); const id = await target.getAttribute('id'); if (item.action === 'click') { assert.equal(id, 'increment'); clicks++; } if (item.action === 'assertText' && id === 'count' && item.value === '1' && clicks === 1) provesOne = true; }
   check('Read-only review confirms one increment followed by a count-of-one assertion', clicks === 1 && provesOne && await frame.locator('#count').innerText() === '0');
-  await button(page, 'Apply draft to plan').click(); check('Applying a draft requires separate confirmation and has not run it', !(await confirm(page).isChecked()) && await frame.locator('#count').innerText() === '0');
+  await button(page, 'Use this checklist').click(); check('Applying a draft requires separate confirmation and has not run it', !(await confirm(page).isChecked()) && await frame.locator('#count').innerText() === '0');
   const accepted = await run(page, 'doubao-counter'), counter = accepted.currentRun;
   check('The actual browser executes the generated plan and observes count one', counter.status === 'passed' && counter.steps.every(item => item.status === 'passed') && await frame.locator('#count').innerText() === '1' && counter.steps.some(item => item.capture?.startsWith('data:image/png;base64,')));
   assert.deepEqual(counter.steps.map(({ id, action, selector, value, description }) => ({ id, action, selector, value, description })), proposed);

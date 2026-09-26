@@ -77,7 +77,7 @@ const ui = {
   upload: current => current.getByLabel('Upload HTML or ZIP', { exact: true }),
   revised: current => current.getByLabel('Upload revised HTML or ZIP', { exact: true }),
   requirements: current => current.getByRole('textbox', { name: 'Requirements', exact: true }),
-  confirm: current => current.getByRole('checkbox', { name: 'I reviewed these requirements and steps for this project.', exact: true }),
+  confirm: current => current.getByRole('checkbox', { name: 'These checks match my requirements.', exact: true }),
   run: current => current.getByRole('button', { name: 'Run acceptance checks', exact: true }),
   cancel: current => current.getByRole('button', { name: 'Cancel checks', exact: true }),
   export: current => current.getByRole('button', { name: 'Export evidence report', exact: true }),
@@ -121,6 +121,7 @@ async function upload(current, file, revised = false) {
 }
 async function configurePlan(current, requirement, steps) {
   await ui.requirements(current).fill(requirement);
+  const editor = current.getByTestId('plan-technical-editor'); if (!(await editor.evaluate(node => node.open))) await editor.locator('summary').click();
   while (await ui.steps(current).count() > 1) await ui.steps(current).last().getByRole('button', { name: 'Remove step', exact: true }).click();
   for (let index = 0; index < steps.length; index++) {
     if (index > 0) await current.getByRole('button', { name: 'Add step', exact: true }).click();

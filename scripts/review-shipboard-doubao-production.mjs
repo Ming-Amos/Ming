@@ -46,7 +46,7 @@ const check = (name, condition) => {
   if (!condition) throw Error(name);
 };
 const button = (page, name) => page.getByRole('button', { name, exact: true });
-const confirm = page => page.getByRole('checkbox', { name: 'I reviewed these requirements and steps for this project.', exact: true });
+const confirm = page => page.getByRole('checkbox', { name: 'These checks match my requirements.', exact: true });
 const ready = page => page.waitForFunction(() => {
   const node = document.querySelector('[data-testid="upload-studio"]');
   return node?.dataset.previewReady === 'true' && node.dataset.phase === 'idle';
@@ -162,7 +162,7 @@ try {
   const proposed = structuredClone(draft.draft.steps), reloadIndex = await reviewPlan(page, proposed);
   check('Read-only review confirms empty-input validation, task creation, and persistence without executing them', reloadIndex >= 0 && await page.locator('[data-testid="upload-step"]').count() === 1);
   await shot(page, '01-shipboard-draft-review');
-  await button(page, 'Apply draft to plan').click();
+  await button(page, 'Use this checklist').click();
   const appliedFields = await editablePlan(page);
   check('Applying the reviewed draft requires separate confirmation', !(await confirm(page).isChecked()) && await button(page, 'Run acceptance checks').isDisabled());
   const first = await run(page, 'buggy-evidence'), failure = first.currentRun;

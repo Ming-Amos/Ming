@@ -25,10 +25,10 @@ const ui = {
   root: page => page.locator('[data-testid="upload-studio"]'),
   requirements: page => page.getByRole('textbox', { name: 'Requirements', exact: true }),
   steps: page => page.locator('[data-testid="upload-step"]'),
-  confirm: page => page.getByRole('checkbox', { name: 'I reviewed these requirements and steps for this project.', exact: true }),
+  confirm: page => page.getByRole('checkbox', { name: 'These checks match my requirements.', exact: true }),
   generate: page => page.getByRole('button', { name: 'Generate draft with Doubao', exact: true }),
   candidate: page => page.locator('[data-testid="ai-plan-draft"]'),
-  apply: page => page.getByRole('button', { name: 'Apply draft to plan', exact: true }),
+  apply: page => page.getByRole('button', { name: 'Use this checklist', exact: true }),
   discard: page => page.getByRole('button', { name: 'Discard draft', exact: true }),
   run: page => page.getByRole('button', { name: 'Run acceptance checks', exact: true }),
 };
@@ -66,10 +66,15 @@ try {
   await page.getByLabel('Upload HTML or ZIP', { exact: true }).setInputFiles({ name: 'proof-counter.html', mimeType: 'text/html', buffer: Buffer.from(source) });
   await page.waitForFunction(() => document.querySelector('[data-testid="upload-studio"]')?.getAttribute('data-preview-ready') === 'true');
   await ui.requirements(page).fill(requirement);
-  await ui.steps(page).first().getByLabel('CSS selector', { exact: true }).fill('h1'); await ui.steps(page).first().getByLabel('Expected text', { exact: true }).fill('Proof counter'); await ui.confirm(page).check();
+  const technicalEditor = page.getByTestId('plan-technical-editor');
+  check('The technical editor starts collapsed for a new project', !(await technicalEditor.evaluate(node => node.open)) && !(await ui.steps(page).first().getByLabel('CSS selector', { exact: true }).isVisible()));
+  await technicalEditor.locator('summary').click();
+  await ui.steps(page).first().getByLabel('CSS selector', { exact: true }).fill('h1'); await ui.steps(page).first().getByLabel('Expected text', { exact: true }).fill('Proof counter');
+  await technicalEditor.locator('summary').click(); await ui.confirm(page).check();
   await sleep(350); check('Opening a project and editing requirements never calls the model automatically', report.requests.length === 0);
   check('A configured provider offers explicit draft generation', await ui.generate(page).isEnabled());
   await ui.generate(page).click(); await ui.candidate(page).waitFor();
+  check('The draft offers a plain-language checklist with technical steps collapsed', await ui.candidate(page).getByRole('heading', { name: 'Review your checklist', exact: true }).isVisible() && await ui.candidate(page).locator('details').evaluateAll(nodes => nodes.every(node => !node.open)));
   check('One explicit generation sends exactly one approved request', report.requests.length === 1 && report.requests[0].method === 'POST' && report.requests[0].body.confirmedUserAction === true && report.requests[0].body.requirement === requirement);
   check('The draft request contains actual observed elements and project context', report.requests[0].body.entry === 'proof-counter.html' && report.requests[0].body.elements.some(element => element.selector === '#increment') && report.requests[0].body.elements.some(element => element.selector === '#count'));
   check('Questions remain visible and block applying the candidate', await page.getByRole('list', { name: 'Unresolved questions', exact: true }).innerText().then(text => text.includes('Should the count remain')) && await ui.apply(page).isDisabled());
@@ -84,7 +89,12 @@ try {
   await ui.requirements(page).fill(requirement);
   await ui.apply(page).click();
   check('Applying the reviewed draft changes the plan and invalidates previous confirmation', await ui.steps(page).count() === 2 && !(await ui.confirm(page).isChecked()) && await ui.run(page).isDisabled());
+  check('The active checklist remains readable without exposing code fields', await page.getByRole('heading', { name: 'What Ming will check', exact: true }).isVisible() && !(await technicalEditor.evaluate(node => node.open)) && !(await ui.steps(page).first().getByLabel('CSS selector', { exact: true }).isVisible()));
   check('Applying the draft still does not execute the application', await page.frameLocator('iframe[sandbox]').locator('#count').innerText() === '0');
+  await ui.confirm(page).check(); await technicalEditor.locator('summary').click();
+  await ui.steps(page).nth(1).getByLabel('Expected text', { exact: true }).fill('2');
+  check('Explicitly editing an advanced step revokes the previous confirmation', !(await ui.confirm(page).isChecked()) && await ui.run(page).isDisabled());
+  await ui.steps(page).nth(1).getByLabel('Expected text', { exact: true }).fill('1'); await technicalEditor.locator('summary').click();
   await ui.confirm(page).check(); await ui.run(page).click(); await page.getByRole('button', { name: 'Cancel checks', exact: true }).waitFor(); await page.getByRole('button', { name: 'Cancel checks', exact: true }).waitFor({ state: 'hidden', timeout: 45000 });
   const transfer = page.waitForEvent('download'); await page.getByRole('button', { name: 'Export evidence report', exact: true }).click(); const runFile = path.join(work, 'actual-browser-run.json'); await (await transfer).saveAs(runFile);
   const originalEvidence = JSON.parse(fs.readFileSync(runFile, 'utf8')), run = originalEvidence.currentRun;
