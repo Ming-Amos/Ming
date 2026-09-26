@@ -1,0 +1,730 @@
+{
+  "reviewId": "0db01f40-e4ac-48e1-874b-a0d3f7eff935",
+  "startedAt": "2026-09-26T17:49:25.058Z",
+  "origin": "https://ming-acceptance-proof.amosming.chatgpt.site",
+  "expectedBundle": "/assets/index-BNIOEhlS.js",
+  "passed": true,
+  "scope": "One real Doubao Seed 2.0 Pro draft using the stated three requirements; read-only review; actual browser checks against existing buggy and corrected Shipboard uploads. Identical generated plan, immutable failing baseline, no automatic model retry or source repair.",
+  "requirement": "1. Submit an empty task name. Show “Add a task name before continuing.” and keep the count at “0 tasks”.\n2. Add a task named “Ming acceptance test”. It must appear in the task list.\n3. Reload the application. “Ming acceptance test” must still appear in the task list.",
+  "fixtures": {
+    "buggy": "examples\\shipboard\\buggy\\index.html",
+    "corrected": "examples\\shipboard\\normal\\index.html"
+  },
+  "checks": [
+    {
+      "name": "Private deployment serves the exact compiled application",
+      "passed": true
+    },
+    {
+      "name": "Opening Shipboard and entering the requirements makes no automatic model request",
+      "passed": true
+    },
+    {
+      "name": "One real Doubao Seed 2.0 Pro request returns a valid review draft",
+      "passed": true
+    },
+    {
+      "name": "The generated draft has no unresolved questions",
+      "passed": true
+    },
+    {
+      "name": "Read-only review confirms empty-input validation, task creation, and persistence without executing them",
+      "passed": true
+    },
+    {
+      "name": "Applying the reviewed draft requires separate confirmation",
+      "passed": true
+    },
+    {
+      "name": "The actual buggy application passes the validation and creation steps before failing after reload",
+      "passed": true
+    },
+    {
+      "name": "The failed persistence assertion includes an actual DOM-render capture",
+      "passed": true
+    },
+    {
+      "name": "The exported draft provenance retains actual provider and token usage",
+      "passed": true
+    },
+    {
+      "name": "The repair brief retains the requirement and observed persistence failure",
+      "passed": true
+    },
+    {
+      "name": "Uploading the corrected source changes the fingerprint while preserving the requirements and exact plan",
+      "passed": true
+    },
+    {
+      "name": "The corrected application passes every unchanged generated step, including persistence",
+      "passed": true
+    },
+    {
+      "name": "Comparison records the same plan and entry, a different source, and the preserved failing baseline",
+      "passed": true
+    },
+    {
+      "name": "Both checks have distinct run IDs and timestamps with identical acceptance criteria",
+      "passed": true
+    },
+    {
+      "name": "Exactly one paid draft was used without retries, unexpected network, or browser errors",
+      "passed": true
+    }
+  ],
+  "runs": [
+    {
+      "id": "f3c08bf5-b479-431d-a038-d2aaa98eda7a",
+      "projectName": "index",
+      "projectFingerprint": "fe5fff4fc84cd5b5d180867e830c32c9c2e1bfbd736aa24ab71faa00c7217ff1",
+      "entry": "index.html",
+      "planFingerprint": "520fe09ea682ad9ffadc82dedf3880335cde036226c1a8a09e8753895221e5d7",
+      "requirement": "1. Submit an empty task name. Show “Add a task name before continuing.” and keep the count at “0 tasks”.\n2. Add a task named “Ming acceptance test”. It must appear in the task list.\n3. Reload the application. “Ming acceptance test” must still appear in the task list.",
+      "startedAt": "2026-09-26T17:49:47.633Z",
+      "finishedAt": "2026-09-26T17:49:50.785Z",
+      "status": "failed",
+      "runner": "isolated-browser-dom",
+      "captureKind": "dom-render",
+      "storage": "isolated-session-adapter",
+      "diagnostics": [],
+      "steps": [
+        {
+          "id": "draft-1-b1b3c0f2-ceed-4ba4-9971-960e99f81978",
+          "action": "fill",
+          "selector": "#taskName",
+          "value": "",
+          "description": "Fill the task name input with an empty string",
+          "status": "passed",
+          "observed": "Executed fill on #taskName",
+          "expected": "Fill the task name input with an empty string",
+          "durationMs": 317,
+          "capture": {
+            "file": "buggy-evidence-step-1.png",
+            "bytes": 56458,
+            "width": 676,
+            "height": 741,
+            "sha256": "9561d946bb78ba4835df236b8d0eb80083637531bd3c4e0bca9fb89df16f7f4c"
+          }
+        },
+        {
+          "id": "draft-2-5628b0e5-554c-4077-9f25-db6f749cff3d",
+          "action": "click",
+          "selector": "body > main > section > div:nth-of-type(1) > form > div > button",
+          "value": "",
+          "description": "Click the +Add task submit button with empty task name",
+          "status": "passed",
+          "observed": "Executed click on body > main > section > div:nth-of-type(1) > form > div > button",
+          "expected": "Click the +Add task submit button with empty task name",
+          "durationMs": 304,
+          "capture": {
+            "file": "buggy-evidence-step-2.png",
+            "bytes": 58237,
+            "width": 676,
+            "height": 741,
+            "sha256": "798947b6ef2506cf848fc83d73dcb808ea6879990efc23875d177537c7661c28"
+          }
+        },
+        {
+          "id": "draft-3-5ea09c86-1a80-4bd1-a4c0-b3e7df842f19",
+          "action": "assertText",
+          "selector": "#notice",
+          "value": "Add a task name before continuing.",
+          "description": "Verify the required empty task name error message is displayed",
+          "status": "passed",
+          "observed": "Add a task name before continuing.",
+          "expected": "Visible text contains: Add a task name before continuing.",
+          "durationMs": 31,
+          "capture": {
+            "file": "buggy-evidence-step-3.png",
+            "bytes": 58237,
+            "width": 676,
+            "height": 741,
+            "sha256": "798947b6ef2506cf848fc83d73dcb808ea6879990efc23875d177537c7661c28"
+          }
+        },
+        {
+          "id": "draft-4-f11c9dda-b1a1-486e-88b6-cbe142a6a83e",
+          "action": "assertText",
+          "selector": "#taskCount",
+          "value": "0 tasks",
+          "description": "Verify the task count remains at 0 tasks after failed empty submission",
+          "status": "passed",
+          "observed": "0 tasks",
+          "expected": "Visible text contains: 0 tasks",
+          "durationMs": 32,
+          "capture": {
+            "file": "buggy-evidence-step-4.png",
+            "bytes": 58237,
+            "width": 676,
+            "height": 741,
+            "sha256": "798947b6ef2506cf848fc83d73dcb808ea6879990efc23875d177537c7661c28"
+          }
+        },
+        {
+          "id": "draft-5-320fac09-7137-4895-ba2b-e3f35ce8bd86",
+          "action": "fill",
+          "selector": "#taskName",
+          "value": "Ming acceptance test",
+          "description": "Fill the task name input with 'Ming acceptance test'",
+          "status": "passed",
+          "observed": "Executed fill on #taskName",
+          "expected": "Fill the task name input with 'Ming acceptance test'",
+          "durationMs": 308,
+          "capture": {
+            "file": "buggy-evidence-step-5.png",
+            "bytes": 58201,
+            "width": 676,
+            "height": 741,
+            "sha256": "00452477548cd9c35731d0bd5f4055e2ad6aad13cbae09b529a0b89edd4fa3a3"
+          }
+        },
+        {
+          "id": "draft-6-1e0f3dfd-ca5e-4ac6-b81e-bc0118b35b0a",
+          "action": "click",
+          "selector": "body > main > section > div:nth-of-type(1) > form > div > button",
+          "value": "",
+          "description": "Click the +Add task submit button to add the valid task",
+          "status": "passed",
+          "observed": "Executed click on body > main > section > div:nth-of-type(1) > form > div > button",
+          "expected": "Click the +Add task submit button to add the valid task",
+          "durationMs": 313,
+          "capture": {
+            "file": "buggy-evidence-step-6.png",
+            "bytes": 53956,
+            "width": 676,
+            "height": 644,
+            "sha256": "77ece0bd192c069facee93029a84997cf49bc92ab3ccf15a81a6f8b0c4d9e7ac"
+          }
+        },
+        {
+          "id": "draft-7-e925700e-afd3-4cda-afcf-68d1d850a61f",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Ming acceptance test",
+          "description": "Verify 'Ming acceptance test' appears in the task list after addition",
+          "status": "passed",
+          "observed": "Ming acceptance test\nReady when you are\n×",
+          "expected": "Visible text contains: Ming acceptance test",
+          "durationMs": 38,
+          "capture": {
+            "file": "buggy-evidence-step-7.png",
+            "bytes": 53956,
+            "width": 676,
+            "height": 644,
+            "sha256": "77ece0bd192c069facee93029a84997cf49bc92ab3ccf15a81a6f8b0c4d9e7ac"
+          }
+        },
+        {
+          "id": "draft-8-f94cbead-daf5-4589-96ec-d0b6edd6fc2f",
+          "action": "reload",
+          "selector": "",
+          "value": "",
+          "description": "Reload the application page",
+          "status": "passed",
+          "observed": "Reopened the uploaded document with the same isolated storage adapter.",
+          "expected": "Reload the isolated page",
+          "durationMs": 179,
+          "capture": {
+            "file": "buggy-evidence-step-8.png",
+            "bytes": 55671,
+            "width": 676,
+            "height": 741,
+            "sha256": "7f69c39d277807e5403ba70eff1f231beaaab9447fd75ed5442f0cd9ef91e9f3"
+          }
+        },
+        {
+          "id": "draft-9-0699dcfb-33cd-4e8e-a372-c710b8b2cf28",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Ming acceptance test",
+          "description": "Verify 'Ming acceptance test' remains in the task list after page reload",
+          "status": "failed",
+          "observed": "(no visible text)",
+          "expected": "Visible text contains: Ming acceptance test",
+          "durationMs": 1481,
+          "capture": {
+            "file": "buggy-evidence-step-9.png",
+            "bytes": 55671,
+            "width": 676,
+            "height": 741,
+            "sha256": "7f69c39d277807e5403ba70eff1f231beaaab9447fd75ed5442f0cd9ef91e9f3"
+          }
+        }
+      ],
+      "export": "buggy-evidence.json",
+      "planOrigin": {
+        "kind": "ai-draft",
+        "provider": "Doubao",
+        "modelId": "doubao-seed-2-0-pro-260215",
+        "generatedAt": "2026-09-26T17:49:47.296Z",
+        "projectFingerprint": "fe5fff4fc84cd5b5d180867e830c32c9c2e1bfbd736aa24ab71faa00c7217ff1",
+        "entry": "index.html",
+        "usage": {
+          "inputTokens": 970,
+          "outputTokens": 497
+        }
+      }
+    },
+    {
+      "id": "8e880336-192f-4905-80fd-fb341717e02d",
+      "projectName": "index",
+      "projectFingerprint": "bd5c1a2bc38bb671fbcf0d2cb9afb28a2d09cf2d5d200123f7166ef238063895",
+      "entry": "index.html",
+      "planFingerprint": "520fe09ea682ad9ffadc82dedf3880335cde036226c1a8a09e8753895221e5d7",
+      "requirement": "1. Submit an empty task name. Show “Add a task name before continuing.” and keep the count at “0 tasks”.\n2. Add a task named “Ming acceptance test”. It must appear in the task list.\n3. Reload the application. “Ming acceptance test” must still appear in the task list.",
+      "startedAt": "2026-09-26T17:49:51.766Z",
+      "finishedAt": "2026-09-26T17:49:53.430Z",
+      "status": "passed",
+      "runner": "isolated-browser-dom",
+      "captureKind": "dom-render",
+      "storage": "isolated-session-adapter",
+      "diagnostics": [],
+      "steps": [
+        {
+          "id": "draft-1-b1b3c0f2-ceed-4ba4-9971-960e99f81978",
+          "action": "fill",
+          "selector": "#taskName",
+          "value": "",
+          "description": "Fill the task name input with an empty string",
+          "status": "passed",
+          "observed": "Executed fill on #taskName",
+          "expected": "Fill the task name input with an empty string",
+          "durationMs": 301,
+          "capture": {
+            "file": "corrected-evidence-step-1.png",
+            "bytes": 56458,
+            "width": 676,
+            "height": 741,
+            "sha256": "9561d946bb78ba4835df236b8d0eb80083637531bd3c4e0bca9fb89df16f7f4c"
+          }
+        },
+        {
+          "id": "draft-2-5628b0e5-554c-4077-9f25-db6f749cff3d",
+          "action": "click",
+          "selector": "body > main > section > div:nth-of-type(1) > form > div > button",
+          "value": "",
+          "description": "Click the +Add task submit button with empty task name",
+          "status": "passed",
+          "observed": "Executed click on body > main > section > div:nth-of-type(1) > form > div > button",
+          "expected": "Click the +Add task submit button with empty task name",
+          "durationMs": 297,
+          "capture": {
+            "file": "corrected-evidence-step-2.png",
+            "bytes": 58237,
+            "width": 676,
+            "height": 741,
+            "sha256": "798947b6ef2506cf848fc83d73dcb808ea6879990efc23875d177537c7661c28"
+          }
+        },
+        {
+          "id": "draft-3-5ea09c86-1a80-4bd1-a4c0-b3e7df842f19",
+          "action": "assertText",
+          "selector": "#notice",
+          "value": "Add a task name before continuing.",
+          "description": "Verify the required empty task name error message is displayed",
+          "status": "passed",
+          "observed": "Add a task name before continuing.",
+          "expected": "Visible text contains: Add a task name before continuing.",
+          "durationMs": 32,
+          "capture": {
+            "file": "corrected-evidence-step-3.png",
+            "bytes": 58237,
+            "width": 676,
+            "height": 741,
+            "sha256": "798947b6ef2506cf848fc83d73dcb808ea6879990efc23875d177537c7661c28"
+          }
+        },
+        {
+          "id": "draft-4-f11c9dda-b1a1-486e-88b6-cbe142a6a83e",
+          "action": "assertText",
+          "selector": "#taskCount",
+          "value": "0 tasks",
+          "description": "Verify the task count remains at 0 tasks after failed empty submission",
+          "status": "passed",
+          "observed": "0 tasks",
+          "expected": "Visible text contains: 0 tasks",
+          "durationMs": 30,
+          "capture": {
+            "file": "corrected-evidence-step-4.png",
+            "bytes": 58237,
+            "width": 676,
+            "height": 741,
+            "sha256": "798947b6ef2506cf848fc83d73dcb808ea6879990efc23875d177537c7661c28"
+          }
+        },
+        {
+          "id": "draft-5-320fac09-7137-4895-ba2b-e3f35ce8bd86",
+          "action": "fill",
+          "selector": "#taskName",
+          "value": "Ming acceptance test",
+          "description": "Fill the task name input with 'Ming acceptance test'",
+          "status": "passed",
+          "observed": "Executed fill on #taskName",
+          "expected": "Fill the task name input with 'Ming acceptance test'",
+          "durationMs": 299,
+          "capture": {
+            "file": "corrected-evidence-step-5.png",
+            "bytes": 58201,
+            "width": 676,
+            "height": 741,
+            "sha256": "00452477548cd9c35731d0bd5f4055e2ad6aad13cbae09b529a0b89edd4fa3a3"
+          }
+        },
+        {
+          "id": "draft-6-1e0f3dfd-ca5e-4ac6-b81e-bc0118b35b0a",
+          "action": "click",
+          "selector": "body > main > section > div:nth-of-type(1) > form > div > button",
+          "value": "",
+          "description": "Click the +Add task submit button to add the valid task",
+          "status": "passed",
+          "observed": "Executed click on body > main > section > div:nth-of-type(1) > form > div > button",
+          "expected": "Click the +Add task submit button to add the valid task",
+          "durationMs": 305,
+          "capture": {
+            "file": "corrected-evidence-step-6.png",
+            "bytes": 53956,
+            "width": 676,
+            "height": 644,
+            "sha256": "77ece0bd192c069facee93029a84997cf49bc92ab3ccf15a81a6f8b0c4d9e7ac"
+          }
+        },
+        {
+          "id": "draft-7-e925700e-afd3-4cda-afcf-68d1d850a61f",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Ming acceptance test",
+          "description": "Verify 'Ming acceptance test' appears in the task list after addition",
+          "status": "passed",
+          "observed": "Ming acceptance test\nReady when you are\n×",
+          "expected": "Visible text contains: Ming acceptance test",
+          "durationMs": 33,
+          "capture": {
+            "file": "corrected-evidence-step-7.png",
+            "bytes": 53956,
+            "width": 676,
+            "height": 644,
+            "sha256": "77ece0bd192c069facee93029a84997cf49bc92ab3ccf15a81a6f8b0c4d9e7ac"
+          }
+        },
+        {
+          "id": "draft-8-f94cbead-daf5-4589-96ec-d0b6edd6fc2f",
+          "action": "reload",
+          "selector": "",
+          "value": "",
+          "description": "Reload the application page",
+          "status": "passed",
+          "observed": "Reopened the uploaded document with the same isolated storage adapter.",
+          "expected": "Reload the isolated page",
+          "durationMs": 190,
+          "capture": {
+            "file": "corrected-evidence-step-8.png",
+            "bytes": 51615,
+            "width": 676,
+            "height": 644,
+            "sha256": "a38cd51980276fd09ad8b9a708db0b6993bdaae7f23034dbf2650ba282a67558"
+          }
+        },
+        {
+          "id": "draft-9-0699dcfb-33cd-4e8e-a372-c710b8b2cf28",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Ming acceptance test",
+          "description": "Verify 'Ming acceptance test' remains in the task list after page reload",
+          "status": "passed",
+          "observed": "Ming acceptance test\nReady when you are\n×",
+          "expected": "Visible text contains: Ming acceptance test",
+          "durationMs": 34,
+          "capture": {
+            "file": "corrected-evidence-step-9.png",
+            "bytes": 51615,
+            "width": 676,
+            "height": 644,
+            "sha256": "a38cd51980276fd09ad8b9a708db0b6993bdaae7f23034dbf2650ba282a67558"
+          }
+        }
+      ],
+      "export": "corrected-evidence.json",
+      "planOrigin": {
+        "kind": "ai-draft",
+        "provider": "Doubao",
+        "modelId": "doubao-seed-2-0-pro-260215",
+        "generatedAt": "2026-09-26T17:49:47.296Z",
+        "projectFingerprint": "fe5fff4fc84cd5b5d180867e830c32c9c2e1bfbd736aa24ab71faa00c7217ff1",
+        "entry": "index.html",
+        "usage": {
+          "inputTokens": 970,
+          "outputTokens": 497
+        }
+      }
+    }
+  ],
+  "blockedRequests": [],
+  "errors": [],
+  "screenshots": [
+    "01-shipboard-draft-review.png",
+    "02-shipboard-persistence-failure.png",
+    "03-shipboard-revision-accepted.png"
+  ],
+  "draftRequests": 1,
+  "requestContext": {
+    "projectName": "index",
+    "entry": "index.html",
+    "requirement": "1. Submit an empty task name. Show “Add a task name before continuing.” and keep the count at “0 tasks”.\n2. Add a task named “Ming acceptance test”. It must appear in the task list.\n3. Reload the application. “Ming acceptance test” must still appear in the task list.",
+    "elements": [
+      {
+        "selector": "#taskForm",
+        "tag": "form",
+        "label": "Task name\n+Add task",
+        "type": "",
+        "text": "Task name\n+Add task"
+      },
+      {
+        "selector": "#taskName",
+        "tag": "input",
+        "label": "e.g. Ship the release notes",
+        "type": "",
+        "text": ""
+      },
+      {
+        "selector": "body > main > section > div:nth-of-type(1) > form > div > button",
+        "tag": "button",
+        "label": "+Add task",
+        "type": "submit",
+        "text": "+Add task"
+      },
+      {
+        "selector": "#notice",
+        "tag": "p",
+        "label": "notice",
+        "type": "",
+        "text": ""
+      },
+      {
+        "selector": "#taskCount",
+        "tag": "span",
+        "label": "0 tasks",
+        "type": "",
+        "text": "0 tasks"
+      },
+      {
+        "selector": "#taskList",
+        "tag": "ul",
+        "label": "Your tasks",
+        "type": "",
+        "text": ""
+      },
+      {
+        "selector": "#emptyState",
+        "tag": "div",
+        "label": "A clear board. A fresh start.\n\nAdd one task to get moving.",
+        "type": "",
+        "text": "A clear board. A fresh start.\n\nAdd one task to get moving."
+      }
+    ]
+  },
+  "planner": {
+    "status": 200,
+    "ok": true,
+    "draft": {
+      "steps": [
+        {
+          "id": "draft-1-b1b3c0f2-ceed-4ba4-9971-960e99f81978",
+          "action": "fill",
+          "selector": "#taskName",
+          "value": "",
+          "description": "Fill the task name input with an empty string"
+        },
+        {
+          "id": "draft-2-5628b0e5-554c-4077-9f25-db6f749cff3d",
+          "action": "click",
+          "selector": "body > main > section > div:nth-of-type(1) > form > div > button",
+          "value": "",
+          "description": "Click the +Add task submit button with empty task name"
+        },
+        {
+          "id": "draft-3-5ea09c86-1a80-4bd1-a4c0-b3e7df842f19",
+          "action": "assertText",
+          "selector": "#notice",
+          "value": "Add a task name before continuing.",
+          "description": "Verify the required empty task name error message is displayed"
+        },
+        {
+          "id": "draft-4-f11c9dda-b1a1-486e-88b6-cbe142a6a83e",
+          "action": "assertText",
+          "selector": "#taskCount",
+          "value": "0 tasks",
+          "description": "Verify the task count remains at 0 tasks after failed empty submission"
+        },
+        {
+          "id": "draft-5-320fac09-7137-4895-ba2b-e3f35ce8bd86",
+          "action": "fill",
+          "selector": "#taskName",
+          "value": "Ming acceptance test",
+          "description": "Fill the task name input with 'Ming acceptance test'"
+        },
+        {
+          "id": "draft-6-1e0f3dfd-ca5e-4ac6-b81e-bc0118b35b0a",
+          "action": "click",
+          "selector": "body > main > section > div:nth-of-type(1) > form > div > button",
+          "value": "",
+          "description": "Click the +Add task submit button to add the valid task"
+        },
+        {
+          "id": "draft-7-e925700e-afd3-4cda-afcf-68d1d850a61f",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Ming acceptance test",
+          "description": "Verify 'Ming acceptance test' appears in the task list after addition"
+        },
+        {
+          "id": "draft-8-f94cbead-daf5-4589-96ec-d0b6edd6fc2f",
+          "action": "reload",
+          "selector": "",
+          "value": "",
+          "description": "Reload the application page"
+        },
+        {
+          "id": "draft-9-0699dcfb-33cd-4e8e-a372-c710b8b2cf28",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Ming acceptance test",
+          "description": "Verify 'Ming acceptance test' remains in the task list after page reload"
+        }
+      ],
+      "openQuestions": []
+    },
+    "usage": {
+      "inputTokens": 970,
+      "outputTokens": 497
+    },
+    "modelId": "doubao-seed-2-0-pro-260215"
+  },
+  "semanticReview": {
+    "details": [
+      {
+        "index": 0,
+        "action": "fill",
+        "selector": "#taskName",
+        "target": {
+          "count": 1,
+          "id": "taskName",
+          "tag": "INPUT",
+          "form": "taskForm",
+          "type": "text",
+          "containsNotice": false,
+          "containsCount": false,
+          "containsList": false
+        }
+      },
+      {
+        "index": 1,
+        "action": "click",
+        "selector": "body > main > section > div:nth-of-type(1) > form > div > button",
+        "target": {
+          "count": 1,
+          "id": "",
+          "tag": "BUTTON",
+          "form": "taskForm",
+          "type": "submit",
+          "containsNotice": false,
+          "containsCount": false,
+          "containsList": false
+        }
+      },
+      {
+        "index": 2,
+        "action": "assertText",
+        "selector": "#notice",
+        "target": {
+          "count": 1,
+          "id": "notice",
+          "tag": "P",
+          "containsNotice": true,
+          "containsCount": false,
+          "containsList": false
+        }
+      },
+      {
+        "index": 3,
+        "action": "assertText",
+        "selector": "#taskCount",
+        "target": {
+          "count": 1,
+          "id": "taskCount",
+          "tag": "SPAN",
+          "containsNotice": false,
+          "containsCount": true,
+          "containsList": false
+        }
+      },
+      {
+        "index": 4,
+        "action": "fill",
+        "selector": "#taskName",
+        "target": {
+          "count": 1,
+          "id": "taskName",
+          "tag": "INPUT",
+          "form": "taskForm",
+          "type": "text",
+          "containsNotice": false,
+          "containsCount": false,
+          "containsList": false
+        }
+      },
+      {
+        "index": 5,
+        "action": "click",
+        "selector": "body > main > section > div:nth-of-type(1) > form > div > button",
+        "target": {
+          "count": 1,
+          "id": "",
+          "tag": "BUTTON",
+          "form": "taskForm",
+          "type": "submit",
+          "containsNotice": false,
+          "containsCount": false,
+          "containsList": false
+        }
+      },
+      {
+        "index": 6,
+        "action": "assertText",
+        "selector": "#taskList",
+        "target": {
+          "count": 1,
+          "id": "taskList",
+          "tag": "UL",
+          "type": "",
+          "containsNotice": false,
+          "containsCount": false,
+          "containsList": true
+        }
+      },
+      {
+        "index": 7,
+        "action": "reload"
+      },
+      {
+        "index": 8,
+        "action": "assertText",
+        "selector": "#taskList",
+        "target": {
+          "count": 1,
+          "id": "taskList",
+          "tag": "UL",
+          "type": "",
+          "containsNotice": false,
+          "containsCount": false,
+          "containsList": true
+        }
+      }
+    ],
+    "provesError": true,
+    "provesEmptyCount": true,
+    "provesAdded": true,
+    "provesPersisted": true,
+    "reloadIndex": 7
+  },
+  "finishedAt": "2026-09-26T17:49:54.073Z"
+}

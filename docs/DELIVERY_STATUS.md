@@ -1,5 +1,11 @@
 # Ming delivery status
 
+## Latest: Shipboard model-format correction — 2026-09-27 (Asia/Shanghai)
+
+The user's actual task-board draft failed JSON parsing despite the earlier simple counter succeeding. The integration now requests strict JSON Schema output while retaining independent validation and manual confirmation. Generation failures show reported token usage and safe diagnostic details without discarding the user's project or plan. Full build passed, backend tests **30/30**, UI regression **29/29**, and actual deployed Shipboard workflow **15/15**: one real generated nine-step plan found the buggy source's persistence failure and passed unchanged against the corrected source. [Incident and evidence](PLANNER_FORMAT_INCIDENT.md).
+
+Current private site: **version 11**, application commit `4e0bde45980b692a77b12130467f39522679fa72`, frontend `index-BNIOEhlS.js`, deployment `appgdep_6ab8054eb9b08191a033fade194d4741`, succeeded **2026-09-26 17:48:14 UTC**. Access remains owner-private and no source repair is attributed to the hosted model. All 60 historical evidence hashes and Bob records remain unchanged. Entries below preserve earlier checkpoints.
+
 ## GitHub import and Doubao planning — 2026-09-27 (Asia/Shanghai)
 
 The own-project workspace now imports public GitHub static folders pinned to an exact commit, with bounded downloads and Git blob verification. Repository/ref/commit/folder provenance is preserved in runs and repair briefs. Optional **Doubao Seed 2.0 Pro** drafting is configured through a server-side secret. Generating a draft is explicit; questions and steps must be reviewed before Apply, confirmation and real browser execution. Imports, manual planning and checks consume no model calls. [GitHub workflow](GITHUB_IMPORT.md) · [Doubao workflow](DOUBAO_PLANNING.md).

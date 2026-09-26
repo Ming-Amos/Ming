@@ -1,0 +1,77 @@
+{
+  "status": 200,
+  "ok": true,
+  "draft": {
+    "steps": [
+      {
+        "id": "draft-1-b1b3c0f2-ceed-4ba4-9971-960e99f81978",
+        "action": "fill",
+        "selector": "#taskName",
+        "value": "",
+        "description": "Fill the task name input with an empty string"
+      },
+      {
+        "id": "draft-2-5628b0e5-554c-4077-9f25-db6f749cff3d",
+        "action": "click",
+        "selector": "body > main > section > div:nth-of-type(1) > form > div > button",
+        "value": "",
+        "description": "Click the +Add task submit button with empty task name"
+      },
+      {
+        "id": "draft-3-5ea09c86-1a80-4bd1-a4c0-b3e7df842f19",
+        "action": "assertText",
+        "selector": "#notice",
+        "value": "Add a task name before continuing.",
+        "description": "Verify the required empty task name error message is displayed"
+      },
+      {
+        "id": "draft-4-f11c9dda-b1a1-486e-88b6-cbe142a6a83e",
+        "action": "assertText",
+        "selector": "#taskCount",
+        "value": "0 tasks",
+        "description": "Verify the task count remains at 0 tasks after failed empty submission"
+      },
+      {
+        "id": "draft-5-320fac09-7137-4895-ba2b-e3f35ce8bd86",
+        "action": "fill",
+        "selector": "#taskName",
+        "value": "Ming acceptance test",
+        "description": "Fill the task name input with 'Ming acceptance test'"
+      },
+      {
+        "id": "draft-6-1e0f3dfd-ca5e-4ac6-b81e-bc0118b35b0a",
+        "action": "click",
+        "selector": "body > main > section > div:nth-of-type(1) > form > div > button",
+        "value": "",
+        "description": "Click the +Add task submit button to add the valid task"
+      },
+      {
+        "id": "draft-7-e925700e-afd3-4cda-afcf-68d1d850a61f",
+        "action": "assertText",
+        "selector": "#taskList",
+        "value": "Ming acceptance test",
+        "description": "Verify 'Ming acceptance test' appears in the task list after addition"
+      },
+      {
+        "id": "draft-8-f94cbead-daf5-4589-96ec-d0b6edd6fc2f",
+        "action": "reload",
+        "selector": "",
+        "value": "",
+        "description": "Reload the application page"
+      },
+      {
+        "id": "draft-9-0699dcfb-33cd-4e8e-a372-c710b8b2cf28",
+        "action": "assertText",
+        "selector": "#taskList",
+        "value": "Ming acceptance test",
+        "description": "Verify 'Ming acceptance test' remains in the task list after page reload"
+      }
+    ],
+    "openQuestions": []
+  },
+  "usage": {
+    "inputTokens": 970,
+    "outputTokens": 497
+  },
+  "modelId": "doubao-seed-2-0-pro-260215"
+}
