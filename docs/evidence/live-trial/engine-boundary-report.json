@@ -1,0 +1,86 @@
+{
+  "checks": [
+    {
+      "name": "abort during delayed navigation returns promptly",
+      "passed": true
+    },
+    {
+      "name": "late navigation cannot recreate session storage",
+      "passed": true
+    },
+    {
+      "name": "blocked storage reports environment error, not expected application bug",
+      "passed": true
+    },
+    {
+      "name": "actual HTTP302 canonical redirects preserve 16-step real reload flow",
+      "passed": true
+    },
+    {
+      "name": "canonical flow still captures observed DOMs",
+      "passed": true
+    }
+  ],
+  "cancel": {
+    "status": "cancelled",
+    "duration": 103.39999997615814,
+    "keys": [],
+    "src": "about:blank"
+  },
+  "storage": {
+    "id": "98b826d5-2f7a-40b0-88ef-81e689c41b44",
+    "variant": "buggy",
+    "taskName": "Storage blocked · 98b826d5",
+    "startedAt": "2026-09-26T14:28:47.294Z",
+    "finishedAt": "2026-09-26T14:28:47.307Z",
+    "planFingerprint": "a7db7aaf50a0009d5db568cc714972ac68b56f7d0a037ec8a918e93f02208e26",
+    "status": "error",
+    "runner": "in-browser-dom",
+    "captureKind": "dom-render",
+    "steps": [
+      {
+        "id": "SHIP-01-S1",
+        "description": "Open a fresh Shipboard session",
+        "status": "error",
+        "observed": "Browser storage is unavailable. This persistence check cannot run in this browser.",
+        "durationMs": 12
+      }
+    ],
+    "criteria": [
+      {
+        "id": "SHIP-01",
+        "title": "A new task appears on the board",
+        "expected": "The exact new task is visible in the task list, and the board contains one task.",
+        "status": "unchecked",
+        "observed": "Browser storage is unavailable. This persistence check cannot run in this browser."
+      },
+      {
+        "id": "SHIP-02",
+        "title": "The same task survives a reload",
+        "expected": "After a real page reload, the exact task is still visible and the board still contains one task.",
+        "status": "unchecked",
+        "observed": "Not checked yet."
+      },
+      {
+        "id": "SHIP-03",
+        "title": "Blank task names are rejected",
+        "expected": "Empty and whitespace-only submissions show an actionable validation message and create no tasks.",
+        "status": "unchecked",
+        "observed": "Not checked yet."
+      }
+    ],
+    "error": "Browser storage is unavailable. This persistence check cannot run in this browser."
+  },
+  "redirect": {
+    "status": "completed",
+    "statuses": [
+      "passed",
+      "passed",
+      "passed"
+    ],
+    "steps": 16,
+    "captures": true,
+    "last": "http://127.0.0.1:4185/trial/shipboard?variant=fixed&session=ca8554a1-1343-4115-87f9-d4f2d9447fff"
+  },
+  "harnessNote": "An earlier Playwright request-mocking attempt failed because redirect targets were not remocked. Replaced with actual HTTP server returning302 and canonical HTML; no product change."
+}

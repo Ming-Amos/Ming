@@ -16,9 +16,17 @@ pnpm build
 pnpm start
 ```
 
-Open **http://127.0.0.1:4001**, then choose **Start** on the pixel-art welcome page. The workspace lives at `/#studio`, so refreshing a working session keeps it open; browser Back returns to the cover. The welcome page makes no application API or model requests. On Windows, after the first installation/build, double-click **`scripts/Start-Ming.cmd`** instead. The launcher reuses a healthy local Ming service, opens the browser, and does not close unrelated applications. Startup does not call a model.
+Open **http://127.0.0.1:4001**, then choose **Start** on the pixel-art welcome page to enter the live sample at `/#trial`. Use **Evidence Studio** at `/#studio` for your own local projects and saved runs. Refreshing either route keeps that view open. The welcome page makes no application API or model requests. On Windows, after the first installation/build, double-click **`scripts/Start-Ming.cmd`** instead. The launcher reuses a healthy local Ming service, opens the browser, and does not close unrelated applications. Startup does not call a model.
 
 For frontend development, run the backend and `pnpm --filter @ming/web dev --port 4000 --host 127.0.0.1`. Rebuild before using the normal launcher to see UI changes.
+
+## Try a fresh browser check online
+
+The hosted **Live sample** at `/#trial` runs the bundled Shipboard application in the visitor's browser. Enter a task name, choose **Run live checks**, inspect the observed failure, copy a repair brief, and apply a **prepared sample fix** before rerunning the same acceptance standard. Each execution creates new identities, timestamps, task content and observations. A completed baseline remains separate from the follow-up result; the original recorded repair is still accessible in Evidence Studio.
+
+This is real browser DOM interaction against a controlled same-origin example: input, submit, reload and assertions execute anew. Images are **DOM-rendered snapshots** of that current page, not native Playwright screenshots; rendering may differ from the exact screen. The prepared fix restores sample persistence; it is not an AI-generated repair or a modification to your repository. No model API, Bobcoins, remote browser service or always-on owner computer is needed. This session's results live in page memory and can be exported before leaving or reloading. Trial storage uses unique session keys and removes only its own data.
+
+This hosted sample does not accept arbitrary URLs, uploaded projects or API keys. Use the local workflow below for your own application and coding-agent repair. See [live trial scope](docs/LIVE_TRIAL.md).
 
 ## Use your own project
 
@@ -74,9 +82,11 @@ The current English demonstration uses **Shipboard**, a task application with wo
 
 The [new judge evidence](docs/judge-evidence/README.md) records a real source repair. **Codex used actual stdio MCP, changed only the same Shipboard repair target's persistence logic, and reran the unchanged plan.** Baseline `33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c` failed SHIP-02; rerun `74ed3133-b62c-44cf-8b4a-042156180db5` passed all three criteria. Task `bbc50e50-7838-4bec-8a2b-4ec386d98679` returned `verifiedRepair: true`, with matching plan and runner identities and no blockers. The [manifest](docs/judge-evidence/manifest.json) identifies four actual runs and hashes their evidence. The buggy variant remains defective.
 
-Read-only packaging and `MING_PUBLIC_DEMO=1` startup use `docs/judge-evidence`. This is a replay of recorded proof. The earlier [daily-report/Focus bundle](docs/demo-evidence/README.md) remains byte-for-byte unchanged and available for provenance review.
+The hosted Evidence Studio APIs and `MING_PUBLIC_DEMO=1` startup use `docs/judge-evidence` for recorded proof. The separately bundled live sample executes independently in the visitor's browser. The earlier [daily-report/Focus bundle](docs/demo-evidence/README.md) remains byte-for-byte unchanged and available for provenance review.
 
 ## Validation and delivery
+
+The new live browser sample passed **40/40** compiled UI checks across eight actual runs, including a disabled-submit counterfactual, cancellation, rerun state, independent tabs, storage cleanup and 390px layout. Isolated engine **10/10** and boundary **5/5** checks also passed. The preserved recorded Studio passed **55/55** and the hosted Worker **8/8**. See [live trial report](docs/evidence/live-trial/2026-09-26T14-33-39-458Z-c853317e/report.json). These checks used no Bob or external model calls.
 
 The latest [functional completeness review](docs/FUNCTIONAL_COMPLETENESS_REVIEW.md) goes beyond the visual audit: it records reproduced defects, fixes, current checks and the limits of the local workflow. In particular, evidence now survives cancellation/restart, screenshots cannot collide across criterion IDs, the editor accepts valid empty-value checks, and bounded AI handoffs retain late failures.
 
@@ -99,7 +109,7 @@ pnpm test:ui
 
 IBM Bob built the initial runner, evidence/history, provider, plan validation/confirmation and repair/MCP foundations. After its trial quota ended, the user authorized **Codex** to complete and extend the application, including the new project workflow and model settings. [Original Bob session summaries](bob_sessions/README.md) remain unchanged; Codex's work and the recorded source repair are not attributed to Bob.
 
-The [GitHub repository](https://github.com/Ming-Amos/Ming) and [Sites preview](https://ming-acceptance-proof.amosming.chatgpt.site) remain **private, pending user approval to publish**. Sites serves a read-only selection of reviewed historical evidence, not a remotely controlled development environment. Local runtime settings and keys are excluded.
+The [GitHub repository](https://github.com/Ming-Amos/Ming) and [Sites preview](https://ming-acceptance-proof.amosming.chatgpt.site) remain **private, pending user approval to publish**. Sites serves the live browser sample and reviewed historical evidence. It does not expose your computer or development environment; local runtime settings and keys are excluded.
 
 [The 164-second video](submission/ming-demo.mp4) and [five-slide deck](submission/ming-slides.pdf) show the **previous prototype checkpoint**. They remain valid historical materials; a new recording and refreshed presentation are still needed to demonstrate the current English Evidence Studio and Shipboard repair. [Submission statements](docs/submission/fields.md), [concept cover](submission/ming-cover.png), and [delivery checklist](docs/DELIVERY_STATUS.md) are available for review. The cover is artwork, not execution evidence.
 

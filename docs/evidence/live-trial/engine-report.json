@@ -1,0 +1,451 @@
+{
+  "checks": [
+    {
+      "name": "buggy real run completes with 2 passed / 1 failed",
+      "passed": true
+    },
+    {
+      "name": "fixed real run completes with 3 passed",
+      "passed": true
+    },
+    {
+      "name": "both complete 16 actual steps",
+      "passed": true
+    },
+    {
+      "name": "stable plan and fresh run IDs/task names",
+      "passed": true
+    },
+    {
+      "name": "captures include all three actual observed criterion DOMs",
+      "passed": true
+    },
+    {
+      "name": "buggy before/reload DOM images differ",
+      "passed": true
+    },
+    {
+      "name": "cancel preserves observations without hanging",
+      "passed": true
+    },
+    {
+      "name": "own session keys cleaned; unrelated storage untouched",
+      "passed": true
+    },
+    {
+      "name": "repair brief cites actual observed missing task and no AI claim",
+      "passed": true
+    },
+    {
+      "name": "no unexpected page errors",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "buggy": {
+    "id": "d7c1ebda-5253-4824-805f-104968dac73e",
+    "variant": "buggy",
+    "taskName": "Smoke task · d7c1ebda",
+    "startedAt": "2026-09-26T14:26:49.351Z",
+    "finishedAt": "2026-09-26T14:26:52.377Z",
+    "planFingerprint": "a7db7aaf50a0009d5db568cc714972ac68b56f7d0a037ec8a918e93f02208e26",
+    "status": "completed",
+    "runner": "in-browser-dom",
+    "captureKind": "dom-render",
+    "steps": [
+      {
+        "id": "SHIP-01-S1",
+        "description": "Open a fresh Shipboard session",
+        "status": "passed",
+        "observed": "A new isolated sample session loaded.",
+        "durationMs": 195
+      },
+      {
+        "id": "SHIP-01-S2",
+        "description": "Enter a unique task name",
+        "status": "passed",
+        "observed": "Entered “Smoke task · d7c1ebda”.",
+        "durationMs": 170
+      },
+      {
+        "id": "SHIP-01-S3",
+        "description": "Add the task to the board",
+        "status": "passed",
+        "observed": "Clicked the actual Add task button.",
+        "durationMs": 165
+      },
+      {
+        "id": "SHIP-01-S4",
+        "description": "Check the exact task in the list",
+        "status": "passed",
+        "observed": "The exact task “Smoke task · d7c1ebda” is visible in #taskList. Rows: 1; displayed count: 1 task.",
+        "durationMs": 161,
+        "capture": {
+          "bytes": 76870,
+          "sha256": "36e5515b56c92b4c16e8b987ecab6e9d4af8b707807bc49d6fac37f13b629e62"
+        }
+      },
+      {
+        "id": "SHIP-02-S1",
+        "description": "Reload the same application page",
+        "status": "passed",
+        "observed": "The iframe completed a real location.reload() with the same session.",
+        "durationMs": 168
+      },
+      {
+        "id": "SHIP-02-S2",
+        "description": "Check the task survived the reload",
+        "status": "failed",
+        "observed": "The exact task “Smoke task · d7c1ebda” is absent from #taskList. Rows: 0; displayed count: 0 tasks.",
+        "durationMs": 161,
+        "capture": {
+          "bytes": 79422,
+          "sha256": "d14d04e6de43a59032571f0a62267b9bb3c00b68171e7019c3845e6c10c4ee31"
+        }
+      },
+      {
+        "id": "SHIP-03-S1",
+        "description": "Open an independent empty board",
+        "status": "passed",
+        "observed": "A different isolated sample session loaded.",
+        "durationMs": 181
+      },
+      {
+        "id": "SHIP-03-S2",
+        "description": "Check the fresh board has no tasks",
+        "status": "passed",
+        "observed": "Task rows: 0; displayed count: 0 tasks.",
+        "durationMs": 167
+      },
+      {
+        "id": "SHIP-03-S3",
+        "description": "Leave the task name empty",
+        "status": "passed",
+        "observed": "The task-name field is empty.",
+        "durationMs": 161
+      },
+      {
+        "id": "SHIP-03-S4",
+        "description": "Try to add an empty task",
+        "status": "passed",
+        "observed": "Clicked Add task with an empty input.",
+        "durationMs": 161
+      },
+      {
+        "id": "SHIP-03-S5",
+        "description": "Check the validation message",
+        "status": "passed",
+        "observed": "Validation: “Add a task name before continuing.”; field marked invalid: true.",
+        "durationMs": 174
+      },
+      {
+        "id": "SHIP-03-S6",
+        "description": "Check no empty task was created",
+        "status": "passed",
+        "observed": "Task rows: 0; displayed count: 0 tasks.",
+        "durationMs": 161,
+        "capture": {
+          "bytes": 81766,
+          "sha256": "1c907dc3568f4b6b6d0f1cab70022998aa1c3e792bfccea37ea096d18fedb213"
+        }
+      },
+      {
+        "id": "SHIP-03-S7",
+        "description": "Enter a whitespace-only task name",
+        "status": "passed",
+        "observed": "Entered three spaces.",
+        "durationMs": 170
+      },
+      {
+        "id": "SHIP-03-S8",
+        "description": "Try to add a whitespace-only task",
+        "status": "passed",
+        "observed": "Clicked Add task with whitespace only.",
+        "durationMs": 164
+      },
+      {
+        "id": "SHIP-03-S9",
+        "description": "Check whitespace also triggers validation",
+        "status": "passed",
+        "observed": "Validation: “Add a task name before continuing.”; field marked invalid: true.",
+        "durationMs": 171
+      },
+      {
+        "id": "SHIP-03-S10",
+        "description": "Check the task board is still empty",
+        "status": "passed",
+        "observed": "Task rows: 0; displayed count: 0 tasks.",
+        "durationMs": 161,
+        "capture": {
+          "bytes": 79662,
+          "sha256": "79f579669038f18b4624116e66bf664bdfe04bec74f73349f79cc8803a0331b8"
+        }
+      }
+    ],
+    "criteria": [
+      {
+        "id": "SHIP-01",
+        "title": "A new task appears on the board",
+        "expected": "The exact new task is visible in the task list, and the board contains one task.",
+        "status": "passed",
+        "observed": "The exact task “Smoke task · d7c1ebda” is visible in #taskList. Rows: 1; displayed count: 1 task.",
+        "capture": {
+          "bytes": 76870,
+          "sha256": "36e5515b56c92b4c16e8b987ecab6e9d4af8b707807bc49d6fac37f13b629e62"
+        }
+      },
+      {
+        "id": "SHIP-02",
+        "title": "The same task survives a reload",
+        "expected": "After a real page reload, the exact task is still visible and the board still contains one task.",
+        "status": "failed",
+        "observed": "The exact task “Smoke task · d7c1ebda” is absent from #taskList. Rows: 0; displayed count: 0 tasks.",
+        "capture": {
+          "bytes": 79422,
+          "sha256": "d14d04e6de43a59032571f0a62267b9bb3c00b68171e7019c3845e6c10c4ee31"
+        }
+      },
+      {
+        "id": "SHIP-03",
+        "title": "Blank task names are rejected",
+        "expected": "Empty and whitespace-only submissions show an actionable validation message and create no tasks.",
+        "status": "passed",
+        "observed": "Task rows: 0; displayed count: 0 tasks.\nValidation: “Add a task name before continuing.”; field marked invalid: true.\nTask rows: 0; displayed count: 0 tasks.\nValidation: “Add a task name before continuing.”; field marked invalid: true.\nTask rows: 0; displayed count: 0 tasks.",
+        "capture": {
+          "bytes": 79662,
+          "sha256": "79f579669038f18b4624116e66bf664bdfe04bec74f73349f79cc8803a0331b8"
+        }
+      }
+    ]
+  },
+  "fixed": {
+    "id": "0d257234-3201-48b9-ab64-3a52e6cf98d2",
+    "variant": "fixed",
+    "taskName": "Smoke task · 0d257234",
+    "startedAt": "2026-09-26T14:26:52.377Z",
+    "finishedAt": "2026-09-26T14:26:55.363Z",
+    "planFingerprint": "a7db7aaf50a0009d5db568cc714972ac68b56f7d0a037ec8a918e93f02208e26",
+    "status": "completed",
+    "runner": "in-browser-dom",
+    "captureKind": "dom-render",
+    "steps": [
+      {
+        "id": "SHIP-01-S1",
+        "description": "Open a fresh Shipboard session",
+        "status": "passed",
+        "observed": "A new isolated sample session loaded.",
+        "durationMs": 168
+      },
+      {
+        "id": "SHIP-01-S2",
+        "description": "Enter a unique task name",
+        "status": "passed",
+        "observed": "Entered “Smoke task · 0d257234”.",
+        "durationMs": 168
+      },
+      {
+        "id": "SHIP-01-S3",
+        "description": "Add the task to the board",
+        "status": "passed",
+        "observed": "Clicked the actual Add task button.",
+        "durationMs": 162
+      },
+      {
+        "id": "SHIP-01-S4",
+        "description": "Check the exact task in the list",
+        "status": "passed",
+        "observed": "The exact task “Smoke task · 0d257234” is visible in #taskList. Rows: 1; displayed count: 1 task.",
+        "durationMs": 161,
+        "capture": {
+          "bytes": 76758,
+          "sha256": "f1b10087dc32c3a262c12fc20ad340ce9f979ecb15d1d6dbd676e17421a392d5"
+        }
+      },
+      {
+        "id": "SHIP-02-S1",
+        "description": "Reload the same application page",
+        "status": "passed",
+        "observed": "The iframe completed a real location.reload() with the same session.",
+        "durationMs": 183
+      },
+      {
+        "id": "SHIP-02-S2",
+        "description": "Check the task survived the reload",
+        "status": "passed",
+        "observed": "The exact task “Smoke task · 0d257234” is visible in #taskList. Rows: 1; displayed count: 1 task.",
+        "durationMs": 170,
+        "capture": {
+          "bytes": 74726,
+          "sha256": "edd6ebaee0dcb1f0a50ad3784771b4b748fa19101209053c5ec452ee71aa6976"
+        }
+      },
+      {
+        "id": "SHIP-03-S1",
+        "description": "Open an independent empty board",
+        "status": "passed",
+        "observed": "A different isolated sample session loaded.",
+        "durationMs": 183
+      },
+      {
+        "id": "SHIP-03-S2",
+        "description": "Check the fresh board has no tasks",
+        "status": "passed",
+        "observed": "Task rows: 0; displayed count: 0 tasks.",
+        "durationMs": 166
+      },
+      {
+        "id": "SHIP-03-S3",
+        "description": "Leave the task name empty",
+        "status": "passed",
+        "observed": "The task-name field is empty.",
+        "durationMs": 167
+      },
+      {
+        "id": "SHIP-03-S4",
+        "description": "Try to add an empty task",
+        "status": "passed",
+        "observed": "Clicked Add task with an empty input.",
+        "durationMs": 161
+      },
+      {
+        "id": "SHIP-03-S5",
+        "description": "Check the validation message",
+        "status": "passed",
+        "observed": "Validation: “Add a task name before continuing.”; field marked invalid: true.",
+        "durationMs": 170
+      },
+      {
+        "id": "SHIP-03-S6",
+        "description": "Check no empty task was created",
+        "status": "passed",
+        "observed": "Task rows: 0; displayed count: 0 tasks.",
+        "durationMs": 161,
+        "capture": {
+          "bytes": 81502,
+          "sha256": "ef1385c64815f6ab28040a334a0755b693e91e0abbf0f220899b7f5da3853bc6"
+        }
+      },
+      {
+        "id": "SHIP-03-S7",
+        "description": "Enter a whitespace-only task name",
+        "status": "passed",
+        "observed": "Entered three spaces.",
+        "durationMs": 166
+      },
+      {
+        "id": "SHIP-03-S8",
+        "description": "Try to add a whitespace-only task",
+        "status": "passed",
+        "observed": "Clicked Add task with whitespace only.",
+        "durationMs": 169
+      },
+      {
+        "id": "SHIP-03-S9",
+        "description": "Check whitespace also triggers validation",
+        "status": "passed",
+        "observed": "Validation: “Add a task name before continuing.”; field marked invalid: true.",
+        "durationMs": 161
+      },
+      {
+        "id": "SHIP-03-S10",
+        "description": "Check the task board is still empty",
+        "status": "passed",
+        "observed": "Task rows: 0; displayed count: 0 tasks.",
+        "durationMs": 161,
+        "capture": {
+          "bytes": 79354,
+          "sha256": "14ed873373b3ee92735e46a14eddbe8407caf3da9ebe9980bba4f43b73b832bc"
+        }
+      }
+    ],
+    "criteria": [
+      {
+        "id": "SHIP-01",
+        "title": "A new task appears on the board",
+        "expected": "The exact new task is visible in the task list, and the board contains one task.",
+        "status": "passed",
+        "observed": "The exact task “Smoke task · 0d257234” is visible in #taskList. Rows: 1; displayed count: 1 task.",
+        "capture": {
+          "bytes": 76758,
+          "sha256": "f1b10087dc32c3a262c12fc20ad340ce9f979ecb15d1d6dbd676e17421a392d5"
+        }
+      },
+      {
+        "id": "SHIP-02",
+        "title": "The same task survives a reload",
+        "expected": "After a real page reload, the exact task is still visible and the board still contains one task.",
+        "status": "passed",
+        "observed": "The exact task “Smoke task · 0d257234” is visible in #taskList. Rows: 1; displayed count: 1 task.",
+        "capture": {
+          "bytes": 74726,
+          "sha256": "edd6ebaee0dcb1f0a50ad3784771b4b748fa19101209053c5ec452ee71aa6976"
+        }
+      },
+      {
+        "id": "SHIP-03",
+        "title": "Blank task names are rejected",
+        "expected": "Empty and whitespace-only submissions show an actionable validation message and create no tasks.",
+        "status": "passed",
+        "observed": "Task rows: 0; displayed count: 0 tasks.\nValidation: “Add a task name before continuing.”; field marked invalid: true.\nTask rows: 0; displayed count: 0 tasks.\nValidation: “Add a task name before continuing.”; field marked invalid: true.\nTask rows: 0; displayed count: 0 tasks.",
+        "capture": {
+          "bytes": 79354,
+          "sha256": "14ed873373b3ee92735e46a14eddbe8407caf3da9ebe9980bba4f43b73b832bc"
+        }
+      }
+    ]
+  },
+  "cancelled": {
+    "id": "e703e2d2-4d58-4d3a-b43e-a91ccc5fb6c9",
+    "variant": "fixed",
+    "taskName": "Cancel task · e703e2d2",
+    "startedAt": "2026-09-26T14:26:55.363Z",
+    "finishedAt": "2026-09-26T14:26:55.697Z",
+    "planFingerprint": "a7db7aaf50a0009d5db568cc714972ac68b56f7d0a037ec8a918e93f02208e26",
+    "status": "cancelled",
+    "runner": "in-browser-dom",
+    "captureKind": "dom-render",
+    "steps": [
+      {
+        "id": "SHIP-01-S1",
+        "description": "Open a fresh Shipboard session",
+        "status": "passed",
+        "observed": "A new isolated sample session loaded.",
+        "durationMs": 169
+      },
+      {
+        "id": "SHIP-01-S2",
+        "description": "Enter a unique task name",
+        "status": "passed",
+        "observed": "Entered “Cancel task · e703e2d2”.",
+        "durationMs": 164
+      }
+    ],
+    "criteria": [
+      {
+        "id": "SHIP-01",
+        "title": "A new task appears on the board",
+        "expected": "The exact new task is visible in the task list, and the board contains one task.",
+        "status": "unchecked",
+        "observed": "The check was cancelled. Completed observations are preserved."
+      },
+      {
+        "id": "SHIP-02",
+        "title": "The same task survives a reload",
+        "expected": "After a real page reload, the exact task is still visible and the board still contains one task.",
+        "status": "unchecked",
+        "observed": "Not checked yet."
+      },
+      {
+        "id": "SHIP-03",
+        "title": "Blank task names are rejected",
+        "expected": "Empty and whitespace-only submissions show an actionable validation message and create no tasks.",
+        "status": "unchecked",
+        "observed": "Not checked yet."
+      }
+    ],
+    "error": "The check was cancelled. Completed observations are preserved."
+  },
+  "storagePreserved": true,
+  "keysClean": true,
+  "brief": "# Ming acceptance evidence\nRun: d7c1ebda-5253-4824-805f-104968dac73e\nSample version: buggy\nStarted: 2026-09-26T14:26:49.351Z\nFinished: 2026-09-26T14:26:52.377Z\nRunner: in-browser-dom (actions and assertions executed in the visitor's browser)\nPlan SHA-256: a7db7aaf50a0009d5db568cc714972ac68b56f7d0a037ec8a918e93f02208e26\nUnique task: Smoke task · d7c1ebda\nRun status: completed\nCapture type: DOM renders, not native browser screenshots.\n\n## Acceptance results\n### SHIP-01: A new task appears on the board — passed\nExpected: The exact new task is visible in the task list, and the board contains one task.\nObserved: The exact task “Smoke task · d7c1ebda” is visible in #taskList. Rows: 1; displayed count: 1 task.\n\n### SHIP-02: The same task survives a reload — failed\nExpected: After a real page reload, the exact task is still visible and the board still contains one task.\nObserved: The exact task “Smoke task · d7c1ebda” is absent from #taskList. Rows: 0; displayed count: 0 tasks.\n\n### SHIP-03: Blank task names are rejected — passed\nExpected: Empty and whitespace-only submissions show an actionable validation message and create no tasks.\nObserved: Task rows: 0; displayed count: 0 tasks.\nValidation: “Add a task name before continuing.”; field marked invalid: true.\nTask rows: 0; displayed count: 0 tasks.\nValidation: “Add a task name before continuing.”; field marked invalid: true.\nTask rows: 0; displayed count: 0 tasks.\n\n## Reproduction steps\n- SHIP-01-S1 [passed] Open a fresh Shipboard session: A new isolated sample session loaded.\n- SHIP-01-S2 [passed] Enter a unique task name: Entered “Smoke task · d7c1ebda”.\n- SHIP-01-S3 [passed] Add the task to the board: Clicked the actual Add task button.\n- SHIP-01-S4 [passed] Check the exact task in the list: The exact task “Smoke task · d7c1ebda” is visible in #taskList. Rows: 1; displayed count: 1 task.\n- SHIP-02-S1 [passed] Reload the same application page: The iframe completed a real location.reload() with the same session.\n- SHIP-02-S2 [failed] Check the task survived the reload: The exact task “Smoke task · d7c1ebda” is absent from #taskList. Rows: 0; displayed count: 0 tasks.\n- SHIP-03-S1 [passed] Open an independent empty board: A different isolated sample session loaded.\n- SHIP-03-S2 [passed] Check the fresh board has no tasks: Task rows: 0; displayed count: 0 tasks.\n- SHIP-03-S3 [passed] Leave the task name empty: The task-name field is empty.\n- SHIP-03-S4 [passed] Try to add an empty task: Clicked Add task with an empty input.\n- SHIP-03-S5 [passed] Check the validation message: Validation: “Add a task name before continuing.”; field marked invalid: true.\n- SHIP-03-S6 [passed] Check no empty task was created: Task rows: 0; displayed count: 0 tasks.\n- SHIP-03-S7 [passed] Enter a whitespace-only task name: Entered three spaces.\n- SHIP-03-S8 [passed] Try to add a whitespace-only task: Clicked Add task with whitespace only.\n- SHIP-03-S9 [passed] Check whitespace also triggers validation: Validation: “Add a task name before continuing.”; field marked invalid: true.\n- SHIP-03-S10 [passed] Check the task board is still empty: Task rows: 0; displayed count: 0 tasks.\n\n## Repair request\nUse the failed observations above to inspect the sample source and implement a fix. Preserve the original evidence and rerun the same acceptance plan. Do not report success without a fresh passing run.\n\nThis brief is ready to copy to a coding AI. No AI was called and no code was repaired by this browser trial."
+}

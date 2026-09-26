@@ -4,6 +4,8 @@ Reviewed 2026-09-26 against the agreed product purpose: reduce repeated manual c
 
 **Assessment:** the supported local-web acceptance and repair-handoff workflow is implemented and usable. It is not an unrestricted autonomous tester for every project. A real external model's plan-generation quality, actual Bob runtime repair integration, and remote browser execution are not established by this review. No Bobcoins or external paid-model calls were used.
 
+**Later live sample update:** `/#trial` now executes a controlled same-origin Shipboard sample in the visitor's own browser, with fresh DOM assertions, DOM-rendered snapshots and prepared-fix comparison. Final browser UI review passed **40/40**, engine **10/10**, and boundary checks **5/5**. This adds a real interactive online trial; it does not establish hosted browser execution for arbitrary projects or live AI-generated repairs. [Scope and evidence boundary](LIVE_TRIAL.md).
+
 ## Capability matrix
 
 | User need | Implementation and verified scope | Remaining boundary |
@@ -15,7 +17,7 @@ Reviewed 2026-09-26 against the agreed product purpose: reduce repeated manual c
 | Preserve evidence if work stops | Cancellation, interrupted-run recovery, completed-step/criterion preservation, immutable historical runs | Already executed application mutations are not undone by cancellation. |
 | Return a failure to the coding AI | Evidence-backed task, claim, original plan and reproduction details, late-failure-aware MCP evidence with truncation disclosure | A task alone does not perform or falsely claim a repair. The connected coding agent needs its own authorized editing tools. |
 | Verify the repair fairly | Same-standard rerun, bounded repair attempts, source/runner/target checks, original and follow-up evidence | Strict source-bound verification applies to captured self-contained HTML; live app reruns remain observed acceptance requiring review. |
-| Let judges inspect the product online | English read-only viewer with actual recorded Shipboard evidence | Hosted preview is private and does not run a browser against the judge's computer. Public access and final competition submission remain separate. |
+| Let judges inspect the product online | Fresh in-browser Shipboard trial plus English recorded Evidence Studio | The trial operates only on its bundled sample; DOM renders differ from native browser screenshots. Hosted preview remains private pending access review. Own projects run through local Ming. |
 
 ## Reproduced defects fixed in this review
 

@@ -30,12 +30,21 @@ test('blocks writes and admin access without calling an asset or model service',
   }
   assert.equal((await worker.fetch(request('/admin/test-transport'), unusedAssets)).status, 404);
 });
-test('always advertises recorded read-only mode and disables provider configuration', async () => {
+test('keeps recorded APIs read-only and advertises a separate browser-owned live sample', async () => {
   const capabilities = await (await worker.fetch(request('/api/capabilities'), unusedAssets)).json();
   assert.equal(capabilities.readOnly, true);
   assert.equal(capabilities.demoMode, 'recorded-evidence');
+  assert.deepEqual(capabilities.liveTrial, { available: true, path: '/#trial', execution: 'visitor-browser', scope: 'bundled-shipboard', captureKind: 'dom-render', modelCalls: false });
   const provider = await (await worker.fetch(request('/api/provider/status'), unusedAssets)).json();
   assert.equal(provider.status.configured, false);
+});
+
+test('a missing trial document never falls back to the application shell', async () => {
+  const seen = [];
+  const env = { ASSETS: { async fetch(req) { seen.push(new URL(req.url).pathname); return new Response('Missing sample', { status: 404 }); } } };
+  const response = await worker.fetch(request('/trial/missing.html', { headers: { accept: 'text/html' } }), env);
+  assert.equal(response.status, 404);
+  assert.deepEqual(seen, ['/trial/missing.html']);
 });
 test('serves only explicitly bundled screenshots with a safe asset path', async () => {
   const seen = [];

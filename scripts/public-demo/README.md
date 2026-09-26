@@ -1,6 +1,6 @@
-# Reviewed public evidence adapter
+# Hosted live sample and reviewed evidence adapter
 
-This adapter publishes the existing Ming frontend as a **read-only recorded-evidence viewer**. It does not run browsers, invoke a model, modify application source, or create repair tasks. Full execution remains available in the local application.
+This adapter serves two separate experiences: a **live sample executed in the visitor's browser** at `/#trial`, and the **read-only recorded-evidence viewer** at `/#studio`. The Worker itself does not launch a browser, invoke a model, modify source, or create repair tasks. The live sample performs fresh DOM interactions and observations against the bundled Shipboard frame, with DOM-rendered snapshots and a clearly labeled prepared fix. Full project execution and coding-agent repair remain available in the local application. See [execution boundary](../../docs/LIVE_TRIAL.md).
 
 ## Export contract
 

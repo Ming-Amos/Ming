@@ -1,4 +1,4 @@
-/** Read-only Sites adapter. Every acceptance result is a recorded wire response. */
+/** Recorded-evidence API plus a bundled, independently executed browser trial. */
 export function createWorker(bundle) {
   if (bundle?.schemaVersion !== 1 || !bundle.responses || !Array.isArray(bundle.screenshots)) {
     throw new Error('Invalid reviewed public-demo bundle');
@@ -24,11 +24,11 @@ export function createWorker(bundle) {
       const url = new URL(request.url);
       const head = request.method === 'HEAD';
       if (!['GET', 'HEAD'].includes(request.method)) {
-        return json({ ok: false, error: 'This public demo displays recorded evidence only. Run Ming locally to execute checks, generate plans, or repair an application.' }, 403);
+        return json({ ok: false, error: 'Hosted API records are read-only. Use the live sample in your browser, or run Ming locally to check your own application.' }, 403);
       }
 
       if (url.pathname === '/api/capabilities') {
-        return json({ ok: true, readOnly: true, sourceBinding: 'self-contained-html-snapshot', demoMode: 'recorded-evidence' }, 200, head);
+        return json({ ok: true, readOnly: true, sourceBinding: 'self-contained-html-snapshot', demoMode: 'recorded-evidence', liveTrial: { available: true, path: '/#trial', execution: 'visitor-browser', scope: 'bundled-shipboard', captureKind: 'dom-render', modelCalls: false } }, 200, head);
       }
       if (url.pathname === '/api/provider/status') {
         return json({ ok: true, status: { configured: false, providerLabel: 'Recorded evidence demo — model calls disabled', baseUrl: '(disabled)', modelId: '(disabled)', missingFields: ['LOCAL_MODEL_CONFIGURATION_REQUIRED'] } }, 200, head);
@@ -59,6 +59,8 @@ export function createWorker(bundle) {
       }
 
       const response = await env.ASSETS.fetch(request);
+      // A missing trial document must fail, never become a nested application shell.
+      if (url.pathname.startsWith('/trial/')) return response;
       const acceptsHtml = request.headers.get('accept')?.includes('text/html');
       if (response.status !== 404 || !acceptsHtml) return response;
       const indexUrl = new URL(request.url);

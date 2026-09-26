@@ -1,0 +1,941 @@
+{
+  "reviewId": "c853317e-82df-4bc8-984f-aca67eddb8d5",
+  "startedAt": "2026-09-26T14:33:39.459Z",
+  "base": "http://127.0.0.1:4186",
+  "checks": [
+    {
+      "name": "Compiled preview is available with a read-only server",
+      "passed": true
+    },
+    {
+      "name": "Welcome presents Start before mounting an application workspace",
+      "passed": true
+    },
+    {
+      "name": "Start opens the live trial at #trial",
+      "passed": true
+    },
+    {
+      "name": "The custom task appears in the actual sample DOM during execution",
+      "passed": true
+    },
+    {
+      "name": "Original buggy app produces two passes and one real persistence failure",
+      "passed": true
+    },
+    {
+      "name": "Exported task exactly matches the observed sample DOM",
+      "passed": true
+    },
+    {
+      "name": "Run identity and timestamps are created by this visit",
+      "passed": true
+    },
+    {
+      "name": "Report describes its real in-browser runner and DOM-render evidence",
+      "passed": true
+    },
+    {
+      "name": "Each criterion includes a non-empty PNG rendered from the inspected DOM",
+      "passed": true
+    },
+    {
+      "name": "All four planned capture points preserve actual DOM render images",
+      "passed": true
+    },
+    {
+      "name": "Creation and post-reload captures differ with the observed app state",
+      "passed": true
+    },
+    {
+      "name": "The actual sample reloads its first session and validates blanks in a separate session",
+      "passed": true
+    },
+    {
+      "name": "Persistence assertion reports the exact missing task, not a canned diagnosis",
+      "passed": true
+    },
+    {
+      "name": "Blank-name acceptance inspects both empty and whitespace submissions",
+      "passed": true
+    },
+    {
+      "name": "Finishing a trial removes its own sample keys and preserves unrelated storage",
+      "passed": true,
+      "detail": {
+        "sentinel": "preserve-c853317e-82df-4bc8-984f-aca67eddb8d5",
+        "ownedKeys": []
+      }
+    },
+    {
+      "name": "Repair brief contains this run, failed requirement, exact task, and honest execution scope",
+      "passed": true
+    },
+    {
+      "name": "Prepared fixed version genuinely passes all three original criteria",
+      "passed": true
+    },
+    {
+      "name": "Prepared fix uses the same plan with a new run, task, and timestamp",
+      "passed": true
+    },
+    {
+      "name": "The original failing baseline stays unchanged beside its follow-up",
+      "passed": true
+    },
+    {
+      "name": "Prepared fixed trial also removes only its own storage",
+      "passed": true,
+      "detail": {
+        "sentinel": "preserve-c853317e-82df-4bc8-984f-aca67eddb8d5",
+        "ownedKeys": []
+      }
+    },
+    {
+      "name": "Starting another prepared rerun clears the previous verified banner and comparison",
+      "passed": true
+    },
+    {
+      "name": "Cancelling that rerun cannot inherit its earlier verified result",
+      "passed": true
+    },
+    {
+      "name": "A cancelled prepared rerun still preserves the exact original baseline",
+      "passed": true
+    },
+    {
+      "name": "Cancel keeps an incomplete run instead of declaring unchecked criteria passed",
+      "passed": true
+    },
+    {
+      "name": "Cancelling preserves unrelated storage and removes the cancelled session",
+      "passed": true,
+      "detail": {
+        "sentinel": "preserve-c853317e-82df-4bc8-984f-aca67eddb8d5",
+        "ownedKeys": []
+      }
+    },
+    {
+      "name": "Retry executes fresh checks after cancellation",
+      "passed": true
+    },
+    {
+      "name": "Live trial and result remain within a 390px viewport",
+      "passed": true,
+      "detail": {
+        "page": 390,
+        "viewport": 390
+      }
+    },
+    {
+      "name": "Concurrent tabs retain independent run IDs and task names",
+      "passed": true
+    },
+    {
+      "name": "Concurrent tabs each inspect their own board and complete the same real outcomes",
+      "passed": true
+    },
+    {
+      "name": "Concurrent trial cleanup leaves no cross-tab sample data",
+      "passed": true,
+      "detail": {
+        "sentinel": "preserve-c853317e-82df-4bc8-984f-aca67eddb8d5",
+        "ownedKeys": []
+      }
+    },
+    {
+      "name": "Disabling actual submission changes the result: creation fails and dependent reload remains unchecked",
+      "passed": true
+    },
+    {
+      "name": "The altered application cannot reuse the normal predetermined outcome",
+      "passed": true
+    },
+    {
+      "name": "Leaving #trial removes its iframe and stops further fixture execution",
+      "passed": true
+    },
+    {
+      "name": "Leaving the route aborts and cleans only its own trial session",
+      "passed": true,
+      "detail": {
+        "sentinel": "preserve-c853317e-82df-4bc8-984f-aca67eddb8d5",
+        "ownedKeys": []
+      }
+    },
+    {
+      "name": "Live execution makes no server mutations or model API requests",
+      "passed": true
+    },
+    {
+      "name": "The existing recorded Evidence Studio remains available at #studio",
+      "passed": true
+    },
+    {
+      "name": "Product language remains English",
+      "passed": true
+    },
+    {
+      "name": "No requests leave the local compiled preview",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "No broken product or sample resources",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "No uncaught browser exceptions across live, cancellation, and recorded flows",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "pageErrors": [],
+  "outsideRequests": [],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/",
+      "resource": "document"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-BTynln7k.js",
+      "resource": "script"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-BHTfKgCw.css",
+      "resource": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "path": "/welcome/pixel-door-original.gif",
+      "resource": "image"
+    },
+    {
+      "method": "GET",
+      "path": "/trial/shipboard.html",
+      "resource": "document"
+    },
+    {
+      "method": "GET",
+      "path": "/trial/shipboard.html",
+      "resource": "document"
+    },
+    {
+      "method": "GET",
+      "path": "/trial/shipboard.html",
+      "resource": "document"
+    },
+    {
+      "method": "GET",
+      "path": "/trial/shipboard.html",
+      "resource": "document"
+    },
+    {
+      "method": "GET",
+      "path": "/trial/shipboard.html",
+      "resource": "document"
+    },
+    {
+      "method": "GET",
+      "path": "/trial/shipboard.html",
+      "resource": "document"
+    },
+    {
+      "method": "GET",
+      "path": "/trial/shipboard.html",
+      "resource": "document"
+    },
+    {
+      "method": "GET",
+      "path": "/trial/shipboard.html",
+      "resource": "document"
+    },
+    {
+      "method": "GET",
+      "path": "/trial/shipboard.html",
+      "resource": "document"
+    },
+    {
+      "method": "GET",
+      "path": "/trial/shipboard.html",
+      "resource": "document"
+    },
+    {
+      "method": "GET",
+      "path": "/trial/shipboard.html",
+      "resource": "document"
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "resource": "document"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-BTynln7k.js",
+      "resource": "script"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-BHTfKgCw.css",
+      "resource": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "path": "/trial/shipboard.html",
+      "resource": "document"
+    },
+    {
+      "method": "GET",
+      "path": "/trial/shipboard.html",
+      "resource": "document"
+    },
+    {
+      "method": "GET",
+      "path": "/trial/shipboard.html",
+      "resource": "document"
+    },
+    {
+      "method": "GET",
+      "path": "/trial/shipboard.html",
+      "resource": "document"
+    },
+    {
+      "method": "GET",
+      "path": "/trial/shipboard.html",
+      "resource": "document"
+    },
+    {
+      "method": "GET",
+      "path": "/trial/shipboard.html",
+      "resource": "document"
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "resource": "document"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-BTynln7k.js",
+      "resource": "script"
+    },
+    {
+      "method": "GET",
+      "path": "/assets/index-BHTfKgCw.css",
+      "resource": "stylesheet"
+    },
+    {
+      "method": "GET",
+      "path": "/trial/shipboard.html",
+      "resource": "document"
+    },
+    {
+      "method": "GET",
+      "path": "/trial/shipboard.html",
+      "resource": "document"
+    },
+    {
+      "method": "GET",
+      "path": "/trial/shipboard.html",
+      "resource": "document"
+    },
+    {
+      "method": "GET",
+      "path": "/welcome/pixel-door-original.gif",
+      "resource": "image"
+    },
+    {
+      "method": "GET",
+      "path": "/api/targets",
+      "resource": "fetch"
+    },
+    {
+      "method": "GET",
+      "path": "/api/provider/status",
+      "resource": "fetch"
+    },
+    {
+      "method": "GET",
+      "path": "/api/history",
+      "resource": "fetch"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repair-tasks",
+      "resource": "fetch"
+    },
+    {
+      "method": "GET",
+      "path": "/api/capabilities",
+      "resource": "fetch"
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects",
+      "resource": "fetch"
+    },
+    {
+      "method": "GET",
+      "path": "/api/plan",
+      "resource": "fetch"
+    },
+    {
+      "method": "GET",
+      "path": "/api/run/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c",
+      "resource": "fetch"
+    },
+    {
+      "method": "GET",
+      "path": "/api/plan",
+      "resource": "fetch"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repair-tasks/bbc50e50-7838-4bec-8a2b-4ec386d98679/comparison",
+      "resource": "fetch"
+    },
+    {
+      "method": "GET",
+      "path": "/api/run/74ed3133-b62c-44cf-8b4a-042156180db5",
+      "resource": "fetch"
+    },
+    {
+      "method": "GET",
+      "path": "/api/run/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c",
+      "resource": "fetch"
+    },
+    {
+      "method": "GET",
+      "path": "/api/screenshots/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c_SHIP-01_final.png",
+      "resource": "image"
+    },
+    {
+      "method": "GET",
+      "path": "/api/screenshots/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c_SHIP-02-S2_failed.png",
+      "resource": "image"
+    }
+  ],
+  "fixtureRequests": [
+    {
+      "variant": "buggy",
+      "session": "b2b656ee-c2bd-4b92-82fb-6a8f9060d984"
+    },
+    {
+      "variant": "buggy",
+      "session": "b2b656ee-c2bd-4b92-82fb-6a8f9060d984"
+    },
+    {
+      "variant": "buggy",
+      "session": "bbe25596-6735-44ce-8340-4c80327cd3be"
+    },
+    {
+      "variant": "fixed",
+      "session": "60e4a6ec-b8fa-47fb-80f1-069c24f3aeaf"
+    },
+    {
+      "variant": "fixed",
+      "session": "60e4a6ec-b8fa-47fb-80f1-069c24f3aeaf"
+    },
+    {
+      "variant": "fixed",
+      "session": "bf2fa238-6701-4a06-981a-08a3099d78a7"
+    },
+    {
+      "variant": "fixed",
+      "session": "fffb6442-e7e3-43ec-b277-465cf9575546"
+    },
+    {
+      "variant": "buggy",
+      "session": "bda4f273-962c-471c-874f-1ee58edfbaae"
+    },
+    {
+      "variant": "buggy",
+      "session": "6a49c765-3b43-432b-b7b2-d0313cc1f0ff"
+    },
+    {
+      "variant": "buggy",
+      "session": "6a49c765-3b43-432b-b7b2-d0313cc1f0ff"
+    },
+    {
+      "variant": "buggy",
+      "session": "a8cf917f-db2a-4f03-9379-a511404decf6"
+    },
+    {
+      "variant": "buggy",
+      "session": "ec80fd9a-5cc6-49fb-b11e-d8b75bb25a74"
+    },
+    {
+      "variant": "buggy",
+      "session": "bc59a03c-fc1e-4a20-b2fa-50870838bc4a"
+    },
+    {
+      "variant": "buggy",
+      "session": "ec80fd9a-5cc6-49fb-b11e-d8b75bb25a74"
+    },
+    {
+      "variant": "buggy",
+      "session": "bc59a03c-fc1e-4a20-b2fa-50870838bc4a"
+    },
+    {
+      "variant": "buggy",
+      "session": "37d9389d-c0c8-4d36-b73b-0fc3107b2734"
+    },
+    {
+      "variant": "buggy",
+      "session": "c3042c10-d06e-4bd1-956f-8e6dead60cf7"
+    },
+    {
+      "variant": "buggy",
+      "session": "96dcac58-73fa-47d5-95e7-a6415bc91cdb"
+    },
+    {
+      "variant": "buggy",
+      "session": "48e0b0c1-c386-48f1-b05c-fa04cd2b08f2"
+    },
+    {
+      "variant": "buggy",
+      "session": "bbe7173e-b39b-4a9f-a88d-1ee226193ba7"
+    }
+  ],
+  "failedResources": [],
+  "screenshots": [
+    {
+      "file": "01-live-trial-ready.png",
+      "sha256": "76e376dbc8d4e54f0bcdb7ef8f8a7faee533aa314880dffb12c6ee9ba89e03dd"
+    },
+    {
+      "file": "02-buggy-app-observed.png",
+      "sha256": "7757981d026f28d7b9f5751107960b2b599bdad0785a6831bc1223eb1a6a0289"
+    },
+    {
+      "file": "03-prepared-fix-compared.png",
+      "sha256": "92520f6bb744e0210742b36c3ab4b6fe362cf6e5af90e5d3c5a2f808650926f7"
+    },
+    {
+      "file": "04-live-trial-mobile.png",
+      "sha256": "10d590e36d735fa1863ffc9526e50449910abe765fb7f38e3ea41302d95b1bb0"
+    }
+  ],
+  "runs": [
+    {
+      "id": "97d5e3b3-c2d5-4b2e-bd2e-a18ac25cf9a5",
+      "variant": "buggy",
+      "taskName": "Review the release c853317e · 97d5e3b3",
+      "startedAt": "2026-09-26T14:33:41.003Z",
+      "finishedAt": "2026-09-26T14:33:44.050Z",
+      "planFingerprint": "a7db7aaf50a0009d5db568cc714972ac68b56f7d0a037ec8a918e93f02208e26",
+      "status": "completed",
+      "runner": "in-browser-dom",
+      "captureKind": "dom-render",
+      "criteria": [
+        {
+          "id": "SHIP-01",
+          "title": "A new task appears on the board",
+          "expected": "The exact new task is visible in the task list, and the board contains one task.",
+          "status": "passed",
+          "observed": "The exact task “Review the release c853317e · 97d5e3b3” is visible in #taskList. Rows: 1; displayed count: 1 task."
+        },
+        {
+          "id": "SHIP-02",
+          "title": "The same task survives a reload",
+          "expected": "After a real page reload, the exact task is still visible and the board still contains one task.",
+          "status": "failed",
+          "observed": "The exact task “Review the release c853317e · 97d5e3b3” is absent from #taskList. Rows: 0; displayed count: 0 tasks."
+        },
+        {
+          "id": "SHIP-03",
+          "title": "Blank task names are rejected",
+          "expected": "Empty and whitespace-only submissions show an actionable validation message and create no tasks.",
+          "status": "passed",
+          "observed": "Task rows: 0; displayed count: 0 tasks.\nValidation: “Add a task name before continuing.”; field marked invalid: true.\nTask rows: 0; displayed count: 0 tasks.\nValidation: “Add a task name before continuing.”; field marked invalid: true.\nTask rows: 0; displayed count: 0 tasks."
+        }
+      ],
+      "stepCount": 16,
+      "captures": [
+        {
+          "criterion": "SHIP-01",
+          "bytes": 54910,
+          "width": 691,
+          "height": 644,
+          "sha256": "e9fb84ff8996c5854f17694ba7ebdd1badfad040a4ed922f3fbf6b8406c4f41d"
+        },
+        {
+          "criterion": "SHIP-02",
+          "bytes": 56530,
+          "width": 691,
+          "height": 741,
+          "sha256": "c47de52037ee16c8ebffab54596335e46cc1977bfbabf35da5d58a74fe4390a0"
+        },
+        {
+          "criterion": "SHIP-03",
+          "bytes": 56693,
+          "width": 691,
+          "height": 741,
+          "sha256": "055a0f84f7af2f007cb2eda5ff7cdb4a31f92eeb0ad2589e8f15747001f5e548"
+        }
+      ]
+    },
+    {
+      "id": "84b4bf8c-1a5b-421c-a62b-97f66f71f1cb",
+      "variant": "fixed",
+      "taskName": "Review the release c853317e · 84b4bf8c",
+      "startedAt": "2026-09-26T14:33:44.670Z",
+      "finishedAt": "2026-09-26T14:33:47.666Z",
+      "planFingerprint": "a7db7aaf50a0009d5db568cc714972ac68b56f7d0a037ec8a918e93f02208e26",
+      "status": "completed",
+      "runner": "in-browser-dom",
+      "captureKind": "dom-render",
+      "criteria": [
+        {
+          "id": "SHIP-01",
+          "title": "A new task appears on the board",
+          "expected": "The exact new task is visible in the task list, and the board contains one task.",
+          "status": "passed",
+          "observed": "The exact task “Review the release c853317e · 84b4bf8c” is visible in #taskList. Rows: 1; displayed count: 1 task."
+        },
+        {
+          "id": "SHIP-02",
+          "title": "The same task survives a reload",
+          "expected": "After a real page reload, the exact task is still visible and the board still contains one task.",
+          "status": "passed",
+          "observed": "The exact task “Review the release c853317e · 84b4bf8c” is visible in #taskList. Rows: 1; displayed count: 1 task."
+        },
+        {
+          "id": "SHIP-03",
+          "title": "Blank task names are rejected",
+          "expected": "Empty and whitespace-only submissions show an actionable validation message and create no tasks.",
+          "status": "passed",
+          "observed": "Task rows: 0; displayed count: 0 tasks.\nValidation: “Add a task name before continuing.”; field marked invalid: true.\nTask rows: 0; displayed count: 0 tasks.\nValidation: “Add a task name before continuing.”; field marked invalid: true.\nTask rows: 0; displayed count: 0 tasks."
+        }
+      ],
+      "stepCount": 16,
+      "captures": [
+        {
+          "criterion": "SHIP-01",
+          "bytes": 54842,
+          "width": 691,
+          "height": 644,
+          "sha256": "c8525fcbee6c73c03528f148db5d8ad303a4560995eafee01a1ac3fd5bcd7888"
+        },
+        {
+          "criterion": "SHIP-02",
+          "bytes": 53333,
+          "width": 691,
+          "height": 644,
+          "sha256": "136cc76db835cf71d64a710382fabb75664c4727b9ed3745acf57ed4fc7251f0"
+        },
+        {
+          "criterion": "SHIP-03",
+          "bytes": 56668,
+          "width": 691,
+          "height": 741,
+          "sha256": "64ecb2d3d96371973166d79bf62fef5c2ee705864d1d9edd84e9a4b32b605c2d"
+        }
+      ]
+    },
+    {
+      "id": "b565eedf-4472-46fb-919d-9b4d584fcc7b",
+      "variant": "fixed",
+      "taskName": "Review the release c853317e · b565eedf",
+      "startedAt": "2026-09-26T14:33:48.368Z",
+      "finishedAt": "2026-09-26T14:33:48.419Z",
+      "planFingerprint": "a7db7aaf50a0009d5db568cc714972ac68b56f7d0a037ec8a918e93f02208e26",
+      "status": "cancelled",
+      "runner": "in-browser-dom",
+      "captureKind": "dom-render",
+      "criteria": [
+        {
+          "id": "SHIP-01",
+          "title": "A new task appears on the board",
+          "expected": "The exact new task is visible in the task list, and the board contains one task.",
+          "status": "unchecked",
+          "observed": "The check was cancelled. Completed observations are preserved."
+        },
+        {
+          "id": "SHIP-02",
+          "title": "The same task survives a reload",
+          "expected": "After a real page reload, the exact task is still visible and the board still contains one task.",
+          "status": "unchecked",
+          "observed": "Not checked yet."
+        },
+        {
+          "id": "SHIP-03",
+          "title": "Blank task names are rejected",
+          "expected": "Empty and whitespace-only submissions show an actionable validation message and create no tasks.",
+          "status": "unchecked",
+          "observed": "Not checked yet."
+        }
+      ],
+      "stepCount": 0,
+      "captures": []
+    },
+    {
+      "id": "143a3eeb-dc1d-4ece-b010-6eb469f6d8f6",
+      "variant": "buggy",
+      "taskName": "Review the release c853317e · 143a3eeb",
+      "startedAt": "2026-09-26T14:33:48.572Z",
+      "finishedAt": "2026-09-26T14:33:48.619Z",
+      "planFingerprint": "a7db7aaf50a0009d5db568cc714972ac68b56f7d0a037ec8a918e93f02208e26",
+      "status": "cancelled",
+      "runner": "in-browser-dom",
+      "captureKind": "dom-render",
+      "criteria": [
+        {
+          "id": "SHIP-01",
+          "title": "A new task appears on the board",
+          "expected": "The exact new task is visible in the task list, and the board contains one task.",
+          "status": "unchecked",
+          "observed": "The check was cancelled. Completed observations are preserved."
+        },
+        {
+          "id": "SHIP-02",
+          "title": "The same task survives a reload",
+          "expected": "After a real page reload, the exact task is still visible and the board still contains one task.",
+          "status": "unchecked",
+          "observed": "Not checked yet."
+        },
+        {
+          "id": "SHIP-03",
+          "title": "Blank task names are rejected",
+          "expected": "Empty and whitespace-only submissions show an actionable validation message and create no tasks.",
+          "status": "unchecked",
+          "observed": "Not checked yet."
+        }
+      ],
+      "stepCount": 0,
+      "captures": []
+    },
+    {
+      "id": "55f42960-04e8-4f77-9085-3d57737c402a",
+      "variant": "buggy",
+      "taskName": "Review the release c853317e · 55f42960",
+      "startedAt": "2026-09-26T14:33:48.769Z",
+      "finishedAt": "2026-09-26T14:33:51.801Z",
+      "planFingerprint": "a7db7aaf50a0009d5db568cc714972ac68b56f7d0a037ec8a918e93f02208e26",
+      "status": "completed",
+      "runner": "in-browser-dom",
+      "captureKind": "dom-render",
+      "criteria": [
+        {
+          "id": "SHIP-01",
+          "title": "A new task appears on the board",
+          "expected": "The exact new task is visible in the task list, and the board contains one task.",
+          "status": "passed",
+          "observed": "The exact task “Review the release c853317e · 55f42960” is visible in #taskList. Rows: 1; displayed count: 1 task."
+        },
+        {
+          "id": "SHIP-02",
+          "title": "The same task survives a reload",
+          "expected": "After a real page reload, the exact task is still visible and the board still contains one task.",
+          "status": "failed",
+          "observed": "The exact task “Review the release c853317e · 55f42960” is absent from #taskList. Rows: 0; displayed count: 0 tasks."
+        },
+        {
+          "id": "SHIP-03",
+          "title": "Blank task names are rejected",
+          "expected": "Empty and whitespace-only submissions show an actionable validation message and create no tasks.",
+          "status": "passed",
+          "observed": "Task rows: 0; displayed count: 0 tasks.\nValidation: “Add a task name before continuing.”; field marked invalid: true.\nTask rows: 0; displayed count: 0 tasks.\nValidation: “Add a task name before continuing.”; field marked invalid: true.\nTask rows: 0; displayed count: 0 tasks."
+        }
+      ],
+      "stepCount": 16,
+      "captures": [
+        {
+          "criterion": "SHIP-01",
+          "bytes": 54847,
+          "width": 691,
+          "height": 644,
+          "sha256": "8a04b5e63d2474ebb0dd2bd8385ef97e1ba4049c580119ad6fed2a79657669e2"
+        },
+        {
+          "criterion": "SHIP-02",
+          "bytes": 56530,
+          "width": 691,
+          "height": 741,
+          "sha256": "c47de52037ee16c8ebffab54596335e46cc1977bfbabf35da5d58a74fe4390a0"
+        },
+        {
+          "criterion": "SHIP-03",
+          "bytes": 56693,
+          "width": 691,
+          "height": 741,
+          "sha256": "055a0f84f7af2f007cb2eda5ff7cdb4a31f92eeb0ad2589e8f15747001f5e548"
+        }
+      ]
+    },
+    {
+      "id": "0fb98b36-64cc-4445-bb76-38b7ffac039d",
+      "variant": "buggy",
+      "taskName": "First tab c853317e · 0fb98b36",
+      "startedAt": "2026-09-26T14:33:53.018Z",
+      "finishedAt": "2026-09-26T14:33:56.015Z",
+      "planFingerprint": "a7db7aaf50a0009d5db568cc714972ac68b56f7d0a037ec8a918e93f02208e26",
+      "status": "completed",
+      "runner": "in-browser-dom",
+      "captureKind": "dom-render",
+      "criteria": [
+        {
+          "id": "SHIP-01",
+          "title": "A new task appears on the board",
+          "expected": "The exact new task is visible in the task list, and the board contains one task.",
+          "status": "passed",
+          "observed": "The exact task “First tab c853317e · 0fb98b36” is visible in #taskList. Rows: 1; displayed count: 1 task."
+        },
+        {
+          "id": "SHIP-02",
+          "title": "The same task survives a reload",
+          "expected": "After a real page reload, the exact task is still visible and the board still contains one task.",
+          "status": "failed",
+          "observed": "The exact task “First tab c853317e · 0fb98b36” is absent from #taskList. Rows: 0; displayed count: 0 tasks."
+        },
+        {
+          "id": "SHIP-03",
+          "title": "Blank task names are rejected",
+          "expected": "Empty and whitespace-only submissions show an actionable validation message and create no tasks.",
+          "status": "passed",
+          "observed": "Task rows: 0; displayed count: 0 tasks.\nValidation: “Add a task name before continuing.”; field marked invalid: true.\nTask rows: 0; displayed count: 0 tasks.\nValidation: “Add a task name before continuing.”; field marked invalid: true.\nTask rows: 0; displayed count: 0 tasks."
+        }
+      ],
+      "stepCount": 16,
+      "captures": [
+        {
+          "criterion": "SHIP-01",
+          "bytes": 54348,
+          "width": 691,
+          "height": 644,
+          "sha256": "13231d738be209f19d342306cd7db0c05fb7f8bca586dc40accfe0a641dbbb92"
+        },
+        {
+          "criterion": "SHIP-02",
+          "bytes": 56530,
+          "width": 691,
+          "height": 741,
+          "sha256": "c47de52037ee16c8ebffab54596335e46cc1977bfbabf35da5d58a74fe4390a0"
+        },
+        {
+          "criterion": "SHIP-03",
+          "bytes": 56693,
+          "width": 691,
+          "height": 741,
+          "sha256": "055a0f84f7af2f007cb2eda5ff7cdb4a31f92eeb0ad2589e8f15747001f5e548"
+        }
+      ]
+    },
+    {
+      "id": "d33b2db9-349d-4ebc-a8ea-6cb849bd4cf7",
+      "variant": "buggy",
+      "taskName": "Second tab c853317e · d33b2db9",
+      "startedAt": "2026-09-26T14:33:53.019Z",
+      "finishedAt": "2026-09-26T14:33:56.082Z",
+      "planFingerprint": "a7db7aaf50a0009d5db568cc714972ac68b56f7d0a037ec8a918e93f02208e26",
+      "status": "completed",
+      "runner": "in-browser-dom",
+      "captureKind": "dom-render",
+      "criteria": [
+        {
+          "id": "SHIP-01",
+          "title": "A new task appears on the board",
+          "expected": "The exact new task is visible in the task list, and the board contains one task.",
+          "status": "passed",
+          "observed": "The exact task “Second tab c853317e · d33b2db9” is visible in #taskList. Rows: 1; displayed count: 1 task."
+        },
+        {
+          "id": "SHIP-02",
+          "title": "The same task survives a reload",
+          "expected": "After a real page reload, the exact task is still visible and the board still contains one task.",
+          "status": "failed",
+          "observed": "The exact task “Second tab c853317e · d33b2db9” is absent from #taskList. Rows: 0; displayed count: 0 tasks."
+        },
+        {
+          "id": "SHIP-03",
+          "title": "Blank task names are rejected",
+          "expected": "Empty and whitespace-only submissions show an actionable validation message and create no tasks.",
+          "status": "passed",
+          "observed": "Task rows: 0; displayed count: 0 tasks.\nValidation: “Add a task name before continuing.”; field marked invalid: true.\nTask rows: 0; displayed count: 0 tasks.\nValidation: “Add a task name before continuing.”; field marked invalid: true.\nTask rows: 0; displayed count: 0 tasks."
+        }
+      ],
+      "stepCount": 16,
+      "captures": [
+        {
+          "criterion": "SHIP-01",
+          "bytes": 54624,
+          "width": 691,
+          "height": 644,
+          "sha256": "ef17fd3eea55bba6b8856ca5531ec35520c0dd560e6815b8e168130689bfa4a7"
+        },
+        {
+          "criterion": "SHIP-02",
+          "bytes": 56530,
+          "width": 691,
+          "height": 741,
+          "sha256": "c47de52037ee16c8ebffab54596335e46cc1977bfbabf35da5d58a74fe4390a0"
+        },
+        {
+          "criterion": "SHIP-03",
+          "bytes": 56693,
+          "width": 691,
+          "height": 741,
+          "sha256": "055a0f84f7af2f007cb2eda5ff7cdb4a31f92eeb0ad2589e8f15747001f5e548"
+        }
+      ]
+    },
+    {
+      "id": "2b63b1c1-3fdc-4ec5-8e0e-c1d3e513b4c2",
+      "variant": "buggy",
+      "taskName": "Ship a feature with proof · 2b63b1c1",
+      "startedAt": "2026-09-26T14:33:57.252Z",
+      "finishedAt": "2026-09-26T14:33:59.866Z",
+      "planFingerprint": "a7db7aaf50a0009d5db568cc714972ac68b56f7d0a037ec8a918e93f02208e26",
+      "status": "completed",
+      "runner": "in-browser-dom",
+      "captureKind": "dom-render",
+      "criteria": [
+        {
+          "id": "SHIP-01",
+          "title": "A new task appears on the board",
+          "expected": "The exact new task is visible in the task list, and the board contains one task.",
+          "status": "failed",
+          "observed": "The exact task “Ship a feature with proof · 2b63b1c1” is absent from #taskList. Rows: 0; displayed count: 0 tasks."
+        },
+        {
+          "id": "SHIP-02",
+          "title": "The same task survives a reload",
+          "expected": "After a real page reload, the exact task is still visible and the board still contains one task.",
+          "status": "unchecked",
+          "observed": "Not checked because the task-creation prerequisite failed."
+        },
+        {
+          "id": "SHIP-03",
+          "title": "Blank task names are rejected",
+          "expected": "Empty and whitespace-only submissions show an actionable validation message and create no tasks.",
+          "status": "failed",
+          "observed": "Validation: “(none)”; field marked invalid: false.\nValidation: “(none)”; field marked invalid: false."
+        }
+      ],
+      "stepCount": 14,
+      "captures": [
+        {
+          "criterion": "SHIP-01",
+          "bytes": 57247,
+          "width": 691,
+          "height": 741,
+          "sha256": "db4dc3fd560ee99f206f63016ecfbbf6182bfa36edd002254a71ad62ebd14f9c"
+        },
+        {
+          "criterion": "SHIP-03",
+          "bytes": 54915,
+          "width": 691,
+          "height": 741,
+          "sha256": "12ff446308f077efe761d0e234a86f4b468ab5af1ba379a6ad72c8a21bfd5b41"
+        }
+      ]
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-09-26T14:34:02.199Z"
+}

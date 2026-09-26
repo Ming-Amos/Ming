@@ -1,0 +1,497 @@
+{
+  "reviewedAt": "2026-09-26T14:29:33.130Z",
+  "base": "http://127.0.0.1:4492",
+  "evidenceOnly": false,
+  "results": [
+    {
+      "name": "All 34 judge evidence files retain their exact manifest hashes",
+      "passed": true
+    },
+    {
+      "name": "Compiled history matches the English reviewed bundle",
+      "passed": true
+    },
+    {
+      "name": "All 12 served PNGs match their original evidence hashes exactly",
+      "passed": true,
+      "detail": [
+        "/api/screenshots/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c_SHIP-01_final.png",
+        "/api/screenshots/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c_SHIP-02-S2_failed.png",
+        "/api/screenshots/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c_SHIP-03_final.png",
+        "/api/screenshots/62d46b46-2227-4ac9-8b15-72ba5bbe7fc3_SHIP-01_final.png",
+        "/api/screenshots/62d46b46-2227-4ac9-8b15-72ba5bbe7fc3_SHIP-02_final.png",
+        "/api/screenshots/62d46b46-2227-4ac9-8b15-72ba5bbe7fc3_SHIP-03_final.png",
+        "/api/screenshots/74ed3133-b62c-44cf-8b4a-042156180db5_SHIP-01_final.png",
+        "/api/screenshots/74ed3133-b62c-44cf-8b4a-042156180db5_SHIP-02_final.png",
+        "/api/screenshots/74ed3133-b62c-44cf-8b4a-042156180db5_SHIP-03_final.png",
+        "/api/screenshots/c001b117-8865-4084-bfa6-e04ddde1683d_SHIP-01_final.png",
+        "/api/screenshots/c001b117-8865-4084-bfa6-e04ddde1683d_SHIP-02-S2_failed.png",
+        "/api/screenshots/c001b117-8865-4084-bfa6-e04ddde1683d_SHIP-03_final.png"
+      ]
+    },
+    {
+      "name": "All 17 recorded acceptance API responses match the reviewed English bundle exactly",
+      "passed": true,
+      "detail": {
+        "routes": [
+          "/api/run/62d46b46-2227-4ac9-8b15-72ba5bbe7fc3",
+          "/api/run/62d46b46-2227-4ac9-8b15-72ba5bbe7fc3/progress",
+          "/api/run/c001b117-8865-4084-bfa6-e04ddde1683d",
+          "/api/run/c001b117-8865-4084-bfa6-e04ddde1683d/progress",
+          "/api/run/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c",
+          "/api/run/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c/progress",
+          "/api/run/74ed3133-b62c-44cf-8b4a-042156180db5",
+          "/api/run/74ed3133-b62c-44cf-8b4a-042156180db5/progress",
+          "/api/repair-tasks/bbc50e50-7838-4bec-8a2b-4ec386d98679",
+          "/api/repair-tasks/bbc50e50-7838-4bec-8a2b-4ec386d98679/comparison",
+          "/api/repair-tasks",
+          "/api/history",
+          "/api/targets",
+          "/api/plan?variant=shipboard-normal",
+          "/api/plan?variant=shipboard-buggy",
+          "/api/plan?variant=shipboard-repair",
+          "/api/plan"
+        ],
+        "responseMismatches": []
+      }
+    },
+    {
+      "name": "All 3 hosted metadata routes enforce read-only, no model connection and no private projects",
+      "passed": true,
+      "detail": {
+        "routes": [
+          "/api/projects",
+          "/api/capabilities",
+          "/api/provider/status"
+        ],
+        "policy": {
+          "/api/capabilities": {
+            "ok": true,
+            "readOnly": true,
+            "sourceBinding": "self-contained-html-snapshot",
+            "demoMode": "recorded-evidence",
+            "liveTrial": {
+              "available": true,
+              "path": "/#trial",
+              "execution": "visitor-browser",
+              "scope": "bundled-shipboard",
+              "captureKind": "dom-render",
+              "modelCalls": false
+            }
+          },
+          "/api/provider/status": {
+            "ok": true,
+            "status": {
+              "configured": false,
+              "providerLabel": "Recorded evidence demo — model calls disabled",
+              "baseUrl": "(disabled)",
+              "modelId": "(disabled)",
+              "missingFields": [
+                "LOCAL_MODEL_CONFIGURATION_REQUIRED"
+              ]
+            }
+          },
+          "/api/projects": {
+            "ok": true,
+            "projects": [],
+            "readOnly": true
+          }
+        },
+        "responseMismatches": []
+      }
+    },
+    {
+      "name": "Fresh root visit shows the welcome page and Start action",
+      "passed": true
+    },
+    {
+      "name": "Welcome page makes no application API requests before Start",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "Start opens the fresh browser trial at #trial",
+      "passed": true
+    },
+    {
+      "name": "Evidence Studio opens the preserved workspace at #studio",
+      "passed": true
+    },
+    {
+      "name": "Fresh entry selects the featured real English baseline",
+      "passed": true
+    },
+    {
+      "name": "Document language is English",
+      "passed": true
+    },
+    {
+      "name": "Fresh baseline contains English product and evidence copy",
+      "passed": true
+    },
+    {
+      "name": "Initial browser image belongs to the selected original baseline",
+      "passed": true
+    },
+    {
+      "name": "Clicking recorded step updates actual selected action and criterion",
+      "passed": true
+    },
+    {
+      "name": "Next-step control follows the saved action order",
+      "passed": true
+    },
+    {
+      "name": "Timeline scrub selects the actual failed assertion",
+      "passed": true
+    },
+    {
+      "name": "Selected failure shows the stored observed result",
+      "passed": true
+    },
+    {
+      "name": "Play advances genuine steps and pause holds the selected evidence",
+      "passed": true
+    },
+    {
+      "name": "Focus mode gives evidence the full workspace",
+      "passed": true
+    },
+    {
+      "name": "Escape exits focus mode",
+      "passed": true
+    },
+    {
+      "name": "Command menu opens with the search field focused",
+      "passed": true
+    },
+    {
+      "name": "Command arrow navigation updates active option",
+      "passed": true
+    },
+    {
+      "name": "Command up navigation returns to the first option",
+      "passed": true
+    },
+    {
+      "name": "Command search filters the actual navigation options",
+      "passed": true
+    },
+    {
+      "name": "Enter executes the filtered workspace command",
+      "passed": true
+    },
+    {
+      "name": "Escape dismisses the dialog",
+      "passed": true
+    },
+    {
+      "name": "Empty command search has a useful English state",
+      "passed": true
+    },
+    {
+      "name": "Escape dismisses command search",
+      "passed": true
+    },
+    {
+      "name": "Comparison displays the strict verified repair result",
+      "passed": true
+    },
+    {
+      "name": "Interactive comparison uses the original before and after PNGs",
+      "passed": true
+    },
+    {
+      "name": "Comparison slider changes the original-image reveal",
+      "passed": true
+    },
+    {
+      "name": "Comparison slider describes its keyboard-accessible split",
+      "passed": true
+    },
+    {
+      "name": "Dragging the original image directly moves the comparison divider",
+      "passed": true,
+      "detail": 72
+    },
+    {
+      "name": "Comparison remains usable by keyboard after pointer dragging",
+      "passed": true
+    },
+    {
+      "name": "Comparison table exposes the same criterion failing before and passing after",
+      "passed": true
+    },
+    {
+      "name": "Repair comparison contains English product and evidence copy",
+      "passed": true
+    },
+    {
+      "name": "Opening follow-up retains its real run identity",
+      "passed": true
+    },
+    {
+      "name": "Refresh restores the selected recorded follow-up",
+      "passed": true
+    },
+    {
+      "name": "Refreshing #studio stays in the workspace without another welcome screen",
+      "passed": true
+    },
+    {
+      "name": "JSON export equals the untouched recorded run",
+      "passed": true
+    },
+    {
+      "name": "Project hub contains English product and evidence copy",
+      "passed": true
+    },
+    {
+      "name": "Workflow explanatory copy has readable normal-text contrast",
+      "passed": true,
+      "detail": {
+        "ratio": 5.446642681822732,
+        "foreground": "rgb(89, 107, 131)",
+        "background": "rgb(255, 255, 255)"
+      }
+    },
+    {
+      "name": "Workflow tabs reveal meaningful process explanations",
+      "passed": true
+    },
+    {
+      "name": "Workflow tabs support arrow-key navigation",
+      "passed": true
+    },
+    {
+      "name": "English sample navigation switches to its recorded passing run",
+      "passed": true
+    },
+    {
+      "name": "Working example contains English product and evidence copy",
+      "passed": true
+    },
+    {
+      "name": "390px workspace has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "390px project hub has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "390px command menu remains within the viewport",
+      "passed": true
+    },
+    {
+      "name": "Reduced-motion preference disables decorative transitions and animations",
+      "passed": true
+    },
+    {
+      "name": "Playback, navigation, comparison and export issue no mutation requests",
+      "passed": true
+    },
+    {
+      "name": "No requests leave the local packaged preview",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "No broken frontend resources or API routes",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "No browser JavaScript errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "Original judge evidence is unchanged after verification",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/api/targets"
+    },
+    {
+      "method": "GET",
+      "path": "/api/provider/status"
+    },
+    {
+      "method": "GET",
+      "path": "/api/history"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repair-tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/api/capabilities"
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects"
+    },
+    {
+      "method": "GET",
+      "path": "/api/plan"
+    },
+    {
+      "method": "GET",
+      "path": "/api/run/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c"
+    },
+    {
+      "method": "GET",
+      "path": "/api/screenshots/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c_SHIP-01_final.png"
+    },
+    {
+      "method": "GET",
+      "path": "/api/screenshots/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c_SHIP-02-S2_failed.png"
+    },
+    {
+      "method": "GET",
+      "path": "/api/plan"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repair-tasks/bbc50e50-7838-4bec-8a2b-4ec386d98679/comparison"
+    },
+    {
+      "method": "GET",
+      "path": "/api/run/74ed3133-b62c-44cf-8b4a-042156180db5"
+    },
+    {
+      "method": "GET",
+      "path": "/api/run/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c"
+    },
+    {
+      "method": "GET",
+      "path": "/api/history"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repair-tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/api/screenshots/74ed3133-b62c-44cf-8b4a-042156180db5_SHIP-02_final.png"
+    },
+    {
+      "method": "GET",
+      "path": "/api/screenshots/74ed3133-b62c-44cf-8b4a-042156180db5_SHIP-01_final.png"
+    },
+    {
+      "method": "GET",
+      "path": "/api/run/74ed3133-b62c-44cf-8b4a-042156180db5"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repair-tasks/bbc50e50-7838-4bec-8a2b-4ec386d98679/comparison"
+    },
+    {
+      "method": "GET",
+      "path": "/api/run/74ed3133-b62c-44cf-8b4a-042156180db5"
+    },
+    {
+      "method": "GET",
+      "path": "/api/run/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c"
+    },
+    {
+      "method": "GET",
+      "path": "/api/targets"
+    },
+    {
+      "method": "GET",
+      "path": "/api/provider/status"
+    },
+    {
+      "method": "GET",
+      "path": "/api/history"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repair-tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/api/capabilities"
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects"
+    },
+    {
+      "method": "GET",
+      "path": "/api/plan"
+    },
+    {
+      "method": "GET",
+      "path": "/api/run/74ed3133-b62c-44cf-8b4a-042156180db5/progress"
+    },
+    {
+      "method": "GET",
+      "path": "/api/run/74ed3133-b62c-44cf-8b4a-042156180db5"
+    },
+    {
+      "method": "GET",
+      "path": "/api/screenshots/74ed3133-b62c-44cf-8b4a-042156180db5_SHIP-01_final.png"
+    },
+    {
+      "method": "GET",
+      "path": "/api/repair-tasks/bbc50e50-7838-4bec-8a2b-4ec386d98679/comparison"
+    },
+    {
+      "method": "GET",
+      "path": "/api/run/74ed3133-b62c-44cf-8b4a-042156180db5"
+    },
+    {
+      "method": "GET",
+      "path": "/api/run/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c"
+    },
+    {
+      "method": "GET",
+      "path": "/api/targets"
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects"
+    },
+    {
+      "method": "GET",
+      "path": "/api/run/62d46b46-2227-4ac9-8b15-72ba5bbe7fc3"
+    },
+    {
+      "method": "GET",
+      "path": "/api/screenshots/62d46b46-2227-4ac9-8b15-72ba5bbe7fc3_SHIP-01_final.png"
+    },
+    {
+      "method": "GET",
+      "path": "/api/plan"
+    },
+    {
+      "method": "GET",
+      "path": "/api/targets"
+    },
+    {
+      "method": "GET",
+      "path": "/api/projects"
+    }
+  ],
+  "failedResources": [],
+  "outsideRequests": [],
+  "captures": [
+    "C:\\Bob\\Projects\\Ming\\runtime\\english-studio-28904654-f3fe-4ab1-90e1-1d8f84dce1e6\\00-welcome.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\english-studio-28904654-f3fe-4ab1-90e1-1d8f84dce1e6\\01-featured-baseline.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\english-studio-28904654-f3fe-4ab1-90e1-1d8f84dce1e6\\02-evidence-focus.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\english-studio-28904654-f3fe-4ab1-90e1-1d8f84dce1e6\\03-repair-comparison.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\english-studio-28904654-f3fe-4ab1-90e1-1d8f84dce1e6\\04-project-hub.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\english-studio-28904654-f3fe-4ab1-90e1-1d8f84dce1e6\\05-mobile-workspace.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\english-studio-28904654-f3fe-4ab1-90e1-1d8f84dce1e6\\06-mobile-project-hub.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\english-studio-28904654-f3fe-4ab1-90e1-1d8f84dce1e6\\07-mobile-command-menu.png"
+  ]
+}

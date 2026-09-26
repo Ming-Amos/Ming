@@ -3,7 +3,7 @@ import path from 'node:path';
 import http from 'node:http';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-// Local preview of the exact packaged Worker, not the writable Express backend.
+// Preview of the packaged Worker, its live browser sample and recorded evidence.
 const root = fileURLToPath(new URL('../..', import.meta.url));
 const output = path.join(root, 'dist', 'sites');
 const client = path.resolve(output, 'client');
@@ -37,4 +37,4 @@ const server = http.createServer(async (incoming, outgoing) => {
     outgoing.end('Public-demo preview error');
   }
 });
-server.listen(port, '127.0.0.1', () => console.log(`Read-only recorded-evidence preview: http://127.0.0.1:${port}`));
+server.listen(port, '127.0.0.1', () => console.log(`Ming hosted preview: http://127.0.0.1:${port}`));

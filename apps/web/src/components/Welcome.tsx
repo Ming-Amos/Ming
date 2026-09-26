@@ -37,7 +37,8 @@ export default function Welcome() {
       <div className="welcome-wordmark" aria-label="Ming">Ming</div>
       <section className="welcome-content">
         <h1 id="welcome-title"><span>Welcome to</span><span>Ming — Every done comes with proof</span></h1>
-        <a className="welcome-start" href="#studio"><span>Start</span><ArrowRight size={22} weight="bold" aria-hidden="true" /></a>
+        <a className="welcome-start" href="#trial"><span>Start</span><ArrowRight size={22} weight="bold" aria-hidden="true" /></a>
+        <a className="welcome-recorded-link" href="#studio">Explore recorded evidence</a>
         <p>From “AI says it’s done”<br />to “I saw it pass.”</p>
       </section>
       <button className="welcome-motion" type="button" onClick={() => { if (!paused) freeze(); setPaused(!paused); }} aria-label={paused ? "Play background animation" : "Pause background animation"}>

@@ -814,6 +814,7 @@ export default function App() {
           Ming<span>Every done comes with proof.</span>
         </a>
         <nav aria-label="Workspace tools">
+          <a className="trial-nav-link" href="#trial"><Play size={15} weight="fill" />Live sample</a>
           <button className="command-trigger" onClick={() => setSheet("commands")} aria-label="Open command menu"><MagnifyingGlass size={16}/><span>Jump to…</span><kbd>Ctrl K</kbd></button>
           <button
             aria-label="Projects"
@@ -943,13 +944,14 @@ export default function App() {
               </div>
             </section>
             {readOnly && (
-              <div className="message public-notice">
+              <div className="message public-notice trial-public-notice">
                 <Info size={19} />
                 <span>
                   <strong>Recorded demo · Real checks, preserved evidence.</strong>{" "}
                   Explore the steps, original screenshots, and repair comparison. Run Ming locally
                   to check your own app and connect your coding AI.
                 </span>
+                <a className="secondary-button live-trial-link" href="#trial"><Play size={15} weight="fill" />Run a live sample</a>
               </div>
             )}
             <div className="workspace-toolbar">

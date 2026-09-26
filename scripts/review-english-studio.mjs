@@ -73,7 +73,7 @@ try {
   check('All 34 judge evidence files retain their exact manifest hashes', checkedFiles === 34);
   compare('Compiled history matches the English reviewed bundle', await (await fetch(base + '/api/history')).json(), bundle.responses['/api/history']);
   const metadataPolicies = {
-    '/api/capabilities': { ok: true, readOnly: true, sourceBinding: 'self-contained-html-snapshot', demoMode: 'recorded-evidence' },
+    '/api/capabilities': { ok: true, readOnly: true, sourceBinding: 'self-contained-html-snapshot', demoMode: 'recorded-evidence', liveTrial: { available: true, path: '/#trial', execution: 'visitor-browser', scope: 'bundled-shipboard', captureKind: 'dom-render', modelCalls: false } },
     '/api/provider/status': { ok: true, status: { configured: false, providerLabel: 'Recorded evidence demo — model calls disabled', baseUrl: '(disabled)', modelId: '(disabled)', missingFields: ['LOCAL_MODEL_CONFIGURATION_REQUIRED'] } },
     '/api/projects': { ok: true, projects: [], readOnly: true },
   };
@@ -122,8 +122,11 @@ try {
   check('Welcome page makes no application API requests before Start', requests.length === 0, requests.slice());
   await capture(page, '00-welcome');
   await start.click();
+  await page.getByRole('link', { name: 'Evidence Studio', exact: true }).waitFor();
+  check('Start opens the fresh browser trial at #trial', new URL(page.url()).hash === '#trial' && !(await start.isVisible()));
+  await page.getByRole('link', { name: 'Evidence Studio', exact: true }).click();
   await page.getByRole('region', { name: 'Recorded acceptance timeline' }).waitFor();
-  check('Start opens the existing workspace at #studio', new URL(page.url()).hash === '#studio' && !(await start.isVisible()));
+  check('Evidence Studio opens the preserved workspace at #studio', new URL(page.url()).hash === '#studio' && !(await start.isVisible()));
   await page.getByRole('button', { name: 'Compare before and after', exact: true }).waitFor();
   await waitForImages(page, '.evidence-link img');
   fs.writeFileSync(path.join(out, 'initial-dom.txt'), await page.locator('body').innerText());
