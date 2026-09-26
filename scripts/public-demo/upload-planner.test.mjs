@@ -60,7 +60,7 @@ test('one explicit draft makes one fixed-endpoint request with bounded tokens an
   const response = await handleUploadPlanner(request(), env, async (url, options) => { calls.push({ url, options }); return provider(); });
   assert.equal(response.status, 200); assert.equal(calls.length, 1);
   assert.equal(calls[0].url, 'https://ark.cn-beijing.volces.com/api/v3/chat/completions');
-  assert.equal(calls[0].options.redirect, 'error');
+  assert.equal(calls[0].options.redirect, 'manual');
   assert.equal(calls[0].options.headers.Authorization, `Bearer ${secret}`);
   const sent = JSON.parse(calls[0].options.body);
   assert.equal(calls[0].options.body.includes(secret), false);
@@ -148,4 +148,35 @@ test('propagates explicit client cancellation to the provider', async () => {
   const pending = handleUploadPlanner(request(payload, { signal: controller.signal }), env, async (_, options) => { started(); return new Promise((_, reject) => options.signal.addEventListener('abort', () => { providerAborted = true; reject(new DOMException('Aborted', 'AbortError')); }, { once: true })); });
   await ready; controller.abort(); const response = await pending;
   assert.equal(response.status, 499); assert.equal(providerAborted, true);
+});
+
+test('uses the global fetch receiver and a portable redirect mode by default', async context => {
+  let calls = 0;
+  context.mock.method(globalThis, 'fetch', function (_, options) {
+    assert.equal(this, globalThis); assert.equal(options.redirect, 'manual'); calls++;
+    return Promise.resolve(provider());
+  });
+  assert.equal((await handleUploadPlanner(request(), env)).status, 200);
+  assert.equal(calls, 1);
+});
+
+test('rejects redirects without following them and discards their body', async context => {
+  context.mock.method(console, 'warn', () => {});
+  let calls = 0, cancelled = false;
+  const response = await handleUploadPlanner(request(), env, async (_, options) => {
+    assert.equal(options.redirect, 'manual'); calls++;
+    return new Response(new ReadableStream({ cancel() { cancelled = true; } }), { status: 302, headers: { location: 'https://never-follow.invalid/' + secret } });
+  });
+  assert.equal(response.status, 502); assert.equal(calls, 1); assert.equal(cancelled, true);
+  const body = await response.text(); assert.equal(body.includes(secret), false); assert.equal(JSON.parse(body).code, 'PLANNER_PROVIDER_HTTP');
+});
+
+test('exposes only allowlisted diagnostics for transport and draft failures', async context => {
+  const logs = []; context.mock.method(console, 'warn', (...args) => logs.push(args));
+  const network = await handleUploadPlanner(request(), env, async () => { throw new TypeError(`Network connection lost: ${secret}`); });
+  const networkBody = await network.text(); assert.equal(JSON.parse(networkBody).code, 'PLANNER_TRANSPORT'); assert.equal(networkBody.includes(secret), false);
+  const invalid = await handleUploadPlanner(request(), env, async () => provider({ steps: [], openQuestions: [] }));
+  assert.equal((await invalid.json()).code, 'PLANNER_INVALID_DRAFT');
+  assert.equal(JSON.stringify(logs).includes(secret), false);
+  assert.deepEqual(logs.map(entry => JSON.parse(entry[1]).code), ['PLANNER_TRANSPORT', 'PLANNER_INVALID_DRAFT']);
 });

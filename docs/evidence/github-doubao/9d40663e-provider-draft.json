@@ -1,0 +1,5 @@
+{
+  "status": 502,
+  "ok": false,
+  "error": "The model did not return a complete, supported acceptance draft. Review your requirements or use a manual plan. No retry was made."
+}

@@ -1,0 +1,149 @@
+{
+  "reviewId": "9d40663e-5e5e-4ae8-86c3-810b69f4f4b1",
+  "startedAt": "2026-09-26T16:48:46.940Z",
+  "origin": "https://ming-acceptance-proof.amosming.chatgpt.site",
+  "expectedBundle": "/assets/index-CN1km-0X.js",
+  "passed": false,
+  "checks": [
+    {
+      "name": "Private deployment serves the exact compiled UI",
+      "passed": true
+    },
+    {
+      "name": "Real imported MDN heading is visible",
+      "passed": true
+    },
+    {
+      "name": "The real GitHub source passes its confirmed heading check with capture and pinned commit",
+      "passed": true
+    },
+    {
+      "name": "Import and manual checks do not invoke a model",
+      "passed": true
+    },
+    {
+      "name": "No automatic generation occurs before the explicit click",
+      "passed": true
+    },
+    {
+      "name": "Exactly one real Doubao Seed 2.0 Pro request returns a reviewable draft",
+      "passed": false
+    }
+  ],
+  "runs": [
+    {
+      "id": "52a8d935-b066-4779-a9e6-e5696132de39",
+      "projectName": "beginner-html-site",
+      "projectFingerprint": "379fc79a54fb1d800f15a4ce7d221a536557096a12b7dfc04f2a6efe80494e1d",
+      "source": {
+        "kind": "github",
+        "url": "https://github.com/mdn/beginner-html-site",
+        "commit": "6cf801f2ce32e60e3be46038b85f0ee5f9dd0ef9",
+        "ref": "main",
+        "directory": ""
+      },
+      "entry": "index.html",
+      "planFingerprint": "d37fb13effa86066ed9680d51e3448118414fda6fbb697bfa29a0fda81e55c5d",
+      "requirement": "The imported public starter page displays the heading: Mozilla is cool",
+      "startedAt": "2026-09-26T16:49:24.827Z",
+      "finishedAt": "2026-09-26T16:49:25.008Z",
+      "status": "passed",
+      "runner": "isolated-browser-dom",
+      "captureKind": "dom-render",
+      "storage": "isolated-session-adapter",
+      "diagnostics": [
+        "Links to other pages are disabled. Select each HTML entry separately to inspect it."
+      ],
+      "steps": [
+        {
+          "id": "7b3c7675-1d2a-411b-b201-bb8d2bbcc12e",
+          "action": "assertText",
+          "selector": "h1",
+          "value": "Mozilla is cool",
+          "description": "",
+          "status": "passed",
+          "observed": "Mozilla is cool",
+          "expected": "Visible text contains: Mozilla is cool",
+          "durationMs": 34,
+          "capture": {
+            "file": "9d40663e-mdn-manual-step-1.png",
+            "bytes": 104366,
+            "width": 676,
+            "height": 635,
+            "sha256": "3381ccc5fc9d8701baa2db58110bc473911881f70caaa1919716f040495dece3"
+          }
+        }
+      ],
+      "export": "9d40663e-mdn-manual.json",
+      "planOrigin": {
+        "kind": "manual"
+      }
+    }
+  ],
+  "githubRequests": [
+    {
+      "host": "api.github.com",
+      "path": "/repos/mdn/beginner-html-site",
+      "method": "GET",
+      "approved": true,
+      "credentialsAbsent": true
+    },
+    {
+      "host": "api.github.com",
+      "path": "/repos/mdn/beginner-html-site/commits/main",
+      "method": "GET",
+      "approved": true,
+      "credentialsAbsent": true
+    },
+    {
+      "host": "api.github.com",
+      "path": "/repos/mdn/beginner-html-site/git/trees/cd24771802ec33a324616d19ea0cdc65d6798972",
+      "method": "GET",
+      "approved": true,
+      "credentialsAbsent": true
+    },
+    {
+      "host": "raw.githubusercontent.com",
+      "path": "/mdn/beginner-html-site/6cf801f2ce32e60e3be46038b85f0ee5f9dd0ef9/Firefox-icon.png",
+      "method": "GET",
+      "approved": true,
+      "credentialsAbsent": true
+    },
+    {
+      "host": "raw.githubusercontent.com",
+      "path": "/mdn/beginner-html-site/6cf801f2ce32e60e3be46038b85f0ee5f9dd0ef9/images/firefox-icon.png",
+      "method": "GET",
+      "approved": true,
+      "credentialsAbsent": true
+    },
+    {
+      "host": "raw.githubusercontent.com",
+      "path": "/mdn/beginner-html-site/6cf801f2ce32e60e3be46038b85f0ee5f9dd0ef9/index.html",
+      "method": "GET",
+      "approved": true,
+      "credentialsAbsent": true
+    },
+    {
+      "host": "raw.githubusercontent.com",
+      "path": "/mdn/beginner-html-site/6cf801f2ce32e60e3be46038b85f0ee5f9dd0ef9/prettierrc.json",
+      "method": "GET",
+      "approved": true,
+      "credentialsAbsent": true
+    }
+  ],
+  "blockedRequests": [],
+  "errors": [],
+  "screenshots": [
+    "9d40663e-mdn-import-accepted.png",
+    "9d40663e-stopped-state.png"
+  ],
+  "draftRequests": 1,
+  "scope": "Real public MDN import and manual heading visibility check; one actual Doubao Seed 2.0 Pro draft for an owned counter, reviewed then executed in the isolated visitor browser. No mocks, source repair, Bob usage, or retries.",
+  "planner": {
+    "status": 502,
+    "ok": false,
+    "error": "The model did not return a complete, supported acceptance draft. Review your requirements or use a manual plan. No retry was made."
+  },
+  "error": "Error: Exactly one real Doubao Seed 2.0 Pro request returns a reviewable draft\n    at check (file:///C:/Bob/Projects/Ming/scripts/review-github-doubao-production.mjs:20:161)\n    at file:///C:/Bob/Projects/Ming/scripts/review-github-doubao-production.mjs:71:3",
+  "finishedAt": "2026-09-26T16:49:35.258Z"
+}

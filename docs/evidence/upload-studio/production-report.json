@@ -1,8 +1,8 @@
 {
-  "reviewId": "76e24d85-b842-42e7-aa8a-c7269632f57b",
-  "startedAt": "2026-09-26T15:17:39.560Z",
+  "reviewId": "fd1ebd46-b255-4a23-a106-8a88264c2302",
+  "startedAt": "2026-09-26T16:48:47.477Z",
   "origin": "https://ming-acceptance-proof.amosming.chatgpt.site",
-  "expectedBundle": "/assets/index-BIIGKyJP.js",
+  "expectedBundle": "/assets/index-CN1km-0X.js",
   "scope": "Actual generated HTML and static ZIP files checked inside the visitor browser on the existing private site. No model, Bob, source repair, or server mutation.",
   "checks": [
     {
@@ -10,7 +10,7 @@
       "passed": true
     },
     {
-      "name": "Deployed capabilities describe isolated manual HTML and ZIP acceptance without models",
+      "name": "Deployed capabilities require human confirmation and keep model drafts behind explicit server-side actions",
       "passed": true
     },
     {
@@ -84,14 +84,14 @@
   ],
   "runs": [
     {
-      "id": "8fdaf116-f985-4c0a-a484-628555f9b731",
+      "id": "df958a68-61a9-4caf-964a-2d5af7059df7",
       "projectName": "field-notes",
       "projectFingerprint": "6e1bb80660d605f89f4ea80eff70529f027fe11263dfe7946fdac4d901fe7e68",
       "entry": "field-notes.html",
-      "planFingerprint": "54551bc68723e3f07f94bdf2473579b4763194f450835b8862f100b83c5032fb",
-      "requirement": "After adding Production upload proof 76e24d85, it appears in the list and remains after a reload.",
-      "startedAt": "2026-09-26T15:17:51.080Z",
-      "finishedAt": "2026-09-26T15:17:53.411Z",
+      "planFingerprint": "e8f297bace1079e713a5aa42d0a886ec7d3d9b79fbc0f3843b9f591b61f2eed4",
+      "requirement": "After adding Production upload proof fd1ebd46, it appears in the list and remains after a reload.",
+      "startedAt": "2026-09-26T16:49:07.111Z",
+      "finishedAt": "2026-09-26T16:49:09.436Z",
       "status": "failed",
       "runner": "isolated-browser-dom",
       "captureKind": "dom-render",
@@ -99,24 +99,24 @@
       "diagnostics": [],
       "steps": [
         {
-          "id": "e662580e-0e27-46e8-946b-4b17ba62d0a8",
+          "id": "3eaa10ed-f290-4040-866b-8fa4e471aa84",
           "action": "fill",
           "selector": "#taskName",
-          "value": "Production upload proof 76e24d85",
+          "value": "Production upload proof fd1ebd46",
           "description": "",
           "status": "passed",
           "observed": "Executed fill on #taskName",
           "expected": "fill",
-          "durationMs": 287,
+          "durationMs": 284,
           "capture": {
-            "bytes": 23164,
+            "bytes": 23078,
             "width": 676,
             "height": 450,
-            "sha256": "0f94d226356a3ba29cc9bb22531a99b30c5cf820f29e886342012b1aaa43ef41"
+            "sha256": "a2187cf058d21e5d426c1d30d282e311c1b3acee0a99e9d9a6d42c37df0fc57a"
           }
         },
         {
-          "id": "d074a654-a38d-4586-9832-453515c20147",
+          "id": "c2655883-fe7c-493f-8406-9cc2f93362a2",
           "action": "click",
           "selector": "#addTask",
           "value": "",
@@ -124,33 +124,33 @@
           "status": "passed",
           "observed": "Executed click on #addTask",
           "expected": "click",
-          "durationMs": 278,
+          "durationMs": 280,
           "capture": {
-            "bytes": 26913,
+            "bytes": 26605,
             "width": 676,
             "height": 523,
-            "sha256": "825e5dca1c285af6bdee10fc018a968cb6551fab9f3556ed514de5f2fe4b95a6"
+            "sha256": "08de873b5f05e9454ef3d4804aeca9155ae7907f981575080ec2d7d854e542e8"
           }
         },
         {
-          "id": "4e8ef109-ee11-4847-96ca-bb92267c7214",
+          "id": "f54bd2ee-03e0-4ef1-9f8a-ac55e8733bd0",
           "action": "assertText",
           "selector": "#taskList",
-          "value": "Production upload proof 76e24d85",
+          "value": "Production upload proof fd1ebd46",
           "description": "",
           "status": "passed",
-          "observed": "Production upload proof 76e24d85",
-          "expected": "Visible text contains: Production upload proof 76e24d85",
-          "durationMs": 16,
+          "observed": "Production upload proof fd1ebd46",
+          "expected": "Visible text contains: Production upload proof fd1ebd46",
+          "durationMs": 15,
           "capture": {
-            "bytes": 26913,
+            "bytes": 26605,
             "width": 676,
             "height": 523,
-            "sha256": "825e5dca1c285af6bdee10fc018a968cb6551fab9f3556ed514de5f2fe4b95a6"
+            "sha256": "08de873b5f05e9454ef3d4804aeca9155ae7907f981575080ec2d7d854e542e8"
           }
         },
         {
-          "id": "d1525793-846e-4f5c-a4a6-3a0609f49578",
+          "id": "ba707de3-92f5-4642-b39f-270405b12ab4",
           "action": "reload",
           "selector": "body",
           "value": "",
@@ -158,7 +158,7 @@
           "status": "passed",
           "observed": "Reopened the uploaded document with the same isolated storage adapter.",
           "expected": "Reload the isolated page",
-          "durationMs": 151,
+          "durationMs": 149,
           "capture": {
             "bytes": 21083,
             "width": 676,
@@ -167,15 +167,15 @@
           }
         },
         {
-          "id": "0dd864b9-482b-4160-9206-13d853440ac7",
+          "id": "68a14ebb-7638-4cb4-83a4-8758e19dfb44",
           "action": "assertText",
           "selector": "#taskList",
-          "value": "Production upload proof 76e24d85",
+          "value": "Production upload proof fd1ebd46",
           "description": "",
           "status": "failed",
           "observed": "(no visible text)",
-          "expected": "Visible text contains: Production upload proof 76e24d85",
-          "durationMs": 1453,
+          "expected": "Visible text contains: Production upload proof fd1ebd46",
+          "durationMs": 1452,
           "capture": {
             "bytes": 21083,
             "width": 676,
@@ -186,14 +186,14 @@
       ]
     },
     {
-      "id": "17746aef-cea3-46fa-a7c3-dc8871959c02",
+      "id": "b4c91558-6840-4bfe-901a-b1e285cc75e3",
       "projectName": "field-notes",
       "projectFingerprint": "107d4ca65f7044a90105a22cdc1f89ac0ab37c3e7fbf5376c21215ccaeaaa39d",
       "entry": "field-notes.html",
-      "planFingerprint": "54551bc68723e3f07f94bdf2473579b4763194f450835b8862f100b83c5032fb",
-      "requirement": "After adding Production upload proof 76e24d85, it appears in the list and remains after a reload.",
-      "startedAt": "2026-09-26T15:17:53.897Z",
-      "finishedAt": "2026-09-26T15:17:54.768Z",
+      "planFingerprint": "e8f297bace1079e713a5aa42d0a886ec7d3d9b79fbc0f3843b9f591b61f2eed4",
+      "requirement": "After adding Production upload proof fd1ebd46, it appears in the list and remains after a reload.",
+      "startedAt": "2026-09-26T16:49:09.928Z",
+      "finishedAt": "2026-09-26T16:49:10.795Z",
       "status": "passed",
       "runner": "isolated-browser-dom",
       "captureKind": "dom-render",
@@ -201,126 +201,126 @@
       "diagnostics": [],
       "steps": [
         {
-          "id": "e662580e-0e27-46e8-946b-4b17ba62d0a8",
+          "id": "3eaa10ed-f290-4040-866b-8fa4e471aa84",
           "action": "fill",
           "selector": "#taskName",
-          "value": "Production upload proof 76e24d85",
+          "value": "Production upload proof fd1ebd46",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed fill on #taskName",
+          "expected": "fill",
+          "durationMs": 269,
+          "capture": {
+            "bytes": 23078,
+            "width": 676,
+            "height": 450,
+            "sha256": "a2187cf058d21e5d426c1d30d282e311c1b3acee0a99e9d9a6d42c37df0fc57a"
+          }
+        },
+        {
+          "id": "c2655883-fe7c-493f-8406-9cc2f93362a2",
+          "action": "click",
+          "selector": "#addTask",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed click on #addTask",
+          "expected": "click",
+          "durationMs": 267,
+          "capture": {
+            "bytes": 26605,
+            "width": 676,
+            "height": 523,
+            "sha256": "08de873b5f05e9454ef3d4804aeca9155ae7907f981575080ec2d7d854e542e8"
+          }
+        },
+        {
+          "id": "f54bd2ee-03e0-4ef1-9f8a-ac55e8733bd0",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Production upload proof fd1ebd46",
+          "description": "",
+          "status": "passed",
+          "observed": "Production upload proof fd1ebd46",
+          "expected": "Visible text contains: Production upload proof fd1ebd46",
+          "durationMs": 14,
+          "capture": {
+            "bytes": 26605,
+            "width": 676,
+            "height": 523,
+            "sha256": "08de873b5f05e9454ef3d4804aeca9155ae7907f981575080ec2d7d854e542e8"
+          }
+        },
+        {
+          "id": "ba707de3-92f5-4642-b39f-270405b12ab4",
+          "action": "reload",
+          "selector": "body",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Reopened the uploaded document with the same isolated storage adapter.",
+          "expected": "Reload the isolated page",
+          "durationMs": 160,
+          "capture": {
+            "bytes": 24380,
+            "width": 676,
+            "height": 487,
+            "sha256": "67f3abba498a50f4aeb6d65aa6909be0be1ce5289f4d30cec5ee0397733d5754"
+          }
+        },
+        {
+          "id": "68a14ebb-7638-4cb4-83a4-8758e19dfb44",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Production upload proof fd1ebd46",
+          "description": "",
+          "status": "passed",
+          "observed": "Production upload proof fd1ebd46",
+          "expected": "Visible text contains: Production upload proof fd1ebd46",
+          "durationMs": 14,
+          "capture": {
+            "bytes": 24380,
+            "width": 676,
+            "height": 487,
+            "sha256": "67f3abba498a50f4aeb6d65aa6909be0be1ce5289f4d30cec5ee0397733d5754"
+          }
+        }
+      ]
+    },
+    {
+      "id": "baa083ba-332f-4bd5-bfe9-564fddc1399c",
+      "projectName": "field-notes-static",
+      "projectFingerprint": "fd1cf101e21e0f40393ecd083e900083666be48481c328cc941d8b8cd10b76fe",
+      "entry": "release/dist/index.html",
+      "planFingerprint": "26a33347e9a303d0f2ce0daf12517ba99ed5b782f2f602835f85bdc047ceec0e",
+      "requirement": "After adding Production upload proof fd1ebd46, it appears in the list and remains after a reload.",
+      "startedAt": "2026-09-26T16:49:24.345Z",
+      "finishedAt": "2026-09-26T16:49:25.221Z",
+      "status": "passed",
+      "runner": "isolated-browser-dom",
+      "captureKind": "dom-render",
+      "storage": "isolated-session-adapter",
+      "diagnostics": [],
+      "steps": [
+        {
+          "id": "37df06dc-b8d3-4a98-b5c6-7719b8fca5d8",
+          "action": "fill",
+          "selector": "#taskName",
+          "value": "Production upload proof fd1ebd46",
           "description": "",
           "status": "passed",
           "observed": "Executed fill on #taskName",
           "expected": "fill",
           "durationMs": 276,
           "capture": {
-            "bytes": 23164,
+            "bytes": 23078,
             "width": 676,
             "height": 450,
-            "sha256": "0f94d226356a3ba29cc9bb22531a99b30c5cf820f29e886342012b1aaa43ef41"
+            "sha256": "a2187cf058d21e5d426c1d30d282e311c1b3acee0a99e9d9a6d42c37df0fc57a"
           }
         },
         {
-          "id": "d074a654-a38d-4586-9832-453515c20147",
-          "action": "click",
-          "selector": "#addTask",
-          "value": "",
-          "description": "",
-          "status": "passed",
-          "observed": "Executed click on #addTask",
-          "expected": "click",
-          "durationMs": 269,
-          "capture": {
-            "bytes": 26913,
-            "width": 676,
-            "height": 523,
-            "sha256": "825e5dca1c285af6bdee10fc018a968cb6551fab9f3556ed514de5f2fe4b95a6"
-          }
-        },
-        {
-          "id": "4e8ef109-ee11-4847-96ca-bb92267c7214",
-          "action": "assertText",
-          "selector": "#taskList",
-          "value": "Production upload proof 76e24d85",
-          "description": "",
-          "status": "passed",
-          "observed": "Production upload proof 76e24d85",
-          "expected": "Visible text contains: Production upload proof 76e24d85",
-          "durationMs": 14,
-          "capture": {
-            "bytes": 26913,
-            "width": 676,
-            "height": 523,
-            "sha256": "825e5dca1c285af6bdee10fc018a968cb6551fab9f3556ed514de5f2fe4b95a6"
-          }
-        },
-        {
-          "id": "d1525793-846e-4f5c-a4a6-3a0609f49578",
-          "action": "reload",
-          "selector": "body",
-          "value": "",
-          "description": "",
-          "status": "passed",
-          "observed": "Reopened the uploaded document with the same isolated storage adapter.",
-          "expected": "Reload the isolated page",
-          "durationMs": 150,
-          "capture": {
-            "bytes": 24687,
-            "width": 676,
-            "height": 487,
-            "sha256": "75b2e12b34f1aaa10719b3bb461c99f7535bed8aafe00cf4a5cce9277b9d9e13"
-          }
-        },
-        {
-          "id": "0dd864b9-482b-4160-9206-13d853440ac7",
-          "action": "assertText",
-          "selector": "#taskList",
-          "value": "Production upload proof 76e24d85",
-          "description": "",
-          "status": "passed",
-          "observed": "Production upload proof 76e24d85",
-          "expected": "Visible text contains: Production upload proof 76e24d85",
-          "durationMs": 15,
-          "capture": {
-            "bytes": 24687,
-            "width": 676,
-            "height": 487,
-            "sha256": "75b2e12b34f1aaa10719b3bb461c99f7535bed8aafe00cf4a5cce9277b9d9e13"
-          }
-        }
-      ]
-    },
-    {
-      "id": "21879a87-954e-441a-941a-26db2c28621f",
-      "projectName": "field-notes-static",
-      "projectFingerprint": "fd1cf101e21e0f40393ecd083e900083666be48481c328cc941d8b8cd10b76fe",
-      "entry": "release/dist/index.html",
-      "planFingerprint": "51bae1095f1b8442ec0a0e73787358976db2d099510866832fefbb54b30c7784",
-      "requirement": "After adding Production upload proof 76e24d85, it appears in the list and remains after a reload.",
-      "startedAt": "2026-09-26T15:18:01.216Z",
-      "finishedAt": "2026-09-26T15:18:02.091Z",
-      "status": "passed",
-      "runner": "isolated-browser-dom",
-      "captureKind": "dom-render",
-      "storage": "isolated-session-adapter",
-      "diagnostics": [],
-      "steps": [
-        {
-          "id": "111dd6f0-76f7-4e5e-a1dc-063e6fb25e57",
-          "action": "fill",
-          "selector": "#taskName",
-          "value": "Production upload proof 76e24d85",
-          "description": "",
-          "status": "passed",
-          "observed": "Executed fill on #taskName",
-          "expected": "fill",
-          "durationMs": 275,
-          "capture": {
-            "bytes": 23164,
-            "width": 676,
-            "height": 450,
-            "sha256": "0f94d226356a3ba29cc9bb22531a99b30c5cf820f29e886342012b1aaa43ef41"
-          }
-        },
-        {
-          "id": "3882a8d9-a011-402d-a60a-e4c1176f48d5",
+          "id": "6d9c2e27-79de-4be4-b97d-5dc403381a6f",
           "action": "click",
           "selector": "#addTask",
           "value": "",
@@ -330,31 +330,31 @@
           "expected": "click",
           "durationMs": 274,
           "capture": {
-            "bytes": 26913,
+            "bytes": 26605,
             "width": 676,
             "height": 523,
-            "sha256": "825e5dca1c285af6bdee10fc018a968cb6551fab9f3556ed514de5f2fe4b95a6"
+            "sha256": "08de873b5f05e9454ef3d4804aeca9155ae7907f981575080ec2d7d854e542e8"
           }
         },
         {
-          "id": "1f3a05c0-6921-4525-abd9-0c03f9ece942",
+          "id": "ca96ceb3-8e54-46a0-97ef-6dbacff3d07e",
           "action": "assertText",
           "selector": "#taskList",
-          "value": "Production upload proof 76e24d85",
+          "value": "Production upload proof fd1ebd46",
           "description": "",
           "status": "passed",
-          "observed": "Production upload proof 76e24d85",
-          "expected": "Visible text contains: Production upload proof 76e24d85",
+          "observed": "Production upload proof fd1ebd46",
+          "expected": "Visible text contains: Production upload proof fd1ebd46",
           "durationMs": 14,
           "capture": {
-            "bytes": 26913,
+            "bytes": 26605,
             "width": 676,
             "height": 523,
-            "sha256": "825e5dca1c285af6bdee10fc018a968cb6551fab9f3556ed514de5f2fe4b95a6"
+            "sha256": "08de873b5f05e9454ef3d4804aeca9155ae7907f981575080ec2d7d854e542e8"
           }
         },
         {
-          "id": "c424f765-dabf-4a92-ac26-0d852d01c4e3",
+          "id": "ccbb589c-1c86-4612-9335-e5bcf1031491",
           "action": "reload",
           "selector": "body",
           "value": "",
@@ -362,29 +362,29 @@
           "status": "passed",
           "observed": "Reopened the uploaded document with the same isolated storage adapter.",
           "expected": "Reload the isolated page",
-          "durationMs": 153,
+          "durationMs": 154,
           "capture": {
-            "bytes": 24687,
+            "bytes": 24380,
             "width": 676,
             "height": 487,
-            "sha256": "75b2e12b34f1aaa10719b3bb461c99f7535bed8aafe00cf4a5cce9277b9d9e13"
+            "sha256": "67f3abba498a50f4aeb6d65aa6909be0be1ce5289f4d30cec5ee0397733d5754"
           }
         },
         {
-          "id": "93803787-5b68-45f9-a9c7-d930f2fc8ca8",
+          "id": "e2b5dccd-c8de-4415-a25f-b341f1dd3fdb",
           "action": "assertText",
           "selector": "#taskList",
-          "value": "Production upload proof 76e24d85",
+          "value": "Production upload proof fd1ebd46",
           "description": "",
           "status": "passed",
-          "observed": "Production upload proof 76e24d85",
-          "expected": "Visible text contains: Production upload proof 76e24d85",
+          "observed": "Production upload proof fd1ebd46",
+          "expected": "Visible text contains: Production upload proof fd1ebd46",
           "durationMs": 12,
           "capture": {
-            "bytes": 24687,
+            "bytes": 24380,
             "width": 676,
             "height": 487,
-            "sha256": "75b2e12b34f1aaa10719b3bb461c99f7535bed8aafe00cf4a5cce9277b9d9e13"
+            "sha256": "67f3abba498a50f4aeb6d65aa6909be0be1ce5289f4d30cec5ee0397733d5754"
           }
         }
       ]
@@ -396,6 +396,14 @@
   "apiRequests": [
     {
       "path": "/api/capabilities",
+      "method": "GET"
+    },
+    {
+      "path": "/api/upload/planner/status",
+      "method": "GET"
+    },
+    {
+      "path": "/api/upload/planner/status",
       "method": "GET"
     }
   ],
@@ -419,10 +427,23 @@
         "html",
         "static-zip"
       ],
+      "github": {
+        "available": true,
+        "visibility": "public",
+        "build": false,
+        "commitPinned": true,
+        "serverUpload": false
+      },
       "execution": "isolated-visitor-browser",
-      "planning": "manually-confirmed",
+      "planning": "human-confirmed",
+      "planner": {
+        "statusUrl": "/api/upload/planner/status",
+        "draftUrl": "/api/upload/planner/draft",
+        "confirmedUserActionRequired": true,
+        "serverSide": true
+      },
       "captureKind": "dom-render",
-      "modelCalls": false
+      "modelCalls": "explicit-draft-only"
     },
     "liveTrial": {
       "available": true,
@@ -433,5 +454,5 @@
       "modelCalls": false
     }
   },
-  "finishedAt": "2026-09-26T15:18:02.820Z"
+  "finishedAt": "2026-09-26T16:49:25.943Z"
 }

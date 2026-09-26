@@ -1,0 +1,80 @@
+Ming
+Every done comes with proof.
+Try a sample
+Evidence Studio
+Cover
+YOUR PROJECT. YOUR STANDARD.
+Bring your app.
+Check its promises.
+
+Open your HTML, static ZIP, or public GitHub project. Define what should happen, run real checks, and send the failure evidence to your coding AI.
+
+Checks run in your browser.
+
+Local files stay here. GitHub imports download public files directly to this browser. No GitHub token or model key is needed.
+
+For browser-ready apps: HTML, a static ZIP, or a built static folder in a public GitHub repository. Up to 10 MB and 100 files. Importing a repository does not install packages or run a backend; the isolated app preview cannot make network requests.
+The model did not return a complete, supported acceptance draft. Review your requirements or use a manual plan. No retry was made.
+01
+DEFINE THE PROMISE
+Your project
+CHOOSE A SOURCE
+Local files
+GitHub
+Upload revised files
+Previous runs are preserved. Your plan stays available for the revision.
+proof-counter
+1 files · 0.6 KB · Source 5508f46ff4
+LOCAL
+Entry HTML
+proof-counter.html
+What should work?
+Import .md / .txt
+Requirements
+
+This text is the source of truth. It is included with the results and repair brief.
+
+Draft the checks with AI
+DOUBAO READY
+
+Requesting a draft sends your requirements, project name, entry path, and page element labels to Doubao. It uses the configured provider account and may incur charges. Nothing is generated automatically.
+
+Generate draft with Doubao
+Executable acceptance plan
+1 / 30 steps
+You define the checks. Write actions and assertions below, or request a draft from Doubao above. The active plan is manual until you apply a draft.
+01
+ACCEPTANCE ASSERTION
+Action
+Click
+Fill input
+Select option
+Check checkbox
+Uncheck checkbox
+Assert text
+Assert count
+Assert value
+Reload page
+CSS selector
+Expected text
+Add step
+Step 1: enter the text you expect to see.
+I reviewed these requirements and steps for this project.
+Run acceptance checks
+
+Changing the file, entry page, requirements, or steps requires a new confirmation.
+
+02
+YOUR APP, UNDER INSPECTION
+proof-counter / proof-counter.html
+ISOLATED · LOCAL
+Preview ready. Define and approve your acceptance checks.
+
+This preview cannot contact external services or access this page’s storage. Local storage inside the app is simulated for the current isolated session.
+
+Page elements
+2 found
+
+These checks cover the steps you approve. Complex full-stack applications and native browser screenshots need the local Ming runner. This page does not automatically send work to a coding AI.
+
+Explore a guided sample

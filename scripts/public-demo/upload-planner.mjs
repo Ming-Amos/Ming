@@ -97,9 +97,22 @@ function validateDraft(value, key) {
   return draft;
 }
 function tokenCount(value) { return Number.isSafeInteger(value) && value >= 0 && value <= 1000000000 ? value : null; }
+function failure(code, message, status = 502, details = {}) {
+  // Only constant codes and bounded numeric HTTP status reach logs. Never log an
+  // exception, its message, request headers/body, provider response, or credential.
+  const diagnostic = { code, ...(Number.isInteger(details.upstreamStatus) ? { upstreamStatus: details.upstreamStatus } : {}) };
+  console.warn('Ming planner failure', JSON.stringify(diagnostic));
+  return json({ ok: false, error: message, code }, status);
+}
+function transportCode(error) {
+  const message = error instanceof Error ? error.message : '';
+  if (/illegal invocation|incorrect this/i.test(message)) return 'PLANNER_FETCH_RECEIVER';
+  if (/unsupported redirect|redirect.*(?:unsupported|invalid)/i.test(message)) return 'PLANNER_FETCH_REDIRECT_MODE';
+  return 'PLANNER_TRANSPORT';
+}
 
 /** Returns null for unrelated routes. No user-supplied provider URL or credential is accepted. */
-export async function handleUploadPlanner(request, env, fetchImpl = fetch) {
+export async function handleUploadPlanner(request, env, fetchImpl = (url, options) => globalThis.fetch(url, options)) {
   const url = new URL(request.url);
   if (!['/api/upload/planner/status', '/api/upload/planner/draft'].includes(url.pathname)) return null;
   const config = configuration(env);
@@ -126,25 +139,37 @@ export async function handleUploadPlanner(request, env, fetchImpl = fetch) {
   const abort = () => controller.abort();
   request.signal.addEventListener('abort', abort, { once: true });
   const timer = setTimeout(() => { timedOut = true; controller.abort(); }, TIMEOUT_MS);
+  let stage = 'fetch';
   try {
     const response = await fetchImpl(ENDPOINT, {
-      method: 'POST', redirect: 'error', signal: controller.signal,
+      // Manual is portable across Worker runtime versions and never forwards the
+      // Authorization header to a redirect target. All non-2xx statuses are rejected.
+      method: 'POST', redirect: 'manual', signal: controller.signal,
       headers: { 'content-type': 'application/json', Authorization: `Bearer ${config.key}` },
       body: JSON.stringify({
         model: config.model, stream: false, max_tokens: 4096, thinking: { type: 'disabled' }, response_format: { type: 'json_object' },
         messages: [{ role: 'system', content: SYSTEM_PROMPT }, { role: 'user', content: JSON.stringify(payload) }],
       }),
     });
-    if (!response.ok) return json({ ok: false, error: 'The model service could not generate a draft. Check provider availability or keep using the manual plan. No retry was made.' }, 502);
-    const data = parse(await boundedBytes(response, RESPONSE_LIMIT));
+    if (!response.ok) {
+      try { await response.body?.cancel(); } catch { /* Discard the upstream error body. */ }
+      return failure('PLANNER_PROVIDER_HTTP', 'The model service could not generate a draft. Check provider availability or keep using the manual plan. No retry was made.', 502, { upstreamStatus: response.status });
+    }
+    stage = 'read';
+    const bytes = await boundedBytes(response, RESPONSE_LIMIT);
+    stage = 'response-json';
+    const data = parse(bytes);
+    stage = 'draft';
     const choice = data?.choices?.[0], content = choice?.message?.content;
     if (choice?.finish_reason !== 'stop' || typeof content !== 'string') throw new Error('Incomplete draft');
     const draft = validateDraft(JSON.parse(content), config.key);
     return json({ ok: true, draft, usage: { inputTokens: tokenCount(data?.usage?.prompt_tokens), outputTokens: tokenCount(data?.usage?.completion_tokens) }, modelId: config.model });
-  } catch {
-    if (timedOut) return json({ ok: false, error: 'The model request timed out after 60 seconds. No automatic retry was made.' }, 504);
-    if (request.signal.aborted) return json({ ok: false, error: 'Draft request cancelled. The provider may already have processed it.' }, 499);
-    return json({ ok: false, error: 'The model did not return a complete, supported acceptance draft. Review your requirements or use a manual plan. No retry was made.' }, 502);
+  } catch (error) {
+    if (timedOut) return failure('PLANNER_TIMEOUT', 'The model request timed out after 60 seconds. No automatic retry was made.', 504);
+    if (request.signal.aborted) return failure('PLANNER_CANCELLED', 'Draft request cancelled. The provider may already have processed it.', 499);
+    if (stage === 'fetch') return failure(transportCode(error), 'The hosted planner could not reach the model service. No automatic retry was made. Manual planning remains available.');
+    const code = stage === 'read' ? 'PLANNER_RESPONSE_READ' : stage === 'response-json' ? 'PLANNER_RESPONSE_JSON' : 'PLANNER_INVALID_DRAFT';
+    return failure(code, 'The model did not return a complete, supported acceptance draft. Review your requirements or use a manual plan. No retry was made.');
   } finally {
     clearTimeout(timer); request.signal.removeEventListener('abort', abort);
   }
