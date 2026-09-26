@@ -1,0 +1,437 @@
+{
+  "reviewId": "76e24d85-b842-42e7-aa8a-c7269632f57b",
+  "startedAt": "2026-09-26T15:17:39.560Z",
+  "origin": "https://ming-acceptance-proof.amosming.chatgpt.site",
+  "expectedBundle": "/assets/index-BIIGKyJP.js",
+  "scope": "Actual generated HTML and static ZIP files checked inside the visitor browser on the existing private site. No model, Bob, source repair, or server mutation.",
+  "checks": [
+    {
+      "name": "The deployed page serves the exact current compiled bundle",
+      "passed": true
+    },
+    {
+      "name": "Deployed capabilities describe isolated manual HTML and ZIP acceptance without models",
+      "passed": true
+    },
+    {
+      "name": "The original welcome provides a Start entry",
+      "passed": true
+    },
+    {
+      "name": "Start now opens real project upload",
+      "passed": true
+    },
+    {
+      "name": "A real uploaded HTML file adds the task but fails after reloading",
+      "passed": true
+    },
+    {
+      "name": "The failure is bound to this unique task, requirement, source, and execution mode",
+      "passed": true
+    },
+    {
+      "name": "Actual uploaded failure has a non-empty DOM-render PNG",
+      "passed": true
+    },
+    {
+      "name": "The revised file requires confirmation while preserving the plan",
+      "passed": true
+    },
+    {
+      "name": "The uploaded revision passes the same five actual browser operations",
+      "passed": true
+    },
+    {
+      "name": "Run and source identities change while the entry and acceptance standard remain fixed",
+      "passed": true
+    },
+    {
+      "name": "The original failing baseline is unchanged",
+      "passed": true
+    },
+    {
+      "name": "The exported comparison verifies a revised source against the same standard",
+      "passed": true
+    },
+    {
+      "name": "Hosted ZIP upload resolves local JavaScript and root-relative CSS",
+      "passed": true
+    },
+    {
+      "name": "Hosted ZIP upload decodes its local image",
+      "passed": true
+    },
+    {
+      "name": "The uploaded multi-file ZIP actually passes interaction and persistence",
+      "passed": true
+    },
+    {
+      "name": "ZIP acceptance is a fresh independent run with observed DOM evidence",
+      "passed": true
+    },
+    {
+      "name": "No application JavaScript exceptions were observed",
+      "passed": true
+    },
+    {
+      "name": "Uploads and acceptance invoke no remote model or server mutation",
+      "passed": true
+    },
+    {
+      "name": "The browser contacted only the existing private site origin",
+      "passed": true
+    }
+  ],
+  "runs": [
+    {
+      "id": "8fdaf116-f985-4c0a-a484-628555f9b731",
+      "projectName": "field-notes",
+      "projectFingerprint": "6e1bb80660d605f89f4ea80eff70529f027fe11263dfe7946fdac4d901fe7e68",
+      "entry": "field-notes.html",
+      "planFingerprint": "54551bc68723e3f07f94bdf2473579b4763194f450835b8862f100b83c5032fb",
+      "requirement": "After adding Production upload proof 76e24d85, it appears in the list and remains after a reload.",
+      "startedAt": "2026-09-26T15:17:51.080Z",
+      "finishedAt": "2026-09-26T15:17:53.411Z",
+      "status": "failed",
+      "runner": "isolated-browser-dom",
+      "captureKind": "dom-render",
+      "storage": "isolated-session-adapter",
+      "diagnostics": [],
+      "steps": [
+        {
+          "id": "e662580e-0e27-46e8-946b-4b17ba62d0a8",
+          "action": "fill",
+          "selector": "#taskName",
+          "value": "Production upload proof 76e24d85",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed fill on #taskName",
+          "expected": "fill",
+          "durationMs": 287,
+          "capture": {
+            "bytes": 23164,
+            "width": 676,
+            "height": 450,
+            "sha256": "0f94d226356a3ba29cc9bb22531a99b30c5cf820f29e886342012b1aaa43ef41"
+          }
+        },
+        {
+          "id": "d074a654-a38d-4586-9832-453515c20147",
+          "action": "click",
+          "selector": "#addTask",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed click on #addTask",
+          "expected": "click",
+          "durationMs": 278,
+          "capture": {
+            "bytes": 26913,
+            "width": 676,
+            "height": 523,
+            "sha256": "825e5dca1c285af6bdee10fc018a968cb6551fab9f3556ed514de5f2fe4b95a6"
+          }
+        },
+        {
+          "id": "4e8ef109-ee11-4847-96ca-bb92267c7214",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Production upload proof 76e24d85",
+          "description": "",
+          "status": "passed",
+          "observed": "Production upload proof 76e24d85",
+          "expected": "Visible text contains: Production upload proof 76e24d85",
+          "durationMs": 16,
+          "capture": {
+            "bytes": 26913,
+            "width": 676,
+            "height": 523,
+            "sha256": "825e5dca1c285af6bdee10fc018a968cb6551fab9f3556ed514de5f2fe4b95a6"
+          }
+        },
+        {
+          "id": "d1525793-846e-4f5c-a4a6-3a0609f49578",
+          "action": "reload",
+          "selector": "body",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Reopened the uploaded document with the same isolated storage adapter.",
+          "expected": "Reload the isolated page",
+          "durationMs": 151,
+          "capture": {
+            "bytes": 21083,
+            "width": 676,
+            "height": 450,
+            "sha256": "364a98b4c4090fe005401416d36ba3167ef86f0ad064aeb6ea52aacd6e090ffc"
+          }
+        },
+        {
+          "id": "0dd864b9-482b-4160-9206-13d853440ac7",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Production upload proof 76e24d85",
+          "description": "",
+          "status": "failed",
+          "observed": "(no visible text)",
+          "expected": "Visible text contains: Production upload proof 76e24d85",
+          "durationMs": 1453,
+          "capture": {
+            "bytes": 21083,
+            "width": 676,
+            "height": 450,
+            "sha256": "364a98b4c4090fe005401416d36ba3167ef86f0ad064aeb6ea52aacd6e090ffc"
+          }
+        }
+      ]
+    },
+    {
+      "id": "17746aef-cea3-46fa-a7c3-dc8871959c02",
+      "projectName": "field-notes",
+      "projectFingerprint": "107d4ca65f7044a90105a22cdc1f89ac0ab37c3e7fbf5376c21215ccaeaaa39d",
+      "entry": "field-notes.html",
+      "planFingerprint": "54551bc68723e3f07f94bdf2473579b4763194f450835b8862f100b83c5032fb",
+      "requirement": "After adding Production upload proof 76e24d85, it appears in the list and remains after a reload.",
+      "startedAt": "2026-09-26T15:17:53.897Z",
+      "finishedAt": "2026-09-26T15:17:54.768Z",
+      "status": "passed",
+      "runner": "isolated-browser-dom",
+      "captureKind": "dom-render",
+      "storage": "isolated-session-adapter",
+      "diagnostics": [],
+      "steps": [
+        {
+          "id": "e662580e-0e27-46e8-946b-4b17ba62d0a8",
+          "action": "fill",
+          "selector": "#taskName",
+          "value": "Production upload proof 76e24d85",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed fill on #taskName",
+          "expected": "fill",
+          "durationMs": 276,
+          "capture": {
+            "bytes": 23164,
+            "width": 676,
+            "height": 450,
+            "sha256": "0f94d226356a3ba29cc9bb22531a99b30c5cf820f29e886342012b1aaa43ef41"
+          }
+        },
+        {
+          "id": "d074a654-a38d-4586-9832-453515c20147",
+          "action": "click",
+          "selector": "#addTask",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed click on #addTask",
+          "expected": "click",
+          "durationMs": 269,
+          "capture": {
+            "bytes": 26913,
+            "width": 676,
+            "height": 523,
+            "sha256": "825e5dca1c285af6bdee10fc018a968cb6551fab9f3556ed514de5f2fe4b95a6"
+          }
+        },
+        {
+          "id": "4e8ef109-ee11-4847-96ca-bb92267c7214",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Production upload proof 76e24d85",
+          "description": "",
+          "status": "passed",
+          "observed": "Production upload proof 76e24d85",
+          "expected": "Visible text contains: Production upload proof 76e24d85",
+          "durationMs": 14,
+          "capture": {
+            "bytes": 26913,
+            "width": 676,
+            "height": 523,
+            "sha256": "825e5dca1c285af6bdee10fc018a968cb6551fab9f3556ed514de5f2fe4b95a6"
+          }
+        },
+        {
+          "id": "d1525793-846e-4f5c-a4a6-3a0609f49578",
+          "action": "reload",
+          "selector": "body",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Reopened the uploaded document with the same isolated storage adapter.",
+          "expected": "Reload the isolated page",
+          "durationMs": 150,
+          "capture": {
+            "bytes": 24687,
+            "width": 676,
+            "height": 487,
+            "sha256": "75b2e12b34f1aaa10719b3bb461c99f7535bed8aafe00cf4a5cce9277b9d9e13"
+          }
+        },
+        {
+          "id": "0dd864b9-482b-4160-9206-13d853440ac7",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Production upload proof 76e24d85",
+          "description": "",
+          "status": "passed",
+          "observed": "Production upload proof 76e24d85",
+          "expected": "Visible text contains: Production upload proof 76e24d85",
+          "durationMs": 15,
+          "capture": {
+            "bytes": 24687,
+            "width": 676,
+            "height": 487,
+            "sha256": "75b2e12b34f1aaa10719b3bb461c99f7535bed8aafe00cf4a5cce9277b9d9e13"
+          }
+        }
+      ]
+    },
+    {
+      "id": "21879a87-954e-441a-941a-26db2c28621f",
+      "projectName": "field-notes-static",
+      "projectFingerprint": "fd1cf101e21e0f40393ecd083e900083666be48481c328cc941d8b8cd10b76fe",
+      "entry": "release/dist/index.html",
+      "planFingerprint": "51bae1095f1b8442ec0a0e73787358976db2d099510866832fefbb54b30c7784",
+      "requirement": "After adding Production upload proof 76e24d85, it appears in the list and remains after a reload.",
+      "startedAt": "2026-09-26T15:18:01.216Z",
+      "finishedAt": "2026-09-26T15:18:02.091Z",
+      "status": "passed",
+      "runner": "isolated-browser-dom",
+      "captureKind": "dom-render",
+      "storage": "isolated-session-adapter",
+      "diagnostics": [],
+      "steps": [
+        {
+          "id": "111dd6f0-76f7-4e5e-a1dc-063e6fb25e57",
+          "action": "fill",
+          "selector": "#taskName",
+          "value": "Production upload proof 76e24d85",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed fill on #taskName",
+          "expected": "fill",
+          "durationMs": 275,
+          "capture": {
+            "bytes": 23164,
+            "width": 676,
+            "height": 450,
+            "sha256": "0f94d226356a3ba29cc9bb22531a99b30c5cf820f29e886342012b1aaa43ef41"
+          }
+        },
+        {
+          "id": "3882a8d9-a011-402d-a60a-e4c1176f48d5",
+          "action": "click",
+          "selector": "#addTask",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed click on #addTask",
+          "expected": "click",
+          "durationMs": 274,
+          "capture": {
+            "bytes": 26913,
+            "width": 676,
+            "height": 523,
+            "sha256": "825e5dca1c285af6bdee10fc018a968cb6551fab9f3556ed514de5f2fe4b95a6"
+          }
+        },
+        {
+          "id": "1f3a05c0-6921-4525-abd9-0c03f9ece942",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Production upload proof 76e24d85",
+          "description": "",
+          "status": "passed",
+          "observed": "Production upload proof 76e24d85",
+          "expected": "Visible text contains: Production upload proof 76e24d85",
+          "durationMs": 14,
+          "capture": {
+            "bytes": 26913,
+            "width": 676,
+            "height": 523,
+            "sha256": "825e5dca1c285af6bdee10fc018a968cb6551fab9f3556ed514de5f2fe4b95a6"
+          }
+        },
+        {
+          "id": "c424f765-dabf-4a92-ac26-0d852d01c4e3",
+          "action": "reload",
+          "selector": "body",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Reopened the uploaded document with the same isolated storage adapter.",
+          "expected": "Reload the isolated page",
+          "durationMs": 153,
+          "capture": {
+            "bytes": 24687,
+            "width": 676,
+            "height": 487,
+            "sha256": "75b2e12b34f1aaa10719b3bb461c99f7535bed8aafe00cf4a5cce9277b9d9e13"
+          }
+        },
+        {
+          "id": "93803787-5b68-45f9-a9c7-d930f2fc8ca8",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Production upload proof 76e24d85",
+          "description": "",
+          "status": "passed",
+          "observed": "Production upload proof 76e24d85",
+          "expected": "Visible text contains: Production upload proof 76e24d85",
+          "durationMs": 12,
+          "capture": {
+            "bytes": 24687,
+            "width": 676,
+            "height": 487,
+            "sha256": "75b2e12b34f1aaa10719b3bb461c99f7535bed8aafe00cf4a5cce9277b9d9e13"
+          }
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "outsideRequests": [],
+  "mutations": [],
+  "apiRequests": [
+    {
+      "path": "/api/capabilities",
+      "method": "GET"
+    }
+  ],
+  "platformRequests": [
+    {
+      "method": "POST",
+      "path": "/cdn-cgi/challenge-platform/…",
+      "owner": "hosting-edge"
+    }
+  ],
+  "passed": true,
+  "capabilities": {
+    "ok": true,
+    "readOnly": true,
+    "sourceBinding": "self-contained-html-snapshot",
+    "demoMode": "recorded-evidence",
+    "uploadedProjects": {
+      "available": true,
+      "path": "/#upload",
+      "formats": [
+        "html",
+        "static-zip"
+      ],
+      "execution": "isolated-visitor-browser",
+      "planning": "manually-confirmed",
+      "captureKind": "dom-render",
+      "modelCalls": false
+    },
+    "liveTrial": {
+      "available": true,
+      "path": "/#trial",
+      "execution": "visitor-browser",
+      "scope": "bundled-shipboard",
+      "captureKind": "dom-render",
+      "modelCalls": false
+    }
+  },
+  "finishedAt": "2026-09-26T15:18:02.820Z"
+}

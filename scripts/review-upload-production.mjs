@@ -98,7 +98,10 @@ async function run(page, name) {
 let browser;
 try {
   browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 1484, height: 1060 }, acceptDownloads: true, serviceWorkers: 'block' });
+  // Playwright's serviceWorkers:'block' injects code into every frame that reads
+  // navigator.serviceWorker. That getter throws in a correctly opaque sandbox,
+  // even for an empty srcdoc. Use a fresh default context; do not inject that probe.
+  const context = await browser.newContext({ viewport: { width: 1484, height: 1060 }, acceptDownloads: true });
   context.on('page', page => page.on('pageerror', error => report.errors.push(redact(error.message))));
   await context.route('**/*', route => {
     const request = route.request(), href = request.url();

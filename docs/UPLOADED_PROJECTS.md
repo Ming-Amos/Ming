@@ -33,3 +33,7 @@ The last six runs live in memory; the original baseline remains separately prese
 ## Full local workflow
 
 Use `/#studio` with the local Ming service for running applications, 15 action/assertion types, native Playwright screenshots, persistent history, optional model-generated draft plans and MCP repair tasks. The hosted upload path does not expose a remote coding service. Neither Bob nor a model API is invoked by importing, previewing, manually checking, comparing or exporting a static project.
+
+## Verified release
+
+On 2026-09-26 the compiled own-project UI passed 47 checks over 10 runs. The deployed private site passed 19 checks over three fresh HTML/ZIP runs, including a genuine failed persistence assertion and a revised source passing the unchanged standard. See [local browser report](evidence/upload-studio/2026-09-26T15-08-23-466Z-4a6f15e1/report.json) and [production report](evidence/upload-studio/production-report.json). The hosted frontend is `index-BIIGKyJP.js` from application commit `5089743f41d9b2cd5dfc05d3c6b893badb6c92f4`; later documentation/test-harness changes record that exact deployment.
