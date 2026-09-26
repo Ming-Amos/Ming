@@ -16,11 +16,13 @@ for(const file of files){
   const checks=[['private-key',/-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/],['github-token',/\b(?:ghp_|github_pat_)[A-Za-z0-9_]{30,}/],['common-api-key',/\bsk-[A-Za-z0-9_-]{28,}/],['personal-email',/[A-Za-z0-9._%+-]+@(?:gmail|outlook|hotmail|qq)\.com/i]];
   for(const [issue,regex]of checks){const match=regex.exec(text);if(!match)continue;const testFixture=/(?:test|review|fixture)/i.test(file)&&/fake|test|boundary/.test(match[0]);if(!testFixture)findings.push({file,issue});}
 }
-const manifest=JSON.parse(fs.readFileSync(path.join(root,'docs/demo-evidence/manifest.json'),'utf8'));
 let verified=0;
-for(const [file,expected]of Object.entries(manifest.files)){
-  const actual=createHash('sha256').update(fs.readFileSync(path.join(root,'docs/demo-evidence',file))).digest('hex');
-  if(actual!==expected)findings.push({file,issue:'preserved evidence hash changed'});else verified++;
+for(const directory of ['docs/demo-evidence','docs/judge-evidence']){
+  const manifest=JSON.parse(fs.readFileSync(path.join(root,directory,'manifest.json'),'utf8'));
+  for(const [file,expected]of Object.entries(manifest.files)){
+    const actual=createHash('sha256').update(fs.readFileSync(path.join(root,directory,file))).digest('hex');
+    if(actual!==expected)findings.push({file:`${directory}/${file}`,issue:'preserved evidence hash changed'});else verified++;
+  }
 }
 const bobChanged=git(['diff','HEAD','--name-only','--','bob_sessions']).trim();if(bobChanged)findings.push({issue:'original Bob evidence changed'});
 const outcome={checkedAt:new Date().toISOString(),candidateFiles:files.length,verifiedEvidenceFiles:verified,bobEvidenceUnchanged:!bobChanged,findings,scope:'Bounded current-source candidate and preserved-evidence review; not a full history secret audit.'};

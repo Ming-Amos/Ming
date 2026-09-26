@@ -57,9 +57,9 @@ export default function RequirementEditor({
     }
   }
   async function save() {
-    if (!text.trim()) throw new Error("请先填写本次要验收的功能需求。");
+    if (!text.trim()) throw new Error("Describe the feature you want to check first.");
     if (text.length > 20_000)
-      throw new Error("需求最多 20,000 字符，请按功能拆分后验收。");
+      throw new Error("Requirements can contain up to 20,000 characters. Split larger documents by feature.");
     if (saved?.text === text.trim()) return saved;
     const response = await api<{ requirement: RequirementRecord }>(
       `/api/projects/${project.projectId}/requirements`,
@@ -77,7 +77,7 @@ export default function RequirementEditor({
     try {
       const record = await save();
       if (kind === "save")
-        setNotice(`需求 v${record.version} 已保存。下次打开项目可以继续使用。`);
+        setNotice(`Requirements v${record.version} saved. You can return to them next time.`);
       else if (kind === "manual") onManual(record);
       else {
         const { draft } = await api<{ draft: DraftRecord }>("/api/generate", {
@@ -95,37 +95,37 @@ export default function RequirementEditor({
     if (!file) return;
     setError("");
     if (!/\.(md|txt)$/i.test(file.name)) {
-      setError("请上传 .md 或 .txt 文件。");
+      setError("Upload a .md or .txt file.");
       return;
     }
     if (file.size > 100_000) {
-      setError("文件过大，请只保留这次功能的验收需求。");
+      setError("This file is too large. Include only the requirements for this feature.");
       return;
     }
     const value = await file.text();
     if (value.length > 20_000) {
-      setError("需求最多 20,000 字符，请按功能拆分。");
+      setError("Requirements can contain up to 20,000 characters. Split larger documents by feature.");
       return;
     }
     edit(value);
-    setNotice(`已导入 ${file.name}，点击保存后留档。`);
+    setNotice(`Imported ${file.name}. Save to keep this version.`);
   }
   return (
     <Sheet
-      title={`${readOnly ? "查看" : "编写"}项目需求`}
+      title={readOnly ? "Project requirements" : "Edit requirements"}
       wide
       onClose={onClose}
       locked={!!busy}
     >
       <p className="sheet-lead">
         <strong>{project.name}</strong> ·
-        写清楚使用者要完成什么、什么结果才算通过，以及哪些输入不应被接受。
+        Describe the user goal, what success looks like, and which inputs should be rejected.
       </p>
       <div className="requirement-file-actions">
         {!readOnly && (
           <label className="secondary-button upload-button">
             <FileArrowUp size={17} />
-            导入 PRD
+            Import PRD
             <input
               type="file"
               accept=".md,.txt,text/plain,text/markdown"
@@ -139,21 +139,21 @@ export default function RequirementEditor({
           disabled={!text}
           onClick={() =>
             downloadText(
-              `${project.name}-需求.md`,
+              `${project.name}-requirements.md`,
               text,
               "text/markdown;charset=utf-8",
             )
           }
         >
           <DownloadSimple size={17} />
-          导出需求
+          Export requirements
         </button>
-        <span>{text.length.toLocaleString()} / 20,000</span>
+        <span>{text.length.toLocaleString("en-GB")} / 20,000</span>
       </div>
       <label className="field">
-        需求与验收边界
+        Requirements and boundaries
         <textarea
-          aria-label="需求与验收边界"
+          aria-label="Requirements and boundaries"
           className="prd-editor"
           rows={11}
           value={text}
@@ -161,7 +161,7 @@ export default function RequirementEditor({
           readOnly={readOnly}
           disabled={!!busy}
           placeholder={
-            "示例：\n用户输入任务名称后点击添加，列表显示本次任务。\n刷新页面后，同一任务仍然存在。\n空白名称不能新增任务，应显示明确提示。"
+            "Example:\nAfter entering a task name and clicking Add, the new task appears in the list.\nThe task remains after reloading.\nA blank name must not create a task and should show a clear message."
           }
         />
       </label>
@@ -185,7 +185,7 @@ export default function RequirementEditor({
               onClick={() => void action("save")}
             >
               <FloppyDisk size={17} />
-              {busy === "save" ? "保存中…" : "保存需求"}
+              {busy === "save" ? "Saving…" : "Save requirements"}
             </button>
             <button
               className="primary-button"
@@ -197,16 +197,16 @@ export default function RequirementEditor({
               ) : (
                 <Sparkle size={17} />
               )}
-              {busy === "generate" ? "正在生成…" : "AI 生成验收草稿"}
+              {busy === "generate" ? "Generating…" : "Generate a plan with AI"}
             </button>
           </div>
           {!providerConfigured && (
             <p className="model-inline-note">
-              还没有配置模型。
+              No model connected yet.{" "}
               <button onClick={onConfigureModel} disabled={!!busy}>
-                连接模型
+                Connect a model
               </button>
-              ，或直接编写标准。
+               or write your own plan.
             </p>
           )}
           <button
@@ -216,9 +216,9 @@ export default function RequirementEditor({
           >
             <PencilSimple size={18} />
             <span>
-              <strong>自己编写验收标准</strong>
+              <strong>Write my own plan</strong>
               <small>
-                添加操作与检查条件，不需要 API，也不需要写测试代码。
+                Build steps and assertions without an API key or test code.
               </small>
             </span>
             <ArrowRight size={19} />

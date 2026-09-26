@@ -54,7 +54,7 @@ app.use((req, res, next) => {
   try { localHost = ["localhost", "127.0.0.1", "[::1]"].includes(new URL(`http://${req.headers.host}`).hostname); } catch { /* Invalid host. */ }
   if (process.env.MING_PUBLIC_DEMO !== "1" && isApi &&
       (!localHost || (origin !== undefined && !trustedBrowserOrigin(origin)) || (!origin && req.headers["sec-fetch-site"] === "cross-site"))) {
-    res.status(403).json({ ok: false, error: "仅允许本机 Ming 页面或本地工具访问此开发接口。" });
+    res.status(403).json({ ok: false, error: "This development API is available only to local Ming pages and local tools." });
     return;
   }
   next();
@@ -63,7 +63,7 @@ app.use(cors({ origin: (origin, callback) => callback(null, !origin || trustedBr
 app.use(express.json({ limit: "256kb" }));
 app.use((req, res, next) => {
   if (process.env.MING_PUBLIC_DEMO === "1" && !["GET", "HEAD", "OPTIONS"].includes(req.method)) {
-    res.status(403).json({ ok: false, error: "此公开演示仅展示已记录的真实运行。请在本地启动 Ming 执行新验收。" });
+    res.status(403).json({ ok: false, error: "This demo displays recorded runs. Start Ming locally to run new acceptance checks." });
     return;
   }
   next();
@@ -139,7 +139,7 @@ function listRuns(): RunRecord[] {
 // ── 加载计划 ─────────────────────────────────────────────────────
 function loadPlan(variant = "normal"): AcceptancePlan {
   const target = ALLOWED_VARIANTS[variant];
-  if (!target?.isSample || !target.planPath) throw new RequestError(400, "自有项目没有预设验收计划，请先建立并确认自己的标准");
+  if (!target?.isSample || !target.planPath) throw new RequestError(400, "This project has no preset plan. Create and confirm its acceptance criteria first");
   const planPath = target.planPath;
   const raw = JSON.parse(fs.readFileSync(planPath, "utf-8")) as AcceptancePlan;
   raw.fingerprint = computeFingerprint(raw);
@@ -166,7 +166,7 @@ function validateConfirmation(confirmation: ConfirmationRecord): string | null {
   const requirement = loadJson<RequirementRecord>(REQUIREMENTS_DIR, confirmation.requirementId);
   const project = loadJson<ProjectRecord>(PROJECTS_DIR, confirmation.projectId);
   if (!planIntegrity(plan, confirmation.planFingerprint) || plan.planId !== confirmation.planId || plan.version !== confirmation.planVersion) {
-    return "确认计划快照内容或指纹不一致";
+    return "The confirmed plan snapshot or fingerprint does not match";
   }
   if (!draft || !requirement || !project || draft.draftId !== confirmation.draftId ||
       project.projectId !== confirmation.projectId || requirement.requirementId !== confirmation.requirementId ||
@@ -174,39 +174,39 @@ function validateConfirmation(confirmation: ConfirmationRecord): string | null {
       plan.projectId !== project.projectId || plan.requirementId !== requirement.requirementId || plan.originalRequirement !== requirement.text ||
       !planIntegrity(draft.plan, confirmation.planFingerprint) || project.targetVariant !== confirmation.targetVariant ||
       project.targetUrl !== ALLOWED_VARIANTS[confirmation.targetVariant]?.url) {
-    return "确认、草稿、原始需求、项目或目标的关联不一致";
+    return "The confirmation, draft, original requirement, project, or target links do not match";
   }
   const errors = validateDraftPlan(plan);
-  if (errors.length || plan.criteria.some(c => c.openQuestions?.some(q => q.trim()))) return "确认计划仍存在校验错误或待确认问题";
+  if (errors.length || plan.criteria.some(c => c.openQuestions?.some(q => q.trim()))) return "The confirmed plan still contains validation errors or unresolved questions";
   return null;
 }
 
 function resolveRunPlan(run: RunRecord): AcceptancePlan {
   const cfg = ALLOWED_VARIANTS[run.targetVariant];
-  if (!cfg || cfg.url !== run.targetUrl) throw new Error("基准运行目标不再匹配已登记目标");
+  if (!cfg || cfg.url !== run.targetUrl) throw new Error("The baseline target no longer matches the registered target");
   let plan: AcceptancePlan;
   if (run.confirmationId) {
     const confirmation = loadJson<ConfirmationRecord>(CONFIRMATIONS_DIR, run.confirmationId);
-    if (!confirmation || confirmation.confirmationId !== run.confirmationId) throw new Error("原始确认记录缺失");
+    if (!confirmation || confirmation.confirmationId !== run.confirmationId) throw new Error("The original confirmation record is missing");
     const error = validateConfirmation(confirmation);
     if (error) throw new Error(error);
-    if (run.requirementId !== confirmation.requirementId || run.targetVariant !== confirmation.targetVariant) throw new Error("运行与确认记录关联不一致");
+    if (run.requirementId !== confirmation.requirementId || run.targetVariant !== confirmation.targetVariant) throw new Error("The run and confirmation record links do not match");
     plan = confirmation.planSnapshot;
   } else {
-    if (run.requirementId) throw new Error("缺少确认记录，不能作为夹具运行处理");
+    if (run.requirementId) throw new Error("The confirmation record is missing; this cannot be treated as a fixture run");
     plan = run.planSnapshot ?? loadPlan(run.targetVariant);
-    if (plan.source !== "fixture" || plan.projectId || plan.requirementId) throw new Error("无确认记录的运行必须来自明确的夹具计划");
+    if (plan.source !== "fixture" || plan.projectId || plan.requirementId) throw new Error("A run without a confirmation record must come from an explicit fixture plan");
   }
   if (!planIntegrity(plan, run.planFingerprint) || plan.planId !== run.planId || plan.version !== run.planVersion ||
-      (run.planSnapshot && !planIntegrity(run.planSnapshot, run.planFingerprint))) throw new Error("原始运行计划的内容、标识或版本不匹配");
+      (run.planSnapshot && !planIntegrity(run.planSnapshot, run.planFingerprint))) throw new Error("The original run plan content, ID, or version does not match");
   return JSON.parse(JSON.stringify(plan)) as AcceptancePlan;
 }
 
 // ── 启动运行的内部函数（Stage A 和 Stage B 共用） ────────────────
 function activeTarget(variant: string): RegisteredTarget {
   const cfg = ALLOWED_VARIANTS[variant];
-  if (!cfg) throw new RequestError(404, "目标不存在");
-  if (cfg.archived) throw new RequestError(409, "项目已归档，不能执行新任务；历史证据仍可查看");
+  if (!cfg) throw new RequestError(404, "Target not found");
+  if (cfg.archived) throw new RequestError(409, "This project is archived. New tasks cannot run; its historical evidence remains available");
   return cfg;
 }
 
@@ -215,8 +215,8 @@ function hasActiveTarget(variant: string): boolean {
 }
 
 function assertRunCapacity(variant: string): void {
-  if (hasActiveTarget(variant)) throw new RequestError(409, "该项目已有运行或连接检查，请等待完成或取消运行");
-  if (runControllers.size + inspectingTargets.size >= 2) throw new RequestError(429, "同时最多执行两个浏览器任务，请稍后重试");
+  if (hasActiveTarget(variant)) throw new RequestError(409, "This project already has an active run or connection check. Wait for it to finish or cancel it");
+  if (runControllers.size + inspectingTargets.size >= 2) throw new RequestError(429, "Two browser tasks are already active. Try again after one finishes");
 }
 
 function launchRun(opts: {
@@ -265,20 +265,20 @@ function launchRun(opts: {
           if (lp) { lp.finishedCriteria += 1; lp.currentCriteria = criteriaId; }
         },
       });
-      const record = await runner.run(plan, target, `Ming测试-${variant}-${Date.now()}`);
+      const record = await runner.run(plan, target, `Ming check ${runId.slice(0, 8)}`);
       record.sourceBinding = target.sourceBinding;
       record.sourceChangedDuringRun = sourceChanged || targetFingerprint(targetCfg) !== target.fingerprint;
       if (controller.signal.aborted) {
         record.status = "error";
         record.terminationReason = "cancelled";
-        record.fatalError = "用户已取消本次验收；未完成的检查不代表通过。";
+        record.fatalError = "You cancelled this acceptance run. Incomplete checks are not passes.";
       }
       if (confirmationId) record.confirmationId = confirmationId;
       if (requirementId) record.requirementId = requirementId;
       saveRun(record);
       return record;
     } catch (error) {
-      const fatalError = controller.signal.aborted ? "用户已取消本次验收；未完成的检查不代表通过。" : error instanceof Error ? error.message : String(error);
+      const fatalError = controller.signal.aborted ? "You cancelled this acceptance run. Incomplete checks are not passes." : error instanceof Error ? error.message : String(error);
       const record: RunRecord = {
         ...pending, status: "error", finishedAt: new Date().toISOString(), fatalError,
         terminationReason: controller.signal.aborted ? "cancelled" : undefined,
@@ -312,20 +312,20 @@ function latestRequirement(projectId: string): RequirementRecord | undefined {
 
 function assertCurrentDraft(draft: DraftRecord): void {
   const project = loadJson<ProjectRecord>(PROJECTS_DIR, draft.projectId);
-  if (!project) throw new RequestError(404, "草稿关联的项目不存在");
+  if (!project) throw new RequestError(404, "The project linked to this draft was not found");
   activeTarget(project.targetVariant);
-  if (draftSuperseded(draft.draftId)) throw new RequestError(409, "草稿已有修订版本，请重新审阅并确认新版；原始证据仍保留");
-  if (latestRequirement(project.projectId)?.requirementId !== draft.requirementId) throw new RequestError(409, "项目需求已有新版本，请基于最新需求建立并确认验收标准");
+  if (draftSuperseded(draft.draftId)) throw new RequestError(409, "This draft has a newer revision. Review and confirm it; the original evidence is preserved");
+  if (latestRequirement(project.projectId)?.requirementId !== draft.requirementId) throw new RequestError(409, "This project has newer requirements. Create and confirm acceptance criteria for the latest version");
 }
 
 // A terminated process cannot leave a run or task appearing to execute forever.
 if (process.env.MING_PUBLIC_DEMO !== "1") {
   for (const run of listRuns()) {
     if (run.status !== "running" && run.status !== "pending") continue;
-    saveRun({ ...run, status: "error", terminationReason: "interrupted", finishedAt: new Date().toISOString(), fatalError: "服务重新启动，此次验收被中断，请重新运行。", criteria: run.criteria.map(c => ({ ...c, status: "not_run", blockedReason: "服务重新启动，未得到完整结果", steps: c.steps.map(step => ({ ...step, status: "skipped" })) })) });
+    saveRun({ ...run, status: "error", terminationReason: "interrupted", finishedAt: new Date().toISOString(), fatalError: "The service restarted and interrupted this run. Start a new run.", criteria: run.criteria.map(c => ({ ...c, status: "not_run", blockedReason: "The service restarted before complete results were available", steps: c.steps.map(step => ({ ...step, status: "skipped" })) })) });
   }
   for (const task of listJson<RepairTaskRecord>(REPAIR_TASKS_DIR)) {
-    if (task.status === "rerunning") saveJson(REPAIR_TASKS_DIR, task.taskId, { ...task, status: "error", blockedReason: "服务重新启动，修复复验已中断。", updatedAt: new Date().toISOString() });
+    if (task.status === "rerunning") saveJson(REPAIR_TASKS_DIR, task.taskId, { ...task, status: "error", blockedReason: "The service restarted and interrupted the repair rerun.", updatedAt: new Date().toISOString() });
   }
 }
 
@@ -340,8 +340,8 @@ app.get("/api/capabilities", (_req: Request, res: Response) => {
 // GET /api/plan  返回固定计划（含真实指纹）
 app.get("/api/plan", (req: Request, res: Response) => {
   try {
-    const variant = typeof req.query.variant === "string" ? req.query.variant : "normal";
-    if (!ALLOWED_VARIANTS[variant]) { res.status(400).json({ ok: false, error: "未知目标" }); return; }
+    const variant = typeof req.query.variant === "string" ? req.query.variant : (ALLOWED_VARIANTS["shipboard-buggy"] ? "shipboard-buggy" : Object.keys(ALLOWED_VARIANTS)[0]);
+    if (!ALLOWED_VARIANTS[variant]) { res.status(400).json({ ok: false, error: "Unknown target" }); return; }
     if (!ALLOWED_VARIANTS[variant].isSample) { res.json({ ok: true, plan: null }); return; }
     const plan = loadPlan(variant);
     res.json({ ok: true, plan });
@@ -356,7 +356,7 @@ app.get("/api/targets", (_req: Request, res: Response) => {
 });
 
 app.post("/api/targets", (req: Request, res: Response) => {
-  if (!req.body || typeof req.body !== "object" || Array.isArray(req.body)) throw new RequestError(400, "目标配置必须为 JSON 对象");
+  if (!req.body || typeof req.body !== "object" || Array.isArray(req.body)) throw new RequestError(400, "Target configuration must be a JSON object");
   const projectId = uuidv4();
   const target = targetRegistry.create(req.body as Record<string, unknown>, projectId);
   const now = new Date().toISOString();
@@ -367,9 +367,9 @@ app.post("/api/targets", (req: Request, res: Response) => {
 
 app.delete("/api/targets/:variant", (req: Request, res: Response) => {
   const target = ALLOWED_VARIANTS[req.params.variant];
-  if (!target) throw new RequestError(404, "目标不存在");
-  if (target.isSample) throw new RequestError(400, "内置示例不能归档");
-  if (hasActiveTarget(target.variant) || listRepairTasks().some(t => t.targetVariant === target.variant && ["claimed", "rerunning"].includes(t.status))) throw new RequestError(409, "项目仍有正在执行的验收或修复任务，不能归档");
+  if (!target) throw new RequestError(404, "Target not found");
+  if (target.isSample) throw new RequestError(400, "Built-in examples cannot be archived");
+  if (hasActiveTarget(target.variant) || listRepairTasks().some(t => t.targetVariant === target.variant && ["claimed", "rerunning"].includes(t.status))) throw new RequestError(409, "This project has an active acceptance or repair task and cannot be archived");
   const updated = { ...target, archived: true };
   targetRegistry.persist(updated);
   ALLOWED_VARIANTS[target.variant] = updated;
@@ -406,7 +406,7 @@ app.post("/api/run", (req: Request, res: Response) => {
   if (confirmed !== true) {
     res.status(400).json({
       ok: false,
-      error: "必须先确认计划（confirmed 必须是布尔 true，不接受字符串）才能执行",
+      error: "Confirm the plan before running it (confirmed must be boolean true, not a string)",
     });
     return;
   }
@@ -414,24 +414,24 @@ app.post("/api/run", (req: Request, res: Response) => {
   if (!variant || typeof variant !== "string" || !ALLOWED_VARIANTS[variant]) {
     res.status(400).json({
       ok: false,
-      error: `不支持的目标版本 "${variant}"，只允许：${Object.keys(ALLOWED_VARIANTS).join(",")}`,
+      error: `Unsupported target variant "${variant}". Allowed: ${Object.keys(ALLOWED_VARIANTS).join(",")}`,
     });
     return;
   }
-  if (!ALLOWED_VARIANTS[variant].isSample) throw new RequestError(400, "自有项目必须通过已确认的手动或模型计划运行，不能使用示例计划");
+  if (!ALLOWED_VARIANTS[variant].isSample) throw new RequestError(400, "Your own project requires a confirmed manual or generated plan; example plans cannot be used");
 
   let plan: AcceptancePlan;
   try {
     plan = loadPlan(variant);
   } catch (err: unknown) {
-    res.status(500).json({ ok: false, error: `计划加载失败：${String(err)}` });
+    res.status(500).json({ ok: false, error: `Could not load the plan: ${String(err)}` });
     return;
   }
 
   if (typeof confirmedPlanId !== "string" || confirmedPlanId !== plan.planId) {
     res.status(400).json({
       ok: false,
-      error: `确认的 planId "${confirmedPlanId}" 与当前计划 "${plan.planId}" 不符`,
+      error: `Confirmed planId "${confirmedPlanId}" does not match the current plan "${plan.planId}"`,
     });
     return;
   }
@@ -442,7 +442,7 @@ app.post("/api/run", (req: Request, res: Response) => {
   ) {
     res.status(400).json({
       ok: false,
-      error: `确认的计划指纹已过期（客户端：${confirmedPlanFingerprint}，当前：${plan.fingerprint}）。请重新查看并确认计划。`,
+      error: `The confirmed plan fingerprint is outdated (displayed: ${confirmedPlanFingerprint}; current: ${plan.fingerprint}). Review and confirm the plan again.`,
     });
     return;
   }
@@ -458,10 +458,10 @@ app.post("/api/run", (req: Request, res: Response) => {
 
 app.post("/api/run/:runId/cancel", (req: Request, res: Response) => {
   const record = loadRun(req.params.runId);
-  if (!record) throw new RequestError(404, "运行不存在");
+  if (!record) throw new RequestError(404, "Run not found");
   const active = runControllers.get(record.runId);
   if (!active) { res.json({ ok: true, runId: record.runId, status: record.status, alreadyFinished: true }); return; }
-  active.controller.abort(new Error("用户取消验收"));
+  active.controller.abort(new Error("Acceptance cancelled by user"));
   res.json({ ok: true, runId: record.runId, status: "cancelling" });
 });
 
@@ -485,7 +485,7 @@ app.get("/api/run/:runId/progress", async (req: Request, res: Response) => {
 
   const record = loadRun(runId);
   if (!record) {
-    res.status(404).json({ ok: false, error: `runId ${runId} 不存在` });
+    res.status(404).json({ ok: false, error: `Run ${runId} was not found` });
     return;
   }
 
@@ -512,7 +512,7 @@ app.get("/api/run/:runId", (req: Request, res: Response) => {
   // for the entire browser job or turns a client timeout into a lost run.
   const record = loadRun(runId);
   if (!record) {
-    res.status(404).json({ ok: false, error: `runId ${runId} 不存在` });
+    res.status(404).json({ ok: false, error: `Run ${runId} was not found` });
     return;
   }
 
@@ -548,7 +548,7 @@ app.get("/api/screenshots/:filename", (req: Request, res: Response) => {
   const filename = path.basename(req.params.filename);
   const filePath = path.join(SCREENSHOTS_DIR, filename);
   if (!fs.existsSync(filePath)) {
-    res.status(404).json({ ok: false, error: "截图不存在" });
+    res.status(404).json({ ok: false, error: "Screenshot not found" });
     return;
   }
   res.sendFile(filePath);
@@ -561,13 +561,13 @@ app.get("/api/screenshots/:filename", (req: Request, res: Response) => {
 app.post("/api/projects", (req: Request, res: Response) => {
   const { name, targetVariant } = req.body as { name?: unknown; targetVariant?: unknown };
   if (!name || typeof name !== "string" || !name.trim()) {
-    res.status(400).json({ ok: false, error: "name 不能为空" });
+    res.status(400).json({ ok: false, error: "name must not be empty" });
     return;
   }
   if (!targetVariant || typeof targetVariant !== "string" || !ALLOWED_VARIANTS[targetVariant]) {
     res.status(400).json({
       ok: false,
-      error: `targetVariant 必须是 ${Object.keys(ALLOWED_VARIANTS).join(" 或 ")}`,
+      error: `targetVariant must be ${Object.keys(ALLOWED_VARIANTS).join(" or ")}`,
     });
     return;
   }
@@ -597,7 +597,7 @@ app.get("/api/projects", (_req: Request, res: Response) => {
 
 app.get("/api/projects/:projectId/workspace", (req: Request, res: Response) => {
   const project = loadJson<ProjectRecord>(PROJECTS_DIR, req.params.projectId);
-  if (!project) throw new RequestError(404, "项目不存在");
+  if (!project) throw new RequestError(404, "Project not found");
   const requirements = listJson<RequirementRecord>(REQUIREMENTS_DIR).filter(r => r.projectId === project.projectId).sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 50);
   const allDrafts = listJson<DraftRecord>(DRAFTS_DIR).filter(d => d.projectId === project.projectId);
   const superseded = new Set(allDrafts.map(d => d.supersedesDraftId).filter(Boolean));
@@ -610,20 +610,20 @@ app.get("/api/projects/:projectId/workspace", (req: Request, res: Response) => {
 // GET /api/projects/:projectId  获取项目
 app.get("/api/projects/:projectId", (req: Request, res: Response) => {
   const project = loadJson<ProjectRecord>(PROJECTS_DIR, req.params.projectId);
-  if (!project) { res.status(404).json({ ok: false, error: "项目不存在" }); return; }
+  if (!project) { res.status(404).json({ ok: false, error: "Project not found" }); return; }
   res.json({ ok: true, project });
 });
 
 // GET /api/projects/:projectId/context  检查目标页面结构
 app.get("/api/projects/:projectId/context", async (req: Request, res: Response, next: NextFunction) => {
   if (process.env.MING_PUBLIC_DEMO === "1") {
-    res.status(403).json({ ok: false, error: "公开演示仅提供已保存证据，不执行新的浏览器检查。" });
+    res.status(403).json({ ok: false, error: "This demo provides saved evidence and does not execute new browser checks." });
     return;
   }
   const project = loadJson<ProjectRecord>(PROJECTS_DIR, req.params.projectId);
-  if (!project) { res.status(404).json({ ok: false, error: "项目不存在" }); return; }
+  if (!project) { res.status(404).json({ ok: false, error: "Project not found" }); return; }
   const targetCfg = ALLOWED_VARIANTS[project.targetVariant];
-  if (!targetCfg) { res.status(400).json({ ok: false, error: "项目目标变体不在允许列表中" }); return; }
+  if (!targetCfg) { res.status(400).json({ ok: false, error: "The project target variant is not registered" }); return; }
 
   try {
     const context = await inspectTarget(targetCfg, project.projectId);
@@ -637,15 +637,15 @@ app.get("/api/projects/:projectId/context", async (req: Request, res: Response, 
 // body: { text: string }
 app.post("/api/projects/:projectId/requirements", (req: Request, res: Response) => {
   const project = loadJson<ProjectRecord>(PROJECTS_DIR, req.params.projectId);
-  if (!project) { res.status(404).json({ ok: false, error: "项目不存在" }); return; }
+  if (!project) { res.status(404).json({ ok: false, error: "Project not found" }); return; }
   activeTarget(project.targetVariant);
 
   const { text } = req.body as { text?: unknown };
   if (!text || typeof text !== "string" || !text.trim()) {
-    res.status(400).json({ ok: false, error: "需求 text 不能为空" });
+    res.status(400).json({ ok: false, error: "Requirement text must not be empty" });
     return;
   }
-  if (text.length > 20000) throw new RequestError(400, "需求最多支持 20,000 字符，请聚焦本次验收范围");
+  if (text.length > 20000) throw new RequestError(400, "Requirements may contain up to 20,000 characters. Focus on this acceptance scope");
 
   const requirementId = uuidv4();
   const record: RequirementRecord = {
@@ -663,7 +663,7 @@ app.post("/api/projects/:projectId/requirements", (req: Request, res: Response) 
 // GET /api/requirements/:requirementId  获取需求
 app.get("/api/requirements/:requirementId", (req: Request, res: Response) => {
   const req2 = loadJson<RequirementRecord>(REQUIREMENTS_DIR, req.params.requirementId);
-  if (!req2) { res.status(404).json({ ok: false, error: "需求不存在" }); return; }
+  if (!req2) { res.status(404).json({ ok: false, error: "Requirement not found" }); return; }
   res.json({ ok: true, requirement: req2 });
 });
 
@@ -673,20 +673,20 @@ app.get("/api/requirements/:requirementId", (req: Request, res: Response) => {
 app.post("/api/generate", async (req: Request, res: Response, next: NextFunction) => {
   const { requirementId } = req.body as { requirementId?: unknown };
   if (!requirementId || typeof requirementId !== "string") {
-    res.status(400).json({ ok: false, error: "requirementId 缺失" });
+    res.status(400).json({ ok: false, error: "requirementId is required" });
     return;
   }
 
   const requirement = loadJson<RequirementRecord>(REQUIREMENTS_DIR, requirementId);
-  if (!requirement) { res.status(404).json({ ok: false, error: "需求不存在" }); return; }
+  if (!requirement) { res.status(404).json({ ok: false, error: "Requirement not found" }); return; }
 
   const project = loadJson<ProjectRecord>(PROJECTS_DIR, requirement.projectId);
-  if (!project) { res.status(404).json({ ok: false, error: "关联项目不存在" }); return; }
+  if (!project) { res.status(404).json({ ok: false, error: "The linked project was not found" }); return; }
   try { activeTarget(project.targetVariant); } catch (error) { next(error); return; }
 
   const transport = getTransport();
   if (!transport) {
-    res.status(503).json({ ok: false, error: "模型未配置：请连接模型，或使用手动验收标准，无需 API 密钥。", notConfigured: true });
+    res.status(503).json({ ok: false, error: "No model is configured. Connect a model or create manual acceptance criteria without an API key.", notConfigured: true });
     return;
   }
 
@@ -718,7 +718,7 @@ app.post("/api/generate", async (req: Request, res: Response, next: NextFunction
   if (!outcome.ok) {
     res.status(502).json({
       ok: false,
-      error: outcome.usage.errorMessage ?? "模型调用失败",
+      error: outcome.usage.errorMessage ?? "The model request failed",
       errorCategory: outcome.usage.errorCategory,
       usage: outcome.usage,
     });
@@ -764,20 +764,20 @@ app.post("/api/generate", async (req: Request, res: Response, next: NextFunction
 });
 
 function createManualDraft(body: unknown, previous?: DraftRecord): DraftRecord {
-  if (!body || typeof body !== "object" || Array.isArray(body)) throw new RequestError(400, "手动计划必须为 JSON 对象");
+  if (!body || typeof body !== "object" || Array.isArray(body)) throw new RequestError(400, "A manual plan must be a JSON object");
   const input = body as { projectId?: unknown; requirementId?: unknown; plan?: unknown };
-  if (typeof input.projectId !== "string" || typeof input.requirementId !== "string") throw new RequestError(400, "必须关联已有项目和原始需求");
+  if (typeof input.projectId !== "string" || typeof input.requirementId !== "string") throw new RequestError(400, "An existing project and original requirement must be linked");
   const project = loadJson<ProjectRecord>(PROJECTS_DIR, input.projectId);
   const requirement = loadJson<RequirementRecord>(REQUIREMENTS_DIR, input.requirementId);
-  if (!project || !requirement || requirement.projectId !== project.projectId) throw new RequestError(400, "项目与需求的关联不一致");
+  if (!project || !requirement || requirement.projectId !== project.projectId) throw new RequestError(400, "The project and requirement links do not match");
   activeTarget(project.targetVariant);
-  if (latestRequirement(project.projectId)?.requirementId !== requirement.requirementId) throw new RequestError(409, "请使用项目最新需求版本");
-  if (previous && (previous.projectId !== project.projectId || previous.requirementId !== requirement.requirementId)) throw new RequestError(400, "修订不能切换项目或需求，请创建新的验收计划");
-  if (previous && draftSuperseded(previous.draftId)) throw new RequestError(409, "此草稿已有新版本，请从最新版本继续修订");
-  if (!input.plan || typeof input.plan !== "object" || Array.isArray(input.plan)) throw new RequestError(400, "plan 必须包含 title、description 和 criteria");
+  if (latestRequirement(project.projectId)?.requirementId !== requirement.requirementId) throw new RequestError(409, "Use the latest requirements for this project");
+  if (previous && (previous.projectId !== project.projectId || previous.requirementId !== requirement.requirementId)) throw new RequestError(400, "A revision cannot change its project or requirements. Create a new acceptance plan instead");
+  if (previous && draftSuperseded(previous.draftId)) throw new RequestError(409, "This draft has a newer version. Continue editing the latest revision");
+  if (!input.plan || typeof input.plan !== "object" || Array.isArray(input.plan)) throw new RequestError(400, "plan must contain title, description, and criteria");
   const content = input.plan as Record<string, unknown>;
-  if (Object.keys(content).some(key => !["title", "description", "criteria"].includes(key))) throw new RequestError(400, "手动计划只接受 title、description、criteria，身份及指纹由服务器生成");
-  if (typeof content.title !== "string" || !content.title.trim() || content.title.length > 200 || typeof content.description !== "string" || content.description.length > 4000) throw new RequestError(400, "标题须为 1–200 字符，描述须为不超过 4000 字符的文本");
+  if (Object.keys(content).some(key => !["title", "description", "criteria"].includes(key))) throw new RequestError(400, "A manual plan accepts only title, description, and criteria. The server generates its identity and fingerprint");
+  if (typeof content.title !== "string" || !content.title.trim() || content.title.length > 200 || typeof content.description !== "string" || content.description.length > 4000) throw new RequestError(400, "The title must contain 1–200 characters and the description must be text with at most 4,000 characters");
   const createdAt = new Date().toISOString();
   const draftVersion = 1 + Math.max(0, ...listJson<DraftRecord>(DRAFTS_DIR).filter(d => d.requirementId === requirement.requirementId).map(d => d.draftVersion));
   const plan: AcceptancePlan = {
@@ -786,7 +786,7 @@ function createManualDraft(body: unknown, previous?: DraftRecord): DraftRecord {
     projectId: project.projectId, requirementId: requirement.requirementId, originalRequirement: requirement.text,
   };
   const errors = validateDraftPlan(plan);
-  if (errors.length) throw new RequestError(422, `验收标准不完整：${errors.join("；")}`);
+  if (errors.length) throw new RequestError(422, `Incomplete acceptance criteria: ${errors.join("; ")}`);
   plan.fingerprint = computeFingerprint(plan);
   const draft: DraftRecord = {
     draftId: uuidv4(), projectId: project.projectId, requirementId: requirement.requirementId, draftVersion, plan,
@@ -805,7 +805,7 @@ app.post("/api/drafts/manual", (req: Request, res: Response) => {
 
 app.post("/api/drafts/:draftId/revise", (req: Request, res: Response) => {
   const previous = loadJson<DraftRecord>(DRAFTS_DIR, req.params.draftId);
-  if (!previous) throw new RequestError(404, "原始草稿不存在");
+  if (!previous) throw new RequestError(404, "The original draft was not found");
   const draft = createManualDraft(req.body, previous);
   res.json({ ok: true, draft });
 });
@@ -813,7 +813,7 @@ app.post("/api/drafts/:draftId/revise", (req: Request, res: Response) => {
 // GET /api/drafts/:draftId  获取草稿
 app.get("/api/drafts/:draftId", (req: Request, res: Response) => {
   const draft = loadJson<DraftRecord>(DRAFTS_DIR, req.params.draftId);
-  if (!draft) { res.status(404).json({ ok: false, error: "草稿不存在" }); return; }
+  if (!draft) { res.status(404).json({ ok: false, error: "Draft not found" }); return; }
   res.json({ ok: true, draft });
 });
 
@@ -825,23 +825,23 @@ app.post("/api/confirm", (req: Request, res: Response) => {
     displayedPlanFingerprint?: unknown;
   };
   if (!draftId || typeof draftId !== "string") {
-    res.status(400).json({ ok: false, error: "draftId 缺失" });
+    res.status(400).json({ ok: false, error: "draftId is required" });
     return;
   }
   if (!displayedPlanFingerprint || typeof displayedPlanFingerprint !== "string") {
-    res.status(400).json({ ok: false, error: "displayedPlanFingerprint 缺失" });
+    res.status(400).json({ ok: false, error: "displayedPlanFingerprint is required" });
     return;
   }
 
   const draft = loadJson<DraftRecord>(DRAFTS_DIR, draftId);
-  if (!draft) { res.status(404).json({ ok: false, error: "草稿不存在" }); return; }
+  if (!draft) { res.status(404).json({ ok: false, error: "Draft not found" }); return; }
   assertCurrentDraft(draft);
 
   // Validate fingerprint match (ensures user confirmed the exact displayed plan)
   if (!planIntegrity(draft.plan, displayedPlanFingerprint)) {
     res.status(400).json({
       ok: false,
-      error: `指纹不匹配（展示：${displayedPlanFingerprint}，草稿：${draft.plan.fingerprint}）`,
+      error: `Fingerprint mismatch (displayed: ${displayedPlanFingerprint}; draft: ${draft.plan.fingerprint})`,
     });
     return;
   }
@@ -850,7 +850,7 @@ app.post("/api/confirm", (req: Request, res: Response) => {
   if (draft.validationErrors.length > 0) {
     res.status(400).json({
       ok: false,
-      error: `草稿包含校验错误，无法确认：${draft.validationErrors.join("；")}`,
+      error: `This draft cannot be confirmed because it contains validation errors: ${draft.validationErrors.join("; ")}`,
     });
     return;
   }
@@ -859,13 +859,13 @@ app.post("/api/confirm", (req: Request, res: Response) => {
   if (draft.hasOpenQuestions) {
     res.status(400).json({
       ok: false,
-      error: "草稿存在未解答的问题（openQuestions），请修改需求重新生成后再确认",
+      error: "The draft has unresolved openQuestions. Clarify the requirements and revise or regenerate the plan before confirming",
     });
     return;
   }
 
   const project = loadJson<ProjectRecord>(PROJECTS_DIR, draft.projectId);
-  if (!project) { res.status(404).json({ ok: false, error: "关联项目不存在" }); return; }
+  if (!project) { res.status(404).json({ ok: false, error: "The linked project was not found" }); return; }
 
   const confirmationId = uuidv4();
   const confirmation: ConfirmationRecord = {
@@ -890,7 +890,7 @@ app.post("/api/confirm", (req: Request, res: Response) => {
 // GET /api/confirmations/:confirmationId  获取确认记录
 app.get("/api/confirmations/:confirmationId", (req: Request, res: Response) => {
   const confirmation = loadJson<ConfirmationRecord>(CONFIRMATIONS_DIR, req.params.confirmationId);
-  if (!confirmation) { res.status(404).json({ ok: false, error: "确认记录不存在" }); return; }
+  if (!confirmation) { res.status(404).json({ ok: false, error: "Confirmation not found" }); return; }
   const active = !draftSuperseded(confirmation.draftId) && !ALLOWED_VARIANTS[confirmation.targetVariant]?.archived && latestRequirement(confirmation.projectId)?.requirementId === confirmation.requirementId;
   res.json({ ok: true, confirmation: { ...confirmation, active } });
 });
@@ -900,21 +900,21 @@ app.get("/api/confirmations/:confirmationId", (req: Request, res: Response) => {
 app.post("/api/run-confirmed", (req: Request, res: Response) => {
   const { confirmationId } = req.body as { confirmationId?: unknown };
   if (!confirmationId || typeof confirmationId !== "string") {
-    res.status(400).json({ ok: false, error: "confirmationId 缺失" });
+    res.status(400).json({ ok: false, error: "confirmationId is required" });
     return;
   }
 
   const confirmation = loadJson<ConfirmationRecord>(CONFIRMATIONS_DIR, confirmationId);
-  if (!confirmation) { res.status(404).json({ ok: false, error: "确认记录不存在" }); return; }
+  if (!confirmation) { res.status(404).json({ ok: false, error: "Confirmation not found" }); return; }
   const draft = loadJson<DraftRecord>(DRAFTS_DIR, confirmation.draftId);
-  if (!draft) throw new RequestError(422, "确认关联的草稿不存在");
+  if (!draft) throw new RequestError(422, "The draft linked to this confirmation was not found");
   assertCurrentDraft(draft);
 
   const targetCfg = ALLOWED_VARIANTS[confirmation.targetVariant];
   if (!targetCfg) {
     res.status(400).json({
       ok: false,
-      error: `目标变体 "${confirmation.targetVariant}" 不在允许列表中`,
+      error: `Target variant "${confirmation.targetVariant}" is not registered`,
     });
     return;
   }
@@ -926,7 +926,7 @@ app.post("/api/run-confirmed", (req: Request, res: Response) => {
   if (errors.length > 0) {
     res.status(400).json({
       ok: false,
-      error: `确认计划执行前验证失败：${errors.join("；")}`,
+      error: `The confirmed plan failed preflight validation: ${errors.join("; ")}`,
     });
     return;
   }
@@ -952,13 +952,13 @@ app.post("/api/run-confirmed", (req: Request, res: Response) => {
 app.post("/api/repair-tasks", (req: Request, res: Response) => {
   const { baselineRunId } = req.body as { baselineRunId?: unknown };
   if (!baselineRunId || typeof baselineRunId !== "string") {
-    res.status(400).json({ ok: false, error: "baselineRunId 缺失" });
+    res.status(400).json({ ok: false, error: "baselineRunId is required" });
     return;
   }
 
   const run = loadRun(baselineRunId);
   if (!run) {
-    res.status(404).json({ ok: false, error: `运行 ${baselineRunId} 不存在` });
+    res.status(404).json({ ok: false, error: `Run ${baselineRunId} was not found` });
     return;
   }
   activeTarget(run.targetVariant);
@@ -967,7 +967,7 @@ app.post("/api/repair-tasks", (req: Request, res: Response) => {
   if (run.status === "passed" || run.status === "running" || run.status === "pending") {
     res.status(400).json({
       ok: false,
-      error: `运行状态为 "${run.status}"，无需创建修复任务（仅 failed/error 状态可创建）`,
+      error: `Run status is "${run.status}". Repair tasks can only be created for failed or error runs`,
     });
     return;
   }
@@ -982,7 +982,7 @@ app.post("/api/repair-tasks", (req: Request, res: Response) => {
   if (active) {
     res.status(409).json({
       ok: false,
-      error: `该基准运行已有活跃修复任务 ${active.taskId}（状态：${active.status}），不允许重复创建`,
+      error: `This baseline already has active repair task ${active.taskId} (status: ${active.status}); duplicates are not allowed`,
       existingTaskId: active.taskId,
     });
     return;
@@ -998,8 +998,8 @@ app.post("/api/repair-tasks", (req: Request, res: Response) => {
   if (!run.runnerFingerprint || run.runnerFingerprint === "unknown") {
     res.status(422).json({
       ok: false,
-      error: `基准运行未记录 runner 指纹（runnerFingerprint 缺失或为 "unknown"）。` +
-        `请使用当前版本重新运行基准以获取已知指纹，然后再创建修复任务。`,
+      error: `The baseline has no known runner fingerprint (runnerFingerprint is missing or unknown). ` +
+        `Rerun the baseline with the current runner to record its fingerprint before creating a repair task.`,
     });
     return;
   }
@@ -1024,19 +1024,19 @@ app.post("/api/repair-tasks", (req: Request, res: Response) => {
     }));
 
   const executionErrors: string[] = [];
-  if (run.fatalError) executionErrors.push(`致命错误: ${run.fatalError}`);
+  if (run.fatalError) executionErrors.push(`Fatal error: ${run.fatalError}`);
   run.criteria.forEach((c) => {
     if (c.status === "error" && c.blockedReason) executionErrors.push(`${c.criteriaId}: ${c.blockedReason}`);
   });
 
   const reproductionSteps = [
-    `1. 目标: ${run.targetVariant} (${run.targetUrl})`,
-    `2. 计划: ${run.planId} v${run.planVersion} 指纹 ${run.planFingerprint.slice(0, 12)}…`,
-    `3. 基准运行 ID: ${run.runId}，开始时间: ${run.startedAt}`,
-    `4. 失败标准数: ${failedCriteria.length}/${run.criteria.length}`,
+    `1. Target: ${run.targetVariant} (${run.targetUrl})`,
+    `2. Plan: ${run.planId} v${run.planVersion}, fingerprint ${run.planFingerprint.slice(0, 12)}…`,
+    `3. Baseline run: ${run.runId}; started: ${run.startedAt}`,
+    `4. Failed criteria: ${failedCriteria.length}/${run.criteria.length}`,
     failedCriteria.length > 0
-      ? `5. 主要失败: ${failedCriteria.map((c) => c.title).join("；")}`
-      : "5. 无业务失败（仅执行错误）",
+      ? `5. Main failures: ${failedCriteria.map((c) => c.title).join("; ")}`
+      : "5. No business assertion failure; execution errors only",
   ].join("\n");
 
   const taskId = uuidv4();
@@ -1079,7 +1079,7 @@ app.get("/api/repair-tasks", (_req: Request, res: Response) => {
 app.get("/api/repair-tasks/:taskId", (req: Request, res: Response) => {
   const task = loadJson<RepairTaskRecord>(REPAIR_TASKS_DIR, req.params.taskId);
   if (!task) {
-    res.status(404).json({ ok: false, error: `修复任务 ${req.params.taskId} 不存在` });
+    res.status(404).json({ ok: false, error: `Repair task ${req.params.taskId} was not found` });
     return;
   }
   res.json({ ok: true, task });
@@ -1091,14 +1091,14 @@ app.get("/api/repair-tasks/:taskId", (req: Request, res: Response) => {
 app.post("/api/repair-tasks/:taskId/claim", (req: Request, res: Response) => {
   const task = loadJson<RepairTaskRecord>(REPAIR_TASKS_DIR, req.params.taskId);
   if (!task) {
-    res.status(404).json({ ok: false, error: `修复任务 ${req.params.taskId} 不存在` });
+    res.status(404).json({ ok: false, error: `Repair task ${req.params.taskId} was not found` });
     return;
   }
   activeTarget(task.targetVariant);
 
   const { claimedBy } = req.body as { claimedBy?: unknown };
   if (!claimedBy || typeof claimedBy !== "string" || !claimedBy.trim()) {
-    res.status(400).json({ ok: false, error: "claimedBy 不能为空" });
+    res.status(400).json({ ok: false, error: "claimedBy must not be empty" });
     return;
   }
   const owner = claimedBy.trim();
@@ -1113,7 +1113,7 @@ app.post("/api/repair-tasks/:taskId/claim", (req: Request, res: Response) => {
   if (task.status === "claimed" && task.claimedBy !== owner) {
     res.status(409).json({
       ok: false,
-      error: `该任务已被 ${task.claimedBy} 认领，无法被 ${owner} 认领`,
+      error: `This task is already claimed by ${task.claimedBy} and cannot be claimed by ${owner}`,
     });
     return;
   }
@@ -1126,7 +1126,7 @@ app.post("/api/repair-tasks/:taskId/claim", (req: Request, res: Response) => {
   if (task.status !== "waiting") {
     res.status(400).json({
       ok: false,
-      error: `任务状态为 "${task.status}"，只有 waiting 状态可以认领`,
+      error: `Task status is "${task.status}". Only waiting tasks can be claimed`,
     });
     return;
   }
@@ -1145,24 +1145,24 @@ app.post("/api/repair-tasks/:taskId/claim", (req: Request, res: Response) => {
 app.post("/api/repair-tasks/:taskId/rerun", (req: Request, res: Response) => {
   const task = loadJson<RepairTaskRecord>(REPAIR_TASKS_DIR, req.params.taskId);
   if (!task) {
-    res.status(404).json({ ok: false, error: `修复任务 ${req.params.taskId} 不存在` });
+    res.status(404).json({ ok: false, error: `Repair task ${req.params.taskId} was not found` });
     return;
   }
 
   if (task.status !== "claimed") {
     res.status(400).json({
       ok: false,
-      error: `任务状态为 "${task.status}"，只有已认领（claimed）的任务才能发起重跑`,
+      error: `Task status is "${task.status}". Only claimed tasks can start a rerun`,
     });
     return;
   }
 
-  if ((task.attemptCount ?? 0) >= 2) { res.status(409).json({ ok: false, error: "最多允许两次修复重跑，请检查证据后重新规划" }); return; }
+  if ((task.attemptCount ?? 0) >= 2) { res.status(409).json({ ok: false, error: "A repair task allows two rerun attempts. Review the evidence before replanning" }); return; }
   // Prevent duplicate concurrent reruns
   if (task.rerunId && runningJobs.has(task.rerunId)) {
     res.status(409).json({
       ok: false,
-      error: `该任务已有正在进行的重跑 ${task.rerunId}`,
+      error: `This task already has active rerun ${task.rerunId}`,
     });
     return;
   }
@@ -1172,7 +1172,7 @@ app.post("/api/repair-tasks/:taskId/rerun", (req: Request, res: Response) => {
   if (!expectedTargetFingerprint || typeof expectedTargetFingerprint !== "string") {
     res.status(400).json({
       ok: false,
-      error: "重跑请求必须提供 expectedTargetFingerprint（修复后目标源码的预期指纹）",
+      error: "A rerun request must include expectedTargetFingerprint (the expected fingerprint of the repaired target source)",
     });
     return;
   }
@@ -1182,7 +1182,7 @@ app.post("/api/repair-tasks/:taskId/rerun", (req: Request, res: Response) => {
   if (!targetCfg) {
     res.status(400).json({
       ok: false,
-      error: `目标变体 "${task.targetVariant}" 不在允许列表中`,
+      error: `Target variant "${task.targetVariant}" is not registered`,
     });
     return;
   }
@@ -1190,20 +1190,20 @@ app.post("/api/repair-tasks/:taskId/rerun", (req: Request, res: Response) => {
   // Compute current source fingerprint and validate it matches the caller's expectation
   let capturedTarget: TargetConfig;
   try { activeTarget(task.targetVariant); capturedTarget = captureTarget(targetCfg); }
-  catch { res.status(422).json({ ok: false, error: "无法读取目标源文件" }); return; }
+  catch { res.status(422).json({ ok: false, error: "Could not read the target source file" }); return; }
   const currentTargetFingerprint = capturedTarget.fingerprint;
   if (targetCfg.kind === "html" && currentTargetFingerprint === "unknown") {
     res.status(422).json({
       ok: false,
-      error: `无法读取目标源文件以计算指纹（路径: ${targetCfg.htmlPath}）`,
+      error: `Could not read the target source file to compute its fingerprint (path: ${targetCfg.htmlPath})`,
     });
     return;
   }
   if (currentTargetFingerprint !== expectedTargetFingerprint) {
     res.status(409).json({
       ok: false,
-      error: `当前目标源码指纹 ${currentTargetFingerprint} 与请求提供的 expectedTargetFingerprint ${expectedTargetFingerprint} 不符。` +
-        `源文件可能在认领后被再次修改，或您提供的指纹有误。请重新检查目标文件后再请求重跑。`,
+      error: `The current source fingerprint ${currentTargetFingerprint} does not match expectedTargetFingerprint ${expectedTargetFingerprint}. ` +
+        `The source may have changed after the task was claimed, or the supplied fingerprint is incorrect. Check the target file again before requesting a rerun.`,
       currentFingerprint: currentTargetFingerprint,
     });
     return;
@@ -1212,14 +1212,14 @@ app.post("/api/repair-tasks/:taskId/rerun", (req: Request, res: Response) => {
   const plan = task.planSnapshot;
   const baseline = loadRun(task.baselineRunId);
   try {
-    if (!baseline) throw new Error("基准运行不存在");
+    if (!baseline) throw new Error("Baseline run not found");
     const originalPlan = resolveRunPlan(baseline);
     if (!planIntegrity(plan, task.planFingerprint) || originalPlan.fingerprint !== task.planFingerprint ||
         task.planId !== baseline.planId || task.planVersion !== baseline.planVersion ||
         task.targetVariant !== baseline.targetVariant || task.targetUrl !== baseline.targetUrl || task.targetUrl !== targetCfg.url ||
         task.confirmationId !== baseline.confirmationId || task.requirementId !== baseline.requirementId ||
         task.baselineTargetFingerprint !== baseline.targetFingerprint || task.baselineRunnerFingerprint !== baseline.runnerFingerprint) {
-      throw new Error("修复任务与原始基准的计划或来源不一致");
+      throw new Error("The repair task plan or source does not match the original baseline");
     }
   } catch (err) { res.status(422).json({ ok: false, error: String(err) }); return; }
 
@@ -1264,7 +1264,7 @@ app.post("/api/repair-tasks/:taskId/rerun", (req: Request, res: Response) => {
       saveJson(REPAIR_TASKS_DIR, task.taskId, {
         ...latest,
         status: newStatus,
-        blockedReason: newStatus === "blocked" ? "两次修复尝试后仍未验证通过，请人工检查失败证据。" : comparison?.verifiedRepair ? undefined : comparison?.blockers.join("；"),
+        blockedReason: newStatus === "blocked" ? "The repair is still unverified after two attempts. Review the failure evidence manually." : comparison?.verifiedRepair ? undefined : comparison?.blockers.join("; "),
         updatedAt: new Date().toISOString(),
       });
     }).catch(() => {
@@ -1287,12 +1287,12 @@ app.post("/api/repair-tasks/:taskId/rerun", (req: Request, res: Response) => {
 app.get("/api/repair-tasks/:taskId/comparison", (req: Request, res: Response) => {
   const task = loadJson<RepairTaskRecord>(REPAIR_TASKS_DIR, req.params.taskId);
   if (!task) {
-    res.status(404).json({ ok: false, error: `修复任务 ${req.params.taskId} 不存在` });
+    res.status(404).json({ ok: false, error: `Repair task ${req.params.taskId} was not found` });
     return;
   }
 
   if (!task.rerunId) {
-    res.status(400).json({ ok: false, error: "该修复任务尚未发起重跑" });
+    res.status(400).json({ ok: false, error: "This repair task has not started a rerun" });
     return;
   }
 
@@ -1300,7 +1300,7 @@ app.get("/api/repair-tasks/:taskId/comparison", (req: Request, res: Response) =>
   const rerun = loadRun(task.rerunId);
 
   if (!baseline) {
-    res.status(404).json({ ok: false, error: `基准运行 ${task.baselineRunId} 不存在` });
+    res.status(404).json({ ok: false, error: `Baseline run ${task.baselineRunId} was not found` });
     return;
   }
   if (!rerun) {
@@ -1308,7 +1308,7 @@ app.get("/api/repair-tasks/:taskId/comparison", (req: Request, res: Response) =>
     const isRunning = runningJobs.has(task.rerunId);
     res.status(isRunning ? 202 : 404).json({
       ok: false,
-      error: isRunning ? "重跑仍在进行中，请稍后查询" : `重跑 ${task.rerunId} 不存在`,
+      error: isRunning ? "The rerun is still in progress. Check again shortly" : `Rerun ${task.rerunId} was not found`,
     });
     return;
   }
@@ -1401,7 +1401,7 @@ for (const cfg of Object.values(ALLOWED_VARIANTS)) {
 }
 app.get("/local-target/:variant", (req: Request, res: Response) => {
   const cfg = activeTarget(req.params.variant);
-  if (cfg.isSample || cfg.kind !== "html" || !cfg.htmlPath) throw new RequestError(404, "目标 HTML 不存在");
+  if (cfg.isSample || cfg.kind !== "html" || !cfg.htmlPath) throw new RequestError(404, "Target HTML was not found");
   // No directory serving: importing one HTML file does not expose neighbouring files.
   res.setHeader("Content-Security-Policy", "sandbox allow-scripts; default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'");
   res.type("html").send(captureTarget(cfg).htmlSnapshot);
@@ -1422,10 +1422,10 @@ app.use((err: Error & { status?: number }, _req: Request, res: Response, _next: 
 });
 
 app.listen(PORT, process.env.HOST ?? "127.0.0.1", () => {
-  console.log(`[Ming Server] 已启动：http://127.0.0.1:${PORT}`);
-  console.log(`  日报样例（正常版）：http://127.0.0.1:${PORT}/normal`);
-  console.log(`  日报样例（缺陷版）：http://127.0.0.1:${PORT}/buggy`);
-  console.log(`  API：             http://127.0.0.1:${PORT}/api`);
+  console.log(`[Ming Server] Listening at http://127.0.0.1:${PORT}`);
+  console.log(`  Daily Report example (working): http://127.0.0.1:${PORT}/normal`);
+  console.log(`  Daily Report example (defective): http://127.0.0.1:${PORT}/buggy`);
+  console.log(`  API:              http://127.0.0.1:${PORT}/api`);
 });
 
 export default app;

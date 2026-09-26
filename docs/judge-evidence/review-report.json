@@ -1,0 +1,124 @@
+{
+  "proofId": "1cb80b66-328e-4aa6-913e-5417d6ba946e",
+  "startedAt": "2026-09-26T11:12:01.887Z",
+  "actor": "Codex via real stdio MCP",
+  "checks": [
+    {
+      "label": "All three English demonstration targets are registered",
+      "passed": true
+    },
+    {
+      "label": "The real stdio MCP server exposes repair and rerun tools",
+      "passed": true
+    },
+    {
+      "label": "Working Shipboard passes all three actual browser criteria",
+      "passed": true
+    },
+    {
+      "label": "The repeatable defective example fails only reload persistence",
+      "passed": true
+    },
+    {
+      "label": "The repair workspace reproduces the same persistence failure",
+      "passed": true
+    },
+    {
+      "label": "The browser executed a frozen self-contained HTML snapshot",
+      "passed": true
+    },
+    {
+      "label": "Actual MCP failure evidence identifies the failed persistence criterion",
+      "passed": true
+    },
+    {
+      "label": "Codex claims the actual task over stdio MCP",
+      "passed": true
+    },
+    {
+      "label": "Only the repair target changed; original plan and both reference examples remain intact",
+      "passed": true
+    },
+    {
+      "label": "The actual source repair implements persistent save and restore",
+      "passed": true
+    },
+    {
+      "label": "MCP observes a new fingerprint for the same repair target",
+      "passed": true
+    },
+    {
+      "label": "The repaired source passes all three original browser criteria",
+      "passed": true
+    },
+    {
+      "label": "Strict repair verification passes with no blockers",
+      "passed": true
+    },
+    {
+      "label": "Plan, runner, and target identity are unchanged across the repair",
+      "passed": true
+    },
+    {
+      "label": "The original failed record remains byte-for-byte unchanged",
+      "passed": true
+    },
+    {
+      "label": "Run 62d46b46 is terminal and all visible evidence is English",
+      "passed": true
+    },
+    {
+      "label": "Run c001b117 is terminal and all visible evidence is English",
+      "passed": true
+    },
+    {
+      "label": "Run 33f7bcfb is terminal and all visible evidence is English",
+      "passed": true
+    },
+    {
+      "label": "Run 74ed3133 is terminal and all visible evidence is English",
+      "passed": true
+    },
+    {
+      "label": "All judge-facing response copy is English",
+      "passed": true
+    },
+    {
+      "label": "The original demonstration evidence bundle is byte-for-byte unchanged",
+      "passed": true
+    }
+  ],
+  "modelCalls": 0,
+  "bobCalls": 0,
+  "runs": {
+    "working": "62d46b46-2227-4ac9-8b15-72ba5bbe7fc3",
+    "defective": "c001b117-8865-4084-bfa6-e04ddde1683d",
+    "baseline": "33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c",
+    "rerun": "74ed3133-b62c-44cf-8b4a-042156180db5"
+  },
+  "rawWireRoutes": [
+    "/api/run/62d46b46-2227-4ac9-8b15-72ba5bbe7fc3",
+    "/api/run/62d46b46-2227-4ac9-8b15-72ba5bbe7fc3/progress",
+    "/api/run/c001b117-8865-4084-bfa6-e04ddde1683d",
+    "/api/run/c001b117-8865-4084-bfa6-e04ddde1683d/progress",
+    "/api/run/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c",
+    "/api/run/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c/progress",
+    "/api/run/74ed3133-b62c-44cf-8b4a-042156180db5",
+    "/api/run/74ed3133-b62c-44cf-8b4a-042156180db5/progress",
+    "/api/repair-tasks/bbc50e50-7838-4bec-8a2b-4ec386d98679",
+    "/api/repair-tasks/bbc50e50-7838-4bec-8a2b-4ec386d98679/comparison",
+    "/api/repair-tasks",
+    "/api/history",
+    "/api/targets",
+    "/api/projects",
+    "/api/plan?variant=shipboard-normal",
+    "/api/plan?variant=shipboard-buggy",
+    "/api/plan?variant=shipboard-repair",
+    "/api/plan",
+    "/api/capabilities",
+    "/api/provider/status"
+  ],
+  "taskId": "bbc50e50-7838-4bec-8a2b-4ec386d98679",
+  "success": true,
+  "finishedAt": "2026-09-26T11:12:45.702Z"
+}

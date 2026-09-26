@@ -9,4 +9,5 @@
 
 # Preserve the exact bytes reviewed by the evidence manifest.
 docs/demo-evidence/** -text
+docs/judge-evidence/** -text
 examples/** -text

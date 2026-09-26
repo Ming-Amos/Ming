@@ -24,12 +24,12 @@ export async function api<T>(
     data = await response.json();
   } catch {
     throw new Error(
-      `服务暂时无法响应 (${response.status})，请检查 Ming 是否正在运行。`,
+      `The service is unavailable (${response.status}). Check that Ming is running.`,
     );
   }
   if (!response.ok || data.ok === false) {
     const error = new Error(
-      data.error || `请求失败 (${response.status})`,
+      data.error || `Request failed (${response.status})`,
     ) as ApiError;
     error.existingTaskId = data.existingTaskId;
     error.status = response.status;

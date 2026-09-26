@@ -43,36 +43,36 @@ export default function RunHistory({
     [runs, query, status, target, targets],
   );
   return (
-    <Sheet title="验收记录" wide onClose={onClose}>
+    <Sheet title="Run history" wide onClose={onClose}>
       <p className="sheet-lead">
-        每次运行都保留自己的标准版本、截图和结果。查看过去的证据，或回到项目再次验收。
+        Every run keeps its plan version, screenshots, and results. Revisit evidence or return to your project for another check.
       </p>
       <div className="history-filters">
         <label className="search-field">
           <MagnifyingGlass size={18} />
           <input
-            aria-label="搜索验收记录"
-            placeholder="搜索项目或运行编号"
+            aria-label="Search run history"
+            placeholder="Search by project or run ID"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
         </label>
         <select
-          aria-label="按结果筛选"
+          aria-label="Filter by result"
           value={status}
           onChange={(e) => setStatus(e.target.value)}
         >
-          <option value="">全部结果</option>
-          <option value="passed">通过</option>
-          <option value="failed">未通过</option>
-          <option value="error">执行异常</option>
+          <option value="">All results</option>
+          <option value="passed">Passed</option>
+          <option value="failed">Failed</option>
+          <option value="error">Run error</option>
         </select>
         <select
-          aria-label="按项目筛选"
+          aria-label="Filter by project"
           value={target}
           onChange={(e) => setTarget(e.target.value)}
         >
-          <option value="">全部项目</option>
+          <option value="">All projects</option>
           {targets.map((t) => (
             <option key={t.variant} value={t.variant}>
               {t.label}
@@ -80,7 +80,7 @@ export default function RunHistory({
           ))}
         </select>
       </div>
-      <p className="history-result-count">{filtered.length} 条记录</p>
+      <p className="history-result-count">{filtered.length} {filtered.length === 1 ? "run" : "runs"}</p>
       <div className="history-list">
         {filtered.length ? (
           filtered.map((run) => (
@@ -96,18 +96,18 @@ export default function RunHistory({
                     ?.label || run.targetVariant}
                 </strong>
                 <span>
-                  {new Date(run.startedAt).toLocaleString("zh-CN")} ·{" "}
+                  {new Date(run.startedAt).toLocaleString("en-GB")} ·{" "}
                   {run.runId.slice(0, 10)}
                 </span>
               </div>
               <span className={`status status-${run.status}`}>
                 {run.status === "passed"
-                  ? "通过"
+                  ? "Passed"
                   : run.status === "failed"
-                    ? "未通过"
+                    ? "Failed"
                     : run.status === "error"
-                      ? "执行异常"
-                      : "检查中"}
+                      ? "Run error"
+                      : "Running"}
               </span>
               <ArrowRight size={18} />
             </button>
@@ -117,8 +117,8 @@ export default function RunHistory({
             <ClockCounterClockwise size={32} />
             <p>
               {runs.length
-                ? "没有符合筛选条件的记录。"
-                : "还没有记录。确认验收标准后，开始第一次运行。"}
+                ? "No runs match these filters."
+                : "No runs yet. Confirm a plan to start your first check."}
             </p>
           </div>
         )}

@@ -58,49 +58,49 @@ const REQUIRED_FIELDS: Record<string, string[]> = {
 // ── 计划结构深度校验 ──────────────────────────────────────────────
 function validatePlan(plan: AcceptancePlan): void {
   if (!plan.planId || typeof plan.planId !== "string") {
-    throw new Error("计划结构无效：planId 缺失");
+    throw new Error("Invalid plan: planId is required");
   }
   if (!Array.isArray(plan.criteria) || plan.criteria.length === 0) {
-    throw new Error("计划结构无效：criteria 为空或不是数组");
+    throw new Error("Invalid plan: criteria must be a non-empty array");
   }
   if (plan.criteria.length > 20 || plan.criteria.reduce((n, c) => n + (Array.isArray(c.steps) ? c.steps.length : 0), 0) > 120) {
-    throw new Error("每次验收最多 20 条标准、120 个步骤，请拆分验收范围。");
+    throw new Error("A run supports up to 20 criteria and 120 steps. Split this acceptance scope into smaller plans.");
   }
 
   const seenCriteriaIds = new Set<string>();
 
   for (const c of plan.criteria) {
     if (!c.id || typeof c.id !== "string" || !/^[A-Za-z0-9_-]{1,80}$/.test(c.id)) {
-      throw new Error("criteria 缺少有效 id");
+      throw new Error("A criterion is missing a valid ID");
     }
     if (seenCriteriaIds.has(c.id)) {
-      throw new Error(`criteria id "${c.id}" 重复`);
+      throw new Error(`Duplicate criterion ID: "${c.id}"`);
     }
     seenCriteriaIds.add(c.id);
 
     if (!Array.isArray(c.steps) || c.steps.length === 0) {
-      throw new Error(`criteria "${c.id}"：steps 为空或不是数组`);
+      throw new Error(`Criterion "${c.id}": steps must be a non-empty array`);
     }
 
     const seenStepIds = new Set<string>();
     for (const s of c.steps) {
       if (!s.id || typeof s.id !== "string" || !/^[A-Za-z0-9_-]{1,80}$/.test(s.id)) {
-        throw new Error(`criteria "${c.id}" 包含没有有效 id 的步骤`);
+        throw new Error(`Criterion "${c.id}" contains a step without a valid ID`);
       }
       if (seenStepIds.has(s.id)) {
-        throw new Error(`步骤 id "${s.id}" 在 criteria "${c.id}" 中重复`);
+        throw new Error(`Duplicate step ID "${s.id}" in criterion "${c.id}"`);
       }
       seenStepIds.add(s.id);
 
       if (!ALLOWED_STEP_TYPES.has(s.type)) {
-        throw new Error(`步骤 "${s.id}" 类型 "${s.type}" 未注册，拒绝执行`);
+        throw new Error(`Step "${s.id}" uses unsupported type "${s.type}"; execution refused`);
       }
 
       // Validate required fields per step type
       for (const field of REQUIRED_FIELDS[s.type] ?? []) {
         const val = (s as unknown as Record<string, unknown>)[field];
         if (val === undefined || val === null) {
-          throw new Error(`步骤 "${s.id}" (${s.type}) 缺少必填字段 "${field}"`);
+          throw new Error(`Step "${s.id}" (${s.type}) is missing required field "${field}"`);
         }
       }
 
@@ -108,17 +108,17 @@ function validatePlan(plan: AcceptancePlan): void {
       if (s.type === "assertCount") {
         const exp = s.expected;
         if (exp === undefined || exp === null) {
-          throw new Error(`步骤 "${s.id}" (assertCount) 缺少 expected 字段`);
+          throw new Error(`Step "${s.id}" (assertCount) is missing expected`);
         }
         // Must be a number type (not string) and a non-negative integer — "2oops" must fail
         if (typeof exp !== "number") {
           throw new Error(
-            `步骤 "${s.id}" (assertCount) expected 必须是数字类型，不接受字符串（得到：${JSON.stringify(exp)}）`
+            `Step "${s.id}" (assertCount): expected must be a number, not a string (received: ${JSON.stringify(exp)})`
           );
         }
         if (!Number.isInteger(exp) || exp < 0) {
           throw new Error(
-            `步骤 "${s.id}" (assertCount) expected 必须是非负整数，得到：${exp}`
+            `Step "${s.id}" (assertCount): expected must be a non-negative integer (received: ${exp})`
           );
         }
       }
@@ -129,7 +129,7 @@ function validatePlan(plan: AcceptancePlan): void {
         sAsRecord["script"] !== undefined ||
         sAsRecord["eval"] !== undefined
       ) {
-        throw new Error(`步骤 "${s.id}" 包含禁止字段 script/eval`);
+        throw new Error(`Step "${s.id}" contains a prohibited script/eval field`);
       }
 
       // Disallow unknown fields beyond the declared PlanStep interface
@@ -138,7 +138,7 @@ function validatePlan(plan: AcceptancePlan): void {
       ]);
       for (const key of Object.keys(sAsRecord)) {
         if (!KNOWN_STEP_KEYS.has(key)) {
-          throw new Error(`步骤 "${s.id}" 包含未知字段 "${key}"，拒绝执行`);
+          throw new Error(`Step "${s.id}" contains unknown field "${key}"; execution refused`);
         }
       }
     }
@@ -150,7 +150,7 @@ function validatePlan(plan: AcceptancePlan): void {
     ]);
     const hasAssertion = c.steps.some((s) => ASSERTION_TYPES.has(s.type));
     if (!hasAssertion) {
-      throw new Error(`criteria "${c.id}" 没有任何断言步骤，无法验证预期行为`);
+      throw new Error(`Criterion "${c.id}" has no assertion steps and cannot verify expected behavior`);
     }
   }
 
@@ -160,7 +160,7 @@ function validatePlan(plan: AcceptancePlan): void {
     for (const dep of c.dependsOn ?? []) {
       if (!orderedIds.includes(dep)) {
         throw new Error(
-          `criteria "${c.id}" 依赖 "${dep}"，但 "${dep}" 不存在或出现在后面（不支持后向/循环依赖）`
+          `Criterion "${c.id}" depends on "${dep}", which is missing or appears later; forward or circular dependencies are not supported`
         );
       }
     }
@@ -193,7 +193,7 @@ export function validateTemplateVars(plan: AcceptancePlan): string[] {
       ]) {
         if (!KNOWN_TEMPLATE_VARS.has(varName)) {
           errors.push(
-            `步骤 "${s.id}" 引用未知模板变量 {{${varName}}}，执行前必须解析`
+            `Step "${s.id}" references unknown template variable {{${varName}}}; resolve it before running`
           );
         }
       }
@@ -247,10 +247,10 @@ async function actionLocator(page: Page, value: string, mode: "fill" | "click" |
   const partial = page.getByLabel(value, { exact: false });
   const count = await partial.count();
   if (count === 1) return partial;
-  if (count > 1) throw new Error(`有多个控件匹配 "${value}"，请使用更准确的名称或 css= 定位器`);
+  if (count > 1) throw new Error(`Multiple controls match "${value}". Use a more specific accessible name or a css= locator`);
   const button = page.getByRole("button", { name: value, exact: true });
   if (await button.count()) return button;
-  throw new Error(`无法找到控件 "${value}"，请核对可访问名称或使用 css= 定位器`);
+  throw new Error(`Control "${value}" was not found. Check its accessible name or use a css= locator`);
 }
 async function eventually(check: () => Promise<boolean>): Promise<boolean> {
   const until = Date.now() + 2500;
@@ -277,7 +277,7 @@ async function executeStep(
       case "navigate": {
         const url = resolveTemplate(step.url, vars);
         await page.goto(url, { waitUntil: "domcontentloaded", timeout: 15000 });
-        result.actual = `已导航到 ${url}`;
+        result.actual = `Navigated to ${url}`;
         result.status = "passed";
         break;
       }
@@ -286,9 +286,9 @@ async function executeStep(
         const locator = resolveTemplate(step.locator, vars);
         const value = resolveTemplate(step.value, vars);
         const el = await actionLocator(page, locator, "fill");
-        if (await el.count() === 0) throw new Error(`找不到可访问名称为 "${locator}" 的元素`);
+        if (await el.count() === 0) throw new Error(`No element has the accessible name "${locator}"`);
         await el.fill(value);
-        result.actual = `已填入内容（长度=${value.length}）`;
+        result.actual = `Entered text (${value.length} characters)`;
         result.status = "passed";
         break;
       }
@@ -296,16 +296,16 @@ async function executeStep(
       case "click": {
         const locator = resolveTemplate(step.locator, vars);
         const el = await actionLocator(page, locator, "click");
-        if (await el.count() === 0) throw new Error(`找不到可点击元素 "${locator}"`);
+        if (await el.count() === 0) throw new Error(`Clickable element "${locator}" was not found`);
         await el.click();
-        result.actual = `已点击 "${locator}"`;
+        result.actual = `Clicked "${locator}"`;
         result.status = "passed";
         break;
       }
 
       case "reload": {
         await page.reload({ waitUntil: "domcontentloaded", timeout: 15000 });
-        result.actual = "页面已刷新";
+        result.actual = "Page reloaded";
         result.status = "passed";
         break;
       }
@@ -313,10 +313,10 @@ async function executeStep(
       case "assertVisible": {
         const text = resolveTemplate(step.value, vars);
         const visible = await eventually(() => page.getByText(text, { exact: false }).isVisible());
-        result.actual = visible ? `文本 "${text}" 可见` : `文本 "${text}" 不可见`;
+        result.actual = visible ? `Text "${text}" is visible` : `Text "${text}" is not visible`;
         result.expected = text;
         result.status = visible ? "passed" : "failed";
-        if (!visible) result.error = `预期文本 "${text}" 可见，但页面上未找到`;
+        if (!visible) result.error = `Expected text "${text}" to be visible, but it was not found on the page`;
         break;
       }
 
@@ -327,18 +327,18 @@ async function executeStep(
         const scope = page.locator(scopeLocator);
         if (await scope.count() === 0) {
           result.status = "error";
-          result.error = `作用域 "${scopeLocator}" 不存在`;
-          result.actual = `找不到 "${scopeLocator}"`;
+          result.error = `Scope "${scopeLocator}" does not exist`;
+          result.actual = `Could not find "${scopeLocator}"`;
           break;
         }
         const visible = await eventually(() => scope.getByText(text, { exact: false }).isVisible());
         result.actual = visible
-          ? `文本 "${text}" 在 "${scopeLocator}" 中可见`
-          : `文本 "${text}" 在 "${scopeLocator}" 中不可见`;
+          ? `Text "${text}" is visible within "${scopeLocator}"`
+          : `Text "${text}" is not visible within "${scopeLocator}"`;
         result.expected = text;
         result.status = visible ? "passed" : "failed";
         if (!visible) {
-          result.error = `预期 "${scopeLocator}" 内文本 "${text}" 可见，但未找到`;
+          result.error = `Expected text "${text}" within "${scopeLocator}" to be visible, but it was not found`;
         }
         break;
       }
@@ -346,10 +346,10 @@ async function executeStep(
       case "assertNotVisible": {
         const text = resolveTemplate(step.value, vars);
         const visible = !await eventually(async () => !(await page.getByText(text, { exact: false }).isVisible()));
-        result.actual = visible ? `文本 "${text}" 仍可见` : `文本 "${text}" 不可见`;
-        result.expected = `"${text}" 不可见`;
+        result.actual = visible ? `Text "${text}" is still visible` : `Text "${text}" is not visible`;
+        result.expected = `"${text}" is not visible`;
         result.status = visible ? "failed" : "passed";
-        if (visible) result.error = `预期文本 "${text}" 不可见，但页面上仍然存在`;
+        if (visible) result.error = `Expected text "${text}" to be hidden, but it is still visible`;
         break;
       }
 
@@ -365,7 +365,7 @@ async function executeStep(
         result.expected = expected;
         result.status = count === expected ? "passed" : "failed";
         if (count !== expected) {
-          result.error = `预期 ${expected} 个 "${locator}"，实际找到 ${count} 个`;
+          result.error = `Expected ${expected} matches for "${locator}"; found ${count}`;
         }
         break;
       }
@@ -374,9 +374,9 @@ async function executeStep(
         const locator = resolveTemplate(step.locator, vars);
         const el = await actionLocator(page, locator);
         const enabled = await eventually(() => el.isEnabled());
-        result.actual = enabled ? "已启用" : "已禁用";
+        result.actual = enabled ? "Enabled" : "Disabled";
         result.status = enabled ? "passed" : "failed";
-        if (!enabled) result.error = `预期按钮 "${locator}" 可用，实际已禁用`;
+        if (!enabled) result.error = `Expected control "${locator}" to be enabled; it is disabled`;
         break;
       }
 
@@ -384,16 +384,16 @@ async function executeStep(
         const locator = resolveTemplate(step.locator, vars);
         const el = await actionLocator(page, locator);
         const disabled = await eventually(() => el.isDisabled());
-        result.actual = disabled ? "已禁用" : "已启用";
+        result.actual = disabled ? "Disabled" : "Enabled";
         result.status = disabled ? "passed" : "failed";
-        if (!disabled) result.error = `预期按钮 "${locator}" 已禁用，实际可用`;
+        if (!disabled) result.error = `Expected control "${locator}" to be disabled; it is enabled`;
         break;
       }
       case "selectOption": case "check": case "uncheck": {
         const el = await actionLocator(page, resolveTemplate(step.locator, vars));
         if (step.type === "selectOption") await el.selectOption(resolveTemplate(step.value, vars));
         else await el.setChecked(step.type === "check");
-        result.status = "passed"; result.actual = "页面操作已完成"; break;
+        result.status = "passed"; result.actual = "Page action completed"; break;
       }
       case "assertValue": {
         const el = await actionLocator(page, resolveTemplate(step.locator, vars));
@@ -401,20 +401,20 @@ async function executeStep(
         let actual = "";
         const passed = await eventually(async () => { actual = await el.inputValue(); return actual === expected; });
         result.status = passed ? "passed" : "failed"; result.expected = expected; result.actual = actual;
-        if (!passed) result.error = "输入值与验收标准不一致"; break;
+        if (!passed) result.error = "The input value does not match the acceptance criterion"; break;
       }
       case "assertUrl": {
         const expected = resolveTemplate(step.value, vars);
         const passed = await eventually(async () => expected.startsWith("/") ? new URL(page.url()).pathname === expected : page.url() === expected);
         result.status = passed ? "passed" : "failed"; result.expected = expected; result.actual = page.url();
-        if (!passed) result.error = "当前页面地址与验收标准不一致"; break;
+        if (!passed) result.error = "The current page URL does not match the acceptance criterion"; break;
       }
     }
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     result.status = "error";
     result.error = message;
-    result.actual = `执行异常：${message}`;
+    result.actual = `Execution error: ${message}`;
   }
 
   result.durationMs = Date.now() - start;
@@ -461,7 +461,7 @@ async function runCriteriaWithContext(
         criteriaId: criteria.id,
         title: criteria.title,
         status: "blocked",
-        blockedReason: `前置条件 ${criteria.dependsOn?.join(", ")} 未通过，本条跳过执行`,
+        blockedReason: `Prerequisites ${criteria.dependsOn?.join(", ")} did not pass; this criterion was skipped`,
         steps: criteria.steps.map((s) => ({
           stepId: s.id,
           description: s.description,
@@ -500,7 +500,7 @@ async function runCriteriaWithContext(
           // second probe that could repeat an application mutation.
           const response = await route.fetch({ maxRedirects: 0, timeout: 15000 });
           if (response.status() >= 300 && response.status() < 400 && response.status() !== 304) {
-            if (lifecycle && lifecycle.diagnostics.length < 80) lifecycle.diagnostics.push({ kind: "network", message: "HTTP 跳转已拦截；请使用最终本地页面地址。当前执行器不跟随服务端重定向。", status: response.status(), url: url.origin + url.pathname, at: new Date().toISOString() });
+            if (lifecycle && lifecycle.diagnostics.length < 80) lifecycle.diagnostics.push({ kind: "network", message: "HTTP redirect blocked. Connect the final local page URL; this runner does not follow server redirects.", status: response.status(), url: url.origin + url.pathname, at: new Date().toISOString() });
             return route.abort("blockedbyresponse");
           }
           await route.fulfill({ response });
@@ -520,7 +520,7 @@ async function runCriteriaWithContext(
     page.on("console", message => { if (["error", "warning"].includes(message.type())) addDiagnostic({ kind: "console", level: message.type(), message: message.text() }); });
     page.on("pageerror", error => addDiagnostic({ kind: "pageerror", message: error.message }));
     page.on("response", response => { if (response.status() >= 400) { const url = new URL(response.url()); addDiagnostic({ kind: "network", message: `HTTP ${response.status()}`, url: url.origin + url.pathname, status: response.status() }); } });
-    page.on("requestfailed", request => { try { const url = new URL(request.url()); addDiagnostic({ kind: "network", message: request.failure()?.errorText || "请求失败", url: url.origin + url.pathname }); } catch { /* Ignore non-URL browser internals. */ } });
+    page.on("requestfailed", request => { try { const url = new URL(request.url()); addDiagnostic({ kind: "network", message: request.failure()?.errorText || "Request failed", url: url.origin + url.pathname }); } catch { /* Ignore non-URL browser internals. */ } });
     weOwnContext = true;
   }
 
@@ -624,7 +624,7 @@ export class PlanRunner {
     let fatalError: string | undefined;
     let terminationReason: RunRecord["terminationReason"];
     const diagnostics: NonNullable<RunRecord["diagnostics"]> = [];
-    const stopReason = () => terminationReason === "cancelled" ? "验收已取消，未执行的步骤不会标记为通过。" : terminationReason === "deadline" ? "验收超时，请缩小范围或检查页面响应后重试。" : undefined;
+    const stopReason = () => terminationReason === "cancelled" ? "Acceptance run cancelled. Unexecuted steps are not marked as passed." : terminationReason === "deadline" ? "Acceptance run timed out. Reduce the scope or check the page response before retrying." : undefined;
     const abort = () => { terminationReason = terminationReason ?? "cancelled"; void browser?.close().catch(() => undefined); };
     this.opts.signal?.addEventListener("abort", abort, { once: true });
     if (this.opts.signal?.aborted) abort();
@@ -716,8 +716,8 @@ export class PlanRunner {
         title: c.title,
         status: "not_run" as CriteriaStatus,
         blockedReason: fatalError
-          ? `执行前发生致命错误：${fatalError}`
-          : "未到达此条标准的执行",
+          ? `Fatal error before execution: ${fatalError}`
+          : "This criterion was not reached",
         steps: c.steps.map((s) => ({
           stepId: s.id,
           description: s.description,

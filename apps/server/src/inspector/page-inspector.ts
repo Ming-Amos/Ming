@@ -106,7 +106,7 @@ export async function inspectPage(opts: {
       title: "",
       elements: [],
       visibleTextSummary: "",
-      error: `页面检查失败：${message}`,
+      error: `Page inspection failed:${message}`,
     };
   } finally {
     if (browser) await browser.close();

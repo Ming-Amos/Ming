@@ -1,0 +1,15 @@
+{
+  "requestedAt": "2026-09-26T11:12:45.462Z",
+  "tool": "ming_get_comparison",
+  "arguments": {
+    "taskId": "bbc50e50-7838-4bec-8a2b-4ec386d98679"
+  },
+  "response": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"taskId\": \"bbc50e50-7838-4bec-8a2b-4ec386d98679\",\n  \"baselineRunId\": \"33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c\",\n  \"rerunId\": \"74ed3133-b62c-44cf-8b4a-042156180db5\",\n  \"planFingerprintMatch\": true,\n  \"runnerFingerprintMatch\": true,\n  \"runnerFingerprintKnown\": true,\n  \"targetIdentityMatch\": true,\n  \"targetFingerprintChanged\": true,\n  \"sourceFingerprintKnown\": true,\n  \"baselineTargetFingerprint\": \"c1775e6bfbafc41d\",\n  \"repairedTargetFingerprint\": \"8426ca024fd0f7c4\",\n  \"baselineRunnerFingerprint\": \"0f4cf2cc5fc32e24\",\n  \"rerunRunnerFingerprint\": \"0f4cf2cc5fc32e24\",\n  \"previouslyFailedNowPassed\": [\n    \"SHIP-02\"\n  ],\n  \"previouslyFailedStillFailing\": [],\n  \"newFailures\": [],\n  \"acceptancePassed\": true,\n  \"verifiedRepair\": true,\n  \"blockers\": []\n}"
+      }
+    ]
+  }
+}

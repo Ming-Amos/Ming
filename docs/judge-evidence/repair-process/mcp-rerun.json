@@ -1,0 +1,16 @@
+{
+  "requestedAt": "2026-09-26T11:12:44.472Z",
+  "tool": "ming_rerun_plan",
+  "arguments": {
+    "taskId": "bbc50e50-7838-4bec-8a2b-4ec386d98679",
+    "expectedTargetFingerprint": "8426ca024fd0f7c4"
+  },
+  "response": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"runId\": \"74ed3133-b62c-44cf-8b4a-042156180db5\",\n  \"taskId\": \"bbc50e50-7838-4bec-8a2b-4ec386d98679\",\n  \"progressUrl\": \"http://127.0.0.1:4480/api/run/74ed3133-b62c-44cf-8b4a-042156180db5/progress\"\n}"
+      }
+    ]
+  }
+}

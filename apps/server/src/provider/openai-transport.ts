@@ -40,6 +40,10 @@ Given a natural-language requirement and optional page context, output a JSON ob
 an AcceptancePlan. The plan must follow the exact schema described below. Return ONLY the JSON object
 with no surrounding markdown fences or commentary.
 
+Write plan titles, descriptions, expectedBehavior, prerequisites, openQuestions, and step descriptions
+in English. Preserve requirementRef quotations in their original language. Preserve the exact labels,
+visible text, input values, selectors, and URLs needed to operate the target; do not translate those.
+
 Schema rules:
 - planId: string, e.g. "generated-<short-slug>"
 - version: "1.0.0"
@@ -184,7 +188,7 @@ export function httpRequest(opts: {
 
     // Hard wall-clock timer — destroys the request unconditionally
     const wallTimer = setTimeout(() => {
-      fail(Object.assign(new Error("请求超时"), { _isTimeout: true }));
+      fail(Object.assign(new Error("Request timed out"), { _isTimeout: true }));
     }, opts.wallClockMs);
 
     const parsed = new URL(opts.url);
@@ -207,7 +211,7 @@ export function httpRequest(opts: {
       res.on("data", (chunk: Buffer) => {
         received += chunk.length;
         if (received > opts.maxBytes) {
-          fail(new Error(`响应超过限制 ${opts.maxBytes} 字节`));
+          fail(new Error(`The response exceeds the ${opts.maxBytes}-byte limit`));
           return;
         }
         chunks.push(chunk);
@@ -223,19 +227,19 @@ export function httpRequest(opts: {
       });
 
       res.on("error", fail);
-      res.on("aborted", () => fail(new Error("服务商提前中断响应")));
+      res.on("aborted", () => fail(new Error("The provider closed the response early")));
     }); } catch (error) {
-      fail(error instanceof Error ? error : new Error("请求无法创建"));
+      fail(error instanceof Error ? error : new Error("The request could not be created"));
       return;
     }
 
     // Socket idle timeout (covers read stalls; wall-clock timer is the final backstop)
     req.setTimeout(opts.socketIdleMs, () => {
-      fail(Object.assign(new Error("请求超时"), { _isTimeout: true }));
+      fail(Object.assign(new Error("Request timed out"), { _isTimeout: true }));
     });
 
     req.on("error", (err) => {
-      const isTimeout = (err as { _isTimeout?: boolean })._isTimeout === true || err.message === "请求超时";
+      const isTimeout = (err as { _isTimeout?: boolean })._isTimeout === true || err.message === "Request timed out";
       fail(Object.assign(err, { _isTimeout: isTimeout }));
     });
 
@@ -263,15 +267,15 @@ function parsePlanFromJson(text: string): AcceptancePlan {
   const obj = JSON.parse(cleaned) as unknown;
 
   if (typeof obj !== "object" || obj === null) {
-    throw new Error("模型返回值不是 JSON 对象");
+    throw new Error("The model output is not a JSON object");
   }
   const plan = obj as Record<string, unknown>;
 
   if (typeof plan["planId"] !== "string" || !plan["planId"]) {
-    throw new Error("模型返回计划缺少 planId");
+    throw new Error("The model plan is missing planId");
   }
   if (!Array.isArray(plan["criteria"]) || (plan["criteria"] as unknown[]).length === 0) {
-    throw new Error("模型返回计划缺少 criteria 数组");
+    throw new Error("The model plan is missing the criteria array");
   }
 
   // Ensure required top-level fields exist.
@@ -283,7 +287,7 @@ function parsePlanFromJson(text: string): AcceptancePlan {
     version: typeof plan["version"] === "string" ? plan["version"] : "1.0.0",
     source: "generated",
     transportProvenance: undefined, // stamped by the caller, never from model output
-    title: typeof plan["title"] === "string" ? plan["title"] : "生成的验收计划",
+    title: typeof plan["title"] === "string" ? plan["title"] : "Generated acceptance plan",
     description: typeof plan["description"] === "string" ? plan["description"] : "",
     fingerprint: "TO_BE_COMPUTED",
     createdAt: typeof plan["createdAt"] === "string" ? plan["createdAt"] : now,
@@ -391,7 +395,7 @@ export class OpenAICompatibleTransport implements ProviderTransport {
         ok: false,
         usage: errorUsage(
           this.label, this.modelId, invokedAt, durationMs,
-          "invalid_output", `响应不是有效 JSON: ${safeBody}`,
+          "invalid_output", `The response is not valid JSON: ${safeBody}`,
           this._isLive
         ),
       };
@@ -403,7 +407,7 @@ export class OpenAICompatibleTransport implements ProviderTransport {
         ok: false,
         usage: errorUsage(
           this.label, this.modelId, invokedAt, durationMs,
-          "invalid_output", "响应中 choices[0].message.content 缺失或为空",
+          "invalid_output", "The response has missing or empty choices[0].message.content",
           this._isLive
         ),
       };
@@ -420,7 +424,7 @@ export class OpenAICompatibleTransport implements ProviderTransport {
           this.label, this.modelId, invokedAt, durationMs,
           "invalid_output",
           // Redact key in case it somehow appeared in model content
-          `计划解析失败：${redactSecret(rawErrMsg, this.apiKey)}`,
+          `Plan parsing failed: ${redactSecret(rawErrMsg, this.apiKey)}`,
           this._isLive
         ),
       };
@@ -491,7 +495,7 @@ export class TestFixtureTransport implements ProviderTransport {
         ok: false,
         usage: errorUsage(
           this.label, this.modelId, invokedAt, durationMs,
-          "timeout", "TestFixtureTransport: 模拟超时",
+          "timeout", "TestFixtureTransport: Simulated timeout",
           false
         ),
       };
@@ -540,7 +544,7 @@ export class TestFixtureTransport implements ProviderTransport {
           ok: false,
           usage: errorUsage(
             this.label, this.modelId, invokedAt, durationMs,
-            "invalid_output", redact(`响应不是有效 JSON: ${responseBody.slice(0, 200)}`),
+            "invalid_output", redact(`The response is not valid JSON: ${responseBody.slice(0, 200)}`),
             false
           ),
         };
@@ -552,7 +556,7 @@ export class TestFixtureTransport implements ProviderTransport {
           ok: false,
           usage: errorUsage(
             this.label, this.modelId, invokedAt, durationMs,
-            "invalid_output", "响应中 choices[0].message.content 缺失或为空",
+            "invalid_output", "The response has missing or empty choices[0].message.content",
             false
           ),
         };
@@ -566,7 +570,7 @@ export class TestFixtureTransport implements ProviderTransport {
           ok: false,
           usage: errorUsage(
             this.label, this.modelId, invokedAt, durationMs,
-            "invalid_output", redact(`计划解析失败：${parseErr instanceof Error ? parseErr.message : String(parseErr)}`),
+            "invalid_output", redact(`Plan parsing failed: ${parseErr instanceof Error ? parseErr.message : String(parseErr)}`),
             false
           ),
         };
@@ -589,7 +593,7 @@ export class TestFixtureTransport implements ProviderTransport {
         ok: false,
         usage: errorUsage(
           this.label, this.modelId, invokedAt, durationMs,
-          "invalid_output", "TestFixtureTransport: 未提供 fixturePlan",
+          "invalid_output", "TestFixtureTransport: fixturePlan was not supplied",
           false
         ),
       };

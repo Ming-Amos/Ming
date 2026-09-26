@@ -12,23 +12,23 @@ const instruction = `After completing a feature, use Ming to verify it against m
 export default function AiConnection({ onClose, readOnly = false }: { onClose: () => void; readOnly?: boolean }) {
   const [notice, setNotice] = useState("");
   async function copy(text: string, label: string) {
-    try { await navigator.clipboard.writeText(text); setNotice(`${label}已复制`); }
-    catch { setNotice("浏览器未允许复制，请在下方文本框中全选复制。"); }
+    try { await navigator.clipboard.writeText(text); setNotice(`${label} copied`); }
+    catch { setNotice("Clipboard access is unavailable. Select and copy the text below."); }
   }
-  return <Sheet title="让编码 AI 调用 Ming" onClose={onClose} wide>
-    <p>首次连接后，编码 AI 可以在每次完成开发时调用已确认的检查，读取失败证据，再修复和复验。Ming 本身不会唤醒另一位 AI，也不会替你同意新的验收标准。</p>
-    {readOnly && <p className="notice">这是只读演示。请在本机启动 Ming 后连接，线上页面不能控制你的电脑。</p>}
+  return <Sheet title="Connect your coding AI" onClose={onClose} wide>
+    <p>Connect your coding AI to run confirmed checks after each feature, read failures, and verify repairs. Your AI initiates the workflow; you stay in control of the acceptance standard.</p>
+    {readOnly && <p className="notice">This is a read-only demo. Run Ming on your computer to connect your coding AI.</p>}
     <ol>
-      <li>启动 Ming 和你的开发网站，在「我的项目」保存需求、编辑计划并确认。</li>
-      <li>在支持 MCP 的编码工具里添加下面的本地服务。路径对应当前电脑；换电脑后需修改为实际安装路径。Bob 可使用项目里的 <code>.bob/mcp.json</code>。</li>
-      <li>将下面的英文工作说明交给编码 AI。检查和修复操作由该 AI 发起；你仍可在网页查看进度。</li>
+      <li>Start Ming and your development app. In Projects, save your requirements, edit a plan, and confirm it.</li>
+      <li>Add this local server to an MCP-compatible coding tool. Update the path if Ming is installed elsewhere. Bob can use the project’s <code>.bob/mcp.json</code>.</li>
+      <li>Give your coding AI the workflow below. It initiates checks and repairs; you can follow the evidence in Ming.</li>
     </ol>
-    <label>本地服务配置<textarea aria-label="MCP 连接配置" readOnly value={config} rows={9} spellCheck={false} style={{ width: "100%", fontFamily: "monospace" }} /></label>
-    <button className="secondary-button" onClick={() => void copy(config, "连接配置")}>复制连接配置</button>
-    <p>服务默认连接 <code>http://127.0.0.1:4001</code>，提供 12 个工具。启动失败时先确认已构建项目，且本机可以运行 Node.js。</p>
-    <label>给编码 AI 的工作说明<textarea aria-label="AI 工作说明" readOnly value={instruction} rows={12} spellCheck={false} style={{ width: "100%", fontFamily: "monospace" }} /></label>
-    <button className="secondary-button" onClick={() => void copy(instruction, "AI 工作说明")}>复制英文工作说明</button>
+    <label>Local server configuration<textarea aria-label="MCP connection configuration" readOnly value={config} rows={9} spellCheck={false} style={{ width: "100%", fontFamily: "monospace" }} /></label>
+    <button className="secondary-button" onClick={() => void copy(config, "Configuration")}>Copy configuration</button>
+    <p>The server connects to <code>http://127.0.0.1:4001</code> by default and exposes 12 tools. If it does not start, check that Ming is built and Node.js is available.</p>
+    <label>Workflow for your coding AI<textarea aria-label="AI workflow" readOnly value={instruction} rows={12} spellCheck={false} style={{ width: "100%", fontFamily: "monospace" }} /></label>
+    <button className="secondary-button" onClick={() => void copy(instruction, "AI workflow")}>Copy workflow</button>
     <p role="status" aria-live="polite">{notice}</p>
-    <p className="muted">Ming 的浏览器检查和 MCP 工具不调用大模型。生成验收草稿，以及编码 AI 自己分析和修复代码，按各自服务的用量计费。</p>
+    <p className="muted">Browser checks and MCP tools make no model calls. Plan generation and your coding AI’s work use their respective services and allowances.</p>
   </Sheet>;
 }

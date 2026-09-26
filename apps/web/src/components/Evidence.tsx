@@ -10,18 +10,18 @@ import {
 } from "@phosphor-icons/react";
 import type { RunRecord, StepResult } from "../types";
 const labels: Record<string, string> = {
-  passed: "通过",
-  failed: "未通过",
-  error: "执行错误",
-  blocked: "已阻塞",
-  not_run: "未执行",
-  pending: "等待执行",
-  running: "检查中",
-  skipped: "已跳过",
-  waiting: "等待 AI 接手",
-  claimed: "已领取",
-  rerunning: "复验中",
-  review: "复验通过 · 待确认",
+  passed: "Passed",
+  failed: "Failed",
+  error: "Run error",
+  blocked: "Blocked",
+  not_run: "Not run",
+  pending: "Pending",
+  running: "Running",
+  skipped: "Skipped",
+  waiting: "Awaiting AI",
+  claimed: "Claimed",
+  rerunning: "Verifying repair",
+  review: "Checks passed · Review needed",
 };
 function screenshot(path?: string) {
   return path
@@ -76,7 +76,7 @@ export function EvidenceImage({
       <div className="frame-toolbar">
         <span>
           <MagnifyingGlass size={15} />
-          浏览器实拍
+          BROWSER CAPTURE
         </span>
         <span className="frame-address" title={run.targetUrl}>
           {run.targetUrl}
@@ -84,15 +84,15 @@ export function EvidenceImage({
         <button
           className="image-zoom-button"
           onClick={() => setZoom((z) => (z === 1 ? 1.8 : 1))}
-          aria-label={zoom === 1 ? "放大证据" : "适应宽度"}
+          aria-label={zoom === 1 ? "Zoom evidence" : "Fit evidence to width"}
         >
-          {zoom === 1 ? "放大" : "适应"}
+          {zoom === 1 ? "Zoom" : "Fit"}
         </button>
         <a
           href={screenshot(step.screenshotPath)}
           target="_blank"
           rel="noreferrer"
-          aria-label={`打开${caption}原图`}
+          aria-label={`Open original: ${caption}`}
         >
           <ArrowSquareOut size={17} />
         </a>
@@ -100,15 +100,15 @@ export function EvidenceImage({
       {failed ? (
         <div className="image-missing">
           <WarningCircle size={28} />
-          <p>证据图片暂时无法读取</p>
-          <small>运行记录仍保留，请检查证据存储。</small>
+          <p>This evidence image is unavailable.</p>
+          <small>The run is still saved. Check the evidence storage.</small>
         </div>
       ) : (
         <div
           ref={viewport}
           className="image-viewport"
           tabIndex={0}
-          aria-label="可滚动的原始截图窗口"
+          aria-label="Scrollable original screenshot"
         >
           <a
             className="evidence-link"
@@ -119,7 +119,7 @@ export function EvidenceImage({
           >
             <img
               src={screenshot(step.screenshotPath)}
-              alt={`${caption}：${step.description}`}
+              alt={`${caption}: ${step.description}`}
               onError={() => setFailed(true)}
             />
           </a>
@@ -129,7 +129,7 @@ export function EvidenceImage({
         <span>{caption}</span>
         <span>
           {step.stepId}
-          <small>滚动查看 · 可打开原图</small>
+          <small>Scroll to inspect · Open original</small>
         </span>
       </figcaption>
     </figure>

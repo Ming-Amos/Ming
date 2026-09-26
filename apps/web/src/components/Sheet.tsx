@@ -39,7 +39,7 @@ export default function Sheet({
           className="icon-button"
           disabled={locked}
           onClick={onClose}
-          aria-label="关闭面板"
+          aria-label="Close panel"
         >
           <X size={21} />
         </button>

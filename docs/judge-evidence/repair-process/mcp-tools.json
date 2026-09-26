@@ -1,0 +1,238 @@
+{
+  "tools": [
+    {
+      "name": "ming_list_projects",
+      "description": "List saved Ming projects before working on an application's acceptance checks. No model request, browser execution or file edit is made.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "ming_get_project",
+      "description": "Read a project's saved requirements, plan drafts and human confirmations. Never treat an unconfirmed draft as permission to run. Reuse the newest active human confirmation after completing a feature; do not silently rewrite the user's standard.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "pattern": "^[0-9a-f-]{36}$"
+          }
+        },
+        "required": [
+          "projectId"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "ming_get_targets",
+      "description": "List registered application targets with current source fingerprints and optional source locations. A live URL is an observed target, not a frozen application snapshot. Use the registered project's source location to locate code; do not edit Ming's own testing code to make a check pass.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "ming_run_acceptance",
+      "description": "Run an existing human-confirmed plan after completing a feature or code change. Browser actions can modify the connected test application's data. Supply the active confirmation returned by ming_get_project. This does not generate, approve or weaken a plan. Returns immediately with a runId; poll ming_get_run for real results.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "confirmationId": {
+            "type": "string",
+            "pattern": "^[0-9a-f-]{36}$"
+          }
+        },
+        "required": [
+          "confirmationId"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "ming_get_run",
+      "description": "Read real progress and evidence for a run. A running, cancelled, blocked or error result is not a passing acceptance check. Retain original runId when reporting a failure.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "runId": {
+            "type": "string",
+            "pattern": "^[0-9a-f-]{36}$"
+          }
+        },
+        "required": [
+          "runId"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "ming_create_repair_task",
+      "description": "Create an evidence-backed repair handoff from a completed failed run. Creating a task does not wake another coding agent; claim it and repair the registered target source using your own authorized editing tools, then rerun the original standard.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "runId": {
+            "type": "string",
+            "pattern": "^[0-9a-f-]{36}$"
+          }
+        },
+        "required": [
+          "runId"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "ming_cancel_run",
+      "description": "Cancel an active local acceptance run when the user asks to stop or when further browser actions would be inappropriate. Preserves a terminal record and does not undo application actions already performed.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "runId": {
+            "type": "string",
+            "pattern": "^[0-9a-f-]{36}$"
+          }
+        },
+        "required": [
+          "runId"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "ming_get_failed_run",
+      "description": "Retrieve size-bounded evidence from a Ming failed or error run. Returns plan/target fingerprints, failed criteria with expected/actual values, and resolvable screenshot references. Use to understand what needs to be repaired.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "runId": {
+            "type": "string",
+            "description": "The runId of a failed or error run"
+          }
+        },
+        "required": [
+          "runId"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "ming_get_repair_task",
+      "description": "Retrieve a Ming repair task by taskId. Returns baseline run evidence, plan/target fingerprints, failed criteria summary and reproduction steps.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "type": "string",
+            "description": "The taskId of the repair task"
+          }
+        },
+        "required": [
+          "taskId"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "ming_claim_repair_task",
+      "description": "Claim a waiting repair task so the connected coding agent can work on it. Repeat claims from the same owner are idempotent. Competing owners are rejected with HTTP 409.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "type": "string",
+            "description": "The taskId to claim"
+          },
+          "claimedBy": {
+            "type": "string",
+            "description": "Identifier for the claimant (e.g. 'bob-session-<id>')"
+          }
+        },
+        "required": [
+          "taskId",
+          "claimedBy"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "ming_rerun_plan",
+      "description": "Start a rerun of the same acceptance plan for a claimed repair task. Returns a runId promptly; poll ming_get_run for completion. Validates that the plan fingerprint is unchanged and the source fingerprint matches expectedTargetFingerprint. A self-contained HTML snapshot binds source to execution; a live URL only records source observation. Prevents duplicate concurrent reruns. Supply expectedTargetFingerprint from ming_get_targets AFTER your repair edit. Never modify the acceptance plan to make the repair pass.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "type": "string",
+            "description": "The taskId of the claimed repair task"
+          },
+          "expectedTargetFingerprint": {
+            "type": "string",
+            "description": "The registered target's current fingerprint from ming_get_targets after editing the source. This is observed metadata for a live URL, not proof that the served application executes those exact source bytes."
+          }
+        },
+        "required": [
+          "taskId",
+          "expectedTargetFingerprint"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "ming_get_comparison",
+      "description": "Get the comparison between baseline and repaired rerun for a repair task. Returns plan/runner/target identity checks, fingerprint changes, previously-failing criteria that now pass, and a verifiedRepair boolean. Call after the rerun has completed.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "type": "string",
+            "description": "The taskId whose comparison to retrieve"
+          }
+        },
+        "required": [
+          "taskId"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    }
+  ]
+}

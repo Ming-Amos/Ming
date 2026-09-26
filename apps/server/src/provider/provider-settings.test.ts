@@ -75,7 +75,7 @@ test("failed atomic persistence leaves the active configuration unchanged and re
   const destination = path.join(runtimeDir, "provider-config.json");
   fs.renameSync(destination, path.join(runtimeDir, "prior-config.json"));
   fs.mkdirSync(destination); // Force a deterministic rename failure on every OS.
-  assert.throws(() => saveProviderConfig({ providerLabel: "Must not activate", baseUrl, modelId: "new-model", apiKey: "test-only-new-key" }), /无法保存/);
+  assert.throws(() => saveProviderConfig({ providerLabel: "Must not activate", baseUrl, modelId: "new-model", apiKey: "test-only-new-key" }), /Could not save/);
   assert.equal(getProviderStatus().providerLabel, "Local test fixture");
   assert.equal(getProviderStatus().modelId, "fixture-model");
   assert.ok(!fs.readdirSync(runtimeDir).some(name => name.endsWith(".tmp")));
@@ -95,7 +95,7 @@ test("local config survives reload and a fresh Node process", () => {
 test("environment overrides local config explicitly; deleting local does not delete environment", () => {
   save(); process.env.PROVIDER_BASE_URL = baseUrl; process.env.PROVIDER_MODEL_ID = "environment-model"; process.env.PROVIDER_API_KEY = "test-only-env-key";
   assert.equal(getProviderStatus().configSource, "environment"); assert.equal(getProviderStatus().modelId, "environment-model");
-  assert.throws(() => save(), /环境变量/);
+  assert.throws(() => save(), /environment variables/);
   const status = clearProviderConfig(); assert.equal(status.configured, true); assert.equal(status.keyStored, false); assert.equal(status.hasKey, true);
   assert.ok(!JSON.stringify(status).includes("test-only-env-key"));
 });
@@ -144,7 +144,7 @@ test("invalid outputs, response cap, redirect rejection and absent usage remain 
 });
 test("hard connection-test deadline and concurrent-click guard prevent unbounded requests", async () => {
   save(); responseMode = "timeout";
-  const pending = testProviderConnection(); await assert.rejects(testProviderConnection(), /正在测试/);
+  const pending = testProviderConnection(); await assert.rejects(testProviderConnection(), /already running/);
   const result = await pending; assert.equal(result.category, "timeout"); assert.ok(result.durationMs >= 9000 && result.durationMs < 14000); assert.equal(requestCount, 1);
 });
 test("generation usage excludes test transport and bounds retained actual-call metadata", () => {

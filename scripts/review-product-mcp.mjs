@@ -57,7 +57,7 @@ try {
   check('HTML export contains actual embedded PNG evidence and escaped requirements',html.includes('data:image/png;base64,')&&html.includes('&lt;script&gt;')&&!html.includes('<script>window.injected'));
   fs.writeFileSync(path.join(runtime,'report.html'),html);
   const exported=await(await fetch(`${base}/api/run/${run.runId}/report?format=json`)).json();
-  check('JSON export retains exact original run and requirement',JSON.stringify(exported.run)===JSON.stringify(run)&&exported.scope.includes('实时'));
+  check('JSON export retains exact original run and requirement',JSON.stringify(exported.run)===JSON.stringify(run)&&exported.scope.includes('Live website observation'));
   const markdown=await(await fetch(`${base}/api/run/${run.runId}/report?format=markdown`)).text();
   check('Markdown export preserves actual results and escapes embedded HTML',markdown.includes('STATE')===false&&markdown.includes('Observe saved state')&&markdown.includes('&lt;script&gt;')&&!markdown.includes('<img'));
   await api('GET',`/api/run/${run.runId}/report?format=exe`,undefined,400);

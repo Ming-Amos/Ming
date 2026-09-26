@@ -8,6 +8,9 @@ import PlanEditor from "./components/PlanEditor";
 import RunHistory from "./components/RunHistory";
 import ProviderSettings from "./components/ProviderSettings";
 import AiConnection from "./components/AiConnection";
+import ProofTimeline from "./components/ProofTimeline";
+import EvidenceCompare from "./components/EvidenceCompare";
+import CommandMenu from "./components/CommandMenu";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ArrowDown,
@@ -37,6 +40,8 @@ import {
   WarningCircle,
   X,
   XCircle,
+  ArrowsOutSimple,
+  ArrowsInSimple,
 } from "@phosphor-icons/react";
 import type {
   PlanInfo,
@@ -69,33 +74,33 @@ type Session = {
 };
 const STORAGE_KEY = "ming.workspace.v2";
 const labels: Record<string, string> = {
-  passed: "通过",
-  failed: "未通过",
-  error: "执行错误",
-  blocked: "已阻塞",
-  not_run: "未执行",
-  pending: "等待执行",
-  running: "检查中",
-  skipped: "已跳过",
-  waiting: "等待 AI 接手",
-  claimed: "已领取",
-  rerunning: "复验中",
-  review: "复验通过 · 待确认",
+  passed: "Passed",
+  failed: "Failed",
+  error: "Run error",
+  blocked: "Blocked",
+  not_run: "Not run",
+  pending: "Pending",
+  running: "Running",
+  skipped: "Skipped",
+  waiting: "Awaiting AI",
+  claimed: "Claimed",
+  rerunning: "Verifying repair",
+  review: "Checks passed · Review needed",
 };
 function savedSession(): Session {
   try {
     return (
       JSON.parse(localStorage.getItem(STORAGE_KEY) || "null") || {
         mode: "sample",
-        variant: "buggy",
+        variant: "shipboard-buggy",
       }
     );
   } catch {
-    return { mode: "sample", variant: "buggy" };
+    return { mode: "sample", variant: "shipboard-buggy" };
   }
 }
 function time(value: string) {
-  return new Date(value).toLocaleString("zh-CN", {
+  return new Date(value).toLocaleString("en-GB", {
     month: "2-digit",
     day: "2-digit",
     hour: "2-digit",
@@ -104,12 +109,13 @@ function time(value: string) {
   });
 }
 function short(value?: string) {
-  return value && value !== "unknown" ? value.slice(0, 10) : "未记录";
+  return value && value !== "unknown" ? value.slice(0, 10) : "Not recorded";
 }
 function last<T>(items: T[] | undefined): T | undefined {
   return items?.[items.length - 1];
 }
 export default function App() {
+  const [focusMode, setFocusMode] = useState(false);
   const [session, setSession] = useState<Session>(savedSession);
   const [view, setView] = useState<"projects" | "workspace">(() =>
     savedSession().runId || savedSession().projectId ? "workspace" : "projects",
@@ -148,6 +154,7 @@ export default function App() {
     | "connect"
     | "requirements"
     | "plan"
+    | "commands"
     | null
   >(null);
   const [projectName, setProjectName] = useState(""),
@@ -182,7 +189,7 @@ export default function App() {
     record?.criteria.map((c) => ({
       id: c.criteriaId,
       title: c.title,
-      description: "该历史记录没有完整的需求快照。",
+      description: "This historical run does not include a complete requirements snapshot.",
     })) ||
     [];
   const selectedStep =
@@ -321,6 +328,7 @@ export default function App() {
         setProvider(p.status);
         setReadOnly(caps.readOnly);
         setProjects(projectList.projects);
+        const featuredReplay = list.find(r => r.targetVariant === "shipboard-repair" && r.status === "failed") || list[0];
         if (!t.targets.some((x) => x.variant === saved.variant))
           setSession((s) => ({
             ...s,
@@ -340,9 +348,9 @@ export default function App() {
             } else await showRun(saved.runId);
           } catch {
             setSession((s) => ({ ...s, runId: undefined }));
-            if (caps.readOnly && list[0]) await showRun(list[0].runId);
+            if (caps.readOnly && featuredReplay) await showRun(featuredReplay.runId);
           }
-        } else if (caps.readOnly && list[0]) await showRun(list[0].runId);
+        } else if (caps.readOnly && featuredReplay) await showRun(featuredReplay.runId);
         if (
           (resumeInFlight || !saved.runId) &&
           !caps.readOnly &&
@@ -378,7 +386,7 @@ export default function App() {
           }
         }
       } catch (e) {
-        if (live) setError(`工作区恢复未完成：${(e as Error).message}`);
+        if (live) setError(`Could not fully restore the workspace: ${(e as Error).message}`);
       } finally {
         if (live) setReady(true);
       }
@@ -551,7 +559,7 @@ export default function App() {
       if (!p || p.targetVariant !== session.variant)
         p = (
           await api<{ project: ProjectRecord }>("/api/projects", {
-            name: projectName.trim() || "我的验收项目",
+            name: projectName.trim() || "My acceptance project",
             targetVariant: session.variant,
           })
         ).project;
@@ -589,7 +597,7 @@ export default function App() {
     if (readOnly) return;
     if (session.mode === "sample") {
       setSampleConfirmed(true);
-      setNotice("验收标准已确认，可以开始真实浏览器检查。");
+      setNotice("Plan confirmed. You can now run real browser checks.");
       return;
     }
     if (!draft) return;
@@ -602,7 +610,7 @@ export default function App() {
       });
       setConfirmation(c);
       setSession((s) => ({ ...s, confirmationId: c.confirmationId }));
-      setNotice("已保存确认版本。后续修复会沿用相同验收标准。");
+      setNotice("Confirmed version saved. Repairs will be checked against the same standard.");
     });
   }
   async function createRepair() {
@@ -614,7 +622,7 @@ export default function App() {
         if (!(e as ApiError).existingTaskId) throw e;
       }
       await refreshLists();
-      setNotice("证据包已就绪。让连接 Ming MCP 的 AI 领取任务后进行修复。");
+      setNotice("Evidence is ready. Your connected coding AI can claim the task and start a repair.");
       setSheet("prompt");
     });
   }
@@ -633,7 +641,7 @@ export default function App() {
         (run) => run.targetVariant === target.variant,
       );
       if (historical) await act("history", () => showRun(historical.runId));
-      else setNotice("此项目尚无公开演示记录。");
+      else setNotice("No recorded demo is available for this project yet.");
       return;
     }
     if (target.isSample !== false) {
@@ -646,7 +654,7 @@ export default function App() {
         hint?.projectId ||
         target.projectId ||
         projects.find((p) => p.targetVariant === target.variant)?.projectId;
-      if (!projectId) throw new Error("项目记录暂时无法读取，请刷新项目列表。");
+      if (!projectId) throw new Error("Unable to load this project. Refresh the project list.");
       const data = await api<{
         project: ProjectRecord;
         requirements: RequirementRecord[];
@@ -721,8 +729,8 @@ export default function App() {
     setView("workspace");
     setNotice(
       next.hasOpenQuestions
-        ? "草稿已保存，仍有需要澄清的问题。修改标准后再确认。"
-        : "草稿已保存。请审查每项条件、操作和预期，再确认执行。",
+        ? "Draft saved. Resolve the open questions before confirming the plan."
+        : "Draft saved. Review each criterion, action, and expected result, then confirm the plan.",
     );
   }
   function projectConnected(target: TargetInfo, created: ProjectRecord) {
@@ -751,7 +759,7 @@ export default function App() {
     await act("cancel", async () => {
       await api(`/api/run/${session.runId}/cancel`, {});
       setNotice(
-        "已请求停止本次检查。已经采集的证据会保留，未完成项不会显示为通过。",
+        "Stop requested. Captured evidence is preserved; unfinished checks will not be marked as passed.",
       );
     });
   }
@@ -778,15 +786,25 @@ export default function App() {
   const canRepair =
     record?.criteria.some((c) => c.status === "failed") && !task;
 
+  useEffect(() => {
+    const handle = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") { event.preventDefault(); setSheet(s => s === "commands" ? null : "commands"); }
+      if (event.key === "Escape" && !sheet) setFocusMode(false);
+    };
+    window.addEventListener("keydown", handle);
+    return () => window.removeEventListener("keydown", handle);
+  }, [sheet]);
+
   return (
-    <div className="app-shell">
+    <div className={`app-shell ${focusMode && view === "workspace" ? "focus-mode" : ""}`}>
       <header className="topbar">
-        <a className="brand" href="#workspace" aria-label="Ming 验收工作区">
+        <a className="brand" href="#workspace" aria-label="Ming acceptance workspace" onClick={event => { event.preventDefault(); if (!running && !busy) setView("projects"); }}>
           Ming<span>Every done comes with proof.</span>
         </a>
-        <nav aria-label="工作区工具">
+        <nav aria-label="Workspace tools">
+          <button className="command-trigger" onClick={() => setSheet("commands")} aria-label="Open command menu"><MagnifyingGlass size={16}/><span>Jump to…</span><kbd>Ctrl K</kbd></button>
           <button
-            aria-label="我的项目"
+            aria-label="Projects"
             className={`subtle-button ${view === "projects" ? "active-nav" : ""}`}
             disabled={!!busy || !!running}
             onClick={() => {
@@ -795,49 +813,49 @@ export default function App() {
             }}
           >
             <FolderOpen size={18} />
-            <span>我的项目</span>
+            <span>Projects</span>
           </button>
           {!readOnly && (
             <button
-              aria-label="接入项目"
+              aria-label="Connect project"
               className="subtle-button connect-project-button"
               disabled={!!busy || !!running}
               onClick={() => setSheet("connect")}
             >
               <Plus size={17} />
-              <span>接入项目</span>
+              <span>Connect project</span>
             </button>
           )}
           <button
             className="subtle-button"
-            aria-label={provider?.configured ? "模型已配置" : "模型未配置"}
+            aria-label={provider?.configured ? "Model connected" : "Connect model"}
             onClick={() => setSheet("model")}
           >
             <Sparkle size={17} />
-            <span>{provider?.configured ? "模型已配置" : "模型未配置"}</span>
+            <span>{provider?.configured ? "Model connected" : "Connect model"}</span>
           </button>
           <button
             className="subtle-button"
-            aria-label="验收记录"
+            aria-label="Run history"
             onClick={() => {
               setSheet("history");
               void refreshLists().catch((e) => setError(e.message));
             }}
           >
             <ClockCounterClockwise size={18} />
-            <span>验收记录</span>
+            <span>Run history</span>
           </button>
           <button
             className="subtle-button"
-            aria-label="连接编码 AI"
+            aria-label="Connect AI"
             onClick={() => setSheet("ai")}
           >
             <TerminalWindow size={18} />
-            <span>连接 AI</span>
+            <span>Connect AI</span>
           </button>
           <button
             className="icon-button"
-            aria-label="配置项目"
+            aria-label="Project setup"
             disabled={running || !!busy || readOnly}
             onClick={() =>
               setSheet(
@@ -877,26 +895,26 @@ export default function App() {
           />
         ) : (
           <>
-            <section className="workspace-intro">
+            <section className="workspace-intro studio-intro">
               <div>
                 <div className="eyebrow">
-                  APPLICATION X-RAY <span>应用透视</span>
+                  EVIDENCE STUDIO
                 </div>
                 <h1>
-                  看见功能背后的每一步<span className="heading-dot">.</span>
+                  See what <em>actually</em> works<span className="heading-dot">.</span>
                 </h1>
                 <p>
-                  从需求到真实操作，再到修复复验。让每一句「已完成」，都有据可验。
+                  From a requirement to a real browser check. Every result comes with evidence.
                 </p>
               </div>
-              <div className="run-summary" aria-label="验收结果概览">
+              <div className="run-summary" aria-label="Acceptance results">
                 <span>
                   <CheckCircle size={20} weight="fill" className="green" />
-                  <strong>{activeCount}</strong> 项通过
+                  <strong>{activeCount}</strong> passed
                 </span>
                 <span>
                   <XCircle size={20} weight="fill" className="red" />
-                  <strong>{failedCount}</strong> 项未通过
+                  <strong>{failedCount}</strong> failed
                 </span>
                 <span>
                   <CircleNotch
@@ -908,7 +926,7 @@ export default function App() {
                       ? record.criteria.length - activeCount - failedCount
                       : criteria.length}
                   </strong>{" "}
-                  项{running ? "检查中" : "待验证"}
+                  {running ? "running" : "unchecked"}
                 </span>
               </div>
             </section>
@@ -916,17 +934,17 @@ export default function App() {
               <div className="message public-notice">
                 <Info size={19} />
                 <span>
-                  <strong>公开演示 · 真实历史运行，只读回放</strong>
-                  　可查看步骤、原始截图与修复对照。完整运行和 AI
-                  修复请使用本地版。
+                  <strong>Recorded demo · Real checks, preserved evidence.</strong>{" "}
+                  Explore the steps, original screenshots, and repair comparison. Run Ming locally
+                  to check your own app and connect your coding AI.
                 </span>
               </div>
             )}
             <div className="workspace-toolbar">
               <div className="project-picker">
-                <span className="project-label">验收项目</span>
+                <span className="project-label">Project</span>
                 <select
-                  aria-label="验收项目"
+                  aria-label="Project"
                   value={session.variant}
                   disabled={running || !!busy}
                   onChange={(e) => {
@@ -936,7 +954,7 @@ export default function App() {
                     if (next) void openProject(next);
                   }}
                 >
-                  <optgroup label="我的项目">
+                  <optgroup label="Projects">
                     {targets
                       .filter(
                         (t) =>
@@ -946,11 +964,11 @@ export default function App() {
                       .map((t) => (
                         <option key={t.variant} value={t.variant}>
                           {t.label}
-                          {t.archived ? "（已归档）" : ""}
+                          {t.archived ? " (archived)" : ""}
                         </option>
                       ))}
                   </optgroup>
-                  <optgroup label="预置演示">
+                  <optgroup label="Sample projects">
                     {targets
                       .filter((t) => t.isSample !== false)
                       .map((t) => (
@@ -964,17 +982,17 @@ export default function App() {
               <span className="plan-origin">
                 <FileText size={15} />
                 {plan?.source === "manual"
-                  ? "手动编写 · 无模型调用"
+                  ? "Manual plan · No model calls"
                   : plan?.source === "generated"
                     ? plan.transportProvenance === "live"
-                      ? "AI 生成 · 已记录来源"
-                      : "测试传输生成 · 非真实模型"
+                      ? "AI-generated · Source recorded"
+                      : "Test fixture · No real model used"
                     : selectedTarget?.isSample === false
-                      ? "等待制定验收标准"
-                      : "预设演示计划 · 无模型调用"}
+                      ? "Create an acceptance plan to begin"
+                      : "Sample plan · No model calls"}
               </span>
               <div className="toolbar-actions">
-                <button
+                {readOnly && comparison ? <button className="secondary-button" onClick={() => setSheet("comparison")}><ArrowRight size={16} />Explore repair</button> : <button
                   className="secondary-button"
                   disabled={running || !!busy || readOnly}
                   onClick={() =>
@@ -986,9 +1004,9 @@ export default function App() {
                   }
                 >
                   {selectedTarget?.isSample === false
-                    ? "需求与标准"
-                    : "自定义需求"}
-                </button>
+                    ? "Requirements"
+                    : "Requirements"}
+                </button>}
                 {draft && session.mode === "requirement" && (
                   <button
                     className="secondary-button"
@@ -996,7 +1014,7 @@ export default function App() {
                     onClick={() => setSheet("plan")}
                   >
                     <PencilSimple size={16} />
-                    编辑标准
+                    Edit plan
                   </button>
                 )}
                 {record && readOnly && (
@@ -1010,20 +1028,20 @@ export default function App() {
                     }
                   >
                     <DownloadSimple size={16} />
-                    导出记录
+                    Export run
                   </button>
                 )}
                 {record && !readOnly && (
                   <details className="report-export">
                     <summary className="secondary-button">
                       <DownloadSimple size={16} />
-                      导出报告
+                      Export report
                     </summary>
                     <div>
                       {[
-                        ["html", "网页报告"],
-                        ["json", "完整数据 JSON"],
-                        ["markdown", "Markdown 文本"],
+                        ["html", "HTML report"],
+                        ["json", "Complete JSON data"],
+                        ["markdown", "Markdown report"],
                       ].map(([format, label]) => (
                         <a
                           key={format}
@@ -1055,12 +1073,12 @@ export default function App() {
                     <Play size={16} weight="fill" />
                   )}
                   {readOnly
-                    ? "历史运行回放"
+                    ? "Recorded run"
                     : running
-                      ? "正在检查"
+                      ? "Running checks"
                       : record
-                        ? "再次验收"
-                        : "开始验收"}
+                        ? "Run again"
+                        : "Run checks"}
                 </button>
               </div>
             </div>
@@ -1071,7 +1089,7 @@ export default function App() {
                   <span>{error}</span>
                   <button
                     className="icon-button"
-                    aria-label="关闭错误提示"
+                    aria-label="Dismiss error"
                     onClick={() => setError("")}
                   >
                     <X size={17} />
@@ -1084,7 +1102,7 @@ export default function App() {
                   <span>{notice}</span>
                   <button
                     className="icon-button"
-                    aria-label="关闭提示"
+                    aria-label="Dismiss notification"
                     onClick={() => setNotice("")}
                   >
                     <X size={17} />
@@ -1095,10 +1113,10 @@ export default function App() {
                 <div className="message progress-message">
                   <CircleNotch className="spin" size={19} />
                   <span>
-                    浏览器正在真实操作页面。已完成 {progress?.finishedCriteria}{" "}
-                    / {progress?.totalCriteria} 项
+                    The browser is interacting with your app. {progress?.finishedCriteria}{" "}
+                    / {progress?.totalCriteria} checks complete
                     {progress?.currentCriteria
-                      ? ` · 最近完成 ${progress.currentCriteria}`
+                      ? ` · Last completed: ${progress.currentCriteria}`
                       : ""}
                   </span>
                   <progress
@@ -1111,7 +1129,7 @@ export default function App() {
                     onClick={() => void cancelRun()}
                   >
                     <Stop size={14} />
-                    {busy === "cancel" ? "停止中…" : "停止本次检查"}
+                    {busy === "cancel" ? "Stopping…" : "Stop checks"}
                   </button>
                 </div>
               )}
@@ -1120,10 +1138,10 @@ export default function App() {
               <div className="message history-notice">
                 <ClockCounterClockwise size={18} />
                 <span>
-                  正在查看历史证据。
-                  {staleSource ? "目标代码已发生变化，原始运行结果保留。" : ""}
+                  You are viewing recorded evidence.{" "}
+                  {staleSource ? "The source has changed; the original results are preserved. " : ""}
                   {stalePlan
-                    ? "当前验收标准已更新，请先审查当前版本再运行。"
+                    ? "The plan has changed. Review the current version before running it."
                     : ""}
                 </span>
                 {stalePlan && !readOnly && (
@@ -1135,7 +1153,7 @@ export default function App() {
                         : resetContext("sample")
                     }
                   >
-                    查看当前验收标准
+                    View current plan
                   </button>
                 )}
               </div>
@@ -1144,7 +1162,7 @@ export default function App() {
               <div className="message history-notice">
                 <Info size={18} />
                 <span>
-                  这份历史标准已被新版本替代。旧证据仍可查看，新验收需要确认当前版本。
+                  A newer plan replaces this version. Past evidence remains available; confirm the current plan before starting a new run.
                 </span>
                 <button
                   className="secondary-button"
@@ -1152,7 +1170,7 @@ export default function App() {
                     selectedTarget && void openProject(selectedTarget)
                   }
                 >
-                  审查当前版本
+                  Review current version
                 </button>
               </div>
             )}
@@ -1160,14 +1178,14 @@ export default function App() {
               <div className="project-workflow-bar">
                 <span>
                   <CheckCircle size={16} />
-                  项目已接入
+                  Project connected
                 </span>
                 <button
                   className={requirement ? "complete" : "current"}
                   disabled={!!busy || !!running}
                   onClick={() => setSheet("requirements")}
                 >
-                  1. {requirement ? "需求已保存" : "编写需求"}
+                  1. {requirement ? "Requirements saved" : "Add requirements"}
                 </button>
                 <ArrowRight size={14} />
                 <button
@@ -1177,44 +1195,44 @@ export default function App() {
                 >
                   2.{" "}
                   {isConfirmed
-                    ? "标准已确认"
+                    ? "Plan confirmed"
                     : draft
-                      ? "审查验收标准"
-                      : "编写验收标准"}
+                      ? "Review plan"
+                      : "Create plan"}
                 </button>
                 <ArrowRight size={14} />
                 <span className={record ? "complete" : ""}>
-                  3. {record ? "查看运行证据" : "执行验收"}
+                  3. {record ? "View evidence" : "Run checks"}
                 </span>
               </div>
             )}
             <div className="xray-layout">
               <aside
                 className="requirements-column"
-                aria-label="需求与验收标准"
+                aria-label="Requirements and acceptance criteria"
               >
                 <div className="column-heading">
                   <span>01</span>
-                  <h2>需求与标准</h2>
+                  <h2>Requirements</h2>
                   <FileText size={19} />
                 </div>
                 <section className="panel requirement-panel">
                   <div className="panel-kicker">
-                    {session.mode === "sample" ? "演示需求" : "原始需求"}
-                    <span>{plan ? `v${plan.version}` : "等待计划"}</span>
+                    {session.mode === "sample" ? "Sample requirement" : "Source requirement"}
+                    <span>{plan ? `v${plan.version}` : "No plan yet"}</span>
                   </div>
                   <h3>
-                    {selectedCriterion?.title || "把「做完了」变成可验证的标准"}
+                    {selectedCriterion?.title || "Define what “done” looks like"}
                   </h3>
                   <p>
                     {selectedCriterion?.requirementRef ||
                       selectedCriterion?.expectedBehavior ||
                       selectedCriterion?.description ||
-                      "选择演示项目，或输入自己的需求。审查标准后开始验收。"}
+                      "Choose a sample or add your requirements. Review the plan, then run your checks."}
                   </p>
                   {(requirement?.text || plan?.originalRequirement) && (
                     <details>
-                      <summary>查看完整需求</summary>
+                      <summary>Read all requirements</summary>
                       <p className="requirement-text">
                         {plan?.originalRequirement || requirement?.text}
                       </p>
@@ -1222,13 +1240,13 @@ export default function App() {
                   )}
                   {selectedCriterion?.openQuestions?.length ? (
                     <div className="inline-warning">
-                      待澄清：{selectedCriterion.openQuestions.join("；")}
+                      Open questions: {selectedCriterion.openQuestions.join("; ")}
                     </div>
                   ) : null}
                   <div className="source-note">
                     <Fingerprint size={14} />
                     <span>
-                      计划 {short(record?.planFingerprint || plan?.fingerprint)}
+                      Plan {short(record?.planFingerprint || plan?.fingerprint)}
                     </span>
                   </div>
                 </section>
@@ -1236,9 +1254,9 @@ export default function App() {
                   <div className="panel-heading">
                     <h3>
                       <ListChecks size={19} />
-                      验收条件
+                      Acceptance criteria
                     </h3>
-                    <span className="small-muted">{criteria.length} 项</span>
+                    <span className="small-muted">{criteria.length} checks</span>
                   </div>
                   <div className="criteria-list">
                     {criteria.map((c) => {
@@ -1267,19 +1285,19 @@ export default function App() {
                       {draft?.validationErrors.length &&
                       session.mode === "requirement" ? (
                         <div className="inline-warning">
-                          草稿校验未通过：{draft.validationErrors.join("；")}
+                          Draft validation failed: {draft.validationErrors.join("; ")}
                         </div>
                       ) : null}
                       {draft?.hasOpenQuestions &&
                         session.mode === "requirement" && (
                           <div className="inline-warning">
-                            需求有待澄清问题，请修改后重新生成。
+                            Resolve the open questions before confirming this plan.
                           </div>
                         )}
                       {!isConfirmed ? (
                         <>
                           <p>
-                            审查各项条件、前置依赖和操作，再确认本次验收标准。
+                            Review the criteria, dependencies, and actions. Confirm when the standard is right.
                           </p>
                           <button
                             className="secondary-button full-width"
@@ -1287,13 +1305,13 @@ export default function App() {
                             onClick={() => void confirmPlan()}
                           >
                             <Check size={16} />
-                            确认验收标准
+                            Confirm plan
                           </button>
                         </>
                       ) : (
                         <div className="confirmed-note">
                           <ShieldCheck size={18} />
-                          标准已确认，修复后沿用同一版本
+                          Plan confirmed · The same standard is used after repairs
                         </div>
                       )}
                     </div>
@@ -1303,21 +1321,21 @@ export default function App() {
                   <div className="panel-heading">
                     <h3>
                       <GitBranch size={18} />
-                      {record ? "实际交互记录" : "计划操作"}
+                      {record ? "Recorded interactions" : "Planned interactions"}
                     </h3>
                     {result && <Status value={result.status} />}
                   </div>
                   {selectedCriterion?.dependsOn?.length ? (
                     <p className="context-note">
-                      前置：{selectedCriterion.dependsOn.join("、")} ·{" "}
+                      Depends on: {selectedCriterion.dependsOn.join(", ")} ·{" "}
                       {selectedCriterion.contextMode === "inherit"
-                        ? "沿用同一浏览器"
-                        : "独立浏览器"}
+                        ? "Continue in the same browser"
+                        : "Fresh browser context"}
                     </p>
                   ) : (
                     <p className="context-note">
                       {selectedCriterion?.prerequisites ||
-                        "使用独立浏览器上下文检查"}
+                        "Checked in a fresh browser context"}
                     </p>
                   )}
                   <ol className="step-list">
@@ -1368,15 +1386,16 @@ export default function App() {
                   </ol>
                   {!result && !selectedCriterion?.steps?.length && (
                     <p className="empty-copy">
-                      确认需求后，操作步骤会显示在这里。
+                      Your plan’s steps will appear here.
                     </p>
                   )}
                 </section>
               </aside>
-              <section className="evidence-column" aria-label="真实浏览器证据">
+              <section className="evidence-column" aria-label="Real browser evidence">
                 <div className="column-heading">
                   <span>02</span>
-                  <h2>真实页面 · 行为证据</h2>
+                  <h2>The app, under inspection</h2>
+                  {record && <button className="icon-button focus-toggle" aria-label={focusMode ? "Exit evidence focus" : "Focus on evidence"} aria-pressed={focusMode} onClick={() => setFocusMode(v => !v)}>{focusMode ? <ArrowsInSimple size={18}/> : <ArrowsOutSimple size={18}/>}</button>}
                   {record ? (
                     <span className="small-muted">
                       {time(record.startedAt)}
@@ -1385,6 +1404,7 @@ export default function App() {
                     <MagnifyingGlass size={19} />
                   )}
                 </div>
+                {record && <ProofTimeline run={record} criterionId={criterionId} stepId={selectedStep?.stepId} onSelect={(criterion, step) => { setCriterionId(criterion); setStepId(step); }} />}
                 {record && imageStep ? (
                   <div className="evidence-canvas">
                     {predecessor?.screenshotPath &&
@@ -1394,14 +1414,14 @@ export default function App() {
                           <EvidenceImage
                             step={predecessor}
                             run={record}
-                            caption="前置操作后的页面"
+                            caption="Page after the prerequisite"
                           />
                           <div className="transition-label">
                             <ArrowDown size={27} />
                             <span>
                               {selectedCriterion?.contextMode === "inherit"
-                                ? "同一浏览器 · 继续检查"
-                                : "进入下一项验收"}
+                                ? "Same browser · Next check"
+                                : "Next acceptance check"}
                             </span>
                           </div>
                         </>
@@ -1409,7 +1429,7 @@ export default function App() {
                     {selectedStep &&
                       selectedStep.stepId !== imageStep.stepId && (
                         <p className="image-context-note">
-                          所选步骤未单独截图，显示本项证据：{imageStep.stepId}。
+                          This step has no separate screenshot. Showing evidence from {imageStep.stepId}.
                         </p>
                       )}
                     <EvidenceImage
@@ -1432,21 +1452,21 @@ export default function App() {
                       <div>
                         <strong>
                           {result?.status === "passed"
-                            ? "验收通过"
+                            ? "Check passed"
                             : result?.status === "failed"
-                              ? "验收未通过"
+                              ? "Check failed"
                               : labels[result?.status || "pending"]}
                           ：{result?.title}
                         </strong>
                         <p>
                           {result?.blockedReason ||
                             selectedStep?.actual ||
-                            "结论来自本次浏览器操作与断言。"}
+                            "Based on this run’s browser actions and assertions."}
                         </p>
                       </div>
                     </div>
                     {evidenceSteps.length > 1 && (
-                      <div className="evidence-strip" aria-label="截图步骤选择">
+                      <div className="evidence-strip" aria-label="Choose a screenshot">
                         {evidenceSteps.map((s, i) => (
                           <button
                             key={s.stepId}
@@ -1454,12 +1474,12 @@ export default function App() {
                               s.stepId === imageStep.stepId ? "active" : ""
                             }
                             onClick={() => setStepId(s.stepId)}
-                            aria-label={`查看第 ${i + 1} 张截图：${s.description}`}
+                            aria-label={`View screenshot ${i + 1}: ${s.description}`}
                           >
                             <span>{String(i + 1).padStart(2, "0")}</span>
                             {s.status === "failed"
-                              ? "失败证据"
-                              : `操作 ${i + 1}`}
+                              ? "Failure evidence"
+                              : `Step ${i + 1}`}
                             <Status value={s.status} />
                           </button>
                         ))}
@@ -1480,27 +1500,27 @@ export default function App() {
                     <div className="eyebrow">PROOF, NOT PROMISES</div>
                     <h2>
                       {running
-                        ? "正在看见真实的结果"
-                        : "让完成的功能，接受一次检验"}
+                        ? "Collecting the real story"
+                        : "Put “done” to the test"}
                     </h2>
                     <p>
                       {running
-                        ? "Ming 正在操作浏览器、执行断言并保存截图。完成后，每一步证据都会呈现在这里。"
-                        : "从左侧确认验收标准，点击「开始验收」。这里将呈现真实页面、实际操作和可追溯的结果。"}
+                        ? "Ming is interacting with the browser, checking assertions, and capturing screenshots. The evidence will appear here."
+                        : "Review and confirm the plan on the left, then choose Run checks. See the real page, each interaction, and the evidence behind the result."}
                     </p>
                     {!running && (
                       <span className="empty-footnote">
                         {selectedTarget?.isSample === false
-                          ? "可以用 AI 生成草稿，也可以手动编写标准"
-                          : "演示计划可直接使用，无需模型额度"}
+                          ? "Generate a draft with AI or write your own plan"
+                          : "Sample plans are ready to run · No model calls"}
                       </span>
                     )}
                     {record?.fatalError && (
                       <div className="inline-warning">
                         {record.terminationReason === "cancelled"
-                          ? "本次检查已取消，未完成项目不会视为通过。"
+                          ? "This run was cancelled. Unfinished checks are not marked as passed."
                           : record.terminationReason === "deadline"
-                            ? "本次检查超时，请检查页面连接或缩小验收范围。"
+                            ? "This run timed out. Check the app connection or reduce the plan’s scope."
                             : record.fatalError}
                       </div>
                     )}
@@ -1513,7 +1533,7 @@ export default function App() {
                             setSheet(requirement ? "plan" : "requirements")
                           }
                         >
-                          {requirement ? "编写验收标准" : "编写项目需求"}
+                          {requirement ? "Create plan" : "Add requirements"}
                           <ArrowRight size={16} />
                         </button>
                       )}
@@ -1523,48 +1543,48 @@ export default function App() {
                   <ShieldCheck size={16} />
                   <span>
                     {record
-                      ? "每张图片来自本次浏览器运行，可打开原图核查"
-                      : "真实操作 · 独立检查 · 可追溯证据"}
+                      ? "Captured in this browser run · Open any image to inspect the original"
+                      : "Real actions · Independent checks · Traceable evidence"}
                   </span>
                   {record && <code>{short(record.runId)}</code>}
                 </div>
               </section>
-              <aside className="inspection-column" aria-label="检查结果与修复">
+              <aside className="inspection-column" aria-label="Results and repair">
                 <div className="column-heading">
                   <span>03</span>
-                  <h2>结果与修复</h2>
+                  <h2>Results and repair</h2>
                   <ShieldCheck size={20} />
                 </div>
                 <section
                   className={`panel observation-panel ${result?.status === "failed" ? "has-failure" : ""}`}
                 >
                   <div className="panel-heading">
-                    <h3>预期与实际</h3>
+                    <h3>Expected vs. observed</h3>
                     {result && <Status value={result.status} />}
                   </div>
                   <div className="observation-block">
-                    <span className="observation-label">应该发生</span>
+                    <span className="observation-label">EXPECTED</span>
                     <p>
                       {selectedStep?.expected !== undefined
                         ? String(selectedStep.expected)
                         : selectedCriterion?.expectedBehavior ||
                           selectedCriterion?.description ||
-                          "由需求和已确认的验收条件定义。"}
+                          "Defined by your requirements and confirmed acceptance criteria."}
                     </p>
                   </div>
                   <div className="observation-block actual-block">
-                    <span className="observation-label">真实发生</span>
+                    <span className="observation-label">OBSERVED</span>
                     <p>
                       {selectedStep?.actual ||
                         result?.blockedReason ||
                         (record
-                          ? "当前步骤未记录单独的观察值，请查看操作和截图。"
-                          : "等待浏览器执行，还没有结果。")}
+                          ? "No separate observation was recorded for this step. Inspect its action and screenshot."
+                          : "Waiting for the browser. No result yet.")}
                     </p>
                   </div>
                   {selectedStep?.error && (
                     <details className="error-detail">
-                      <summary>断言详情</summary>
+                      <summary>Assertion details</summary>
                       <pre>{selectedStep.error}</pre>
                     </details>
                   )}
@@ -1572,13 +1592,13 @@ export default function App() {
                     <Info size={14} />
                     <span>
                       {record?.diagnostics
-                        ? `已采集 ${record.diagnostics.length} 条浏览器诊断`
-                        : "本次记录未包含浏览器诊断"}
+                        ? `${record.diagnostics.length} browser diagnostics captured`
+                        : "No browser diagnostics in this run"}
                     </span>
                   </div>
                   {!!record?.diagnostics?.length && (
                     <details className="diagnostics-panel">
-                      <summary>查看网络与控制台记录</summary>
+                      <summary>Network and console records</summary>
                       <ul>
                         {record.diagnostics.map((item, i) => (
                           <li key={i}>
@@ -1602,18 +1622,18 @@ export default function App() {
                     <div>
                       <h3>
                         {comparison?.verifiedRepair
-                          ? "这次失败已有复验结果"
-                          : "问题已复现，原因仍待定位"}
+                          ? "This failure has a follow-up result"
+                          : "Failure reproduced. Cause to investigate."}
                       </h3>
                       <p>
                         {comparison?.verifiedRepair
-                          ? "原始失败证据保持不变。修改后的代码已通过同标准检查。"
-                          : "行为与需求不符。具体根因由 AI 读取项目后确认。"}
+                          ? "Original failure evidence is preserved. The updated code passed the same checks."
+                          : "The behavior does not match the requirement. Your coding AI can inspect the project to establish the cause."}
                       </p>
                       <span>
                         {comparison?.verifiedRepair
-                          ? "查看下方修复前后对照"
-                          : "未验证推断不会当作事实"}
+                          ? "Compare before and after below"
+                          : "Observations are kept separate from hypotheses"}
                       </span>
                     </div>
                   </section>
@@ -1622,36 +1642,36 @@ export default function App() {
                   <div className="panel-heading">
                     <h3>
                       <PaperPlaneTilt size={20} />
-                      交给 AI 的证据包
+                      Ready for your coding AI
                     </h3>
                   </div>
                   <ul className="packet-list">
                     <li>
                       <span>01</span>
                       <div>
-                        <strong>原始标准</strong>
-                        <small>需求、计划版本与前置条件</small>
+                        <strong>The original standard</strong>
+                        <small>Requirements, plan version, prerequisites</small>
                       </div>
                     </li>
                     <li>
                       <span>02</span>
                       <div>
-                        <strong>复现步骤</strong>
-                        <small>已执行动作、期望与实际结果</small>
+                        <strong>Steps to reproduce</strong>
+                        <small>Actions taken, expected and actual results</small>
                       </div>
                     </li>
                     <li>
                       <span>03</span>
                       <div>
-                        <strong>失败现场</strong>
-                        <small>原始截图与不可覆盖的运行记录</small>
+                        <strong>The failure, captured</strong>
+                        <small>Original screenshots and preserved run records</small>
                       </div>
                     </li>
                     <li>
                       <span>04</span>
                       <div>
-                        <strong>同标准复验</strong>
-                        <small>代码修改后，重新检验相同行为</small>
+                        <strong>The same standard, again</strong>
+                        <small>Recheck the same behavior after a code change</small>
                       </div>
                     </li>
                   </ul>
@@ -1663,22 +1683,21 @@ export default function App() {
                       </div>
                       <p>
                         {task.status === "waiting"
-                          ? "证据包已准备好，等待已连接的 AI 领取。"
+                          ? "Evidence is ready. Waiting for your connected AI to claim the task."
                           : task.status === "claimed"
-                            ? `已由 ${task.claimedBy || "AI"} 领取。领取不代表修复完成。`
+                            ? `Claimed by ${task.claimedBy || "AI"}. The repair has not been verified yet.`
                             : task.status === "rerunning"
-                              ? "正在用原始标准复验修改后的代码。"
+                              ? "Checking the updated code against the original standard."
                               : comparison?.verifiedRepair
-                                ? "代码已修改，并通过同一标准的复验。"
+                                ? "The code changed and passed the same acceptance standard."
                                 : task.status === "review"
-                                  ? "同标准复验已通过。真实网页未冻结整个应用代码，仍需人工确认修复归因。"
+                                  ? "The same checks passed. This live app was not frozen as a complete source snapshot, so repair attribution needs human review."
                                   : task.blockedReason ||
-                                    "复验已有结果，请检查对照与阻塞原因。"}
+                                    "Verification is complete. Review the comparison and any blockers."}
                       </p>
                       {task.attemptCount !== undefined && (
                         <small>
-                          已复验 {task.attemptCount} / {task.maxAttempts ?? 2}{" "}
-                          次
+                          Verification attempts: {task.attemptCount} / {task.maxAttempts ?? 2}
                         </small>
                       )}
                       <button
@@ -1686,7 +1705,7 @@ export default function App() {
                         onClick={() => setSheet("prompt")}
                       >
                         <Copy size={16} />
-                        查看 AI 交接指令
+                        View AI handoff
                       </button>
                       {comparison && (
                         <button
@@ -1694,7 +1713,7 @@ export default function App() {
                           onClick={() => setSheet("comparison")}
                         >
                           <GitBranch size={17} />
-                          查看修复前后对照
+                          Compare before and after
                           <ArrowRight size={17} />
                         </button>
                       )}
@@ -1707,15 +1726,15 @@ export default function App() {
                         onClick={() => void createRepair()}
                       >
                         <PaperPlaneTilt size={17} />
-                        {busy === "repair" ? "整理证据中…" : "创建 AI 修复任务"}
+                        {busy === "repair" ? "Preparing evidence…" : "Create repair task"}
                         <ArrowRight size={17} />
                       </button>
                       <p className="repair-footnote">
                         {readOnly
-                          ? "公开演示为只读回放，请在本地版创建修复任务。"
+                          ? "This is a read-only replay. Run Ming locally to create repair tasks."
                           : canRepair
-                            ? "创建后，由连接 Ming MCP 的 AI 读取证据并修复。"
-                            : "发现功能未通过时，即可生成完整修复证据包。"}
+                            ? "Your connected coding AI can read the evidence and repair the app."
+                            : "A failed check unlocks a complete evidence package for repair."}
                       </p>
                     </>
                   )}
@@ -1723,38 +1742,38 @@ export default function App() {
                 <details className="provenance-panel">
                   <summary>
                     <Fingerprint size={16} />
-                    这次结论从哪里来
+                    Trace this result
                   </summary>
                   <dl>
-                    <dt>计划</dt>
+                    <dt>Plan</dt>
                     <dd>
-                      {record?.planFingerprint || plan?.fingerprint || "未生成"}
+                      {record?.planFingerprint || plan?.fingerprint || "Not created"}
                     </dd>
-                    <dt>目标代码</dt>
+                    <dt>Target source</dt>
                     <dd>
                       {record?.targetFingerprint ||
                         selectedTarget?.fingerprint ||
-                        "未记录"}
+                        "Not recorded"}
                     </dd>
-                    <dt>执行器</dt>
-                    <dd>{record?.runnerFingerprint || "运行后记录"}</dd>
-                    <dt>代码绑定</dt>
+                    <dt>Runner</dt>
+                    <dd>{record?.runnerFingerprint || "Recorded after the run"}</dd>
+                    <dt>Source binding</dt>
                     <dd>
                       {record?.sourceBinding === "self-contained-html-snapshot"
-                        ? "执行本次捕获的 HTML 快照"
+                        ? "Frozen HTML snapshot executed"
                         : record?.sourceBinding === "live-url-observed"
-                          ? "真实页面观察；未冻结整个应用代码"
-                          : "未记录快照绑定"}
+                          ? "Live page observed · Full app source not frozen"
+                          : "No snapshot binding recorded"}
                     </dd>
-                    <dt>执行时变更</dt>
+                    <dt>Changes during the run</dt>
                     <dd>
                       {record
                         ? record.sourceChangedDuringRun
-                          ? "检测到变化，不能认定修复通过"
+                          ? "Change detected · Repair cannot be verified"
                           : record.sourceChangedDuringRun === false
-                            ? "未检测到"
-                            : "未记录"
-                        : "等待检查"}
+                            ? "None detected"
+                            : "Not recorded"
+                        : "Awaiting checks"}
                     </dd>
                   </dl>
                 </details>
@@ -1765,10 +1784,18 @@ export default function App() {
       </main>
       <footer className="app-footer">
         <span className="footer-brand">
-          Ming <span>让软件可靠地工作</span>
+          Ming <span>Proof behind every “done”</span>
         </span>
-        <span>从「AI 说完成了」到「我看见它通过了」</span>
+        <span>From “AI says it’s done” to “I saw it pass.”</span>
       </footer>
+      {sheet === "commands" && <CommandMenu onClose={() => setSheet(null)} commands={[
+        {label:"Projects",detail:"Your saved projects and the proof lab",disabled:!!running||!!busy,action:()=>{setView("projects");setSheet(null);}},
+        {label:"Connect project",detail:"Add your local development app",disabled:readOnly||!!running||!!busy,action:()=>setSheet("connect")},
+        {label:"Run history",detail:"Search recorded checks and original evidence",action:()=>{setSheet("history");void refreshLists().catch(e=>setError(e.message));}},
+        {label:"Model settings",detail:"Configure your provider and review usage",action:()=>setSheet("model")},
+        {label:"Connect coding AI",detail:"MCP configuration and workflow instructions",action:()=>setSheet("ai")},
+        {label:focusMode?"Exit evidence focus":"Focus on evidence",detail:"Give the recorded browser evidence more room",disabled:!record||view!=="workspace",action:()=>{setFocusMode(v=>!v);setSheet(null);}},
+      ]} />}
       <ProviderSettings
         open={sheet === "model"}
         onClose={() => setSheet(null)}
@@ -1830,8 +1857,8 @@ export default function App() {
         <AiConnection onClose={() => setSheet(null)} readOnly={readOnly} />
       )}
       {sheet === "setup" && (
-        <Sheet title="设置验收项目" onClose={() => setSheet(null)}>
-          <p className="sheet-lead">先定义什么才算完成，再让浏览器逐项验证。</p>
+        <Sheet title="Project setup" onClose={() => setSheet(null)}>
+          <p className="sheet-lead">Define what success means. Let the browser check each part.</p>
           <div className="mode-switch">
             <button
               disabled={!!busy}
@@ -1839,7 +1866,7 @@ export default function App() {
               onClick={() => resetContext("sample")}
             >
               <Play size={17} />
-              体验演示项目
+              Try a sample
             </button>
             <button
               disabled={!!busy}
@@ -1847,11 +1874,11 @@ export default function App() {
               onClick={() => resetContext("requirement")}
             >
               <FileText size={17} />
-              用自己的需求
+              Use my requirements
             </button>
           </div>
           <label className="field">
-            检查哪个项目
+            Project to check
             <select
               disabled={!!busy}
               value={session.variant}
@@ -1871,48 +1898,48 @@ export default function App() {
               <div className="info-box">
                 <Info size={20} />
                 <p>
-                  演示使用预先编写的验收计划，浏览器检查是真实执行的，不消耗模型额度。预置缺陷用于展示发现问题。
+                  Samples use predefined plans and real browser checks, with no model calls. Intentional bugs show how Ming finds failures.
                 </p>
               </div>
               <button
                 className="primary-button full-width"
                 onClick={() => setSheet(null)}
               >
-                审查演示验收标准
+                Review sample plan
                 <ArrowRight size={17} />
               </button>
             </>
           ) : (
             <>
               <label className="field">
-                项目名称
+                Project name
                 <input
                   disabled={!!busy}
                   value={projectName}
                   maxLength={120}
                   onChange={(e) => setProjectName(e.target.value)}
-                  placeholder="例如：我的任务管理工具"
+                  placeholder="e.g. My task manager"
                 />
               </label>
               <label className="field">
-                需求与验收边界
+                Requirements and boundaries
                 <textarea
                   disabled={!!busy}
                   rows={7}
                   value={requirementText}
                   onChange={(e) => setRequirementText(e.target.value)}
-                  placeholder="例如：用户添加任务后，任务出现在列表。标记完成后，刷新页面仍保留该任务及完成状态。"
+                  placeholder="e.g. A new task appears in the list. After marking it complete and reloading, both the task and its completion state remain."
                 />
               </label>
               <p className="field-help">
-                写清操作、预期结果和失败边界。AI
-                会读取页面结构并生成可审查的计划。
+                Describe the actions, expected outcomes, and failure boundaries. AI
+                uses the page structure to draft a plan for your review.
               </p>
               {!provider?.configured && (
                 <div className="info-box warning-box">
                   <WarningCircle size={20} />
                   <p>
-                    模型尚未配置。可以先体验演示计划；可以从右上角连接模型，也可以在「我的项目」中编写手动标准。
+                    No model is connected. Try a sample plan, connect a model from the toolbar, or write a manual plan in Projects.
                   </p>
                 </div>
               )}
@@ -1926,7 +1953,7 @@ export default function App() {
                 ) : (
                   <Sparkle size={18} />
                 )}
-                {busy === "generate" ? "正在保存需求并生成…" : "生成验收草稿"}
+                {busy === "generate" ? "Saving and generating…" : "Generate draft plan"}
               </button>
               {error && (
                 <p className="inline-warning" role="alert">
@@ -1934,33 +1961,33 @@ export default function App() {
                 </p>
               )}
               {requirement && (
-                <p className="small-muted">需求已保存，可在配置模型后重试。</p>
+                <p className="small-muted">Requirements saved. Connect a model to try again.</p>
               )}
             </>
           )}
           <details className="scope-note">
-            <summary>接入其他项目</summary>
+            <summary>Connect another project</summary>
             <p>
-              通过「接入项目」登记运行中的本地网页，支持同源的页面、脚本和接口；跨域接口请配置开发服务器代理。也可接入自包含
-              HTML 文件。真实网页属于现场观察，不会声称整个应用代码已经被冻结。
+              Choose Connect project to register a running local app with same-origin pages, scripts, and APIs. Proxy cross-origin APIs through your development server. You can also connect a self-contained
+              HTML file. Live app results reflect observed behavior, not a frozen copy of the entire app.
             </p>
           </details>
         </Sheet>
       )}
       {sheet === "prompt" && (
-        <Sheet title="交接给你的 AI" onClose={() => setSheet(null)}>
+        <Sheet title="Hand off to your AI" onClose={() => setSheet(null)}>
           <p className="sheet-lead">
-            把指令交给已连接 Ming MCP 的编程
-            AI。它会读取证据、修改目标代码，并重新执行原始验收标准。
+            Give these instructions to your coding AI connected through Ming MCP.
+            It can read the evidence, repair the app, and rerun the original acceptance standard.
           </p>
           {task ? (
             <>
               <div className="info-box">
                 <TerminalWindow size={20} />
                 <p>
-                  任务 {short(task.taskId)} · {labels[task.status]}
+                  Task {short(task.taskId)} · {labels[task.status]}
                   <br />
-                  创建任务不会自动唤醒 AI；领取和复验状态会自动更新。
+                  Your coding AI initiates the handoff. Claim and verification status update here automatically.
                 </p>
               </div>
               <textarea
@@ -1968,7 +1995,7 @@ export default function App() {
                 readOnly
                 rows={12}
                 value={repairPrompt}
-                aria-label="AI 修复交接指令"
+                aria-label="AI repair instructions"
               />
               <button
                 className="primary-button full-width"
@@ -1980,23 +2007,23 @@ export default function App() {
                       setTimeout(() => setCopied(false), 2000);
                     })
                     .catch(() =>
-                      setError("无法复制，请从文本框手动复制指令。"),
+                      setError("Clipboard access is unavailable. Copy the instructions from the text box."),
                     );
                 }}
               >
                 <Copy size={17} />
-                {copied ? "已复制" : "复制英文修复指令"}
+                {copied ? "Copied" : "Copy repair instructions"}
               </button>
             </>
           ) : (
-            <p>正在读取修复任务…</p>
+            <p>Loading repair task…</p>
           )}
         </Sheet>
       )}
       {sheet === "comparison" && comparison && task && (
         <Sheet
           title={
-            comparison.verifiedRepair ? "这一次，修复有了证据" : "修复复验对照"
+            comparison.verifiedRepair ? "A repair you can verify" : "Repair comparison"
           }
           wide
           onClose={() => setSheet(null)}
@@ -2008,31 +2035,31 @@ export default function App() {
             <div>
               <h3>
                 {comparison.verifiedRepair
-                  ? "已验证修复"
+                  ? "Verified repair"
                   : comparison.acceptancePassed
-                    ? "复验通过 · 待确认"
-                    : "尚未验证修复"}
+                    ? "Checks passed · Review needed"
+                    : "Repair not yet verified"}
               </h3>
               <p>
                 {comparison.verifiedRepair
-                  ? "同一目标、同一验收标准和执行器；代码发生变化，原失败项复验通过。"
+                  ? "Same target, plan, and runner. The source changed, and previously failed checks now pass."
                   : comparison.acceptancePassed
-                    ? "相同标准下的检查已经通过；完整代码快照未绑定，暂不认定为已验证修复。"
-                    : "仅有新的运行结果不足以认定修复，请检查阻塞原因。"}
+                    ? "The same checks passed. Without a bound snapshot of the full source, this is acceptance evidence, not a verified repair."
+                    : "A new result alone does not verify a repair. Review the blockers below."}
               </p>
             </div>
           </div>
           <div className="comparison-checks">
             {[
-              ["验收标准相同", comparison.planFingerprintMatch],
+              ["Same acceptance standard", comparison.planFingerprintMatch],
               [
-                "执行器相同且已知",
+                "Same known runner",
                 comparison.runnerFingerprintMatch &&
                   comparison.runnerFingerprintKnown,
               ],
-              ["检查目标相同", comparison.targetIdentityMatch],
+              ["Same target", comparison.targetIdentityMatch],
               [
-                "目标代码已修改",
+                "Source changed",
                 comparison.targetFingerprintChanged &&
                   comparison.sourceFingerprintKnown,
               ],
@@ -2048,7 +2075,7 @@ export default function App() {
           </div>
           {comparison.blockers.length > 0 && (
             <div className="inline-warning">
-              <strong>仍需解决</strong>
+              <strong>Still to resolve</strong>
               <ul>
                 {comparison.blockers.map((b) => (
                   <li key={b}>{b}</li>
@@ -2058,22 +2085,28 @@ export default function App() {
           )}
           <div className="compare-versions">
             <div>
-              <span>修复前</span>
+              <span>Before repair</span>
               <code>{short(comparison.baselineTargetFingerprint)}</code>
-              <small>运行 {short(comparison.baselineRunId)}</small>
+              <small>Run {short(comparison.baselineRunId)}</small>
             </div>
             <ArrowRight size={21} />
             <div>
-              <span>修改后</span>
+              <span>After change</span>
               <code>{short(comparison.repairedTargetFingerprint)}</code>
-              <small>运行 {short(comparison.rerunId)}</small>
+              <small>Run {short(comparison.rerunId)}</small>
             </div>
           </div>
+          {baseline && rerun && (() => {
+            const id = task.failedCriteria[0]?.criteriaId || criterionId;
+            const before = last(baseline.criteria.find(c=>c.criteriaId===id)?.steps.filter(s=>s.screenshotPath));
+            const after = last(rerun.criteria.find(c=>c.criteriaId===id)?.steps.filter(s=>s.screenshotPath));
+            return before && after ? <EvidenceCompare before={{run:baseline,step:before}} after={{run:rerun,step:after}} /> : null;
+          })()}
           <div className="comparison-table">
             <div className="comparison-row table-header">
-              <span>验收条件</span>
-              <span>修复前</span>
-              <span>修改后</span>
+              <span>Acceptance criteria</span>
+              <span>Before repair</span>
+              <span>After change</span>
             </div>
             {(
               task.planSnapshot?.criteria ||
@@ -2103,6 +2136,7 @@ export default function App() {
             ))}
           </div>
           {baseline && rerun && (
+            <details className="original-comparison"><summary>Inspect individual captures</summary>
             <div className="compare-evidence">
               {[baseline, rerun].map((r, i) => {
                 const cr =
@@ -2118,13 +2152,14 @@ export default function App() {
                     key={r.runId}
                     run={r}
                     step={st}
-                    caption={i ? "修改后 · 同标准复验" : "修复前 · 原始证据"}
+                    caption={i ? "After change · Same checks" : "Before repair · Original evidence"}
                   />
                 ) : (
-                  <p key={r.runId}>此项没有截图证据</p>
+                  <p key={r.runId}>No screenshot evidence for this criterion</p>
                 );
               })}
             </div>
+            </details>
           )}
           {rerun && (
             <button
@@ -2136,7 +2171,7 @@ export default function App() {
                 })
               }
             >
-              查看修改后的完整运行与截图
+              View the complete follow-up run
               <ArrowRight size={17} />
             </button>
           )}

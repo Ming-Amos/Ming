@@ -70,32 +70,32 @@ function safeText(value: string, secrets: string[]): string {
 }
 export function validateProviderBaseUrl(value: string): string {
   let parsed: URL;
-  try { parsed = new URL(value); } catch { throw new ProviderConfigError("API 地址无效，请填写完整的 HTTPS 地址。"); }
+  try { parsed = new URL(value); } catch { throw new ProviderConfigError("Invalid API URL. Enter a complete HTTPS URL."); }
   const loopback = parsed.hostname === "localhost" || parsed.hostname === "[::1]" || /^127\.(\d{1,3}\.){2}\d{1,3}$/.test(parsed.hostname);
-  if (parsed.protocol !== "https:" && !(parsed.protocol === "http:" && loopback)) throw new ProviderConfigError("远程 API 必须使用 HTTPS；HTTP 仅允许本机 localhost、127.x.x.x 或 ::1。");
-  if (parsed.username || parsed.password || value.includes("?") || value.includes("#")) throw new ProviderConfigError("API 地址不能包含用户名、密码、查询参数或 # 片段。密钥请填写在独立字段。");
+  if (parsed.protocol !== "https:" && !(parsed.protocol === "http:" && loopback)) throw new ProviderConfigError("Remote APIs must use HTTPS. HTTP is only allowed for local localhost, 127.x.x.x, or ::1 addresses.");
+  if (parsed.username || parsed.password || value.includes("?") || value.includes("#")) throw new ProviderConfigError("The API URL must not contain a username, password, query, or fragment. Enter the key in its separate field.");
   return parsed.toString().replace(/\/+$/, "");
 }
 function textField(value: unknown, name: string, maximum: number, required = true): string {
-  if (typeof value !== "string") throw new ProviderConfigError(`${name}必须是文本。`);
+  if (typeof value !== "string") throw new ProviderConfigError(`${name} must be text.`);
   const result = value.trim();
-  if ((required && !result) || result.length > maximum || /[\u0000-\u001f\u007f]/.test(result)) throw new ProviderConfigError(`${name}为空、过长或包含无效字符。`);
+  if ((required && !result) || result.length > maximum || /[\u0000-\u001f\u007f]/.test(result)) throw new ProviderConfigError(`${name} is empty, too long, or contains invalid characters.`);
   return result;
 }
 function validateConfig(value: unknown, existingKey: string): ProviderConfig {
-  if (!value || typeof value !== "object" || Array.isArray(value)) throw new ProviderConfigError("配置格式无效。");
+  if (!value || typeof value !== "object" || Array.isArray(value)) throw new ProviderConfigError("Invalid configuration format.");
   const input = value as Record<string, unknown>;
-  if (Object.keys(input).some(key => !["providerLabel", "baseUrl", "modelId", "apiKey"].includes(key))) throw new ProviderConfigError("配置包含未知字段。");
-  const providerLabel = textField(input.providerLabel ?? "OpenAI-compatible", "提供商名称", 100);
-  const baseUrl = validateProviderBaseUrl(textField(input.baseUrl, "API 地址", 2048));
-  const modelId = textField(input.modelId, "模型 ID", 200);
+  if (Object.keys(input).some(key => !["providerLabel", "baseUrl", "modelId", "apiKey"].includes(key))) throw new ProviderConfigError("The configuration contains unknown fields.");
+  const providerLabel = textField(input.providerLabel ?? "OpenAI-compatible", "Provider name", 100);
+  const baseUrl = validateProviderBaseUrl(textField(input.baseUrl, "API URL", 2048));
+  const modelId = textField(input.modelId, "Model ID", 200);
   const suppliedKey = input.apiKey === undefined ? "" : textField(input.apiKey, "API Key", 8192, false);
   const apiKey = suppliedKey || existingKey;
-  if (apiKey && [providerLabel, baseUrl, modelId].some(field => field.includes(apiKey) || field.includes(encodeURIComponent(apiKey)))) throw new ProviderConfigError("密钥只能填写在 API Key 字段，不可出现在名称、模型 ID 或地址中。");
+  if (apiKey && [providerLabel, baseUrl, modelId].some(field => field.includes(apiKey) || field.includes(encodeURIComponent(apiKey)))) throw new ProviderConfigError("Enter the key only in the API Key field, not in the name, model ID, or URL.");
   return { providerLabel, baseUrl, modelId, apiKey };
 }
 function writePrivateJson(name: string, value: unknown): void {
-  if (!storageDir) throw new ProviderConfigError("本地配置存储尚未初始化。", 503);
+  if (!storageDir) throw new ProviderConfigError("Local configuration storage has not been initialized.", 503);
   const temporary = path.join(storageDir, `.${name}.${randomUUID()}.tmp`);
   try {
     fs.mkdirSync(storageDir, { recursive: true, mode: 0o700 });
@@ -103,12 +103,12 @@ function writePrivateJson(name: string, value: unknown): void {
     fs.renameSync(temporary, path.join(storageDir, name));
   } catch {
     try { fs.unlinkSync(temporary); } catch { /* No temporary file was written. */ }
-    throw new ProviderConfigError("无法保存本地模型配置，请检查运行目录的写入权限。", 500);
+    throw new ProviderConfigError("Could not save the local model configuration. Check write permissions for the runtime directory.", 500);
   }
 }
 function persistUsage(): void {
   try { writePrivateJson("provider-usage.json", { events: usageEvents, lastTest }); }
-  catch { storageWarning = "调用记录未能保存到本地磁盘；当前会话仍显示已知用量。"; }
+  catch { storageWarning = "Usage records could not be saved to disk. This session still displays known usage."; }
 }
 /** Reload persisted local settings on server startup. Never makes a model request. */
 export function configureProviderStorage(runtimeDir: string): void {
@@ -116,7 +116,7 @@ export function configureProviderStorage(runtimeDir: string): void {
   const file = path.join(storageDir, "provider-config.json");
   if (fs.existsSync(file)) {
     try { localConfig = validateConfig(JSON.parse(fs.readFileSync(file, "utf8")), ""); }
-    catch { storageWarning = "本地模型配置无法读取，请重新保存配置。"; }
+    catch { storageWarning = "The local model configuration could not be read. Save the configuration again."; }
   }
   try {
     const saved = JSON.parse(fs.readFileSync(path.join(storageDir, "provider-usage.json"), "utf8"));
@@ -167,15 +167,15 @@ export function getProviderStatus(): LocalProviderStatus {
   };
 }
 export function saveProviderConfig(input: unknown): LocalProviderStatus {
-  if (environmentConfig()) throw new ProviderConfigError("检测到服务器环境变量配置，当前以环境变量为准。请先移除 PROVIDER_* 环境配置并重启，才能在界面中保存。", 409);
+  if (environmentConfig()) throw new ProviderConfigError("Server environment variables currently take precedence. Remove the PROVIDER_* configuration and restart before saving settings here.", 409);
   const next = validateConfig(input, localConfig?.apiKey ?? "");
   writePrivateJson("provider-config.json", next); localConfig = next; storageWarning = undefined;
   return getProviderStatus();
 }
 export function clearProviderConfig(): LocalProviderStatus {
-  if (!storageDir) throw new ProviderConfigError("本地配置存储尚未初始化。", 503);
+  if (!storageDir) throw new ProviderConfigError("Local configuration storage has not been initialized.", 503);
   try { fs.rmSync(path.join(storageDir, "provider-config.json"), { force: true }); }
-  catch { throw new ProviderConfigError("无法删除本地配置，请检查目录权限。", 500); }
+  catch { throw new ProviderConfigError("Could not remove the local configuration. Check directory permissions.", 500); }
   localConfig = null; lastTest = undefined; persistUsage();
   return getProviderStatus();
 }
@@ -186,12 +186,12 @@ export function createLiveTransport(): ProviderTransport | null {
 }
 /** Called only by the explicit local Test connection action. No retries or redirects. */
 export async function testProviderConnection(): Promise<ConnectionTestResult> {
-  if (!getProviderStatus().configured) throw new ProviderConfigError("请先保存完整的 API 地址、模型 ID 和密钥。", 409);
-  if (testing) throw new ProviderConfigError("正在测试连接，请等待当前请求完成。", 409);
+  if (!getProviderStatus().configured) throw new ProviderConfigError("Save a complete API URL, model ID, and API key first.", 409);
+  if (testing) throw new ProviderConfigError("A connection test is already running. Wait for the current request to finish.", 409);
   testing = true;
   const config = activeConfig().config;
   const started = Date.now(); const testedAt = new Date().toISOString();
-  let result: ConnectionTestResult = { ok: false, testedAt, durationMs: 0, inputTokens: null, outputTokens: null, message: "连接失败。" };
+  let result: ConnectionTestResult = { ok: false, testedAt, durationMs: 0, inputTokens: null, outputTokens: null, message: "Connection failed." };
   try {
     const body = JSON.stringify({ model: config.modelId, messages: [{ role: "user", content: "Reply with OK." }], max_tokens: 8 });
     const response = await httpRequest({ url: buildEndpointUrl(validateProviderBaseUrl(config.baseUrl), "chat/completions"), method: "POST",
@@ -199,18 +199,18 @@ export async function testProviderConnection(): Promise<ConnectionTestResult> {
       body, wallClockMs: 10_000, socketIdleMs: 10_000, maxBytes: 32 * 1024 });
     if (response.statusCode < 200 || response.statusCode >= 300) {
       const category = classifyHttpStatus(response.statusCode);
-      const explanation = category === "auth" ? "密钥或账号权限未通过验证" : category === "quota" ? "服务商限流或额度不足" : "服务商未接受请求";
-      result = { ...result, category, message: `${explanation}（HTTP ${response.statusCode}）。` };
+      const explanation = category === "auth" ? "The API key or account access could not be verified" : category === "quota" ? "The provider rate limit or quota was reached" : "The provider did not accept the request";
+      result = { ...result, category, message: `${explanation} (HTTP ${response.statusCode}).` };
     } else {
       let data: { choices?: { message?: { content?: unknown } }[]; usage?: { prompt_tokens?: unknown; completion_tokens?: unknown } };
       try { data = JSON.parse(response.body); } catch { data = {}; }
       const content = data?.choices?.[0]?.message?.content;
       result.inputTokens = tokenCount(data?.usage?.prompt_tokens); result.outputTokens = tokenCount(data?.usage?.completion_tokens);
-      result = typeof content === "string" && content.trim() ? { ...result, ok: true, message: "模型已返回有效响应，连接成功。" } : { ...result, category: "invalid_output", message: "服务商响应不符合 Chat Completions 格式。请核对 API 地址与模型 ID。" };
+      result = typeof content === "string" && content.trim() ? { ...result, ok: true, message: "The model returned a valid response. Connection successful." } : { ...result, category: "invalid_output", message: "The provider response does not match the Chat Completions format. Check the API URL and model ID." };
     }
   } catch (error) {
     const timedOut = (error as { _isTimeout?: boolean })._isTimeout === true;
-    result = { ...result, category: timedOut ? "timeout" : "network", message: timedOut ? "连接测试超过 10 秒，已停止请求。" : "连接失败或响应超过限制，请检查 API 地址、网络及服务状态。" };
+    result = { ...result, category: timedOut ? "timeout" : "network", message: timedOut ? "The connection test exceeded 10 seconds and was stopped." : "The connection failed or its response exceeded the limit. Check the API URL, network, and service status." };
   } finally { testing = false; }
   result.durationMs = Date.now() - started; lastTest = { configurationId: configurationId(config), result };
   recordProviderUsage({ providerLabel: config.providerLabel, modelId: config.modelId, invokedAt: testedAt, durationMs: result.durationMs,

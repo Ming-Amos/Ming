@@ -16,47 +16,47 @@ export function compareRepair(task: RepairTaskRecord, baseline: RunRecord, rerun
     baseline.planVersion === task.planVersion && rerun.planVersion === task.planVersion && plan.version === task.planVersion &&
     Boolean(baseline.planSnapshot && planIntegrity(baseline.planSnapshot, task.planFingerprint)) &&
     Boolean(rerun.planSnapshot && planIntegrity(rerun.planSnapshot, task.planFingerprint));
-  if (!planFingerprintMatch) blockers.push("计划内容、版本或不可变快照不一致，无法验证修复。");
+  if (!planFingerprintMatch) blockers.push("The plan content, version, or immutable snapshot does not match. The repair cannot be verified.");
   const baselineRunnerFingerprint = baseline.runnerFingerprint ?? "unknown";
   const rerunRunnerFingerprint = rerun.runnerFingerprint ?? "unknown";
   const runnerFingerprintKnown = known(baselineRunnerFingerprint) && known(rerunRunnerFingerprint);
   const runnerFingerprintMatch = runnerFingerprintKnown && baselineRunnerFingerprint === rerunRunnerFingerprint &&
     task.baselineRunnerFingerprint === baselineRunnerFingerprint;
-  if (!runnerFingerprintMatch) blockers.push("执行器指纹未知或不同，需要使用同一执行器重新获取基准。");
+  if (!runnerFingerprintMatch) blockers.push("Runner fingerprints are unknown or different. Record a new baseline with the same runner.");
   const targetIdentityMatch = baseline.targetVariant === task.targetVariant && rerun.targetVariant === task.targetVariant &&
     baseline.targetUrl === task.targetUrl && rerun.targetUrl === task.targetUrl;
-  if (!targetIdentityMatch) blockers.push("目标身份或地址发生变化。");
+  if (!targetIdentityMatch) blockers.push("The target identity or URL has changed.");
   const sourceFingerprintKnown = known(baseline.targetFingerprint) && known(rerun.targetFingerprint) &&
     task.baselineTargetFingerprint === baseline.targetFingerprint && task.repairedTargetFingerprint === rerun.targetFingerprint &&
     baseline.sourceBinding === "self-contained-html-snapshot" && rerun.sourceBinding === "self-contained-html-snapshot" &&
     baseline.sourceChangedDuringRun === false && rerun.sourceChangedDuringRun === false;
   if (!sourceFingerprintKnown) blockers.push(baseline.sourceBinding === "live-url-observed" || rerun.sourceBinding === "live-url-observed"
-    ? "实时网址未绑定执行源码快照；可以查看实际验收结果，但不能仅凭文件指纹确认修复来源。"
-    : "源码快照来源缺失、不一致或在运行过程中发生变化。");
+    ? "A live URL is not bound to an executed source snapshot. Acceptance results are available, but a file fingerprint alone cannot verify the source of a repair."
+    : "The source snapshot is missing, inconsistent, or changed during execution.");
   const targetFingerprintChanged = known(baseline.targetFingerprint) && known(rerun.targetFingerprint) &&
     baseline.targetFingerprint !== rerun.targetFingerprint;
-  if (!targetFingerprintChanged) blockers.push("目标源码未发生变化，重跑通过也不能证明代码已修复。");
+  if (!targetFingerprintChanged) blockers.push("The target source has not changed. A passing rerun alone does not prove a code repair.");
   const linksMatch = baseline.runId === task.baselineRunId && rerun.runId === task.rerunId &&
     baseline.confirmationId === task.confirmationId && rerun.confirmationId === task.confirmationId &&
     baseline.requirementId === task.requirementId && rerun.requirementId === task.requirementId;
   if (!linksMatch) {
-    blockers.push("运行、确认或需求记录的关联不一致。");
+    blockers.push("The run, confirmation, or requirement record links do not match.");
   }
   const expected = plan?.criteria ?? [];
   const complete = (run: RunRecord) => expected.length > 0 && run.criteria.length === expected.length &&
     expected.every((criterion, i) => run.criteria[i]?.criteriaId === criterion.id &&
       run.criteria[i].steps.length === criterion.steps.length &&
       criterion.steps.every((step, j) => run.criteria[i].steps[j]?.stepId === step.id));
-  if (!complete(baseline) || !complete(rerun)) blockers.push("运行结果缺少标准或步骤，不能比较不完整的验收结果。");
+  if (!complete(baseline) || !complete(rerun)) blockers.push("The run is missing criteria or steps. Incomplete acceptance results cannot be compared.");
   const assertionFailure = baseline.criteria.some(c => c.status === "failed" && c.steps.some(s =>
     s.status === "failed" && expected.find(p => p.id === c.criteriaId)?.steps.some(p => p.id === s.stepId && p.type.startsWith("assert"))));
   if (!assertionFailure || baseline.status !== "failed" || baseline.fatalError) {
-    blockers.push("基准没有完整的业务断言失败；基础设施错误恢复不算功能修复。");
+    blockers.push("The baseline has no complete business assertion failure. Recovery from an infrastructure error does not count as a feature repair.");
   }
   const rerunFullyPassed = rerun.status === "passed" && !rerun.fatalError && Boolean(rerun.finishedAt) &&
     rerun.criteria.every(c => c.status === "passed" && c.steps.every(s => s.status === "passed"));
   if (!rerunFullyPassed) {
-    blockers.push("重跑尚未全部通过，或存在执行错误。");
+    blockers.push("The rerun has not fully passed or contains execution errors.");
   }
   const failedIds = new Set(baseline.criteria.filter(c => c.status !== "passed").map(c => c.criteriaId));
   const passedIds = new Set(rerun.criteria.filter(c => c.status === "passed").map(c => c.criteriaId));

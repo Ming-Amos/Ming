@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Shipboard — Your next great thing</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;color:#252b40;background:#f4f5f9;font-family:Inter,"Segoe UI",Arial,sans-serif;font-size:15px;-webkit-font-smoothing:antialiased}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid #b9b2ff;outline-offset:3px}header{height:76px;border-bottom:1px solid #e4e6ed;display:flex;align-items:center;justify-content:space-between;padding:0 5%;background:#ffffffb8}.brand{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:700;letter-spacing:-.7px}.brand-symbol{display:grid;place-items:center;background:#333957;color:white;width:30px;height:30px;border-radius:9px;font-size:18px}.workspace-label{color:#81869a;font-size:12px;letter-spacing:.4px}.workspace-label span{display:inline-block;width:6px;height:6px;background:#aaa3ee;border-radius:50%;margin-right:8px}main{max-width:828px;margin:38px auto 0;padding:0 24px}.eyebrow{font-size:10px;font-weight:650;letter-spacing:2px;color:#77718f;margin-bottom:10px}h1{font-size:32px;line-height:1.2;letter-spacing:-1.25px;font-weight:650;margin:0 0 9px}.intro{margin:0 0 28px;color:#8b90a2;line-height:1.6;font-size:13px}.board{background:white;border:1px solid #e1e4ee;border-radius:14px;box-shadow:0 10px 28px #29305505;overflow:hidden}.composer{padding:25px 27px 21px;border-bottom:1px solid #edf0f5}.composer-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}.composer-top h2{font-size:16px;font-weight:600;margin:0;letter-spacing:-.25px}.pill{font-size:10px;color:#8d86a6;background:#f4f2fb;padding:5px 9px;border-radius:20px;letter-spacing:.3px}label[for="taskName"]{display:block;font-size:11px;font-weight:600;color:#7c8295;margin-bottom:7px}.input-row{display:flex;gap:9px}.input-row input{min-width:0;flex:1;height:43px;padding:0 13px;border:1px solid #e0e3ed;border-radius:7px;font-size:13px;color:#33384b;background:#fcfcfe}.input-row input::placeholder{color:#a8adbd}.add-button{height:43px;padding:0 19px;border:1px solid #6860dd;border-radius:7px;color:white;background:#7067e4;box-shadow:0 3px 8px #7067e420;font-size:12px;font-weight:550;white-space:nowrap}.add-button:hover{background:#6158d1}.add-button span{font-size:18px;margin-right:7px;font-weight:400;vertical-align:-1px}.notice{min-height:17px;margin:10px 0 0;font-size:11px;line-height:1.5;color:#7b927f}.notice.error{color:#ce6269}.tasks-header{padding:20px 27px 0;display:flex;align-items:center;justify-content:space-between;color:#8e94a4;font-size:10px;letter-spacing:1.1px;text-transform:uppercase}.task-count{font-size:11px;letter-spacing:0;text-transform:none;color:#a4a9b7}.task-list{list-style:none;margin:0;padding:13px 27px 0}.task-item{display:flex;align-items:center;gap:12px;padding:15px 0;border-bottom:1px solid #eceef4}.task-item:last-child{border-bottom:0}.task-check{flex-shrink:0;width:19px;height:19px;accent-color:#7067e4}.task-content{display:flex;flex-direction:column;gap:5px;min-width:0;flex:1}.task-name{font-size:13px;line-height:1.5;overflow-wrap:anywhere;color:#40465c}.task-item.done .task-name{text-decoration:line-through;color:#9ea4b4}.task-meta{font-size:10px;color:#a6abba}.delete-button{background:none;border:0;color:#b0b5c2;font-size:19px;padding:6px}.delete-button:hover{color:#ce6269}.empty-state{text-align:center;padding:30px 16px 38px}.empty-symbol{width:42px;height:42px;border:1px solid #e8e7f3;border-radius:12px;background:#f9f8fe;margin:0 auto 14px;display:flex;flex-direction:column;justify-content:center;gap:4px;padding:12px}.empty-symbol i{height:2px;background:#c6c1e9;display:block;border-radius:2px}.empty-symbol i:last-child{width:65%}.empty-state h3{font-size:14px;font-weight:500;margin:0 0 7px;color:#82899e}.empty-state p{font-size:12px;color:#b0b5c3;margin:0}.board-footer{padding:15px 27px;color:#a4a9ba;font-size:10px;background:#fdfdfe;border-top:1px solid #f0f1f6;display:flex;justify-content:space-between}.board-footer strong{font-weight:500;color:#9197aa}.page-footer{text-align:center;color:#a8aebd;font-size:10px;letter-spacing:.2px;margin:21px 0 28px}[hidden]{display:none!important}@media(max-width:600px){header{height:64px;padding:0 22px}.workspace-label{font-size:10px}.brand{font-size:18px}main{padding:0 18px;margin-top:28px}h1{font-size:26px}.intro{font-size:12px}.composer{padding:21px 19px 17px}.tasks-header{padding:18px 19px 0}.task-list{padding:10px 19px 0}.add-button{padding:0 12px}.add-button span{display:none}.board-footer{padding:14px 19px}.pill{font-size:9px}.empty-state{padding-bottom:32px}}
+  </style>
+</head>
+<body>
+  <header><div class="brand"><span class="brand-symbol" aria-hidden="true">s</span>shipboard</div><div class="workspace-label"><span aria-hidden="true"></span>Personal workspace</div></header>
+  <main>
+    <div class="eyebrow">MAKE ROOM FOR WHAT MATTERS</div>
+    <h1>Your next great thing starts here.</h1>
+    <p class="intro">One task at a time. Keep your next step in view.</p>
+    <section class="board" aria-label="Task board">
+      <div class="composer">
+        <div class="composer-top"><h2>What's your next step?</h2><span class="pill">A LITTLE PROGRESS, EVERY DAY</span></div>
+        <form id="taskForm" novalidate>
+          <label for="taskName">Task name</label>
+          <div class="input-row"><input id="taskName" name="taskName" placeholder="e.g. Ship the release notes" autocomplete="off" maxlength="300"><button class="add-button" type="submit"><span aria-hidden="true">+</span>Add task</button></div>
+          <p id="notice" class="notice" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+      <div class="tasks-header"><span>Up next</span><span class="task-count" id="taskCount">0 tasks</span></div>
+      <ul id="taskList" class="task-list" aria-label="Your tasks"></ul>
+      <div class="empty-state" id="emptyState"><div class="empty-symbol" aria-hidden="true"><i></i><i></i><i></i></div><h3>A clear board. A fresh start.</h3><p>Add one task to get moving.</p></div>
+      <div class="board-footer"><strong>Small steps. Real progress.</strong><span>YOUR PERSONAL BOARD</span></div>
+    </section>
+    <p class="page-footer">Made for the work you care about.</p>
+  </main>
+  <script>
+    const STORAGE_KEY = 'shipboard.tasks.v1';
+    // Seeded demonstration defect: tasks exist only for the current page lifetime.
+    function loadTasks() { return []; }
+    function persistTasks() { /* Persistence is missing in this example. */ }
+    let tasks = loadTasks();
+    const list = document.getElementById('taskList');
+    const input = document.getElementById('taskName');
+    const notice = document.getElementById('notice');
+    function render() {
+      list.replaceChildren();
+      for (const task of tasks) {
+        const row = document.createElement('li'); row.className = 'task-item' + (task.done ? ' done' : '');
+        const toggle = document.createElement('input'); toggle.type = 'checkbox'; toggle.className = 'task-check'; toggle.checked = task.done; toggle.setAttribute('aria-label', `Complete ${task.text}`);
+        toggle.addEventListener('change', () => { task.done = toggle.checked; persistTasks(); render(); });
+        const content = document.createElement('div'); content.className = 'task-content';
+        const name = document.createElement('span'); name.className = 'task-name'; name.textContent = task.text;
+        const meta = document.createElement('span'); meta.className = 'task-meta'; meta.textContent = task.done ? 'Completed' : 'Ready when you are';
+        content.append(name, meta);
+        const remove = document.createElement('button'); remove.type = 'button'; remove.className = 'delete-button'; remove.textContent = '×'; remove.setAttribute('aria-label', `Delete ${task.text}`);
+        remove.addEventListener('click', () => { tasks = tasks.filter(item => item.id !== task.id); persistTasks(); render(); });
+        row.append(toggle, content, remove); list.append(row);
+      }
+      document.getElementById('taskCount').textContent = `${tasks.length} ${tasks.length === 1 ? 'task' : 'tasks'}`;
+      document.getElementById('emptyState').hidden = tasks.length > 0;
+    }
+    document.getElementById('taskForm').addEventListener('submit', event => {
+      event.preventDefault(); const text = input.value.trim();
+      if (!text) { notice.textContent = 'Add a task name before continuing.'; notice.className = 'notice error'; input.setAttribute('aria-invalid', 'true'); return; }
+      tasks.push({ id: crypto.randomUUID(), text, done: false }); persistTasks(); render();
+      input.value = ''; input.removeAttribute('aria-invalid'); notice.textContent = 'Task added. One step closer.'; notice.className = 'notice'; input.focus();
+    });
+    render();
+  </script>
+</body>
+</html>

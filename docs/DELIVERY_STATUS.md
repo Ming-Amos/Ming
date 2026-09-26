@@ -1,6 +1,8 @@
 # Ming delivery status
 
-Checkpoint: 2026-09-26. This checklist distinguishes the updated local product from its earlier recorded prototype. No automatic competition submission or public publication has occurred.
+Checkpoint: 2026-09-26. The current presentation is the English **Evidence Studio**, with new Shipboard execution evidence. This checklist separates implementation, recorded proof, earlier validation, and work still awaiting review. No automatic competition submission or public publication has occurred.
+
+Still needed for the current submission: refresh the private preview, record a current-interface video and refresh the deck, user approval for public repository/site access, organizer confirmation of account eligibility, and the final submission review. An external model key and a real generation/review/run are also needed if the entry will claim demonstrated live plan generation; manual acceptance already works without one.
 
 ## Updated local product
 
@@ -11,18 +13,39 @@ Checkpoint: 2026-09-26. This checklist distinguishes the updated local product f
 - [x] Local provider settings: save/replace/delete key, explicit environment precedence, activation without restart, no request on save/start.
 - [x] Explicit bounded connection test and actual token-usage ledger. No external model key has been configured; no live model quality claim.
 - [x] Extend stdio MCP to 12 tools for discovery, confirmed execution, progress/cancellation, repair and comparison.
-- [x] Provider suite: **13/13 passed**, including key retention/deletion, environment fallback, fresh-process persistence, atomic-write failure, response bounds, 10-second timeout and public-mode isolation.
-- [x] ProviderSettings real-browser smoke: save/test/reopen/delete/read-only checks passed against a local HTTP fixture; no key readback or automatic model requests.
-- [x] Backend integration: **36/36 passed**, including the live-URL review state and a responsive GET while reachability probing continues (16 ms in that check).
-- [x] Runner checks: **13/13 passed** for its reported scope.
-- [x] Final full-repository typecheck and build passed.
-- [x] Updated own-project browser UI: **32/32 passed**, including restoring an in-flight run after reload and cancellation. See [PRODUCT_UI_REVIEW](PRODUCT_UI_REVIEW.md).
-- [x] Latest compiled read-only viewer: **27/27 passed**. Exact baseline/rerun/comparison responses and all 19 screenshot hashes match the preserved bundle; history search/switch/reload, JSON export, read-only model/AI help, 390px layout and write rejection passed with no frontend JavaScript errors. Desktop and mobile captures were visually reviewed.
-- [x] Actual-SDK MCP/report suite: **16/16 passed** across the expanded 12-tool workflow. A passing live-URL rerun remains “复验通过 · 待确认” with `verifiedRepair: false`.
+- [x] Implement the English Evidence Studio: recorded-step scrubber with Play/Pause, evidence focus, Ctrl+K command menu, and a before/after slider showing original captures. Playback navigates stored evidence; it is not a new execution or generated video.
+- [x] Add English Shipboard working/defective/repair-workspace examples and the three-criterion plan. Default fixture: `shipboard-buggy`.
+- [x] Record a new real source repair through actual stdio MCP: **21/21 evidence checks passed**, all three rerun criteria passed, `verifiedRepair: true`, and no blockers. Original plan, runner and target identities match; old evidence remains byte-identical.
+- [x] Visually inspect actual Shipboard before/after and validation screenshots. Separate 390px app check confirms persistence after reload, English text, no overflow and no browser errors.
+- [x] Current English own-project workflow: **32/32 browser checks passed**, with no browser exceptions.
+- [x] Current Evidence Studio and compiled read-only viewer: **47/47 checks passed**, including playback, focus, keyboard commands, direct comparison-slider interaction, original-image identity and 390px layout.
+- [x] Full type checking, production build and **7 Worker unit tests** passed. Reviewed frontend bundle: `index-Cw3An0o5.js`.
+- [x] Bounded publication review: **270 candidate files**, **60 evidence hashes** (26 legacy + 34 new), unchanged Bob files and no findings.
+- [ ] Update the existing private Sites preview with this reviewed package. This checklist does not yet claim the hosted preview contains the new revision.
 
-These scoped tests do not establish compatibility or quality for an external model. Running local apps are observed live; only self-contained HTML is bound to the exact captured source snapshot. HTTP target redirects and cross-origin requests are blocked; separate backend services need a same-origin development proxy.
+## Current English verification
 
-Local reports: `runtime/real-targets-047c1b1c-db4a-4cd2-9c44-af7e4e78423e/review-report.json` (backend), `runtime/product-runner-77b8c790-57f1-49b0-a9bf-91a8d28164ea/report.json` (runner), `runtime/product-mcp-15cad0a2-c4aa-4501-b9f8-223ab7294a12/review-report.json` (MCP/report), and `runtime/public-ui-15576ca0-9d23-402d-b54a-3526f8867f64/report.json` (compiled read-only viewer, with screenshots alongside). Runtime files remain local and are not automatically published. The compiled UI reviews used `index-CtFySXMn.js`; the final build's AI-help button-class adjustment is cosmetic.
+- **47/47 Evidence Studio and compiled read-only checks:** original evidence, recorded-step playback, focus, command navigation, mouse and keyboard image comparison, project/history navigation and 390px layouts. No browser errors, missing resources, external requests or mutation requests; reviewed text contrast is at least 4.5:1. Report and captured screens: [English Studio review](evidence/english-studio/review-report.json), [desktop baseline](evidence/english-studio/01-featured-baseline.png), [repair comparison](evidence/english-studio/03-repair-comparison.png), [mobile workspace](evidence/english-studio/05-mobile-workspace.png).
+- **32/32 own-project browser checks:** registration, Markdown PRD upload, model-missing fallback, manual plans, confirmation, real runs, immutable revisions, history, reload recovery, cancellation and 390px layout. No browser exceptions. Report: [English own-project review](evidence/english-product-ui/review-report.json).
+- **36/36 backend integration:** report `runtime/real-targets-95e47b77-1632-4afd-bd23-c4096f3aae51/review-report.json`.
+- **13/13 runner:** report `runtime/product-runner-3f86148a-672c-4d8d-bf70-0fb9ee9326c4/report.json`.
+- **16/16 actual-SDK MCP/report:** report `runtime/product-mcp-85a66e10-862b-444d-8994-edce3ca1c49b/review-report.json`.
+- Fresh English **13/13 provider** and **32/32 repair-integrity** suites also passed.
+
+These fresh checks used no Bob calls or external model provider. A successful live-URL rerun remains acceptance evidence requiring review, with `verifiedRepair: false`; only the captured-document path can satisfy strict source-bound repair verification. These results do not establish an external model's generation quality.
+
+The earlier **27/27 compiled read-only review** describes its prior build, `index-CtFySXMn.js`. The current presentation is covered by the fresh 47-check review above. Selected current UI reports and captures are copied under `docs/evidence/`; other reports under `runtime/` remain local.
+
+## Current English judge evidence
+
+- Bundle: [judge-evidence/README.md](judge-evidence/README.md), [manifest](judge-evidence/manifest.json), and [21-check report](judge-evidence/review-report.json).
+- Target: `shipboard-repair`; task: `bbc50e50-7838-4bec-8a2b-4ec386d98679`.
+- Baseline: `33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c`; only SHIP-02 persistence failed.
+- Rerun: `74ed3133-b62c-44cf-8b4a-042156180db5`; all three criteria passed.
+- Unchanged plan: `9c1f3dcf7fd3f279`; unchanged runner: `0f4cf2cc5fc32e24`.
+- Source: `c1775e6bfbafc41d` → `8426ca024fd0f7c4`; the same target executed its captured HTML snapshot. Strict comparison: `verifiedRepair: true`, no blockers.
+- Four real runs, original screenshots, exact source diff, actual MCP responses, and SHA-256 manifest. Actor: **Codex via real stdio MCP**, with no Bob or model calls.
+- `MING_PUBLIC_DEMO=1` startup and the read-only package use `docs/judge-evidence`. This changes which historical records are presented; it does not make the site a remote execution service.
 
 ## Preserved earlier evidence and materials
 
@@ -31,7 +54,8 @@ Local reports: `runtime/real-targets-047c1b1c-db4a-4cd2-9c44-af7e4e78423e/review
 - [x] Reviewed demo bundle: six selected runs, 19 screenshots, source diff and manifest hashes. Original evidence was not rewritten for the new interface.
 - [x] Earlier Application X-ray checkpoint: 43 UI integration checks and 10 read-only viewer checks passed. These counts describe that checkpoint, not the updated interface.
 - [x] Existing concept cover, five-slide PDF, English statements and 164-second narrated video are present.
-- [x] Existing video/deck and historical captures are clearly identified as the **previous prototype checkpoint** in current onboarding. A future recording of the expanded interface is optional and does not block local product use.
+- [x] Existing video/deck and historical captures are clearly identified as the **previous prototype checkpoint**. They can remain as historical artifacts.
+- [ ] Record a new video and refresh the presentation for the current English Evidence Studio and Shipboard demonstration. This remains required for an up-to-date presentation, although it does not block local product use.
 - [x] Updated source review checked 212 candidate files, all 26 original evidence hashes and unchanged Bob files. Final local startup and AI-connection panel passed browser smoke checks.
 
 Recorded repair: task `7ed27f84-aa14-43f8-90e2-f84702dc21b0`; baseline `65aece9c-b145-4045-8096-60331a4c6ae1`; rerun `2cf3cc33-507f-41c2-8b9f-6a16c712a7ae`. Its plan/runner identities match, source changes from `4d61d95b3ffbc28d` to `29ebdc69fb588289`, all three rerun criteria pass, and `verifiedRepair` is true. See [the manifest](demo-evidence/manifest.json).
@@ -41,7 +65,7 @@ Recorded repair: task `7ed27f84-aa14-43f8-90e2-f84702dc21b0`; baseline `65aece9c
 - [x] GitHub repository exists at https://github.com/Ming-Amos/Ming — **private**.
 - [x] Sites preview exists at https://ming-acceptance-proof.amosming.chatgpt.site — **owner-private**, historical read-only evidence.
 - [ ] Obtain final user review before changing either audience to public. Then verify signed-out access; a private URL is not a usable public judging link.
-- [x] Reviewed the refreshed package: compiled UI, an explicit 25-route recorded-response map and 19 original screenshots; no local provider settings, keys or unreviewed runtime data are included.
+- [x] The new English read-only package passed its own 47-check review and bounded publication review. It presents reviewed Shipboard records and original captures; provider settings, keys and unreviewed runtime data are excluded. Private preview deployment remains a separate unchecked step above.
 - [ ] Obtain organizer confirmation of the account's event eligibility.
 - [ ] If claiming live AI-generated plans, configure the user's chosen provider locally and perform an actual generation, human review and browser acceptance run.
 - [ ] Review final statements, media, repository and application URL, then submit through the official event form before its deadline.

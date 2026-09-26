@@ -1,0 +1,59 @@
+{
+  "planId": "shipboard-task-acceptance",
+  "version": "1.0.0",
+  "source": "fixture",
+  "title": "Shipboard — task creation and persistence",
+  "description": "A hand-authored acceptance plan for the English Shipboard demonstration. These browser checks validate visible user outcomes; no language model generated this plan.",
+  "originalRequirement": "A user can add a non-empty task and immediately see it on the board. The same task must survive a page reload. Empty and whitespace-only task names must show a clear validation message without creating a task.",
+  "fingerprint": "TO_BE_COMPUTED",
+  "createdAt": "2026-09-26T00:00:00.000Z",
+  "criteria": [
+    {
+      "id": "SHIP-01",
+      "title": "A new task appears on the board",
+      "description": "Enter a unique task name, submit it, and check the actual task list.",
+      "requirementRef": "A user can add a non-empty task and immediately see it on the board.",
+      "expectedBehavior": "The newly added task is visible in the task list, not just in the input field.",
+      "contextMode": "fresh",
+      "steps": [
+        { "id": "SHIP-01-S1", "type": "navigate", "url": "{{TARGET_URL}}", "description": "Open the Shipboard application" },
+        { "id": "SHIP-01-S2", "type": "fill", "locator": "Task name", "value": "{{UNIQUE_CONTENT}}", "description": "Enter this run's unique task name" },
+        { "id": "SHIP-01-S3", "type": "click", "locator": "Add task", "description": "Add the task to the board" },
+        { "id": "SHIP-01-S4", "type": "assertVisibleIn", "locator": "#taskList", "value": "{{UNIQUE_CONTENT}}", "description": "Verify the new task is visible in the task list" }
+      ]
+    },
+    {
+      "id": "SHIP-02",
+      "title": "The same task survives a reload",
+      "description": "Continue in the same browser as SHIP-01, reload, and check the same task.",
+      "requirementRef": "The same task must survive a page reload.",
+      "expectedBehavior": "Reloading the page keeps the task that was just added.",
+      "dependsOn": ["SHIP-01"],
+      "contextMode": "inherit",
+      "steps": [
+        { "id": "SHIP-02-S1", "type": "reload", "description": "Reload the same browser page" },
+        { "id": "SHIP-02-S2", "type": "assertVisibleIn", "locator": "#taskList", "value": "{{UNIQUE_CONTENT}}", "description": "Verify the same task is still on the board" }
+      ]
+    },
+    {
+      "id": "SHIP-03",
+      "title": "Blank task names are rejected",
+      "description": "Use an independent browser to check empty and whitespace-only submissions.",
+      "requirementRef": "Empty and whitespace-only task names must show a clear validation message without creating a task.",
+      "expectedBehavior": "The board remains empty and displays an actionable validation message.",
+      "contextMode": "fresh",
+      "steps": [
+        { "id": "SHIP-03-S1", "type": "navigate", "url": "{{TARGET_URL}}", "description": "Open a fresh Shipboard browser session" },
+        { "id": "SHIP-03-S2", "type": "assertCount", "locator": ".task-item", "expected": 0, "description": "Verify the fresh board has no tasks" },
+        { "id": "SHIP-03-S3", "type": "fill", "locator": "Task name", "value": "", "description": "Leave the task name empty" },
+        { "id": "SHIP-03-S4", "type": "click", "locator": "Add task", "description": "Try to add an empty task" },
+        { "id": "SHIP-03-S5", "type": "assertVisible", "value": "Add a task name before continuing.", "description": "Verify an actionable validation message appears" },
+        { "id": "SHIP-03-S6", "type": "assertCount", "locator": ".task-item", "expected": 0, "description": "Verify no empty task was created" },
+        { "id": "SHIP-03-S7", "type": "fill", "locator": "Task name", "value": "   ", "description": "Enter a whitespace-only task name" },
+        { "id": "SHIP-03-S8", "type": "click", "locator": "Add task", "description": "Try to add a whitespace-only task" },
+        { "id": "SHIP-03-S9", "type": "assertVisible", "value": "Add a task name before continuing.", "description": "Verify whitespace also produces a validation message" },
+        { "id": "SHIP-03-S10", "type": "assertCount", "locator": ".task-item", "expected": 0, "description": "Verify the task board is still empty" }
+      ]
+    }
+  ]
+}

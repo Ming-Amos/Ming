@@ -20,34 +20,34 @@ const EXCLUDED = new Set(["node_modules", ".git", ".hg", ".svn", "dist", "build"
 const SOURCE_EXT = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".html", ".htm", ".css", ".scss", ".less", ".vue", ".svelte", ".json", ".md", ".py", ".go", ".rs", ".java", ".cs", ".rb", ".php", ".yml", ".yaml", ".toml"]);
 
 export function validateLocalUrl(value: unknown, port: number): string {
-  if (typeof value !== "string" || value.length > 2048) throw new RequestError(400, "请输入本地项目 HTTP 地址");
+  if (typeof value !== "string" || value.length > 2048) throw new RequestError(400, "Enter the local project HTTP URL");
   let url: URL;
-  try { url = new URL(value); } catch { throw new RequestError(400, "项目地址不是有效 URL"); }
+  try { url = new URL(value); } catch { throw new RequestError(400, "The project address is not a valid URL"); }
   const targetPort = Number(url.port || "80");
   if (url.protocol !== "http:" || !["localhost", "127.0.0.1"].includes(url.hostname) ||
       !Number.isInteger(targetPort) || targetPort < 1024 || targetPort > 65535 ||
       [port, 4000, 4001].includes(targetPort) || url.username || url.password) {
-    throw new RequestError(400, "仅支持 http://localhost 或 http://127.0.0.1 的 1024–65535 端口；不能使用 Ming 自身端口或带凭证的地址");
+    throw new RequestError(400, "Use http://localhost or http://127.0.0.1 on port 1024–65535. Ming ports and URLs containing credentials are not supported");
   }
   return url.href;
 }
 
 function localPath(value: unknown, kind: "file" | "directory"): string {
-  if (typeof value !== "string" || !path.isAbsolute(value) || value.startsWith("\\\\")) throw new RequestError(400, "请提供本机绝对路径，不能使用网络共享路径");
+  if (typeof value !== "string" || !path.isAbsolute(value) || value.startsWith("\\\\")) throw new RequestError(400, "Provide an absolute path on this computer. Network share paths are not supported");
   let resolved: string;
   try {
     resolved = fs.realpathSync(value);
     const st = fs.statSync(resolved);
     if (kind === "file" ? !st.isFile() : !st.isDirectory()) throw new Error("wrong type");
-  } catch { throw new RequestError(400, kind === "file" ? "HTML 文件不存在或不可读取" : "源码目录不存在或不可读取"); }
-  if (kind === "directory" && path.parse(resolved).root === resolved) throw new RequestError(400, "请选择具体项目目录，不能使用整个磁盘");
+  } catch { throw new RequestError(400, kind === "file" ? "The HTML file does not exist or cannot be read" : "The source directory does not exist or cannot be read"); }
+  if (kind === "directory" && path.parse(resolved).root === resolved) throw new RequestError(400, "Select a project directory, not an entire drive");
   return resolved;
 }
 
 export function readTargetHtml(target: RegisteredTarget): string {
-  if (!target.htmlPath) throw new RequestError(422, "目标没有 HTML 文件");
+  if (!target.htmlPath) throw new RequestError(422, "This target has no HTML file");
   const stat = fs.lstatSync(target.htmlPath);
-  if (!stat.isFile() || stat.size > MAX_HTML_BYTES) throw new RequestError(422, "单个 HTML 文件必须小于 2 MB");
+  if (!stat.isFile() || stat.size > MAX_HTML_BYTES) throw new RequestError(422, "A single HTML file must be smaller than 2 MB");
   return fs.readFileSync(target.htmlPath, "utf-8");
 }
 
@@ -96,8 +96,8 @@ export class TargetRegistry {
     this.directory = path.join(runtimeDir, "targets");
     fs.mkdirSync(this.directory, { recursive: true });
     const entries: Array<{variant: string; route: string; label: string; htmlPath: string; planPath?: string}> = fs.existsSync(registryPath) ? JSON.parse(fs.readFileSync(registryPath, "utf-8")) : [
-      { variant: "normal", route: "/normal", label: "日报 · 正常示例", htmlPath: "examples/daily-report/normal/index.html" },
-      { variant: "buggy", route: "/buggy", label: "日报 · 缺陷示例", htmlPath: "examples/daily-report/buggy/index.html" },
+      { variant: "normal", route: "/normal", label: "Daily Report · Working example", htmlPath: "examples/daily-report/normal/index.html" },
+      { variant: "buggy", route: "/buggy", label: "Daily Report · Defective example", htmlPath: "examples/daily-report/buggy/index.html" },
     ];
     const routes = new Set<string>();
     const repoFile = (relative: string) => {
@@ -125,21 +125,21 @@ export class TargetRegistry {
     }
   }
   create(body: Record<string, unknown>, projectId: string): RegisteredTarget {
-    if (typeof body.name !== "string" || !body.name.trim() || body.name.length > 120) throw new RequestError(400, "项目名称须为 1–120 个字符");
-    if (body.kind !== "url" && body.kind !== "html") throw new RequestError(400, "kind 必须为 url 或 html");
+    if (typeof body.name !== "string" || !body.name.trim() || body.name.length > 120) throw new RequestError(400, "The project name must contain 1–120 characters");
+    if (body.kind !== "url" && body.kind !== "html") throw new RequestError(400, "kind must be url or html");
     const variant = `custom-${randomUUID()}`;
     const target: RegisteredTarget = { variant, label: body.name.trim(), kind: body.kind, projectId, url: "", isSample: false, archived: false, createdAt: new Date().toISOString() };
     if (body.kind === "url") target.url = validateLocalUrl(body.url, this.port);
     else {
       target.htmlPath = localPath(body.htmlPath, "file");
-      if (!/\.html?$/i.test(target.htmlPath)) throw new RequestError(400, "仅能登记 .html 或 .htm 文件；多文件项目请通过本地 URL 接入");
+      if (!/\.html?$/i.test(target.htmlPath)) throw new RequestError(400, "Only .html or .htm files can be registered. Connect a local URL for a project with multiple files");
       readTargetHtml(target);
       target.route = `/local-target/${variant}`;
       target.url = `http://localhost:${this.port}${target.route}`;
     }
     if (body.sourceDir !== undefined && body.sourceDir !== "") target.sourceDir = localPath(body.sourceDir, "directory");
-    if (Object.values(this.targets).filter(t => !t.isSample && !t.archived).length >= 50) throw new RequestError(409, "最多可登记 50 个活跃项目，请先归档不再使用的项目");
-    if (Object.values(this.targets).some(t => !t.archived && (target.kind === "url" ? t.url === target.url : t.htmlPath === target.htmlPath))) throw new RequestError(409, "该目标已登记，请使用已有项目");
+    if (Object.values(this.targets).filter(t => !t.isSample && !t.archived).length >= 50) throw new RequestError(409, "Up to 50 active projects can be registered. Archive unused projects first");
+    if (Object.values(this.targets).some(t => !t.archived && (target.kind === "url" ? t.url === target.url : t.htmlPath === target.htmlPath))) throw new RequestError(409, "This target is already registered. Open the existing project");
     this.persist(target);
     this.targets[variant] = target;
     return target;
@@ -202,6 +202,6 @@ export async function inspectRegisteredTarget(target: RegisteredTarget, projectI
       return { elements, visibleTextSummary: document.body.innerText.slice(0, 1500) };
     });
     return { ...base, title, ...info };
-  } catch (error) { return { ...base, error: timedOut ? "页面检查超时（15 秒）" : `页面检查失败：${error instanceof Error ? error.message : String(error)}` }; }
+  } catch (error) { return { ...base, error: timedOut ? "Page inspection timed out after 15 seconds" : `Page inspection failed:${error instanceof Error ? error.message : String(error)}` }; }
   finally { if (timeout) clearTimeout(timeout); await browser?.close().catch(() => {}); }
 }

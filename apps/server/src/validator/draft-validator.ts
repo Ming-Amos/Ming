@@ -28,7 +28,7 @@ export function validateDraftPlan(plan: unknown): string[] {
   // Guard: plan must be a non-null object before we touch anything on it.
   // Fix 2: be total over arbitrary JSON — structural checks first.
   if (!plan || typeof plan !== "object" || Array.isArray(plan)) {
-    errors.push("计划结构无效：输入不是对象");
+    errors.push("Invalid plan: input must be an object");
     return errors;
   }
 
@@ -62,8 +62,8 @@ export function validateDraftPlan(plan: unknown): string[] {
       if (s.type === "navigate" && s.url !== undefined) {
         if (s.url !== "{{TARGET_URL}}") {
           errors.push(
-            `步骤 "${s.id}" (navigate) URL "${s.url}" 不等于 {{TARGET_URL}}，` +
-            `navigate 步骤只允许使用 {{TARGET_URL}}`
+            `Step "${s.id}" (navigate) URL "${s.url}" is not {{TARGET_URL}}; ` +
+            `navigate steps may only use {{TARGET_URL}}`
           );
         }
       }
@@ -112,42 +112,42 @@ const ASSERTION_TYPES = new Set([
 
 function validateStructure(plan: AcceptancePlan, errors: string[]): void {
   if (!plan.planId || typeof plan.planId !== "string") {
-    errors.push("计划结构无效：planId 缺失");
+    errors.push("Invalid plan: planId is required");
     return; // can't continue without planId
   }
   if (!Array.isArray(plan.criteria) || plan.criteria.length === 0) {
-    errors.push("计划结构无效：criteria 为空或不是数组");
+    errors.push("Invalid plan: criteria must be a non-empty array");
     return;
   }
-  if (plan.criteria.length > 20) { errors.push("最多支持 20 条验收标准"); return; }
-  if (plan.criteria.reduce((count, c) => count + (Array.isArray(c?.steps) ? c.steps.length : 0), 0) > 120) { errors.push("计划最多支持 120 个步骤"); return; }
-  if (!["fixture", "generated", "manual"].includes(plan.source)) errors.push("计划 source 必须为 fixture、generated 或 manual");
-  if (typeof plan.title !== "string" || !plan.title.trim() || plan.title.length > 200) errors.push("计划标题须为 1–200 字符");
-  if (typeof plan.description !== "string" || plan.description.length > 4000) errors.push("计划描述必须为不超过 4000 字符的文本");
+  if (plan.criteria.length > 20) { errors.push("A plan supports up to 20 acceptance criteria"); return; }
+  if (plan.criteria.reduce((count, c) => count + (Array.isArray(c?.steps) ? c.steps.length : 0), 0) > 120) { errors.push("A plan supports up to 120 steps"); return; }
+  if (!["fixture", "generated", "manual"].includes(plan.source)) errors.push("Plan source must be fixture, generated, or manual");
+  if (typeof plan.title !== "string" || !plan.title.trim() || plan.title.length > 200) errors.push("The plan title must contain 1–200 characters");
+  if (typeof plan.description !== "string" || plan.description.length > 4000) errors.push("The plan description must be text with at most 4,000 characters");
 
   const seenCriteriaIds = new Set<string>();
 
   for (const c of plan.criteria) {
-    if (!c || typeof c !== "object") { errors.push("验收标准必须为对象"); continue; }
-    if (typeof c.title !== "string" || !c.title.trim() || c.title.length > 200) errors.push("验收标准标题须为 1–200 字符");
-    if (typeof c.description !== "string" || c.description.length > 4000) errors.push("验收标准描述必须为不超过 4000 字符的文本");
+    if (!c || typeof c !== "object") { errors.push("Each acceptance criterion must be an object"); continue; }
+    if (typeof c.title !== "string" || !c.title.trim() || c.title.length > 200) errors.push("A criterion title must contain 1–200 characters");
+    if (typeof c.description !== "string" || c.description.length > 4000) errors.push("A criterion description must be text with at most 4,000 characters");
     for (const field of ["requirementRef", "expectedBehavior", "prerequisites"] as const) {
-      if (c[field] !== undefined && (typeof c[field] !== "string" || c[field]!.length > 4000)) errors.push(`criteria "${c.id}" 的 ${field} 必须为不超过 4000 字符的文本`);
+      if (c[field] !== undefined && (typeof c[field] !== "string" || c[field]!.length > 4000)) errors.push(`Criterion "${c.id}": ${field} must be text with at most 4,000 characters`);
     }
-    if (c.contextMode !== undefined && !["fresh", "inherit"].includes(c.contextMode)) errors.push(`criteria "${c.id}" contextMode 必须为 fresh 或 inherit`);
-    if (c.dependsOn !== undefined && (!Array.isArray(c.dependsOn) || c.dependsOn.some(d => typeof d !== "string"))) errors.push(`criteria "${c.id}" dependsOn 必须为字符串数组`);
+    if (c.contextMode !== undefined && !["fresh", "inherit"].includes(c.contextMode)) errors.push(`Criterion "${c.id}": contextMode must be fresh or inherit`);
+    if (c.dependsOn !== undefined && (!Array.isArray(c.dependsOn) || c.dependsOn.some(d => typeof d !== "string"))) errors.push(`Criterion "${c.id}": dependsOn must be an array of strings`);
     if (!c.id || typeof c.id !== "string" || !/^[A-Za-z0-9_-]{1,80}$/.test(c.id)) {
-      errors.push("criteria 缺少有效 id");
+      errors.push("A criterion is missing a valid ID");
       continue;
     }
     if (seenCriteriaIds.has(c.id)) {
-      errors.push(`criteria id "${c.id}" 重复`);
+      errors.push(`Duplicate criterion ID: "${c.id}"`);
       continue;
     }
     seenCriteriaIds.add(c.id);
 
     if (!Array.isArray(c.steps) || c.steps.length === 0) {
-      errors.push(`criteria "${c.id}"：steps 为空或不是数组`);
+      errors.push(`Criterion "${c.id}": steps must be a non-empty array`);
       continue;
     }
 
@@ -155,52 +155,52 @@ function validateStructure(plan: AcceptancePlan, errors: string[]): void {
     let hasAssertion = false;
 
     for (const s of c.steps) {
-      if (!s || typeof s !== "object") { errors.push(`criteria "${c.id}" 包含无效步骤`); continue; }
-      if (typeof s.description !== "string" || s.description.length > 1000) errors.push(`criteria "${c.id}" 的步骤说明必须为不超过 1000 字符的文本`);
+      if (!s || typeof s !== "object") { errors.push(`Criterion "${c.id}" contains an invalid step`); continue; }
+      if (typeof s.description !== "string" || s.description.length > 1000) errors.push(`Criterion "${c.id}": step descriptions must be text with at most 1,000 characters`);
       if (!s.id || typeof s.id !== "string" || !/^[A-Za-z0-9_-]{1,80}$/.test(s.id)) {
-        errors.push(`criteria "${c.id}" 包含没有有效 id 的步骤`);
+        errors.push(`Criterion "${c.id}" contains a step without a valid ID`);
         continue;
       }
       if (seenStepIds.has(s.id)) {
-        errors.push(`步骤 id "${s.id}" 在 criteria "${c.id}" 中重复`);
+        errors.push(`Duplicate step ID "${s.id}" in criterion "${c.id}"`);
         continue;
       }
       seenStepIds.add(s.id);
 
       if (!ALLOWED_STEP_TYPES.has(s.type)) {
-        errors.push(`步骤 "${s.id}" 类型 "${s.type}" 未注册，拒绝执行`);
+        errors.push(`Step "${s.id}" uses unsupported type "${s.type}"; execution refused`);
         continue;
       }
 
       for (const field of REQUIRED_FIELDS[s.type] ?? []) {
         const val = (s as unknown as Record<string, unknown>)[field];
         if (val === undefined || val === null) {
-          errors.push(`步骤 "${s.id}" (${s.type}) 缺少必填字段 "${field}"`);
+          errors.push(`Step "${s.id}" (${s.type}) is missing required field "${field}"`);
         }
-        else if (typeof val !== "string" || val.length > 4000 || (field !== "value" && !val.trim())) errors.push(`步骤 "${s.id}" 的 ${field} 必须为有效字符串（不超过 4000 字符）`);
+        else if (typeof val !== "string" || val.length > 4000 || (field !== "value" && !val.trim())) errors.push(`Step "${s.id}": ${field} must be a valid string with at most 4,000 characters`);
       }
 
       if (s.type === "assertCount") {
         const exp = s.expected;
         if (exp === undefined || exp === null) {
-          errors.push(`步骤 "${s.id}" (assertCount) 缺少 expected 字段`);
+          errors.push(`Step "${s.id}" (assertCount) is missing expected`);
         } else if (typeof exp !== "number") {
           errors.push(
-            `步骤 "${s.id}" (assertCount) expected 必须是数字类型，不接受字符串（得到：${JSON.stringify(exp)}）`
+            `Step "${s.id}" (assertCount): expected must be a number, not a string (received: ${JSON.stringify(exp)})`
           );
         } else if (!Number.isInteger(exp) || exp < 0) {
-          errors.push(`步骤 "${s.id}" (assertCount) expected 必须是非负整数，得到：${exp}`);
+          errors.push(`Step "${s.id}" (assertCount): expected must be a non-negative integer (received: ${exp})`);
         }
       }
 
       const sRec = s as unknown as Record<string, unknown>;
       if (sRec["script"] !== undefined || sRec["eval"] !== undefined) {
-        errors.push(`步骤 "${s.id}" 包含禁止字段 script/eval`);
+        errors.push(`Step "${s.id}" contains a prohibited script/eval field`);
       }
 
       for (const key of Object.keys(sRec)) {
         if (!KNOWN_STEP_KEYS.has(key)) {
-          errors.push(`步骤 "${s.id}" 包含未知字段 "${key}"，拒绝执行`);
+          errors.push(`Step "${s.id}" contains unknown field "${key}"; execution refused`);
         }
       }
 
@@ -208,7 +208,7 @@ function validateStructure(plan: AcceptancePlan, errors: string[]): void {
     }
 
     if (!hasAssertion) {
-      errors.push(`criteria "${c.id}" 没有任何断言步骤，无法验证预期行为`);
+      errors.push(`Criterion "${c.id}" has no assertion steps and cannot verify expected behavior`);
     }
   }
 
@@ -219,7 +219,7 @@ function validateStructure(plan: AcceptancePlan, errors: string[]): void {
     for (const dep of c.dependsOn ?? []) {
       if (!orderedIds.includes(dep)) {
         errors.push(
-          `criteria "${c.id}" 依赖 "${dep}"，但 "${dep}" 不存在或出现在后面（不支持后向/循环依赖）`
+          `Criterion "${c.id}" depends on "${dep}", which is missing or appears later; forward or circular dependencies are not supported`
         );
       }
     }
@@ -232,16 +232,16 @@ function validateStructure(plan: AcceptancePlan, errors: string[]): void {
     if (oq !== undefined && oq !== null) {
       if (!Array.isArray(oq)) {
         errors.push(
-          `criteria "${c.id}" 的 openQuestions 必须是字符串数组，当前是 ${typeof oq}` +
-          `（值：${JSON.stringify(oq)}），此草稿将被标记为含待确认问题`
+          `Criterion "${c.id}": openQuestions must be an array of strings; received ${typeof oq}` +
+          ` (value: ${JSON.stringify(oq)}). This draft will be marked as having unresolved questions`
         );
       } else {
-        if (oq.length > 20) errors.push(`criteria "${c.id}" 最多支持 20 个待确认问题`);
+        if (oq.length > 20) errors.push(`Criterion "${c.id}" supports up to 20 open questions`);
         for (const q of oq) {
           if (typeof q !== "string") {
-            errors.push(`criteria "${c.id}" 的 openQuestions 包含非字符串元素：${JSON.stringify(q)}`);
+            errors.push(`Criterion "${c.id}": openQuestions contains a non-string value: ${JSON.stringify(q)}`);
           }
-          else if (q.length > 1000) errors.push(`criteria "${c.id}" 的待确认问题不能超过 1000 字符`);
+          else if (q.length > 1000) errors.push(`Criterion "${c.id}": an open question must not exceed 1,000 characters`);
         }
       }
     }
@@ -255,7 +255,7 @@ function validateStructure(plan: AcceptancePlan, errors: string[]): void {
   ]);
   for (const key of Object.keys(plan as unknown as Record<string, unknown>)) {
     if (!KNOWN_PLAN_KEYS.has(key)) {
-      errors.push(`计划包含未知顶层字段 "${key}"，拒绝执行`);
+      errors.push(`The plan contains unknown top-level field "${key}"; execution refused`);
     }
   }
 
@@ -267,7 +267,7 @@ function validateStructure(plan: AcceptancePlan, errors: string[]): void {
   for (const c of plan.criteria) {
     for (const key of Object.keys(c as unknown as Record<string, unknown>)) {
       if (!KNOWN_CRITERION_KEYS.has(key)) {
-        errors.push(`criteria "${c.id}" 包含未知字段 "${key}"，拒绝执行`);
+        errors.push(`Criterion "${c.id}" contains unknown field "${key}"; execution refused`);
       }
     }
   }
@@ -278,15 +278,15 @@ function validateStructure(plan: AcceptancePlan, errors: string[]): void {
     if (c.contextMode === "inherit") {
       if (i === 0) {
         errors.push(
-          `criteria "${c.id}" 使用 contextMode=inherit，但它是第一个 criteria，没有前驱，无法继承上下文`
+          `Criterion "${c.id}" uses contextMode=inherit, but it is first and has no preceding context to inherit`
         );
       } else {
         const prev = plan.criteria[i - 1];
         const deps = c.dependsOn ?? [];
         if (!deps.includes(prev.id)) {
           errors.push(
-            `criteria "${c.id}" 使用 contextMode=inherit，但没有依赖紧前一个 criteria "${prev.id}"` +
-            `（dependsOn=${JSON.stringify(deps)}），inherit 只能从紧前项继承上下文`
+            `Criterion "${c.id}" uses contextMode=inherit but does not depend on the immediately preceding criterion "${prev.id}"` +
+            ` (dependsOn=${JSON.stringify(deps)}); context can only be inherited from the immediately preceding criterion`
           );
         }
       }

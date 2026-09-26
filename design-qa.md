@@ -1,5 +1,25 @@
 # Ming Application X-ray — design QA
 
+## English Evidence Studio — current review, 2026-09-26
+
+**Final result: passed.** The latest revision retains the selected three-column Application X-ray composition and adds an English editorial project hub, an actual recorded-step timeline, evidence focus, command navigation and direct before/after image comparison. The earlier sections below describe historical checkpoints, including their original Chinese UI; they do not describe the current interface.
+
+The source audit captured the previous working hub, history and failed evidence workspace before changes. Root review opened the [workspace pair](docs/evidence/english-studio/workspace-comparison.png) and [hub pair](docs/evidence/english-studio/hub-comparison.png) as combined before/after inputs at identical 1484×1060 viewport and 1× density. No source image was rescaled. Both use the same product workflow; the English Shipboard fixture is an intentional replacement for the Chinese daily-report presentation. The previous raw execution bundle remains unchanged.
+
+**Visual and interaction findings resolved:**
+
+1. **P1 — judge-facing language gap:** product navigation, editors, settings, errors and new report copy are English. A separately executed English example supplies English screenshot/repair evidence instead of relabelling old screenshots.
+2. **P2 — weak first-use hierarchy:** the large empty placeholder is replaced by a concise project entry, a serif-led product promise and keyboard-operable Define/Inspect/Resolve tabs. Sample cards expose working, defective and repair variants; legacy examples are grouped separately.
+3. **P2 — hard-to-follow execution evidence:** a scrubber and Play/Pause follow actual saved actions and keep the criterion, observation and evidence selection synchronized. Focus mode enlarges the evidence area. The above-fold Explore repair action opens the verified comparison without searching the side panel.
+4. **P2 — static repair comparison:** a draggable divider and keyboard range reveal original captures. Same-standard comparison checks and original-image links remain available. No invented pixels or execution steps are displayed.
+5. **P2 — readability and loading:** explanatory copy was darkened (measured paragraph contrast 5.45:1), the missing banner text gap and millisecond casing were corrected, and remote font imports were removed. Native Segoe UI/Arial and Georgia stacks load without a font-network dependency. Reduced motion is honored.
+
+The final compiled interface passed **47/47** creative/read-only checks and **32/32** independent own-project checks. All seven stable final Studio captures, the independent project workflow captures, and both visual pairs were inspected. Desktop and 390px layouts have no horizontal document overflow. No uncaught browser errors, failed resources or external requests occurred in the read-only review. Type checking and the full production build passed.
+
+The real screenshots remain the primary imagery; Phosphor icons provide controls. Ink text, warm neutral surfaces and cobalt actions retain the existing palette, with green/red status words and icons rather than color alone. Operational screenshots can scroll, zoom and open at original size. The new timeline adds vertical space deliberately; the top comparison entry and focus mode provide a direct route to the relevant proof.
+
+**P3 follow-up:** compact provenance metadata and full-page source captures can remain small at narrow widths. Original-image access and focus/zoom controls are available. This does not prevent the reviewed workflow. No actionable P0/P1/P2 finding remains in the bounded review. See [ENGLISH_STUDIO_REVIEW](docs/ENGLISH_STUDIO_REVIEW.md) for current evidence, exact scope and limitations. All work in this upgrade is attributed to Codex, with no additional Bob usage.
+
 ## Product workflow extension — 2026-09-26
 
 **PASS: own-project workflow and responsive visual review.** The frontend now adds a first-use project hub, local URL/HTML connection, PRD upload and persisted requirements, a visual manual acceptance editor, model configuration, and searchable history. These retain the original light Application X-ray styling while providing a complete entry path for a user's application.

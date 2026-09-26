@@ -1,0 +1,21 @@
+diff --git "a/C:\\Bob\\Projects\\Ming\\docs\\judge-evidence\\repair-process\\before.html" "b/C:\\Bob\\Projects\\Ming\\docs\\judge-evidence\\repair-process\\after.html"
+index d21dfe1..d9212a2 100644
+--- "a/C:\\Bob\\Projects\\Ming\\docs\\judge-evidence\\repair-process\\before.html"
++++ "b/C:\\Bob\\Projects\\Ming\\docs\\judge-evidence\\repair-process\\after.html"
+@@ -33,9 +33,13 @@
+   </main>
+   <script>
+     const STORAGE_KEY = 'shipboard.tasks.v1';
+-    // Seeded demonstration defect: tasks exist only for the current page lifetime.
+-    function loadTasks() { return []; }
+-    function persistTasks() { /* Persistence is missing in this example. */ }
++    function loadTasks() {
++      try {
++        const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
++        return Array.isArray(stored) ? stored.filter(task => task && typeof task.id === 'string' && typeof task.text === 'string' && typeof task.done === 'boolean') : [];
++      } catch { return []; }
++    }
++    function persistTasks() { localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks)); }
+     let tasks = loadTasks();
+     const list = document.getElementById('taskList');
+     const input = document.getElementById('taskName');

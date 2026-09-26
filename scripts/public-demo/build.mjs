@@ -6,7 +6,7 @@ import { execFileSync } from 'node:child_process';
 
 const root = fileURLToPath(new URL('../..', import.meta.url));
 const output = path.join(root, 'dist', 'sites');
-const evidence = path.join(root, 'docs', 'demo-evidence');
+const evidence = path.join(root, 'docs', 'judge-evidence');
 const web = path.join(root, 'apps', 'web', 'dist');
 const metadataFile = path.join(root, '.openai', 'hosting.json');
 const args = process.argv.slice(2);

@@ -35,7 +35,7 @@ try{
  check('Outside-origin subresource never reaches destination',trapRequests===0);
  const before=trapRequests;const redirect=await run(plan([{type:'navigate',url:'{{TARGET_URL}}'},{type:'assertVisible',value:'Unauthorized destination'}]),appUrl+'/redirect');
  check('HTTP redirect to another origin is blocked before destination request',redirect.status==='error'&&trapRequests===before);
- check('Blocked redirect has actionable real diagnostic',redirect.diagnostics.some(x=>x.status===302&&x.message.includes('跳转')));
+ check('Blocked redirect has actionable real diagnostic',redirect.diagnostics.some(x=>x.status===302&&x.message.includes('redirect')));
  const slow=plan([{type:'navigate',url:'{{TARGET_URL}}'},{type:'click',locator:'Never enabled'},{type:'assertVisible',value:'Impossible'}]);
  const controller=new AbortController();const started=Date.now();setTimeout(()=>controller.abort(),350);
  const cancelled=await run(slow,appUrl+'/slow',{signal:controller.signal});

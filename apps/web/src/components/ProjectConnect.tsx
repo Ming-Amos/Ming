@@ -49,9 +49,9 @@ export default function ProjectConnect({
     }
   }
   return (
-    <Sheet title="接入你的项目" onClose={onClose} locked={busy}>
+    <Sheet title="Connect your project" onClose={onClose} locked={busy}>
       <p className="sheet-lead">
-        项目继续在原来的开发工具中运行。Ming 打开测试页面，按你定义的标准验收。
+        Keep your app running in your usual development tool. Ming opens its test page and checks it against your acceptance criteria.
       </p>
       <div className="mode-switch">
         <button
@@ -60,7 +60,7 @@ export default function ProjectConnect({
           onClick={() => setKind("url")}
         >
           <Globe size={18} />
-          运行中的网页
+          Running web app
         </button>
         <button
           disabled={busy}
@@ -68,23 +68,23 @@ export default function ProjectConnect({
           onClick={() => setKind("html")}
         >
           <FileHtml size={18} />
-          本地 HTML
+          Local HTML file
         </button>
       </div>
       <label className="field">
-        项目名称
+        Project name
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
           maxLength={100}
-          placeholder="例如：我的任务管理工具"
+          placeholder="e.g. My task manager"
           disabled={busy}
         />
       </label>
       {kind === "url" ? (
         <>
           <label className="field">
-            测试页面地址
+            Test page URL
             <input
               value={url}
               onChange={(e) => setUrl(e.target.value)}
@@ -94,14 +94,14 @@ export default function ProjectConnect({
             />
           </label>
           <p className="field-help">
-            填写已经启动的本地开发地址。页面、脚本和接口须在同一来源；跨域接口请先通过开发服务器代理。不要填写
-            Ming 自己的页面地址。
+            Enter your running local app URL. Pages, scripts, and APIs must share one origin; proxy cross-origin APIs through your development server. Use your app URL,
+            not the Ming dashboard URL.
           </p>
         </>
       ) : (
         <>
           <label className="field">
-            HTML 文件完整路径
+            Full HTML file path
             <input
               value={htmlPath}
               onChange={(e) => setHtmlPath(e.target.value)}
@@ -110,18 +110,18 @@ export default function ProjectConnect({
             />
           </label>
           <p className="field-help">
-            适用于样式和脚本包含在一个 HTML 文件中的页面。Ming
-            会固定本次执行的文件快照。
+            For pages with all styles and scripts inside one HTML file. Ming
+            freezes a snapshot of the file for each run.
           </p>
         </>
       )}
       <details className="connection-advanced">
         <summary>
           <FolderOpen size={17} />
-          关联代码文件夹（可选）
+          Link a source folder (optional)
         </summary>
         <label className="field">
-          源代码目录
+          Source folder
           <input
             value={sourceDir}
             onChange={(e) => setSourceDir(e.target.value)}
@@ -130,13 +130,13 @@ export default function ProjectConnect({
           />
         </label>
         <p className="field-help">
-          供修复交接和代码版本核对使用。Ming 不会自动修改这个目录。
+          Used to hand off repairs and track source revisions. Ming does not edit this folder automatically.
         </p>
       </details>
       <div className="info-box">
         <Info size={20} />
         <p>
-          检查会执行真实的输入和点击，请使用自己的测试环境。登录流程、验证码和外部系统需要先准备好可验收的页面。
+          Checks perform real actions. Use your own test environment and prepare a testable page for flows that require sign-in, CAPTCHA, or external services.
         </p>
       </div>
       {error && (
@@ -159,7 +159,7 @@ export default function ProjectConnect({
         ) : (
           <ArrowRight size={18} />
         )}
-        {busy ? "正在接入…" : "接入项目并编写需求"}
+        {busy ? "Connecting…" : "Connect and add requirements"}
       </button>
     </Sheet>
   );

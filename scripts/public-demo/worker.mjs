@@ -33,6 +33,9 @@ export function createWorker(bundle) {
       if (url.pathname === '/api/provider/status') {
         return json({ ok: true, status: { configured: false, providerLabel: 'Recorded evidence demo — model calls disabled', baseUrl: '(disabled)', modelId: '(disabled)', missingFields: ['LOCAL_MODEL_CONFIGURATION_REQUIRED'] } }, 200, head);
       }
+      if (url.pathname === '/api/projects') {
+        return json({ ok: true, projects: [], readOnly: true }, 200, head);
+      }
       if (url.pathname.startsWith('/api/screenshots/')) {
         let filename;
         try { filename = decodeURIComponent(url.pathname.slice('/api/screenshots/'.length)); }

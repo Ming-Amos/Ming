@@ -1,37 +1,58 @@
 [
   {
     "variant": "normal",
-    "label": "日报 · 正常示例",
+    "label": "Daily Report · Working example (Chinese)",
     "route": "/normal",
     "htmlPath": "examples/daily-report/normal/index.html",
     "planPath": "fixtures/stage-a-plan.json"
   },
   {
     "variant": "buggy",
-    "label": "日报 · 缺陷示例",
+    "label": "Daily Report · Defective example (Chinese)",
     "route": "/buggy",
     "htmlPath": "examples/daily-report/buggy/index.html",
     "planPath": "fixtures/stage-a-plan.json"
   },
   {
     "variant": "repair-demo",
-    "label": "日报 · AI 修复工作区",
+    "label": "Daily Report · AI repair workspace (Chinese)",
     "route": "/repair-demo",
     "htmlPath": "examples/daily-report/repair/index.html",
     "planPath": "fixtures/stage-a-plan.json"
   },
   {
     "variant": "todo-normal",
-    "label": "Focus · 正常示例",
+    "label": "Focus · Working example (Chinese)",
     "route": "/todo-normal",
     "htmlPath": "examples/todo/normal/index.html",
     "planPath": "fixtures/todo-plan.json"
   },
   {
     "variant": "todo-buggy",
-    "label": "Focus · 缺陷示例",
+    "label": "Focus · Defective example (Chinese)",
     "route": "/todo-buggy",
     "htmlPath": "examples/todo/buggy/index.html",
     "planPath": "fixtures/todo-plan.json"
+  },
+  {
+    "variant": "shipboard-normal",
+    "label": "Shipboard · Working example",
+    "route": "/shipboard-normal",
+    "htmlPath": "examples/shipboard/normal/index.html",
+    "planPath": "fixtures/shipboard-plan.json"
+  },
+  {
+    "variant": "shipboard-buggy",
+    "label": "Shipboard · Persistence defect",
+    "route": "/shipboard-buggy",
+    "htmlPath": "examples/shipboard/buggy/index.html",
+    "planPath": "fixtures/shipboard-plan.json"
+  },
+  {
+    "variant": "shipboard-repair",
+    "label": "Shipboard · AI repair workspace",
+    "route": "/shipboard-repair",
+    "htmlPath": "examples/shipboard/repair/index.html",
+    "planPath": "fixtures/shipboard-plan.json"
   }
 ]

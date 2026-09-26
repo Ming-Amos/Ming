@@ -1,0 +1,2565 @@
+{
+  "schemaVersion": 1,
+  "baseUrl": "http://127.0.0.1:4480",
+  "responses": {
+    "/api/run/62d46b46-2227-4ac9-8b15-72ba5bbe7fc3": {
+      "ok": true,
+      "run": {
+        "runId": "62d46b46-2227-4ac9-8b15-72ba5bbe7fc3",
+        "planId": "shipboard-task-acceptance",
+        "planVersion": "1.0.0",
+        "planFingerprint": "9c1f3dcf7fd3f279",
+        "targetVariant": "shipboard-normal",
+        "targetUrl": "http://localhost:4480/shipboard-normal",
+        "targetFingerprint": "8426ca024fd0f7c4",
+        "status": "passed",
+        "startedAt": "2026-09-26T11:12:02.651Z",
+        "finishedAt": "2026-09-26T11:12:03.442Z",
+        "criteria": [
+          {
+            "criteriaId": "SHIP-01",
+            "title": "A new task appears on the board",
+            "status": "passed",
+            "steps": [
+              {
+                "stepId": "SHIP-01-S1",
+                "description": "Open the Shipboard application",
+                "status": "passed",
+                "actual": "Navigated to http://localhost:4480/shipboard-normal",
+                "durationMs": 12
+              },
+              {
+                "stepId": "SHIP-01-S2",
+                "description": "Enter this run's unique task name",
+                "status": "passed",
+                "actual": "Entered text (19 characters)",
+                "durationMs": 63
+              },
+              {
+                "stepId": "SHIP-01-S3",
+                "description": "Add the task to the board",
+                "status": "passed",
+                "actual": "Clicked \"Add task\"",
+                "durationMs": 30
+              },
+              {
+                "stepId": "SHIP-01-S4",
+                "description": "Verify the new task is visible in the task list",
+                "status": "passed",
+                "expected": "Ming check 62d46b46",
+                "actual": "Text \"Ming check 62d46b46\" is visible within \"#taskList\"",
+                "durationMs": 4,
+                "screenshotPath": "62d46b46-2227-4ac9-8b15-72ba5bbe7fc3_SHIP-01_final.png"
+              }
+            ]
+          },
+          {
+            "criteriaId": "SHIP-02",
+            "title": "The same task survives a reload",
+            "status": "passed",
+            "steps": [
+              {
+                "stepId": "SHIP-02-S1",
+                "description": "Reload the same browser page",
+                "status": "passed",
+                "actual": "Page reloaded",
+                "durationMs": 7
+              },
+              {
+                "stepId": "SHIP-02-S2",
+                "description": "Verify the same task is still on the board",
+                "status": "passed",
+                "expected": "Ming check 62d46b46",
+                "actual": "Text \"Ming check 62d46b46\" is visible within \"#taskList\"",
+                "durationMs": 27,
+                "screenshotPath": "62d46b46-2227-4ac9-8b15-72ba5bbe7fc3_SHIP-02_final.png"
+              }
+            ]
+          },
+          {
+            "criteriaId": "SHIP-03",
+            "title": "Blank task names are rejected",
+            "status": "passed",
+            "steps": [
+              {
+                "stepId": "SHIP-03-S1",
+                "description": "Open a fresh Shipboard browser session",
+                "status": "passed",
+                "actual": "Navigated to http://localhost:4480/shipboard-normal",
+                "durationMs": 7
+              },
+              {
+                "stepId": "SHIP-03-S2",
+                "description": "Verify the fresh board has no tasks",
+                "status": "passed",
+                "expected": 0,
+                "actual": "0",
+                "durationMs": 29
+              },
+              {
+                "stepId": "SHIP-03-S3",
+                "description": "Leave the task name empty",
+                "status": "passed",
+                "actual": "Entered text (0 characters)",
+                "durationMs": 7
+              },
+              {
+                "stepId": "SHIP-03-S4",
+                "description": "Try to add an empty task",
+                "status": "passed",
+                "actual": "Clicked \"Add task\"",
+                "durationMs": 43
+              },
+              {
+                "stepId": "SHIP-03-S5",
+                "description": "Verify an actionable validation message appears",
+                "status": "passed",
+                "expected": "Add a task name before continuing.",
+                "actual": "Text \"Add a task name before continuing.\" is visible",
+                "durationMs": 1
+              },
+              {
+                "stepId": "SHIP-03-S6",
+                "description": "Verify no empty task was created",
+                "status": "passed",
+                "expected": 0,
+                "actual": "0",
+                "durationMs": 1
+              },
+              {
+                "stepId": "SHIP-03-S7",
+                "description": "Enter a whitespace-only task name",
+                "status": "passed",
+                "actual": "Entered text (3 characters)",
+                "durationMs": 4
+              },
+              {
+                "stepId": "SHIP-03-S8",
+                "description": "Try to add a whitespace-only task",
+                "status": "passed",
+                "actual": "Clicked \"Add task\"",
+                "durationMs": 24
+              },
+              {
+                "stepId": "SHIP-03-S9",
+                "description": "Verify whitespace also produces a validation message",
+                "status": "passed",
+                "expected": "Add a task name before continuing.",
+                "actual": "Text \"Add a task name before continuing.\" is visible",
+                "durationMs": 1
+              },
+              {
+                "stepId": "SHIP-03-S10",
+                "description": "Verify the task board is still empty",
+                "status": "passed",
+                "expected": 0,
+                "actual": "0",
+                "durationMs": 1,
+                "screenshotPath": "62d46b46-2227-4ac9-8b15-72ba5bbe7fc3_SHIP-03_final.png"
+              }
+            ]
+          }
+        ],
+        "runnerFingerprint": "0f4cf2cc5fc32e24",
+        "planSnapshot": {
+          "planId": "shipboard-task-acceptance",
+          "version": "1.0.0",
+          "source": "fixture",
+          "title": "Shipboard — task creation and persistence",
+          "description": "A hand-authored acceptance plan for the English Shipboard demonstration. These browser checks validate visible user outcomes; no language model generated this plan.",
+          "originalRequirement": "A user can add a non-empty task and immediately see it on the board. The same task must survive a page reload. Empty and whitespace-only task names must show a clear validation message without creating a task.",
+          "fingerprint": "9c1f3dcf7fd3f279",
+          "createdAt": "2026-09-26T00:00:00.000Z",
+          "criteria": [
+            {
+              "id": "SHIP-01",
+              "title": "A new task appears on the board",
+              "description": "Enter a unique task name, submit it, and check the actual task list.",
+              "requirementRef": "A user can add a non-empty task and immediately see it on the board.",
+              "expectedBehavior": "The newly added task is visible in the task list, not just in the input field.",
+              "contextMode": "fresh",
+              "steps": [
+                {
+                  "id": "SHIP-01-S1",
+                  "type": "navigate",
+                  "url": "{{TARGET_URL}}",
+                  "description": "Open the Shipboard application"
+                },
+                {
+                  "id": "SHIP-01-S2",
+                  "type": "fill",
+                  "locator": "Task name",
+                  "value": "{{UNIQUE_CONTENT}}",
+                  "description": "Enter this run's unique task name"
+                },
+                {
+                  "id": "SHIP-01-S3",
+                  "type": "click",
+                  "locator": "Add task",
+                  "description": "Add the task to the board"
+                },
+                {
+                  "id": "SHIP-01-S4",
+                  "type": "assertVisibleIn",
+                  "locator": "#taskList",
+                  "value": "{{UNIQUE_CONTENT}}",
+                  "description": "Verify the new task is visible in the task list"
+                }
+              ]
+            },
+            {
+              "id": "SHIP-02",
+              "title": "The same task survives a reload",
+              "description": "Continue in the same browser as SHIP-01, reload, and check the same task.",
+              "requirementRef": "The same task must survive a page reload.",
+              "expectedBehavior": "Reloading the page keeps the task that was just added.",
+              "dependsOn": [
+                "SHIP-01"
+              ],
+              "contextMode": "inherit",
+              "steps": [
+                {
+                  "id": "SHIP-02-S1",
+                  "type": "reload",
+                  "description": "Reload the same browser page"
+                },
+                {
+                  "id": "SHIP-02-S2",
+                  "type": "assertVisibleIn",
+                  "locator": "#taskList",
+                  "value": "{{UNIQUE_CONTENT}}",
+                  "description": "Verify the same task is still on the board"
+                }
+              ]
+            },
+            {
+              "id": "SHIP-03",
+              "title": "Blank task names are rejected",
+              "description": "Use an independent browser to check empty and whitespace-only submissions.",
+              "requirementRef": "Empty and whitespace-only task names must show a clear validation message without creating a task.",
+              "expectedBehavior": "The board remains empty and displays an actionable validation message.",
+              "contextMode": "fresh",
+              "steps": [
+                {
+                  "id": "SHIP-03-S1",
+                  "type": "navigate",
+                  "url": "{{TARGET_URL}}",
+                  "description": "Open a fresh Shipboard browser session"
+                },
+                {
+                  "id": "SHIP-03-S2",
+                  "type": "assertCount",
+                  "locator": ".task-item",
+                  "expected": 0,
+                  "description": "Verify the fresh board has no tasks"
+                },
+                {
+                  "id": "SHIP-03-S3",
+                  "type": "fill",
+                  "locator": "Task name",
+                  "value": "",
+                  "description": "Leave the task name empty"
+                },
+                {
+                  "id": "SHIP-03-S4",
+                  "type": "click",
+                  "locator": "Add task",
+                  "description": "Try to add an empty task"
+                },
+                {
+                  "id": "SHIP-03-S5",
+                  "type": "assertVisible",
+                  "value": "Add a task name before continuing.",
+                  "description": "Verify an actionable validation message appears"
+                },
+                {
+                  "id": "SHIP-03-S6",
+                  "type": "assertCount",
+                  "locator": ".task-item",
+                  "expected": 0,
+                  "description": "Verify no empty task was created"
+                },
+                {
+                  "id": "SHIP-03-S7",
+                  "type": "fill",
+                  "locator": "Task name",
+                  "value": "   ",
+                  "description": "Enter a whitespace-only task name"
+                },
+                {
+                  "id": "SHIP-03-S8",
+                  "type": "click",
+                  "locator": "Add task",
+                  "description": "Try to add a whitespace-only task"
+                },
+                {
+                  "id": "SHIP-03-S9",
+                  "type": "assertVisible",
+                  "value": "Add a task name before continuing.",
+                  "description": "Verify whitespace also produces a validation message"
+                },
+                {
+                  "id": "SHIP-03-S10",
+                  "type": "assertCount",
+                  "locator": ".task-item",
+                  "expected": 0,
+                  "description": "Verify the task board is still empty"
+                }
+              ]
+            }
+          ]
+        },
+        "sourceBinding": "self-contained-html-snapshot",
+        "diagnostics": [],
+        "sourceChangedDuringRun": false
+      }
+    },
+    "/api/run/62d46b46-2227-4ac9-8b15-72ba5bbe7fc3/progress": {
+      "ok": true,
+      "progress": {
+        "runId": "62d46b46-2227-4ac9-8b15-72ba5bbe7fc3",
+        "status": "passed",
+        "finishedCriteria": 3,
+        "totalCriteria": 3
+      }
+    },
+    "/api/run/c001b117-8865-4084-bfa6-e04ddde1683d": {
+      "ok": true,
+      "run": {
+        "runId": "c001b117-8865-4084-bfa6-e04ddde1683d",
+        "planId": "shipboard-task-acceptance",
+        "planVersion": "1.0.0",
+        "planFingerprint": "9c1f3dcf7fd3f279",
+        "targetVariant": "shipboard-buggy",
+        "targetUrl": "http://localhost:4480/shipboard-buggy",
+        "targetFingerprint": "c1775e6bfbafc41d",
+        "status": "failed",
+        "startedAt": "2026-09-26T11:12:03.456Z",
+        "finishedAt": "2026-09-26T11:12:07.298Z",
+        "criteria": [
+          {
+            "criteriaId": "SHIP-01",
+            "title": "A new task appears on the board",
+            "status": "passed",
+            "steps": [
+              {
+                "stepId": "SHIP-01-S1",
+                "description": "Open the Shipboard application",
+                "status": "passed",
+                "actual": "Navigated to http://localhost:4480/shipboard-buggy",
+                "durationMs": 8
+              },
+              {
+                "stepId": "SHIP-01-S2",
+                "description": "Enter this run's unique task name",
+                "status": "passed",
+                "actual": "Entered text (19 characters)",
+                "durationMs": 37
+              },
+              {
+                "stepId": "SHIP-01-S3",
+                "description": "Add the task to the board",
+                "status": "passed",
+                "actual": "Clicked \"Add task\"",
+                "durationMs": 61
+              },
+              {
+                "stepId": "SHIP-01-S4",
+                "description": "Verify the new task is visible in the task list",
+                "status": "passed",
+                "expected": "Ming check c001b117",
+                "actual": "Text \"Ming check c001b117\" is visible within \"#taskList\"",
+                "durationMs": 2,
+                "screenshotPath": "c001b117-8865-4084-bfa6-e04ddde1683d_SHIP-01_final.png"
+              }
+            ]
+          },
+          {
+            "criteriaId": "SHIP-02",
+            "title": "The same task survives a reload",
+            "status": "failed",
+            "steps": [
+              {
+                "stepId": "SHIP-02-S1",
+                "description": "Reload the same browser page",
+                "status": "passed",
+                "actual": "Page reloaded",
+                "durationMs": 8
+              },
+              {
+                "stepId": "SHIP-02-S2",
+                "description": "Verify the same task is still on the board",
+                "status": "failed",
+                "expected": "Ming check c001b117",
+                "actual": "Text \"Ming check c001b117\" is not visible within \"#taskList\"",
+                "error": "Expected text \"Ming check c001b117\" within \"#taskList\" to be visible, but it was not found",
+                "durationMs": 2555,
+                "screenshotPath": "c001b117-8865-4084-bfa6-e04ddde1683d_SHIP-02-S2_failed.png"
+              }
+            ]
+          },
+          {
+            "criteriaId": "SHIP-03",
+            "title": "Blank task names are rejected",
+            "status": "passed",
+            "steps": [
+              {
+                "stepId": "SHIP-03-S1",
+                "description": "Open a fresh Shipboard browser session",
+                "status": "passed",
+                "actual": "Navigated to http://localhost:4480/shipboard-buggy",
+                "durationMs": 17
+              },
+              {
+                "stepId": "SHIP-03-S2",
+                "description": "Verify the fresh board has no tasks",
+                "status": "passed",
+                "expected": 0,
+                "actual": "0",
+                "durationMs": 36
+              },
+              {
+                "stepId": "SHIP-03-S3",
+                "description": "Leave the task name empty",
+                "status": "passed",
+                "actual": "Entered text (0 characters)",
+                "durationMs": 16
+              },
+              {
+                "stepId": "SHIP-03-S4",
+                "description": "Try to add an empty task",
+                "status": "passed",
+                "actual": "Clicked \"Add task\"",
+                "durationMs": 48
+              },
+              {
+                "stepId": "SHIP-03-S5",
+                "description": "Verify an actionable validation message appears",
+                "status": "passed",
+                "expected": "Add a task name before continuing.",
+                "actual": "Text \"Add a task name before continuing.\" is visible",
+                "durationMs": 3
+              },
+              {
+                "stepId": "SHIP-03-S6",
+                "description": "Verify no empty task was created",
+                "status": "passed",
+                "expected": 0,
+                "actual": "0",
+                "durationMs": 2
+              },
+              {
+                "stepId": "SHIP-03-S7",
+                "description": "Enter a whitespace-only task name",
+                "status": "passed",
+                "actual": "Entered text (3 characters)",
+                "durationMs": 19
+              },
+              {
+                "stepId": "SHIP-03-S8",
+                "description": "Try to add a whitespace-only task",
+                "status": "passed",
+                "actual": "Clicked \"Add task\"",
+                "durationMs": 43
+              },
+              {
+                "stepId": "SHIP-03-S9",
+                "description": "Verify whitespace also produces a validation message",
+                "status": "passed",
+                "expected": "Add a task name before continuing.",
+                "actual": "Text \"Add a task name before continuing.\" is visible",
+                "durationMs": 3
+              },
+              {
+                "stepId": "SHIP-03-S10",
+                "description": "Verify the task board is still empty",
+                "status": "passed",
+                "expected": 0,
+                "actual": "0",
+                "durationMs": 2,
+                "screenshotPath": "c001b117-8865-4084-bfa6-e04ddde1683d_SHIP-03_final.png"
+              }
+            ]
+          }
+        ],
+        "runnerFingerprint": "0f4cf2cc5fc32e24",
+        "planSnapshot": {
+          "planId": "shipboard-task-acceptance",
+          "version": "1.0.0",
+          "source": "fixture",
+          "title": "Shipboard — task creation and persistence",
+          "description": "A hand-authored acceptance plan for the English Shipboard demonstration. These browser checks validate visible user outcomes; no language model generated this plan.",
+          "originalRequirement": "A user can add a non-empty task and immediately see it on the board. The same task must survive a page reload. Empty and whitespace-only task names must show a clear validation message without creating a task.",
+          "fingerprint": "9c1f3dcf7fd3f279",
+          "createdAt": "2026-09-26T00:00:00.000Z",
+          "criteria": [
+            {
+              "id": "SHIP-01",
+              "title": "A new task appears on the board",
+              "description": "Enter a unique task name, submit it, and check the actual task list.",
+              "requirementRef": "A user can add a non-empty task and immediately see it on the board.",
+              "expectedBehavior": "The newly added task is visible in the task list, not just in the input field.",
+              "contextMode": "fresh",
+              "steps": [
+                {
+                  "id": "SHIP-01-S1",
+                  "type": "navigate",
+                  "url": "{{TARGET_URL}}",
+                  "description": "Open the Shipboard application"
+                },
+                {
+                  "id": "SHIP-01-S2",
+                  "type": "fill",
+                  "locator": "Task name",
+                  "value": "{{UNIQUE_CONTENT}}",
+                  "description": "Enter this run's unique task name"
+                },
+                {
+                  "id": "SHIP-01-S3",
+                  "type": "click",
+                  "locator": "Add task",
+                  "description": "Add the task to the board"
+                },
+                {
+                  "id": "SHIP-01-S4",
+                  "type": "assertVisibleIn",
+                  "locator": "#taskList",
+                  "value": "{{UNIQUE_CONTENT}}",
+                  "description": "Verify the new task is visible in the task list"
+                }
+              ]
+            },
+            {
+              "id": "SHIP-02",
+              "title": "The same task survives a reload",
+              "description": "Continue in the same browser as SHIP-01, reload, and check the same task.",
+              "requirementRef": "The same task must survive a page reload.",
+              "expectedBehavior": "Reloading the page keeps the task that was just added.",
+              "dependsOn": [
+                "SHIP-01"
+              ],
+              "contextMode": "inherit",
+              "steps": [
+                {
+                  "id": "SHIP-02-S1",
+                  "type": "reload",
+                  "description": "Reload the same browser page"
+                },
+                {
+                  "id": "SHIP-02-S2",
+                  "type": "assertVisibleIn",
+                  "locator": "#taskList",
+                  "value": "{{UNIQUE_CONTENT}}",
+                  "description": "Verify the same task is still on the board"
+                }
+              ]
+            },
+            {
+              "id": "SHIP-03",
+              "title": "Blank task names are rejected",
+              "description": "Use an independent browser to check empty and whitespace-only submissions.",
+              "requirementRef": "Empty and whitespace-only task names must show a clear validation message without creating a task.",
+              "expectedBehavior": "The board remains empty and displays an actionable validation message.",
+              "contextMode": "fresh",
+              "steps": [
+                {
+                  "id": "SHIP-03-S1",
+                  "type": "navigate",
+                  "url": "{{TARGET_URL}}",
+                  "description": "Open a fresh Shipboard browser session"
+                },
+                {
+                  "id": "SHIP-03-S2",
+                  "type": "assertCount",
+                  "locator": ".task-item",
+                  "expected": 0,
+                  "description": "Verify the fresh board has no tasks"
+                },
+                {
+                  "id": "SHIP-03-S3",
+                  "type": "fill",
+                  "locator": "Task name",
+                  "value": "",
+                  "description": "Leave the task name empty"
+                },
+                {
+                  "id": "SHIP-03-S4",
+                  "type": "click",
+                  "locator": "Add task",
+                  "description": "Try to add an empty task"
+                },
+                {
+                  "id": "SHIP-03-S5",
+                  "type": "assertVisible",
+                  "value": "Add a task name before continuing.",
+                  "description": "Verify an actionable validation message appears"
+                },
+                {
+                  "id": "SHIP-03-S6",
+                  "type": "assertCount",
+                  "locator": ".task-item",
+                  "expected": 0,
+                  "description": "Verify no empty task was created"
+                },
+                {
+                  "id": "SHIP-03-S7",
+                  "type": "fill",
+                  "locator": "Task name",
+                  "value": "   ",
+                  "description": "Enter a whitespace-only task name"
+                },
+                {
+                  "id": "SHIP-03-S8",
+                  "type": "click",
+                  "locator": "Add task",
+                  "description": "Try to add a whitespace-only task"
+                },
+                {
+                  "id": "SHIP-03-S9",
+                  "type": "assertVisible",
+                  "value": "Add a task name before continuing.",
+                  "description": "Verify whitespace also produces a validation message"
+                },
+                {
+                  "id": "SHIP-03-S10",
+                  "type": "assertCount",
+                  "locator": ".task-item",
+                  "expected": 0,
+                  "description": "Verify the task board is still empty"
+                }
+              ]
+            }
+          ]
+        },
+        "sourceBinding": "self-contained-html-snapshot",
+        "diagnostics": [],
+        "sourceChangedDuringRun": false
+      }
+    },
+    "/api/run/c001b117-8865-4084-bfa6-e04ddde1683d/progress": {
+      "ok": true,
+      "progress": {
+        "runId": "c001b117-8865-4084-bfa6-e04ddde1683d",
+        "status": "failed",
+        "finishedCriteria": 3,
+        "totalCriteria": 3
+      }
+    },
+    "/api/run/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c": {
+      "ok": true,
+      "run": {
+        "runId": "33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c",
+        "planId": "shipboard-task-acceptance",
+        "planVersion": "1.0.0",
+        "planFingerprint": "9c1f3dcf7fd3f279",
+        "targetVariant": "shipboard-repair",
+        "targetUrl": "http://localhost:4480/shipboard-repair",
+        "targetFingerprint": "c1775e6bfbafc41d",
+        "status": "failed",
+        "startedAt": "2026-09-26T11:12:07.483Z",
+        "finishedAt": "2026-09-26T11:12:11.432Z",
+        "criteria": [
+          {
+            "criteriaId": "SHIP-01",
+            "title": "A new task appears on the board",
+            "status": "passed",
+            "steps": [
+              {
+                "stepId": "SHIP-01-S1",
+                "description": "Open the Shipboard application",
+                "status": "passed",
+                "actual": "Navigated to http://localhost:4480/shipboard-repair",
+                "durationMs": 13
+              },
+              {
+                "stepId": "SHIP-01-S2",
+                "description": "Enter this run's unique task name",
+                "status": "passed",
+                "actual": "Entered text (19 characters)",
+                "durationMs": 38
+              },
+              {
+                "stepId": "SHIP-01-S3",
+                "description": "Add the task to the board",
+                "status": "passed",
+                "actual": "Clicked \"Add task\"",
+                "durationMs": 36
+              },
+              {
+                "stepId": "SHIP-01-S4",
+                "description": "Verify the new task is visible in the task list",
+                "status": "passed",
+                "expected": "Ming check 33f7bcfb",
+                "actual": "Text \"Ming check 33f7bcfb\" is visible within \"#taskList\"",
+                "durationMs": 5,
+                "screenshotPath": "33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c_SHIP-01_final.png"
+              }
+            ]
+          },
+          {
+            "criteriaId": "SHIP-02",
+            "title": "The same task survives a reload",
+            "status": "failed",
+            "steps": [
+              {
+                "stepId": "SHIP-02-S1",
+                "description": "Reload the same browser page",
+                "status": "passed",
+                "actual": "Page reloaded",
+                "durationMs": 11
+              },
+              {
+                "stepId": "SHIP-02-S2",
+                "description": "Verify the same task is still on the board",
+                "status": "failed",
+                "expected": "Ming check 33f7bcfb",
+                "actual": "Text \"Ming check 33f7bcfb\" is not visible within \"#taskList\"",
+                "error": "Expected text \"Ming check 33f7bcfb\" within \"#taskList\" to be visible, but it was not found",
+                "durationMs": 2548,
+                "screenshotPath": "33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c_SHIP-02-S2_failed.png"
+              }
+            ]
+          },
+          {
+            "criteriaId": "SHIP-03",
+            "title": "Blank task names are rejected",
+            "status": "passed",
+            "steps": [
+              {
+                "stepId": "SHIP-03-S1",
+                "description": "Open a fresh Shipboard browser session",
+                "status": "passed",
+                "actual": "Navigated to http://localhost:4480/shipboard-repair",
+                "durationMs": 52
+              },
+              {
+                "stepId": "SHIP-03-S2",
+                "description": "Verify the fresh board has no tasks",
+                "status": "passed",
+                "expected": 0,
+                "actual": "0",
+                "durationMs": 26
+              },
+              {
+                "stepId": "SHIP-03-S3",
+                "description": "Leave the task name empty",
+                "status": "passed",
+                "actual": "Entered text (0 characters)",
+                "durationMs": 17
+              },
+              {
+                "stepId": "SHIP-03-S4",
+                "description": "Try to add an empty task",
+                "status": "passed",
+                "actual": "Clicked \"Add task\"",
+                "durationMs": 58
+              },
+              {
+                "stepId": "SHIP-03-S5",
+                "description": "Verify an actionable validation message appears",
+                "status": "passed",
+                "expected": "Add a task name before continuing.",
+                "actual": "Text \"Add a task name before continuing.\" is visible",
+                "durationMs": 4
+              },
+              {
+                "stepId": "SHIP-03-S6",
+                "description": "Verify no empty task was created",
+                "status": "passed",
+                "expected": 0,
+                "actual": "0",
+                "durationMs": 5
+              },
+              {
+                "stepId": "SHIP-03-S7",
+                "description": "Enter a whitespace-only task name",
+                "status": "passed",
+                "actual": "Entered text (3 characters)",
+                "durationMs": 19
+              },
+              {
+                "stepId": "SHIP-03-S8",
+                "description": "Try to add a whitespace-only task",
+                "status": "passed",
+                "actual": "Clicked \"Add task\"",
+                "durationMs": 56
+              },
+              {
+                "stepId": "SHIP-03-S9",
+                "description": "Verify whitespace also produces a validation message",
+                "status": "passed",
+                "expected": "Add a task name before continuing.",
+                "actual": "Text \"Add a task name before continuing.\" is visible",
+                "durationMs": 3
+              },
+              {
+                "stepId": "SHIP-03-S10",
+                "description": "Verify the task board is still empty",
+                "status": "passed",
+                "expected": 0,
+                "actual": "0",
+                "durationMs": 3,
+                "screenshotPath": "33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c_SHIP-03_final.png"
+              }
+            ]
+          }
+        ],
+        "runnerFingerprint": "0f4cf2cc5fc32e24",
+        "planSnapshot": {
+          "planId": "shipboard-task-acceptance",
+          "version": "1.0.0",
+          "source": "fixture",
+          "title": "Shipboard — task creation and persistence",
+          "description": "A hand-authored acceptance plan for the English Shipboard demonstration. These browser checks validate visible user outcomes; no language model generated this plan.",
+          "originalRequirement": "A user can add a non-empty task and immediately see it on the board. The same task must survive a page reload. Empty and whitespace-only task names must show a clear validation message without creating a task.",
+          "fingerprint": "9c1f3dcf7fd3f279",
+          "createdAt": "2026-09-26T00:00:00.000Z",
+          "criteria": [
+            {
+              "id": "SHIP-01",
+              "title": "A new task appears on the board",
+              "description": "Enter a unique task name, submit it, and check the actual task list.",
+              "requirementRef": "A user can add a non-empty task and immediately see it on the board.",
+              "expectedBehavior": "The newly added task is visible in the task list, not just in the input field.",
+              "contextMode": "fresh",
+              "steps": [
+                {
+                  "id": "SHIP-01-S1",
+                  "type": "navigate",
+                  "url": "{{TARGET_URL}}",
+                  "description": "Open the Shipboard application"
+                },
+                {
+                  "id": "SHIP-01-S2",
+                  "type": "fill",
+                  "locator": "Task name",
+                  "value": "{{UNIQUE_CONTENT}}",
+                  "description": "Enter this run's unique task name"
+                },
+                {
+                  "id": "SHIP-01-S3",
+                  "type": "click",
+                  "locator": "Add task",
+                  "description": "Add the task to the board"
+                },
+                {
+                  "id": "SHIP-01-S4",
+                  "type": "assertVisibleIn",
+                  "locator": "#taskList",
+                  "value": "{{UNIQUE_CONTENT}}",
+                  "description": "Verify the new task is visible in the task list"
+                }
+              ]
+            },
+            {
+              "id": "SHIP-02",
+              "title": "The same task survives a reload",
+              "description": "Continue in the same browser as SHIP-01, reload, and check the same task.",
+              "requirementRef": "The same task must survive a page reload.",
+              "expectedBehavior": "Reloading the page keeps the task that was just added.",
+              "dependsOn": [
+                "SHIP-01"
+              ],
+              "contextMode": "inherit",
+              "steps": [
+                {
+                  "id": "SHIP-02-S1",
+                  "type": "reload",
+                  "description": "Reload the same browser page"
+                },
+                {
+                  "id": "SHIP-02-S2",
+                  "type": "assertVisibleIn",
+                  "locator": "#taskList",
+                  "value": "{{UNIQUE_CONTENT}}",
+                  "description": "Verify the same task is still on the board"
+                }
+              ]
+            },
+            {
+              "id": "SHIP-03",
+              "title": "Blank task names are rejected",
+              "description": "Use an independent browser to check empty and whitespace-only submissions.",
+              "requirementRef": "Empty and whitespace-only task names must show a clear validation message without creating a task.",
+              "expectedBehavior": "The board remains empty and displays an actionable validation message.",
+              "contextMode": "fresh",
+              "steps": [
+                {
+                  "id": "SHIP-03-S1",
+                  "type": "navigate",
+                  "url": "{{TARGET_URL}}",
+                  "description": "Open a fresh Shipboard browser session"
+                },
+                {
+                  "id": "SHIP-03-S2",
+                  "type": "assertCount",
+                  "locator": ".task-item",
+                  "expected": 0,
+                  "description": "Verify the fresh board has no tasks"
+                },
+                {
+                  "id": "SHIP-03-S3",
+                  "type": "fill",
+                  "locator": "Task name",
+                  "value": "",
+                  "description": "Leave the task name empty"
+                },
+                {
+                  "id": "SHIP-03-S4",
+                  "type": "click",
+                  "locator": "Add task",
+                  "description": "Try to add an empty task"
+                },
+                {
+                  "id": "SHIP-03-S5",
+                  "type": "assertVisible",
+                  "value": "Add a task name before continuing.",
+                  "description": "Verify an actionable validation message appears"
+                },
+                {
+                  "id": "SHIP-03-S6",
+                  "type": "assertCount",
+                  "locator": ".task-item",
+                  "expected": 0,
+                  "description": "Verify no empty task was created"
+                },
+                {
+                  "id": "SHIP-03-S7",
+                  "type": "fill",
+                  "locator": "Task name",
+                  "value": "   ",
+                  "description": "Enter a whitespace-only task name"
+                },
+                {
+                  "id": "SHIP-03-S8",
+                  "type": "click",
+                  "locator": "Add task",
+                  "description": "Try to add a whitespace-only task"
+                },
+                {
+                  "id": "SHIP-03-S9",
+                  "type": "assertVisible",
+                  "value": "Add a task name before continuing.",
+                  "description": "Verify whitespace also produces a validation message"
+                },
+                {
+                  "id": "SHIP-03-S10",
+                  "type": "assertCount",
+                  "locator": ".task-item",
+                  "expected": 0,
+                  "description": "Verify the task board is still empty"
+                }
+              ]
+            }
+          ]
+        },
+        "sourceBinding": "self-contained-html-snapshot",
+        "diagnostics": [],
+        "sourceChangedDuringRun": false
+      }
+    },
+    "/api/run/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c/progress": {
+      "ok": true,
+      "progress": {
+        "runId": "33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c",
+        "status": "failed",
+        "finishedCriteria": 3,
+        "totalCriteria": 3
+      }
+    },
+    "/api/run/74ed3133-b62c-44cf-8b4a-042156180db5": {
+      "ok": true,
+      "run": {
+        "runId": "74ed3133-b62c-44cf-8b4a-042156180db5",
+        "planId": "shipboard-task-acceptance",
+        "planVersion": "1.0.0",
+        "planFingerprint": "9c1f3dcf7fd3f279",
+        "targetVariant": "shipboard-repair",
+        "targetUrl": "http://localhost:4480/shipboard-repair",
+        "targetFingerprint": "8426ca024fd0f7c4",
+        "status": "passed",
+        "startedAt": "2026-09-26T11:12:44.481Z",
+        "finishedAt": "2026-09-26T11:12:45.418Z",
+        "criteria": [
+          {
+            "criteriaId": "SHIP-01",
+            "title": "A new task appears on the board",
+            "status": "passed",
+            "steps": [
+              {
+                "stepId": "SHIP-01-S1",
+                "description": "Open the Shipboard application",
+                "status": "passed",
+                "actual": "Navigated to http://localhost:4480/shipboard-repair",
+                "durationMs": 16
+              },
+              {
+                "stepId": "SHIP-01-S2",
+                "description": "Enter this run's unique task name",
+                "status": "passed",
+                "actual": "Entered text (19 characters)",
+                "durationMs": 46
+              },
+              {
+                "stepId": "SHIP-01-S3",
+                "description": "Add the task to the board",
+                "status": "passed",
+                "actual": "Clicked \"Add task\"",
+                "durationMs": 51
+              },
+              {
+                "stepId": "SHIP-01-S4",
+                "description": "Verify the new task is visible in the task list",
+                "status": "passed",
+                "expected": "Ming check 74ed3133",
+                "actual": "Text \"Ming check 74ed3133\" is visible within \"#taskList\"",
+                "durationMs": 6,
+                "screenshotPath": "74ed3133-b62c-44cf-8b4a-042156180db5_SHIP-01_final.png"
+              }
+            ]
+          },
+          {
+            "criteriaId": "SHIP-02",
+            "title": "The same task survives a reload",
+            "status": "passed",
+            "steps": [
+              {
+                "stepId": "SHIP-02-S1",
+                "description": "Reload the same browser page",
+                "status": "passed",
+                "actual": "Page reloaded",
+                "durationMs": 12
+              },
+              {
+                "stepId": "SHIP-02-S2",
+                "description": "Verify the same task is still on the board",
+                "status": "passed",
+                "expected": "Ming check 74ed3133",
+                "actual": "Text \"Ming check 74ed3133\" is visible within \"#taskList\"",
+                "durationMs": 18,
+                "screenshotPath": "74ed3133-b62c-44cf-8b4a-042156180db5_SHIP-02_final.png"
+              }
+            ]
+          },
+          {
+            "criteriaId": "SHIP-03",
+            "title": "Blank task names are rejected",
+            "status": "passed",
+            "steps": [
+              {
+                "stepId": "SHIP-03-S1",
+                "description": "Open a fresh Shipboard browser session",
+                "status": "passed",
+                "actual": "Navigated to http://localhost:4480/shipboard-repair",
+                "durationMs": 12
+              },
+              {
+                "stepId": "SHIP-03-S2",
+                "description": "Verify the fresh board has no tasks",
+                "status": "passed",
+                "expected": 0,
+                "actual": "0",
+                "durationMs": 31
+              },
+              {
+                "stepId": "SHIP-03-S3",
+                "description": "Leave the task name empty",
+                "status": "passed",
+                "actual": "Entered text (0 characters)",
+                "durationMs": 12
+              },
+              {
+                "stepId": "SHIP-03-S4",
+                "description": "Try to add an empty task",
+                "status": "passed",
+                "actual": "Clicked \"Add task\"",
+                "durationMs": 49
+              },
+              {
+                "stepId": "SHIP-03-S5",
+                "description": "Verify an actionable validation message appears",
+                "status": "passed",
+                "expected": "Add a task name before continuing.",
+                "actual": "Text \"Add a task name before continuing.\" is visible",
+                "durationMs": 2
+              },
+              {
+                "stepId": "SHIP-03-S6",
+                "description": "Verify no empty task was created",
+                "status": "passed",
+                "expected": 0,
+                "actual": "0",
+                "durationMs": 2
+              },
+              {
+                "stepId": "SHIP-03-S7",
+                "description": "Enter a whitespace-only task name",
+                "status": "passed",
+                "actual": "Entered text (3 characters)",
+                "durationMs": 9
+              },
+              {
+                "stepId": "SHIP-03-S8",
+                "description": "Try to add a whitespace-only task",
+                "status": "passed",
+                "actual": "Clicked \"Add task\"",
+                "durationMs": 34
+              },
+              {
+                "stepId": "SHIP-03-S9",
+                "description": "Verify whitespace also produces a validation message",
+                "status": "passed",
+                "expected": "Add a task name before continuing.",
+                "actual": "Text \"Add a task name before continuing.\" is visible",
+                "durationMs": 1
+              },
+              {
+                "stepId": "SHIP-03-S10",
+                "description": "Verify the task board is still empty",
+                "status": "passed",
+                "expected": 0,
+                "actual": "0",
+                "durationMs": 2,
+                "screenshotPath": "74ed3133-b62c-44cf-8b4a-042156180db5_SHIP-03_final.png"
+              }
+            ]
+          }
+        ],
+        "runnerFingerprint": "0f4cf2cc5fc32e24",
+        "planSnapshot": {
+          "planId": "shipboard-task-acceptance",
+          "version": "1.0.0",
+          "source": "fixture",
+          "title": "Shipboard — task creation and persistence",
+          "description": "A hand-authored acceptance plan for the English Shipboard demonstration. These browser checks validate visible user outcomes; no language model generated this plan.",
+          "originalRequirement": "A user can add a non-empty task and immediately see it on the board. The same task must survive a page reload. Empty and whitespace-only task names must show a clear validation message without creating a task.",
+          "fingerprint": "9c1f3dcf7fd3f279",
+          "createdAt": "2026-09-26T00:00:00.000Z",
+          "criteria": [
+            {
+              "id": "SHIP-01",
+              "title": "A new task appears on the board",
+              "description": "Enter a unique task name, submit it, and check the actual task list.",
+              "requirementRef": "A user can add a non-empty task and immediately see it on the board.",
+              "expectedBehavior": "The newly added task is visible in the task list, not just in the input field.",
+              "contextMode": "fresh",
+              "steps": [
+                {
+                  "id": "SHIP-01-S1",
+                  "type": "navigate",
+                  "url": "{{TARGET_URL}}",
+                  "description": "Open the Shipboard application"
+                },
+                {
+                  "id": "SHIP-01-S2",
+                  "type": "fill",
+                  "locator": "Task name",
+                  "value": "{{UNIQUE_CONTENT}}",
+                  "description": "Enter this run's unique task name"
+                },
+                {
+                  "id": "SHIP-01-S3",
+                  "type": "click",
+                  "locator": "Add task",
+                  "description": "Add the task to the board"
+                },
+                {
+                  "id": "SHIP-01-S4",
+                  "type": "assertVisibleIn",
+                  "locator": "#taskList",
+                  "value": "{{UNIQUE_CONTENT}}",
+                  "description": "Verify the new task is visible in the task list"
+                }
+              ]
+            },
+            {
+              "id": "SHIP-02",
+              "title": "The same task survives a reload",
+              "description": "Continue in the same browser as SHIP-01, reload, and check the same task.",
+              "requirementRef": "The same task must survive a page reload.",
+              "expectedBehavior": "Reloading the page keeps the task that was just added.",
+              "dependsOn": [
+                "SHIP-01"
+              ],
+              "contextMode": "inherit",
+              "steps": [
+                {
+                  "id": "SHIP-02-S1",
+                  "type": "reload",
+                  "description": "Reload the same browser page"
+                },
+                {
+                  "id": "SHIP-02-S2",
+                  "type": "assertVisibleIn",
+                  "locator": "#taskList",
+                  "value": "{{UNIQUE_CONTENT}}",
+                  "description": "Verify the same task is still on the board"
+                }
+              ]
+            },
+            {
+              "id": "SHIP-03",
+              "title": "Blank task names are rejected",
+              "description": "Use an independent browser to check empty and whitespace-only submissions.",
+              "requirementRef": "Empty and whitespace-only task names must show a clear validation message without creating a task.",
+              "expectedBehavior": "The board remains empty and displays an actionable validation message.",
+              "contextMode": "fresh",
+              "steps": [
+                {
+                  "id": "SHIP-03-S1",
+                  "type": "navigate",
+                  "url": "{{TARGET_URL}}",
+                  "description": "Open a fresh Shipboard browser session"
+                },
+                {
+                  "id": "SHIP-03-S2",
+                  "type": "assertCount",
+                  "locator": ".task-item",
+                  "expected": 0,
+                  "description": "Verify the fresh board has no tasks"
+                },
+                {
+                  "id": "SHIP-03-S3",
+                  "type": "fill",
+                  "locator": "Task name",
+                  "value": "",
+                  "description": "Leave the task name empty"
+                },
+                {
+                  "id": "SHIP-03-S4",
+                  "type": "click",
+                  "locator": "Add task",
+                  "description": "Try to add an empty task"
+                },
+                {
+                  "id": "SHIP-03-S5",
+                  "type": "assertVisible",
+                  "value": "Add a task name before continuing.",
+                  "description": "Verify an actionable validation message appears"
+                },
+                {
+                  "id": "SHIP-03-S6",
+                  "type": "assertCount",
+                  "locator": ".task-item",
+                  "expected": 0,
+                  "description": "Verify no empty task was created"
+                },
+                {
+                  "id": "SHIP-03-S7",
+                  "type": "fill",
+                  "locator": "Task name",
+                  "value": "   ",
+                  "description": "Enter a whitespace-only task name"
+                },
+                {
+                  "id": "SHIP-03-S8",
+                  "type": "click",
+                  "locator": "Add task",
+                  "description": "Try to add a whitespace-only task"
+                },
+                {
+                  "id": "SHIP-03-S9",
+                  "type": "assertVisible",
+                  "value": "Add a task name before continuing.",
+                  "description": "Verify whitespace also produces a validation message"
+                },
+                {
+                  "id": "SHIP-03-S10",
+                  "type": "assertCount",
+                  "locator": ".task-item",
+                  "expected": 0,
+                  "description": "Verify the task board is still empty"
+                }
+              ]
+            }
+          ]
+        },
+        "sourceBinding": "self-contained-html-snapshot",
+        "diagnostics": [],
+        "sourceChangedDuringRun": false
+      }
+    },
+    "/api/run/74ed3133-b62c-44cf-8b4a-042156180db5/progress": {
+      "ok": true,
+      "progress": {
+        "runId": "74ed3133-b62c-44cf-8b4a-042156180db5",
+        "status": "passed",
+        "finishedCriteria": 3,
+        "totalCriteria": 3
+      }
+    },
+    "/api/repair-tasks/bbc50e50-7838-4bec-8a2b-4ec386d98679": {
+      "ok": true,
+      "task": {
+        "taskId": "bbc50e50-7838-4bec-8a2b-4ec386d98679",
+        "baselineRunId": "33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c",
+        "targetVariant": "shipboard-repair",
+        "targetUrl": "http://localhost:4480/shipboard-repair",
+        "planId": "shipboard-task-acceptance",
+        "planVersion": "1.0.0",
+        "planFingerprint": "9c1f3dcf7fd3f279",
+        "planSnapshot": {
+          "planId": "shipboard-task-acceptance",
+          "version": "1.0.0",
+          "source": "fixture",
+          "title": "Shipboard — task creation and persistence",
+          "description": "A hand-authored acceptance plan for the English Shipboard demonstration. These browser checks validate visible user outcomes; no language model generated this plan.",
+          "originalRequirement": "A user can add a non-empty task and immediately see it on the board. The same task must survive a page reload. Empty and whitespace-only task names must show a clear validation message without creating a task.",
+          "fingerprint": "9c1f3dcf7fd3f279",
+          "createdAt": "2026-09-26T00:00:00.000Z",
+          "criteria": [
+            {
+              "id": "SHIP-01",
+              "title": "A new task appears on the board",
+              "description": "Enter a unique task name, submit it, and check the actual task list.",
+              "requirementRef": "A user can add a non-empty task and immediately see it on the board.",
+              "expectedBehavior": "The newly added task is visible in the task list, not just in the input field.",
+              "contextMode": "fresh",
+              "steps": [
+                {
+                  "id": "SHIP-01-S1",
+                  "type": "navigate",
+                  "url": "{{TARGET_URL}}",
+                  "description": "Open the Shipboard application"
+                },
+                {
+                  "id": "SHIP-01-S2",
+                  "type": "fill",
+                  "locator": "Task name",
+                  "value": "{{UNIQUE_CONTENT}}",
+                  "description": "Enter this run's unique task name"
+                },
+                {
+                  "id": "SHIP-01-S3",
+                  "type": "click",
+                  "locator": "Add task",
+                  "description": "Add the task to the board"
+                },
+                {
+                  "id": "SHIP-01-S4",
+                  "type": "assertVisibleIn",
+                  "locator": "#taskList",
+                  "value": "{{UNIQUE_CONTENT}}",
+                  "description": "Verify the new task is visible in the task list"
+                }
+              ]
+            },
+            {
+              "id": "SHIP-02",
+              "title": "The same task survives a reload",
+              "description": "Continue in the same browser as SHIP-01, reload, and check the same task.",
+              "requirementRef": "The same task must survive a page reload.",
+              "expectedBehavior": "Reloading the page keeps the task that was just added.",
+              "dependsOn": [
+                "SHIP-01"
+              ],
+              "contextMode": "inherit",
+              "steps": [
+                {
+                  "id": "SHIP-02-S1",
+                  "type": "reload",
+                  "description": "Reload the same browser page"
+                },
+                {
+                  "id": "SHIP-02-S2",
+                  "type": "assertVisibleIn",
+                  "locator": "#taskList",
+                  "value": "{{UNIQUE_CONTENT}}",
+                  "description": "Verify the same task is still on the board"
+                }
+              ]
+            },
+            {
+              "id": "SHIP-03",
+              "title": "Blank task names are rejected",
+              "description": "Use an independent browser to check empty and whitespace-only submissions.",
+              "requirementRef": "Empty and whitespace-only task names must show a clear validation message without creating a task.",
+              "expectedBehavior": "The board remains empty and displays an actionable validation message.",
+              "contextMode": "fresh",
+              "steps": [
+                {
+                  "id": "SHIP-03-S1",
+                  "type": "navigate",
+                  "url": "{{TARGET_URL}}",
+                  "description": "Open a fresh Shipboard browser session"
+                },
+                {
+                  "id": "SHIP-03-S2",
+                  "type": "assertCount",
+                  "locator": ".task-item",
+                  "expected": 0,
+                  "description": "Verify the fresh board has no tasks"
+                },
+                {
+                  "id": "SHIP-03-S3",
+                  "type": "fill",
+                  "locator": "Task name",
+                  "value": "",
+                  "description": "Leave the task name empty"
+                },
+                {
+                  "id": "SHIP-03-S4",
+                  "type": "click",
+                  "locator": "Add task",
+                  "description": "Try to add an empty task"
+                },
+                {
+                  "id": "SHIP-03-S5",
+                  "type": "assertVisible",
+                  "value": "Add a task name before continuing.",
+                  "description": "Verify an actionable validation message appears"
+                },
+                {
+                  "id": "SHIP-03-S6",
+                  "type": "assertCount",
+                  "locator": ".task-item",
+                  "expected": 0,
+                  "description": "Verify no empty task was created"
+                },
+                {
+                  "id": "SHIP-03-S7",
+                  "type": "fill",
+                  "locator": "Task name",
+                  "value": "   ",
+                  "description": "Enter a whitespace-only task name"
+                },
+                {
+                  "id": "SHIP-03-S8",
+                  "type": "click",
+                  "locator": "Add task",
+                  "description": "Try to add a whitespace-only task"
+                },
+                {
+                  "id": "SHIP-03-S9",
+                  "type": "assertVisible",
+                  "value": "Add a task name before continuing.",
+                  "description": "Verify whitespace also produces a validation message"
+                },
+                {
+                  "id": "SHIP-03-S10",
+                  "type": "assertCount",
+                  "locator": ".task-item",
+                  "expected": 0,
+                  "description": "Verify the task board is still empty"
+                }
+              ]
+            }
+          ]
+        },
+        "baselineTargetFingerprint": "c1775e6bfbafc41d",
+        "baselineRunnerFingerprint": "0f4cf2cc5fc32e24",
+        "failedCriteria": [
+          {
+            "criteriaId": "SHIP-02",
+            "title": "The same task survives a reload",
+            "status": "failed",
+            "failedSteps": [
+              {
+                "stepId": "SHIP-02-S2",
+                "description": "Verify the same task is still on the board",
+                "expected": "Ming check 33f7bcfb",
+                "actual": "Text \"Ming check 33f7bcfb\" is not visible within \"#taskList\"",
+                "error": "Expected text \"Ming check 33f7bcfb\" within \"#taskList\" to be visible, but it was not found",
+                "screenshotPath": "33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c_SHIP-02-S2_failed.png"
+              }
+            ]
+          }
+        ],
+        "executionErrors": [],
+        "reproductionSteps": "1. Target: shipboard-repair (http://localhost:4480/shipboard-repair)\n2. Plan: shipboard-task-acceptance v1.0.0, fingerprint 9c1f3dcf7fd3…\n3. Baseline run: 33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c; started: 2026-09-26T11:12:07.483Z\n4. Failed criteria: 1/3\n5. Main failures: The same task survives a reload",
+        "status": "passed",
+        "attemptCount": 1,
+        "maxAttempts": 2,
+        "attemptRunIds": [
+          "74ed3133-b62c-44cf-8b4a-042156180db5"
+        ],
+        "createdAt": "2026-09-26T11:12:11.619Z",
+        "updatedAt": "2026-09-26T11:12:45.431Z",
+        "claimedBy": "Codex via real stdio MCP",
+        "claimedAt": "2026-09-26T11:12:11.643Z",
+        "rerunId": "74ed3133-b62c-44cf-8b4a-042156180db5",
+        "repairedTargetFingerprint": "8426ca024fd0f7c4"
+      }
+    },
+    "/api/repair-tasks/bbc50e50-7838-4bec-8a2b-4ec386d98679/comparison": {
+      "ok": true,
+      "comparison": {
+        "taskId": "bbc50e50-7838-4bec-8a2b-4ec386d98679",
+        "baselineRunId": "33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c",
+        "rerunId": "74ed3133-b62c-44cf-8b4a-042156180db5",
+        "planFingerprintMatch": true,
+        "runnerFingerprintMatch": true,
+        "runnerFingerprintKnown": true,
+        "targetIdentityMatch": true,
+        "targetFingerprintChanged": true,
+        "sourceFingerprintKnown": true,
+        "baselineTargetFingerprint": "c1775e6bfbafc41d",
+        "repairedTargetFingerprint": "8426ca024fd0f7c4",
+        "baselineRunnerFingerprint": "0f4cf2cc5fc32e24",
+        "rerunRunnerFingerprint": "0f4cf2cc5fc32e24",
+        "previouslyFailedNowPassed": [
+          "SHIP-02"
+        ],
+        "previouslyFailedStillFailing": [],
+        "newFailures": [],
+        "acceptancePassed": true,
+        "verifiedRepair": true,
+        "blockers": []
+      }
+    },
+    "/api/repair-tasks": {
+      "ok": true,
+      "tasks": [
+        {
+          "taskId": "bbc50e50-7838-4bec-8a2b-4ec386d98679",
+          "baselineRunId": "33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c",
+          "targetVariant": "shipboard-repair",
+          "targetUrl": "http://localhost:4480/shipboard-repair",
+          "planId": "shipboard-task-acceptance",
+          "planVersion": "1.0.0",
+          "planFingerprint": "9c1f3dcf7fd3f279",
+          "planSnapshot": {
+            "planId": "shipboard-task-acceptance",
+            "version": "1.0.0",
+            "source": "fixture",
+            "title": "Shipboard — task creation and persistence",
+            "description": "A hand-authored acceptance plan for the English Shipboard demonstration. These browser checks validate visible user outcomes; no language model generated this plan.",
+            "originalRequirement": "A user can add a non-empty task and immediately see it on the board. The same task must survive a page reload. Empty and whitespace-only task names must show a clear validation message without creating a task.",
+            "fingerprint": "9c1f3dcf7fd3f279",
+            "createdAt": "2026-09-26T00:00:00.000Z",
+            "criteria": [
+              {
+                "id": "SHIP-01",
+                "title": "A new task appears on the board",
+                "description": "Enter a unique task name, submit it, and check the actual task list.",
+                "requirementRef": "A user can add a non-empty task and immediately see it on the board.",
+                "expectedBehavior": "The newly added task is visible in the task list, not just in the input field.",
+                "contextMode": "fresh",
+                "steps": [
+                  {
+                    "id": "SHIP-01-S1",
+                    "type": "navigate",
+                    "url": "{{TARGET_URL}}",
+                    "description": "Open the Shipboard application"
+                  },
+                  {
+                    "id": "SHIP-01-S2",
+                    "type": "fill",
+                    "locator": "Task name",
+                    "value": "{{UNIQUE_CONTENT}}",
+                    "description": "Enter this run's unique task name"
+                  },
+                  {
+                    "id": "SHIP-01-S3",
+                    "type": "click",
+                    "locator": "Add task",
+                    "description": "Add the task to the board"
+                  },
+                  {
+                    "id": "SHIP-01-S4",
+                    "type": "assertVisibleIn",
+                    "locator": "#taskList",
+                    "value": "{{UNIQUE_CONTENT}}",
+                    "description": "Verify the new task is visible in the task list"
+                  }
+                ]
+              },
+              {
+                "id": "SHIP-02",
+                "title": "The same task survives a reload",
+                "description": "Continue in the same browser as SHIP-01, reload, and check the same task.",
+                "requirementRef": "The same task must survive a page reload.",
+                "expectedBehavior": "Reloading the page keeps the task that was just added.",
+                "dependsOn": [
+                  "SHIP-01"
+                ],
+                "contextMode": "inherit",
+                "steps": [
+                  {
+                    "id": "SHIP-02-S1",
+                    "type": "reload",
+                    "description": "Reload the same browser page"
+                  },
+                  {
+                    "id": "SHIP-02-S2",
+                    "type": "assertVisibleIn",
+                    "locator": "#taskList",
+                    "value": "{{UNIQUE_CONTENT}}",
+                    "description": "Verify the same task is still on the board"
+                  }
+                ]
+              },
+              {
+                "id": "SHIP-03",
+                "title": "Blank task names are rejected",
+                "description": "Use an independent browser to check empty and whitespace-only submissions.",
+                "requirementRef": "Empty and whitespace-only task names must show a clear validation message without creating a task.",
+                "expectedBehavior": "The board remains empty and displays an actionable validation message.",
+                "contextMode": "fresh",
+                "steps": [
+                  {
+                    "id": "SHIP-03-S1",
+                    "type": "navigate",
+                    "url": "{{TARGET_URL}}",
+                    "description": "Open a fresh Shipboard browser session"
+                  },
+                  {
+                    "id": "SHIP-03-S2",
+                    "type": "assertCount",
+                    "locator": ".task-item",
+                    "expected": 0,
+                    "description": "Verify the fresh board has no tasks"
+                  },
+                  {
+                    "id": "SHIP-03-S3",
+                    "type": "fill",
+                    "locator": "Task name",
+                    "value": "",
+                    "description": "Leave the task name empty"
+                  },
+                  {
+                    "id": "SHIP-03-S4",
+                    "type": "click",
+                    "locator": "Add task",
+                    "description": "Try to add an empty task"
+                  },
+                  {
+                    "id": "SHIP-03-S5",
+                    "type": "assertVisible",
+                    "value": "Add a task name before continuing.",
+                    "description": "Verify an actionable validation message appears"
+                  },
+                  {
+                    "id": "SHIP-03-S6",
+                    "type": "assertCount",
+                    "locator": ".task-item",
+                    "expected": 0,
+                    "description": "Verify no empty task was created"
+                  },
+                  {
+                    "id": "SHIP-03-S7",
+                    "type": "fill",
+                    "locator": "Task name",
+                    "value": "   ",
+                    "description": "Enter a whitespace-only task name"
+                  },
+                  {
+                    "id": "SHIP-03-S8",
+                    "type": "click",
+                    "locator": "Add task",
+                    "description": "Try to add a whitespace-only task"
+                  },
+                  {
+                    "id": "SHIP-03-S9",
+                    "type": "assertVisible",
+                    "value": "Add a task name before continuing.",
+                    "description": "Verify whitespace also produces a validation message"
+                  },
+                  {
+                    "id": "SHIP-03-S10",
+                    "type": "assertCount",
+                    "locator": ".task-item",
+                    "expected": 0,
+                    "description": "Verify the task board is still empty"
+                  }
+                ]
+              }
+            ]
+          },
+          "baselineTargetFingerprint": "c1775e6bfbafc41d",
+          "baselineRunnerFingerprint": "0f4cf2cc5fc32e24",
+          "failedCriteria": [
+            {
+              "criteriaId": "SHIP-02",
+              "title": "The same task survives a reload",
+              "status": "failed",
+              "failedSteps": [
+                {
+                  "stepId": "SHIP-02-S2",
+                  "description": "Verify the same task is still on the board",
+                  "expected": "Ming check 33f7bcfb",
+                  "actual": "Text \"Ming check 33f7bcfb\" is not visible within \"#taskList\"",
+                  "error": "Expected text \"Ming check 33f7bcfb\" within \"#taskList\" to be visible, but it was not found",
+                  "screenshotPath": "33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c_SHIP-02-S2_failed.png"
+                }
+              ]
+            }
+          ],
+          "executionErrors": [],
+          "reproductionSteps": "1. Target: shipboard-repair (http://localhost:4480/shipboard-repair)\n2. Plan: shipboard-task-acceptance v1.0.0, fingerprint 9c1f3dcf7fd3…\n3. Baseline run: 33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c; started: 2026-09-26T11:12:07.483Z\n4. Failed criteria: 1/3\n5. Main failures: The same task survives a reload",
+          "status": "passed",
+          "attemptCount": 1,
+          "maxAttempts": 2,
+          "attemptRunIds": [
+            "74ed3133-b62c-44cf-8b4a-042156180db5"
+          ],
+          "createdAt": "2026-09-26T11:12:11.619Z",
+          "updatedAt": "2026-09-26T11:12:45.431Z",
+          "claimedBy": "Codex via real stdio MCP",
+          "claimedAt": "2026-09-26T11:12:11.643Z",
+          "rerunId": "74ed3133-b62c-44cf-8b4a-042156180db5",
+          "repairedTargetFingerprint": "8426ca024fd0f7c4"
+        }
+      ]
+    },
+    "/api/history": {
+      "ok": true,
+      "runs": [
+        {
+          "runId": "74ed3133-b62c-44cf-8b4a-042156180db5",
+          "planVersion": "1.0.0",
+          "planFingerprint": "9c1f3dcf7fd3f279",
+          "targetVariant": "shipboard-repair",
+          "targetFingerprint": "8426ca024fd0f7c4",
+          "status": "passed",
+          "startedAt": "2026-09-26T11:12:44.481Z",
+          "finishedAt": "2026-09-26T11:12:45.418Z",
+          "criteriaSummary": [
+            {
+              "id": "SHIP-01",
+              "status": "passed"
+            },
+            {
+              "id": "SHIP-02",
+              "status": "passed"
+            },
+            {
+              "id": "SHIP-03",
+              "status": "passed"
+            }
+          ],
+          "sourceBinding": "self-contained-html-snapshot"
+        },
+        {
+          "runId": "33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c",
+          "planVersion": "1.0.0",
+          "planFingerprint": "9c1f3dcf7fd3f279",
+          "targetVariant": "shipboard-repair",
+          "targetFingerprint": "c1775e6bfbafc41d",
+          "status": "failed",
+          "startedAt": "2026-09-26T11:12:07.483Z",
+          "finishedAt": "2026-09-26T11:12:11.432Z",
+          "criteriaSummary": [
+            {
+              "id": "SHIP-01",
+              "status": "passed"
+            },
+            {
+              "id": "SHIP-02",
+              "status": "failed"
+            },
+            {
+              "id": "SHIP-03",
+              "status": "passed"
+            }
+          ],
+          "sourceBinding": "self-contained-html-snapshot"
+        },
+        {
+          "runId": "c001b117-8865-4084-bfa6-e04ddde1683d",
+          "planVersion": "1.0.0",
+          "planFingerprint": "9c1f3dcf7fd3f279",
+          "targetVariant": "shipboard-buggy",
+          "targetFingerprint": "c1775e6bfbafc41d",
+          "status": "failed",
+          "startedAt": "2026-09-26T11:12:03.456Z",
+          "finishedAt": "2026-09-26T11:12:07.298Z",
+          "criteriaSummary": [
+            {
+              "id": "SHIP-01",
+              "status": "passed"
+            },
+            {
+              "id": "SHIP-02",
+              "status": "failed"
+            },
+            {
+              "id": "SHIP-03",
+              "status": "passed"
+            }
+          ],
+          "sourceBinding": "self-contained-html-snapshot"
+        },
+        {
+          "runId": "62d46b46-2227-4ac9-8b15-72ba5bbe7fc3",
+          "planVersion": "1.0.0",
+          "planFingerprint": "9c1f3dcf7fd3f279",
+          "targetVariant": "shipboard-normal",
+          "targetFingerprint": "8426ca024fd0f7c4",
+          "status": "passed",
+          "startedAt": "2026-09-26T11:12:02.651Z",
+          "finishedAt": "2026-09-26T11:12:03.442Z",
+          "criteriaSummary": [
+            {
+              "id": "SHIP-01",
+              "status": "passed"
+            },
+            {
+              "id": "SHIP-02",
+              "status": "passed"
+            },
+            {
+              "id": "SHIP-03",
+              "status": "passed"
+            }
+          ],
+          "sourceBinding": "self-contained-html-snapshot"
+        }
+      ]
+    },
+    "/api/targets": {
+      "ok": true,
+      "targets": [
+        {
+          "variant": "normal",
+          "label": "Daily Report · Working example (Chinese)",
+          "url": "http://localhost:4480/normal",
+          "route": "/normal",
+          "htmlPath": "C:\\Bob\\Projects\\Ming\\examples\\daily-report\\normal\\index.html",
+          "planPath": "C:\\Bob\\Projects\\Ming\\fixtures\\stage-a-plan.json",
+          "kind": "html",
+          "isSample": true,
+          "archived": false,
+          "fingerprint": "c608e21d187e5f84",
+          "sourceBinding": "self-contained-html-snapshot"
+        },
+        {
+          "variant": "buggy",
+          "label": "Daily Report · Defective example (Chinese)",
+          "url": "http://localhost:4480/buggy",
+          "route": "/buggy",
+          "htmlPath": "C:\\Bob\\Projects\\Ming\\examples\\daily-report\\buggy\\index.html",
+          "planPath": "C:\\Bob\\Projects\\Ming\\fixtures\\stage-a-plan.json",
+          "kind": "html",
+          "isSample": true,
+          "archived": false,
+          "fingerprint": "4d61d95b3ffbc28d",
+          "sourceBinding": "self-contained-html-snapshot"
+        },
+        {
+          "variant": "repair-demo",
+          "label": "Daily Report · AI repair workspace (Chinese)",
+          "url": "http://localhost:4480/repair-demo",
+          "route": "/repair-demo",
+          "htmlPath": "C:\\Bob\\Projects\\Ming\\examples\\daily-report\\repair\\index.html",
+          "planPath": "C:\\Bob\\Projects\\Ming\\fixtures\\stage-a-plan.json",
+          "kind": "html",
+          "isSample": true,
+          "archived": false,
+          "fingerprint": "29ebdc69fb588289",
+          "sourceBinding": "self-contained-html-snapshot"
+        },
+        {
+          "variant": "todo-normal",
+          "label": "Focus · Working example (Chinese)",
+          "url": "http://localhost:4480/todo-normal",
+          "route": "/todo-normal",
+          "htmlPath": "C:\\Bob\\Projects\\Ming\\examples\\todo\\normal\\index.html",
+          "planPath": "C:\\Bob\\Projects\\Ming\\fixtures\\todo-plan.json",
+          "kind": "html",
+          "isSample": true,
+          "archived": false,
+          "fingerprint": "3d5ab2f080a9b027",
+          "sourceBinding": "self-contained-html-snapshot"
+        },
+        {
+          "variant": "todo-buggy",
+          "label": "Focus · Defective example (Chinese)",
+          "url": "http://localhost:4480/todo-buggy",
+          "route": "/todo-buggy",
+          "htmlPath": "C:\\Bob\\Projects\\Ming\\examples\\todo\\buggy\\index.html",
+          "planPath": "C:\\Bob\\Projects\\Ming\\fixtures\\todo-plan.json",
+          "kind": "html",
+          "isSample": true,
+          "archived": false,
+          "fingerprint": "a2e5bdaf80c13847",
+          "sourceBinding": "self-contained-html-snapshot"
+        },
+        {
+          "variant": "shipboard-normal",
+          "label": "Shipboard · Working example",
+          "url": "http://localhost:4480/shipboard-normal",
+          "route": "/shipboard-normal",
+          "htmlPath": "C:\\Bob\\Projects\\Ming\\examples\\shipboard\\normal\\index.html",
+          "planPath": "C:\\Bob\\Projects\\Ming\\fixtures\\shipboard-plan.json",
+          "kind": "html",
+          "isSample": true,
+          "archived": false,
+          "fingerprint": "8426ca024fd0f7c4",
+          "sourceBinding": "self-contained-html-snapshot"
+        },
+        {
+          "variant": "shipboard-buggy",
+          "label": "Shipboard · Persistence defect",
+          "url": "http://localhost:4480/shipboard-buggy",
+          "route": "/shipboard-buggy",
+          "htmlPath": "C:\\Bob\\Projects\\Ming\\examples\\shipboard\\buggy\\index.html",
+          "planPath": "C:\\Bob\\Projects\\Ming\\fixtures\\shipboard-plan.json",
+          "kind": "html",
+          "isSample": true,
+          "archived": false,
+          "fingerprint": "c1775e6bfbafc41d",
+          "sourceBinding": "self-contained-html-snapshot"
+        },
+        {
+          "variant": "shipboard-repair",
+          "label": "Shipboard · AI repair workspace",
+          "url": "http://localhost:4480/shipboard-repair",
+          "route": "/shipboard-repair",
+          "htmlPath": "C:\\Bob\\Projects\\Ming\\examples\\shipboard\\repair\\index.html",
+          "planPath": "C:\\Bob\\Projects\\Ming\\fixtures\\shipboard-plan.json",
+          "kind": "html",
+          "isSample": true,
+          "archived": false,
+          "fingerprint": "8426ca024fd0f7c4",
+          "sourceBinding": "self-contained-html-snapshot"
+        }
+      ]
+    },
+    "/api/projects": {
+      "ok": true,
+      "projects": []
+    },
+    "/api/plan?variant=shipboard-normal": {
+      "ok": true,
+      "plan": {
+        "planId": "shipboard-task-acceptance",
+        "version": "1.0.0",
+        "source": "fixture",
+        "title": "Shipboard — task creation and persistence",
+        "description": "A hand-authored acceptance plan for the English Shipboard demonstration. These browser checks validate visible user outcomes; no language model generated this plan.",
+        "originalRequirement": "A user can add a non-empty task and immediately see it on the board. The same task must survive a page reload. Empty and whitespace-only task names must show a clear validation message without creating a task.",
+        "fingerprint": "9c1f3dcf7fd3f279",
+        "createdAt": "2026-09-26T00:00:00.000Z",
+        "criteria": [
+          {
+            "id": "SHIP-01",
+            "title": "A new task appears on the board",
+            "description": "Enter a unique task name, submit it, and check the actual task list.",
+            "requirementRef": "A user can add a non-empty task and immediately see it on the board.",
+            "expectedBehavior": "The newly added task is visible in the task list, not just in the input field.",
+            "contextMode": "fresh",
+            "steps": [
+              {
+                "id": "SHIP-01-S1",
+                "type": "navigate",
+                "url": "{{TARGET_URL}}",
+                "description": "Open the Shipboard application"
+              },
+              {
+                "id": "SHIP-01-S2",
+                "type": "fill",
+                "locator": "Task name",
+                "value": "{{UNIQUE_CONTENT}}",
+                "description": "Enter this run's unique task name"
+              },
+              {
+                "id": "SHIP-01-S3",
+                "type": "click",
+                "locator": "Add task",
+                "description": "Add the task to the board"
+              },
+              {
+                "id": "SHIP-01-S4",
+                "type": "assertVisibleIn",
+                "locator": "#taskList",
+                "value": "{{UNIQUE_CONTENT}}",
+                "description": "Verify the new task is visible in the task list"
+              }
+            ]
+          },
+          {
+            "id": "SHIP-02",
+            "title": "The same task survives a reload",
+            "description": "Continue in the same browser as SHIP-01, reload, and check the same task.",
+            "requirementRef": "The same task must survive a page reload.",
+            "expectedBehavior": "Reloading the page keeps the task that was just added.",
+            "dependsOn": [
+              "SHIP-01"
+            ],
+            "contextMode": "inherit",
+            "steps": [
+              {
+                "id": "SHIP-02-S1",
+                "type": "reload",
+                "description": "Reload the same browser page"
+              },
+              {
+                "id": "SHIP-02-S2",
+                "type": "assertVisibleIn",
+                "locator": "#taskList",
+                "value": "{{UNIQUE_CONTENT}}",
+                "description": "Verify the same task is still on the board"
+              }
+            ]
+          },
+          {
+            "id": "SHIP-03",
+            "title": "Blank task names are rejected",
+            "description": "Use an independent browser to check empty and whitespace-only submissions.",
+            "requirementRef": "Empty and whitespace-only task names must show a clear validation message without creating a task.",
+            "expectedBehavior": "The board remains empty and displays an actionable validation message.",
+            "contextMode": "fresh",
+            "steps": [
+              {
+                "id": "SHIP-03-S1",
+                "type": "navigate",
+                "url": "{{TARGET_URL}}",
+                "description": "Open a fresh Shipboard browser session"
+              },
+              {
+                "id": "SHIP-03-S2",
+                "type": "assertCount",
+                "locator": ".task-item",
+                "expected": 0,
+                "description": "Verify the fresh board has no tasks"
+              },
+              {
+                "id": "SHIP-03-S3",
+                "type": "fill",
+                "locator": "Task name",
+                "value": "",
+                "description": "Leave the task name empty"
+              },
+              {
+                "id": "SHIP-03-S4",
+                "type": "click",
+                "locator": "Add task",
+                "description": "Try to add an empty task"
+              },
+              {
+                "id": "SHIP-03-S5",
+                "type": "assertVisible",
+                "value": "Add a task name before continuing.",
+                "description": "Verify an actionable validation message appears"
+              },
+              {
+                "id": "SHIP-03-S6",
+                "type": "assertCount",
+                "locator": ".task-item",
+                "expected": 0,
+                "description": "Verify no empty task was created"
+              },
+              {
+                "id": "SHIP-03-S7",
+                "type": "fill",
+                "locator": "Task name",
+                "value": "   ",
+                "description": "Enter a whitespace-only task name"
+              },
+              {
+                "id": "SHIP-03-S8",
+                "type": "click",
+                "locator": "Add task",
+                "description": "Try to add a whitespace-only task"
+              },
+              {
+                "id": "SHIP-03-S9",
+                "type": "assertVisible",
+                "value": "Add a task name before continuing.",
+                "description": "Verify whitespace also produces a validation message"
+              },
+              {
+                "id": "SHIP-03-S10",
+                "type": "assertCount",
+                "locator": ".task-item",
+                "expected": 0,
+                "description": "Verify the task board is still empty"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "/api/plan?variant=shipboard-buggy": {
+      "ok": true,
+      "plan": {
+        "planId": "shipboard-task-acceptance",
+        "version": "1.0.0",
+        "source": "fixture",
+        "title": "Shipboard — task creation and persistence",
+        "description": "A hand-authored acceptance plan for the English Shipboard demonstration. These browser checks validate visible user outcomes; no language model generated this plan.",
+        "originalRequirement": "A user can add a non-empty task and immediately see it on the board. The same task must survive a page reload. Empty and whitespace-only task names must show a clear validation message without creating a task.",
+        "fingerprint": "9c1f3dcf7fd3f279",
+        "createdAt": "2026-09-26T00:00:00.000Z",
+        "criteria": [
+          {
+            "id": "SHIP-01",
+            "title": "A new task appears on the board",
+            "description": "Enter a unique task name, submit it, and check the actual task list.",
+            "requirementRef": "A user can add a non-empty task and immediately see it on the board.",
+            "expectedBehavior": "The newly added task is visible in the task list, not just in the input field.",
+            "contextMode": "fresh",
+            "steps": [
+              {
+                "id": "SHIP-01-S1",
+                "type": "navigate",
+                "url": "{{TARGET_URL}}",
+                "description": "Open the Shipboard application"
+              },
+              {
+                "id": "SHIP-01-S2",
+                "type": "fill",
+                "locator": "Task name",
+                "value": "{{UNIQUE_CONTENT}}",
+                "description": "Enter this run's unique task name"
+              },
+              {
+                "id": "SHIP-01-S3",
+                "type": "click",
+                "locator": "Add task",
+                "description": "Add the task to the board"
+              },
+              {
+                "id": "SHIP-01-S4",
+                "type": "assertVisibleIn",
+                "locator": "#taskList",
+                "value": "{{UNIQUE_CONTENT}}",
+                "description": "Verify the new task is visible in the task list"
+              }
+            ]
+          },
+          {
+            "id": "SHIP-02",
+            "title": "The same task survives a reload",
+            "description": "Continue in the same browser as SHIP-01, reload, and check the same task.",
+            "requirementRef": "The same task must survive a page reload.",
+            "expectedBehavior": "Reloading the page keeps the task that was just added.",
+            "dependsOn": [
+              "SHIP-01"
+            ],
+            "contextMode": "inherit",
+            "steps": [
+              {
+                "id": "SHIP-02-S1",
+                "type": "reload",
+                "description": "Reload the same browser page"
+              },
+              {
+                "id": "SHIP-02-S2",
+                "type": "assertVisibleIn",
+                "locator": "#taskList",
+                "value": "{{UNIQUE_CONTENT}}",
+                "description": "Verify the same task is still on the board"
+              }
+            ]
+          },
+          {
+            "id": "SHIP-03",
+            "title": "Blank task names are rejected",
+            "description": "Use an independent browser to check empty and whitespace-only submissions.",
+            "requirementRef": "Empty and whitespace-only task names must show a clear validation message without creating a task.",
+            "expectedBehavior": "The board remains empty and displays an actionable validation message.",
+            "contextMode": "fresh",
+            "steps": [
+              {
+                "id": "SHIP-03-S1",
+                "type": "navigate",
+                "url": "{{TARGET_URL}}",
+                "description": "Open a fresh Shipboard browser session"
+              },
+              {
+                "id": "SHIP-03-S2",
+                "type": "assertCount",
+                "locator": ".task-item",
+                "expected": 0,
+                "description": "Verify the fresh board has no tasks"
+              },
+              {
+                "id": "SHIP-03-S3",
+                "type": "fill",
+                "locator": "Task name",
+                "value": "",
+                "description": "Leave the task name empty"
+              },
+              {
+                "id": "SHIP-03-S4",
+                "type": "click",
+                "locator": "Add task",
+                "description": "Try to add an empty task"
+              },
+              {
+                "id": "SHIP-03-S5",
+                "type": "assertVisible",
+                "value": "Add a task name before continuing.",
+                "description": "Verify an actionable validation message appears"
+              },
+              {
+                "id": "SHIP-03-S6",
+                "type": "assertCount",
+                "locator": ".task-item",
+                "expected": 0,
+                "description": "Verify no empty task was created"
+              },
+              {
+                "id": "SHIP-03-S7",
+                "type": "fill",
+                "locator": "Task name",
+                "value": "   ",
+                "description": "Enter a whitespace-only task name"
+              },
+              {
+                "id": "SHIP-03-S8",
+                "type": "click",
+                "locator": "Add task",
+                "description": "Try to add a whitespace-only task"
+              },
+              {
+                "id": "SHIP-03-S9",
+                "type": "assertVisible",
+                "value": "Add a task name before continuing.",
+                "description": "Verify whitespace also produces a validation message"
+              },
+              {
+                "id": "SHIP-03-S10",
+                "type": "assertCount",
+                "locator": ".task-item",
+                "expected": 0,
+                "description": "Verify the task board is still empty"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "/api/plan?variant=shipboard-repair": {
+      "ok": true,
+      "plan": {
+        "planId": "shipboard-task-acceptance",
+        "version": "1.0.0",
+        "source": "fixture",
+        "title": "Shipboard — task creation and persistence",
+        "description": "A hand-authored acceptance plan for the English Shipboard demonstration. These browser checks validate visible user outcomes; no language model generated this plan.",
+        "originalRequirement": "A user can add a non-empty task and immediately see it on the board. The same task must survive a page reload. Empty and whitespace-only task names must show a clear validation message without creating a task.",
+        "fingerprint": "9c1f3dcf7fd3f279",
+        "createdAt": "2026-09-26T00:00:00.000Z",
+        "criteria": [
+          {
+            "id": "SHIP-01",
+            "title": "A new task appears on the board",
+            "description": "Enter a unique task name, submit it, and check the actual task list.",
+            "requirementRef": "A user can add a non-empty task and immediately see it on the board.",
+            "expectedBehavior": "The newly added task is visible in the task list, not just in the input field.",
+            "contextMode": "fresh",
+            "steps": [
+              {
+                "id": "SHIP-01-S1",
+                "type": "navigate",
+                "url": "{{TARGET_URL}}",
+                "description": "Open the Shipboard application"
+              },
+              {
+                "id": "SHIP-01-S2",
+                "type": "fill",
+                "locator": "Task name",
+                "value": "{{UNIQUE_CONTENT}}",
+                "description": "Enter this run's unique task name"
+              },
+              {
+                "id": "SHIP-01-S3",
+                "type": "click",
+                "locator": "Add task",
+                "description": "Add the task to the board"
+              },
+              {
+                "id": "SHIP-01-S4",
+                "type": "assertVisibleIn",
+                "locator": "#taskList",
+                "value": "{{UNIQUE_CONTENT}}",
+                "description": "Verify the new task is visible in the task list"
+              }
+            ]
+          },
+          {
+            "id": "SHIP-02",
+            "title": "The same task survives a reload",
+            "description": "Continue in the same browser as SHIP-01, reload, and check the same task.",
+            "requirementRef": "The same task must survive a page reload.",
+            "expectedBehavior": "Reloading the page keeps the task that was just added.",
+            "dependsOn": [
+              "SHIP-01"
+            ],
+            "contextMode": "inherit",
+            "steps": [
+              {
+                "id": "SHIP-02-S1",
+                "type": "reload",
+                "description": "Reload the same browser page"
+              },
+              {
+                "id": "SHIP-02-S2",
+                "type": "assertVisibleIn",
+                "locator": "#taskList",
+                "value": "{{UNIQUE_CONTENT}}",
+                "description": "Verify the same task is still on the board"
+              }
+            ]
+          },
+          {
+            "id": "SHIP-03",
+            "title": "Blank task names are rejected",
+            "description": "Use an independent browser to check empty and whitespace-only submissions.",
+            "requirementRef": "Empty and whitespace-only task names must show a clear validation message without creating a task.",
+            "expectedBehavior": "The board remains empty and displays an actionable validation message.",
+            "contextMode": "fresh",
+            "steps": [
+              {
+                "id": "SHIP-03-S1",
+                "type": "navigate",
+                "url": "{{TARGET_URL}}",
+                "description": "Open a fresh Shipboard browser session"
+              },
+              {
+                "id": "SHIP-03-S2",
+                "type": "assertCount",
+                "locator": ".task-item",
+                "expected": 0,
+                "description": "Verify the fresh board has no tasks"
+              },
+              {
+                "id": "SHIP-03-S3",
+                "type": "fill",
+                "locator": "Task name",
+                "value": "",
+                "description": "Leave the task name empty"
+              },
+              {
+                "id": "SHIP-03-S4",
+                "type": "click",
+                "locator": "Add task",
+                "description": "Try to add an empty task"
+              },
+              {
+                "id": "SHIP-03-S5",
+                "type": "assertVisible",
+                "value": "Add a task name before continuing.",
+                "description": "Verify an actionable validation message appears"
+              },
+              {
+                "id": "SHIP-03-S6",
+                "type": "assertCount",
+                "locator": ".task-item",
+                "expected": 0,
+                "description": "Verify no empty task was created"
+              },
+              {
+                "id": "SHIP-03-S7",
+                "type": "fill",
+                "locator": "Task name",
+                "value": "   ",
+                "description": "Enter a whitespace-only task name"
+              },
+              {
+                "id": "SHIP-03-S8",
+                "type": "click",
+                "locator": "Add task",
+                "description": "Try to add a whitespace-only task"
+              },
+              {
+                "id": "SHIP-03-S9",
+                "type": "assertVisible",
+                "value": "Add a task name before continuing.",
+                "description": "Verify whitespace also produces a validation message"
+              },
+              {
+                "id": "SHIP-03-S10",
+                "type": "assertCount",
+                "locator": ".task-item",
+                "expected": 0,
+                "description": "Verify the task board is still empty"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "/api/plan": {
+      "ok": true,
+      "plan": {
+        "planId": "shipboard-task-acceptance",
+        "version": "1.0.0",
+        "source": "fixture",
+        "title": "Shipboard — task creation and persistence",
+        "description": "A hand-authored acceptance plan for the English Shipboard demonstration. These browser checks validate visible user outcomes; no language model generated this plan.",
+        "originalRequirement": "A user can add a non-empty task and immediately see it on the board. The same task must survive a page reload. Empty and whitespace-only task names must show a clear validation message without creating a task.",
+        "fingerprint": "9c1f3dcf7fd3f279",
+        "createdAt": "2026-09-26T00:00:00.000Z",
+        "criteria": [
+          {
+            "id": "SHIP-01",
+            "title": "A new task appears on the board",
+            "description": "Enter a unique task name, submit it, and check the actual task list.",
+            "requirementRef": "A user can add a non-empty task and immediately see it on the board.",
+            "expectedBehavior": "The newly added task is visible in the task list, not just in the input field.",
+            "contextMode": "fresh",
+            "steps": [
+              {
+                "id": "SHIP-01-S1",
+                "type": "navigate",
+                "url": "{{TARGET_URL}}",
+                "description": "Open the Shipboard application"
+              },
+              {
+                "id": "SHIP-01-S2",
+                "type": "fill",
+                "locator": "Task name",
+                "value": "{{UNIQUE_CONTENT}}",
+                "description": "Enter this run's unique task name"
+              },
+              {
+                "id": "SHIP-01-S3",
+                "type": "click",
+                "locator": "Add task",
+                "description": "Add the task to the board"
+              },
+              {
+                "id": "SHIP-01-S4",
+                "type": "assertVisibleIn",
+                "locator": "#taskList",
+                "value": "{{UNIQUE_CONTENT}}",
+                "description": "Verify the new task is visible in the task list"
+              }
+            ]
+          },
+          {
+            "id": "SHIP-02",
+            "title": "The same task survives a reload",
+            "description": "Continue in the same browser as SHIP-01, reload, and check the same task.",
+            "requirementRef": "The same task must survive a page reload.",
+            "expectedBehavior": "Reloading the page keeps the task that was just added.",
+            "dependsOn": [
+              "SHIP-01"
+            ],
+            "contextMode": "inherit",
+            "steps": [
+              {
+                "id": "SHIP-02-S1",
+                "type": "reload",
+                "description": "Reload the same browser page"
+              },
+              {
+                "id": "SHIP-02-S2",
+                "type": "assertVisibleIn",
+                "locator": "#taskList",
+                "value": "{{UNIQUE_CONTENT}}",
+                "description": "Verify the same task is still on the board"
+              }
+            ]
+          },
+          {
+            "id": "SHIP-03",
+            "title": "Blank task names are rejected",
+            "description": "Use an independent browser to check empty and whitespace-only submissions.",
+            "requirementRef": "Empty and whitespace-only task names must show a clear validation message without creating a task.",
+            "expectedBehavior": "The board remains empty and displays an actionable validation message.",
+            "contextMode": "fresh",
+            "steps": [
+              {
+                "id": "SHIP-03-S1",
+                "type": "navigate",
+                "url": "{{TARGET_URL}}",
+                "description": "Open a fresh Shipboard browser session"
+              },
+              {
+                "id": "SHIP-03-S2",
+                "type": "assertCount",
+                "locator": ".task-item",
+                "expected": 0,
+                "description": "Verify the fresh board has no tasks"
+              },
+              {
+                "id": "SHIP-03-S3",
+                "type": "fill",
+                "locator": "Task name",
+                "value": "",
+                "description": "Leave the task name empty"
+              },
+              {
+                "id": "SHIP-03-S4",
+                "type": "click",
+                "locator": "Add task",
+                "description": "Try to add an empty task"
+              },
+              {
+                "id": "SHIP-03-S5",
+                "type": "assertVisible",
+                "value": "Add a task name before continuing.",
+                "description": "Verify an actionable validation message appears"
+              },
+              {
+                "id": "SHIP-03-S6",
+                "type": "assertCount",
+                "locator": ".task-item",
+                "expected": 0,
+                "description": "Verify no empty task was created"
+              },
+              {
+                "id": "SHIP-03-S7",
+                "type": "fill",
+                "locator": "Task name",
+                "value": "   ",
+                "description": "Enter a whitespace-only task name"
+              },
+              {
+                "id": "SHIP-03-S8",
+                "type": "click",
+                "locator": "Add task",
+                "description": "Try to add a whitespace-only task"
+              },
+              {
+                "id": "SHIP-03-S9",
+                "type": "assertVisible",
+                "value": "Add a task name before continuing.",
+                "description": "Verify whitespace also produces a validation message"
+              },
+              {
+                "id": "SHIP-03-S10",
+                "type": "assertCount",
+                "locator": ".task-item",
+                "expected": 0,
+                "description": "Verify the task board is still empty"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "/api/capabilities": {
+      "ok": true,
+      "readOnly": false,
+      "sourceBinding": "self-contained-html-snapshot",
+      "customTargets": true,
+      "manualPlans": true,
+      "maxConcurrentRuns": 2
+    },
+    "/api/provider/status": {
+      "status": {
+        "configured": false,
+        "providerLabel": "OpenAI-compatible",
+        "baseUrl": "",
+        "modelId": "",
+        "missingFields": [
+          "PROVIDER_BASE_URL",
+          "PROVIDER_MODEL_ID",
+          "PROVIDER_API_KEY"
+        ],
+        "hasKey": false,
+        "keyStored": false,
+        "configSource": "none",
+        "environmentOverride": false,
+        "readOnly": false,
+        "usageSummary": {
+          "retainedCalls": 0,
+          "successfulCalls": 0,
+          "failedCalls": 0,
+          "generationCalls": 0,
+          "connectionTestCalls": 0,
+          "knownInputTokens": 0,
+          "knownOutputTokens": 0,
+          "callsWithUnreportedTokens": 0,
+          "retentionLimit": 200
+        }
+      }
+    }
+  }
+}

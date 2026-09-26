@@ -1,0 +1,105 @@
+{
+  "reviewedAt": "2026-09-26T11:28:34.174Z",
+  "base": "http://127.0.0.1:4492",
+  "evidenceOnly": true,
+  "results": [
+    {
+      "name": "All 34 judge evidence files retain their exact manifest hashes",
+      "passed": true
+    },
+    {
+      "name": "Compiled history matches the English reviewed bundle",
+      "passed": true
+    },
+    {
+      "name": "All 12 served PNGs match their original evidence hashes exactly",
+      "passed": true,
+      "detail": [
+        "/api/screenshots/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c_SHIP-01_final.png",
+        "/api/screenshots/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c_SHIP-02-S2_failed.png",
+        "/api/screenshots/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c_SHIP-03_final.png",
+        "/api/screenshots/62d46b46-2227-4ac9-8b15-72ba5bbe7fc3_SHIP-01_final.png",
+        "/api/screenshots/62d46b46-2227-4ac9-8b15-72ba5bbe7fc3_SHIP-02_final.png",
+        "/api/screenshots/62d46b46-2227-4ac9-8b15-72ba5bbe7fc3_SHIP-03_final.png",
+        "/api/screenshots/74ed3133-b62c-44cf-8b4a-042156180db5_SHIP-01_final.png",
+        "/api/screenshots/74ed3133-b62c-44cf-8b4a-042156180db5_SHIP-02_final.png",
+        "/api/screenshots/74ed3133-b62c-44cf-8b4a-042156180db5_SHIP-03_final.png",
+        "/api/screenshots/c001b117-8865-4084-bfa6-e04ddde1683d_SHIP-01_final.png",
+        "/api/screenshots/c001b117-8865-4084-bfa6-e04ddde1683d_SHIP-02-S2_failed.png",
+        "/api/screenshots/c001b117-8865-4084-bfa6-e04ddde1683d_SHIP-03_final.png"
+      ]
+    },
+    {
+      "name": "All 17 recorded acceptance API responses match the reviewed English bundle exactly",
+      "passed": true,
+      "detail": {
+        "routes": [
+          "/api/run/62d46b46-2227-4ac9-8b15-72ba5bbe7fc3",
+          "/api/run/62d46b46-2227-4ac9-8b15-72ba5bbe7fc3/progress",
+          "/api/run/c001b117-8865-4084-bfa6-e04ddde1683d",
+          "/api/run/c001b117-8865-4084-bfa6-e04ddde1683d/progress",
+          "/api/run/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c",
+          "/api/run/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c/progress",
+          "/api/run/74ed3133-b62c-44cf-8b4a-042156180db5",
+          "/api/run/74ed3133-b62c-44cf-8b4a-042156180db5/progress",
+          "/api/repair-tasks/bbc50e50-7838-4bec-8a2b-4ec386d98679",
+          "/api/repair-tasks/bbc50e50-7838-4bec-8a2b-4ec386d98679/comparison",
+          "/api/repair-tasks",
+          "/api/history",
+          "/api/targets",
+          "/api/plan?variant=shipboard-normal",
+          "/api/plan?variant=shipboard-buggy",
+          "/api/plan?variant=shipboard-repair",
+          "/api/plan"
+        ],
+        "responseMismatches": []
+      }
+    },
+    {
+      "name": "All 3 hosted metadata routes enforce read-only, no model connection and no private projects",
+      "passed": true,
+      "detail": {
+        "routes": [
+          "/api/projects",
+          "/api/capabilities",
+          "/api/provider/status"
+        ],
+        "policy": {
+          "/api/capabilities": {
+            "ok": true,
+            "readOnly": true,
+            "sourceBinding": "self-contained-html-snapshot",
+            "demoMode": "recorded-evidence"
+          },
+          "/api/provider/status": {
+            "ok": true,
+            "status": {
+              "configured": false,
+              "providerLabel": "Recorded evidence demo — model calls disabled",
+              "baseUrl": "(disabled)",
+              "modelId": "(disabled)",
+              "missingFields": [
+                "LOCAL_MODEL_CONFIGURATION_REQUIRED"
+              ]
+            }
+          },
+          "/api/projects": {
+            "ok": true,
+            "projects": [],
+            "readOnly": true
+          }
+        },
+        "responseMismatches": []
+      }
+    },
+    {
+      "name": "Original judge evidence is unchanged after verification",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "requests": [],
+  "failedResources": [],
+  "outsideRequests": [],
+  "captures": []
+}

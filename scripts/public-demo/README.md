@@ -4,7 +4,7 @@ This adapter publishes the existing Ming frontend as a **read-only recorded-evid
 
 ## Export contract
 
-The separately reviewed export at `docs/demo-evidence/api-responses.json` must have this structure:
+The separately reviewed English export at `docs/judge-evidence/api-responses.json` must have this structure:
 
 ```json
 {
@@ -21,7 +21,7 @@ The separately reviewed export at `docs/demo-evidence/api-responses.json` must h
 
 The shape above is illustrative, not acceptance evidence. The actual export must contain complete response bodies copied from selected real API records. Include `/api/run/:id`, optional terminal progress responses, `/api/repair-tasks/:id`, and `/api/repair-tasks/:id/comparison` for every visible run/task. Comparison results are served unchanged, never recomputed by the public adapter. Requirements, confirmations, and draft GET responses can also be included if needed by the final frontend.
 
-Only reviewed screenshots in `docs/demo-evidence/runtime/screenshots/` are copied. Packaging fails if a recorded `screenshotPath` refers to an image absent from that directory. Live local `runtime/`, model configuration, `.env`, and credentials are not included.
+Only reviewed screenshots in `docs/judge-evidence/runtime/screenshots/` are copied. Packaging fails if a recorded `screenshotPath` refers to an image absent from that directory. Live local `runtime/`, model configuration, `.env`, and credentials are not included. The legacy `docs/demo-evidence` is preserved unchanged as a historical checkpoint; the current viewer packages 20 English response routes and 12 original Shipboard captures.
 
 ## Local validation and packaging
 

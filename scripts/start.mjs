@@ -19,7 +19,7 @@ function cleanPublicRuntime() {
 // Public mode always gets a new isolated snapshot of the explicitly reviewed
 // bundle. Never merge with the user's runtime or an existing override directory.
 if (process.env.MING_PUBLIC_DEMO === '1') {
-  const source = path.join(root, 'docs/demo-evidence/runtime');
+  const source = path.join(root, 'docs/judge-evidence/runtime');
   if (!fs.existsSync(source)) {
     console.error('Reviewed demo evidence is missing. Build the demo evidence bundle first.');
     process.exit(1);

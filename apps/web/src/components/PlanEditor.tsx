@@ -21,21 +21,21 @@ import { api, downloadText } from "../lib/api";
 import Sheet from "./Sheet";
 
 const ACTIONS = [
-  ["navigate", "打开项目页面"],
-  ["fill", "输入内容"],
-  ["click", "点击按钮或链接"],
-  ["selectOption", "选择下拉选项"],
-  ["check", "勾选选项"],
-  ["uncheck", "取消勾选"],
-  ["reload", "刷新当前页面"],
-  ["assertVisible", "页面应显示内容"],
-  ["assertVisibleIn", "指定区域应显示内容"],
-  ["assertNotVisible", "页面不应显示内容"],
-  ["assertCount", "元素数量应为"],
-  ["assertValue", "输入值应为"],
-  ["assertUrl", "页面地址应为"],
-  ["assertInputEnabled", "输入框应可用"],
-  ["assertInputDisabled", "输入框应禁用"],
+  ["navigate", "Open the project page"],
+  ["fill", "Enter text"],
+  ["click", "Click a button or link"],
+  ["selectOption", "Select an option"],
+  ["check", "Check a box"],
+  ["uncheck", "Uncheck a box"],
+  ["reload", "Reload the page"],
+  ["assertVisible", "Text should be visible"],
+  ["assertVisibleIn", "Text should appear in a region"],
+  ["assertNotVisible", "Text should not be visible"],
+  ["assertCount", "Element count should match"],
+  ["assertValue", "Field value should match"],
+  ["assertUrl", "Page URL should match"],
+  ["assertInputEnabled", "Field should be enabled"],
+  ["assertInputDisabled", "Field should be disabled"],
 ] as const;
 const LOCATOR_ACTIONS = new Set([
   "fill",
@@ -113,8 +113,8 @@ export default function PlanEditor({
           criteria: draft.plan.criteria,
         })
       : {
-          title: `${project.name} · 功能验收`,
-          description: "根据项目需求检查用户操作与预期结果。",
+          title: `${project.name} · Acceptance plan`,
+          description: "Check user actions and expected outcomes against the project requirements.",
           criteria: [newCriterion("AC-01")],
         },
   );
@@ -174,23 +174,23 @@ export default function PlanEditor({
   }
   function validate(): string[] {
     const problems: string[] = [];
-    if (!plan.title.trim()) problems.push("请为验收计划命名。");
+    if (!plan.title.trim()) problems.push("Give your acceptance plan a name.");
     plan.criteria.forEach((c, i) => {
-      if (!c.title.trim()) problems.push(`第 ${i + 1} 项验收条件需要名称。`);
+      if (!c.title.trim()) problems.push(`Criterion ${i + 1} needs a name.`);
       if (!(c.steps || []).some((s) => s.type.startsWith("assert")))
-        problems.push(`${c.id} 至少需要一个「应当」检查，不能只有操作。`);
+        problems.push(`${c.id} needs at least one assertion to check the result of its actions.`);
       (c.steps || []).forEach((s, n) => {
         if (!s.description.trim())
-          problems.push(`${c.id} 的第 ${n + 1} 步需要操作说明。`);
+          problems.push(`${c.id}, step ${n + 1}: add a description.`);
         if (LOCATOR_ACTIONS.has(s.type) && !s.locator?.trim())
-          problems.push(`${c.id} 的第 ${n + 1} 步需要指定控件或区域。`);
+          problems.push(`${c.id}, step ${n + 1}: specify a control or region.`);
         if (VALUE_ACTIONS.has(s.type) && s.type !== "fill" && !s.value?.trim())
-          problems.push(`${c.id} 的第 ${n + 1} 步需要填写预期内容。`);
+          problems.push(`${c.id}, step ${n + 1}: enter the expected content.`);
         if (
           s.type === "assertCount" &&
           (!Number.isInteger(s.expected) || Number(s.expected) < 0)
         )
-          problems.push(`${c.id} 的元素数量必须是非负整数。`);
+          problems.push(`${c.id}: the element count must be a non-negative integer.`);
       });
     });
     return problems;
@@ -238,7 +238,7 @@ export default function PlanEditor({
         !parsed.criteria.length ||
         parsed.criteria.length > 20
       )
-        throw new Error("需要包含 title、description 和 1–20 项 criteria。");
+        throw new Error("Include a title, description, and 1–20 criteria.");
       const ids = new Set<string>();
       let stepCount = 0;
       parsed.criteria.forEach((c) => {
@@ -251,7 +251,7 @@ export default function PlanEditor({
           !Array.isArray(c.steps) ||
           !c.steps.length
         )
-          throw new Error("每项条件需要唯一的 id、title 和步骤列表。");
+          throw new Error("Each criterion needs a unique id, title, and a list of steps.");
         ids.add(c.id);
         for (const field of [
           "description",
@@ -259,19 +259,19 @@ export default function PlanEditor({
           "expectedBehavior",
         ] as const)
           if (c[field] !== undefined && typeof c[field] !== "string")
-            throw new Error("条件说明和需求引用必须是文本。");
+            throw new Error("Criterion descriptions and requirement references must be text.");
         for (const list of [c.openQuestions, c.dependsOn, c.prerequisites])
           if (
             list !== undefined &&
             (!Array.isArray(list) ||
               list.some((value) => typeof value !== "string"))
           )
-            throw new Error("待澄清问题、前置条件和依赖必须是文本列表。");
+            throw new Error("Open questions, prerequisites, and dependencies must be lists of text.");
         if (
           c.contextMode !== undefined &&
           !["fresh", "inherit"].includes(c.contextMode)
         )
-          throw new Error("页面上下文只能为 fresh 或 inherit。");
+          throw new Error("Page context must be fresh or inherit.");
         c.steps.forEach((s, i) => {
           if (
             !s ||
@@ -279,49 +279,49 @@ export default function PlanEditor({
             typeof s.description !== "string" ||
             !ACTIONS.some((a) => a[0] === s.type)
           )
-            throw new Error("步骤类型或说明无效。");
+            throw new Error("Invalid step type or description.");
           for (const field of ["url", "locator", "value"] as const)
             if (s[field] !== undefined && typeof s[field] !== "string")
-              throw new Error("地址、控件和输入值必须是文本。");
+              throw new Error("URLs, controls, and input values must be text.");
           if (
             s.expected !== undefined &&
             typeof s.expected !== "string" &&
             typeof s.expected !== "number"
           )
-            throw new Error("预期值必须是文本或数字。");
+            throw new Error("Expected values must be text or numbers.");
           s.id = `${c.id}-S${i + 1}`;
           stepCount++;
         });
       });
       if (stepCount > 120)
-        throw new Error("一个计划最多 120 个步骤，请拆分为多个功能验收。");
+        throw new Error("A plan can contain up to 120 steps. Split larger plans by feature.");
       setPlan(parsed);
       setActive(0);
       setErrors([]);
       setAdvanced("");
     } catch (e) {
-      setErrors([`导入失败：${(e as Error).message}`]);
+      setErrors([`Import failed: ${(e as Error).message}`]);
     }
   }
   return (
     <Sheet
-      title={draft ? "修改验收标准 · 保存为新版本" : "编写验收标准"}
+      title={draft ? "Edit plan · New revision" : "Create acceptance plan"}
       wide
       onClose={onClose}
       locked={busy}
     >
       <p className="sheet-lead">
-        从需求中定义可见的结果。每项条件至少包含一个检查；修改不会覆盖旧版本及其运行证据。
+        Turn requirements into observable outcomes. Include at least one assertion per criterion. Saving a revision preserves earlier plans and their evidence.
       </p>
       <details className="plan-requirement">
         <summary>
           <FileSourceIcon />
-          需求依据 · v{requirement.version}
+          Source requirements · v{requirement.version}
         </summary>
         <pre>{requirement.text}</pre>
       </details>
       <label className="field">
-        验收计划名称
+        Plan name
         <input
           value={plan.title}
           disabled={busy || readOnly}
@@ -329,7 +329,7 @@ export default function PlanEditor({
         />
       </label>
       <div className="plan-editor-layout">
-        <div className="plan-editor-nav" aria-label="验收条件列表">
+        <div className="plan-editor-nav" aria-label="Acceptance criteria">
           {plan.criteria.map((c, i) => (
             <button
               key={c.id}
@@ -337,7 +337,7 @@ export default function PlanEditor({
               onClick={() => setActive(i)}
             >
               <span>{c.id}</span>
-              <strong>{c.title || "未命名条件"}</strong>
+              <strong>{c.title || "Untitled criterion"}</strong>
             </button>
           ))}
           {!readOnly && (
@@ -347,7 +347,7 @@ export default function PlanEditor({
               onClick={addCriterion}
             >
               <Plus size={17} />
-              添加验收条件
+              Add criterion
             </button>
           )}
         </div>
@@ -362,23 +362,23 @@ export default function PlanEditor({
                   onClick={removeCriterion}
                 >
                   <Trash size={15} />
-                  删除条件
+                  Remove criterion
                 </button>
               )}
             </div>
             <label className="field">
-              条件名称
+              Criterion name
               <input
                 value={criterion.title}
                 disabled={busy || readOnly}
                 onChange={(e) => updateCriterion({ title: e.target.value })}
-                placeholder="例如：刷新后仍能看到刚添加的任务"
+                placeholder="e.g. A new task remains after reloading"
               />
             </label>
             <label className="field">
-              预期行为
+              Expected behavior
               <textarea
-                aria-label="预期行为"
+                aria-label="Expected behavior"
                 rows={2}
                 value={
                   criterion.expectedBehavior || criterion.description || ""
@@ -390,25 +390,25 @@ export default function PlanEditor({
                     description: e.target.value,
                   })
                 }
-                placeholder="用户完成操作后，页面上应该出现什么？"
+                placeholder="What should the user see after completing this action?"
               />
             </label>
             <label className="field">
-              对应的需求原文
+              Requirement reference
               <input
                 value={criterion.requirementRef || ""}
                 disabled={busy || readOnly}
                 onChange={(e) =>
                   updateCriterion({ requirementRef: e.target.value })
                 }
-                placeholder="从 PRD 引用相关语句，便于核对"
+                placeholder="Quote the relevant sentence from your PRD"
               />
             </label>
             <div className="field-pair">
               <label className="field">
-                前置验收条件
+                Depends on
                 <select
-                  aria-label="前置验收条件"
+                  aria-label="Depends on"
                   value={criterion.dependsOn?.[0] || ""}
                   disabled={busy || readOnly || active === 0}
                   onChange={(e) =>
@@ -418,18 +418,18 @@ export default function PlanEditor({
                     })
                   }
                 >
-                  <option value="">独立执行</option>
+                  <option value="">Run independently</option>
                   {plan.criteria.slice(0, active).map((c) => (
                     <option key={c.id} value={c.id}>
-                      {c.id} · {c.title || "未命名"}
+                      {c.id} · {c.title || "Untitled"}
                     </option>
                   ))}
                 </select>
               </label>
               <label className="field">
-                页面上下文
+                Browser context
                 <select
-                  aria-label="页面上下文"
+                  aria-label="Browser context"
                   value={criterion.contextMode || "fresh"}
                   disabled={busy || readOnly}
                   onChange={(e) =>
@@ -441,27 +441,27 @@ export default function PlanEditor({
                     })
                   }
                 >
-                  <option value="fresh">独立浏览器</option>
+                  <option value="fresh">Start fresh</option>
                   <option value="inherit" disabled={active === 0}>
-                    接续前一项页面
+                    Continue from the previous criterion
                   </option>
                 </select>
               </label>
             </div>
-            <h3 className="editor-section-title">按顺序执行这些步骤</h3>
+            <h3 className="editor-section-title">Steps to run, in order</h3>
             <p className="field-help">
-              控件可以填写页面上的按钮/字段名称；也可用 css=#save
-              精确定位。每轮唯一测试值可填写 {"{{UNIQUE_CONTENT}}"}。
+              Use a button or field label, or target an element with css=#save.
+              For a unique value in each run, use {"{{UNIQUE_CONTENT}}"}.
             </p>
             <div className="editable-steps">
               {(criterion.steps || []).map((s, i) => (
                 <div className="editable-step" key={s.id}>
                   <div className="editable-step-heading">
-                    <span>步骤 {i + 1}</span>
+                    <span>Step {i + 1}</span>
                     <div>
                       <button
                         className="icon-button"
-                        aria-label={`上移步骤 ${i + 1}`}
+                        aria-label={`Move step up: ${i + 1}`}
                         disabled={busy || readOnly || i === 0}
                         onClick={() => moveStep(i, -1)}
                       >
@@ -469,7 +469,7 @@ export default function PlanEditor({
                       </button>
                       <button
                         className="icon-button"
-                        aria-label={`下移步骤 ${i + 1}`}
+                        aria-label={`Move step down: ${i + 1}`}
                         disabled={
                           busy ||
                           readOnly ||
@@ -481,7 +481,7 @@ export default function PlanEditor({
                       </button>
                       <button
                         className="icon-button"
-                        aria-label={`删除步骤 ${i + 1}`}
+                        aria-label={`Remove step: ${i + 1}`}
                         disabled={
                           busy || readOnly || criterion.steps?.length === 1
                         }
@@ -496,9 +496,9 @@ export default function PlanEditor({
                     </div>
                   </div>
                   <label className="field">
-                    操作类型
+                    Action
                     <select
-                      aria-label="操作类型"
+                      aria-label="Action"
                       value={s.type}
                       disabled={busy || readOnly}
                       onChange={(e) => {
@@ -516,7 +516,7 @@ export default function PlanEditor({
                   </label>
                   {LOCATOR_ACTIONS.has(s.type) && (
                     <label className="field">
-                      控件或区域
+                      Control or region
                       <input
                         value={s.locator || ""}
                         disabled={busy || readOnly}
@@ -527,7 +527,7 @@ export default function PlanEditor({
                           s.type === "assertVisibleIn" ||
                           s.type === "assertCount"
                             ? "css=#task-list"
-                            : "例如：添加任务 或 css=#add"
+                            : "e.g. Add task or css=#add"
                         }
                       />
                     </label>
@@ -535,12 +535,12 @@ export default function PlanEditor({
                   {VALUE_ACTIONS.has(s.type) && (
                     <label className="field">
                       {s.type === "fill"
-                        ? "输入内容"
+                        ? "Enter text"
                         : s.type === "selectOption"
-                          ? "选项值"
+                          ? "Option value"
                           : s.type === "assertUrl"
-                            ? "预期地址或路径"
-                            : "预期内容"}
+                            ? "Expected URL or path"
+                            : "Expected content"}
                       <input
                         value={s.value || ""}
                         disabled={busy || readOnly}
@@ -550,14 +550,14 @@ export default function PlanEditor({
                         placeholder={
                           s.type === "assertUrl"
                             ? "/settings"
-                            : "例如：任务已保存"
+                            : "e.g. Task saved"
                         }
                       />
                     </label>
                   )}
                   {s.type === "assertCount" && (
                     <label className="field">
-                      预期元素数量
+                      Expected element count
                       <input
                         type="number"
                         min={0}
@@ -577,11 +577,11 @@ export default function PlanEditor({
                   )}
                   {s.type === "navigate" && (
                     <p className="field-help">
-                      打开当前项目登记的测试页面，不会跳转到其他项目。
+                      Opens the test page registered for this project.
                     </p>
                   )}
                   <label className="field step-description-field">
-                    步骤说明
+                    Step description
                     <input
                       value={s.description}
                       disabled={busy || readOnly}
@@ -607,13 +607,13 @@ export default function PlanEditor({
                 }
               >
                 <Plus size={17} />
-                添加步骤
+                Add step
               </button>
             )}
             <label className="field open-questions-field">
-              尚未明确的问题（每行一个）
+              Open questions (one per line)
               <textarea
-                aria-label="尚未明确的问题（每行一个）"
+                aria-label="Open questions (one per line)"
                 rows={2}
                 value={(criterion.openQuestions || []).join("\n")}
                 disabled={busy || readOnly}
@@ -624,7 +624,7 @@ export default function PlanEditor({
                       .filter((line) => line.trim()),
                   })
                 }
-                placeholder="存在待澄清问题时，草稿可以保存，但不能确认执行。"
+                placeholder="You can save a draft with open questions, but resolve them before confirming the plan."
               />
             </label>
           </div>
@@ -644,7 +644,7 @@ export default function PlanEditor({
         <div className="editor-save-bar">
           <span>
             <Info size={16} />
-            手动编辑不会调用模型
+            Manual editing uses no model calls
           </span>
           <button
             className="primary-button"
@@ -656,12 +656,12 @@ export default function PlanEditor({
             ) : (
               <FloppyDisk size={17} />
             )}
-            {busy ? "校验并保存中…" : draft ? "保存为新版本" : "保存验收草稿"}
+            {busy ? "Validating and saving…" : draft ? "Save revision" : "Save draft"}
           </button>
         </div>
       )}
       <details className="scope-note">
-        <summary>高级：导入或导出计划</summary>
+        <summary>Advanced: Import or export a plan</summary>
         <button
           className="secondary-button"
           onClick={() =>
@@ -672,14 +672,14 @@ export default function PlanEditor({
           }
         >
           <DownloadSimple size={16} />
-          导出 JSON
+          Export JSON
         </button>
         {!readOnly && (
           <>
             <label className="field">
-              计划 JSON
+              Plan JSON
               <textarea
-                aria-label="计划 JSON"
+                aria-label="Plan JSON"
                 rows={4}
                 value={advanced}
                 onChange={(e) => setAdvanced(e.target.value)}
@@ -691,7 +691,7 @@ export default function PlanEditor({
               disabled={busy || !advanced.trim()}
               onClick={importPlan}
             >
-              导入到编辑器
+              Import into editor
             </button>
           </>
         )}

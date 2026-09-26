@@ -129,7 +129,7 @@ try {
   const comparison = (await api('GET', `/api/repair-tasks/${task.taskId}/comparison`)).comparison;
   check('Changed live project can pass rerun without falsely claiming frozen repair', rerun.status === 'passed' && comparison.acceptancePassed && comparison.targetFingerprintChanged && !comparison.sourceFingerprintKnown && !comparison.verifiedRepair);
   const reviewTask = (await api('GET', `/api/repair-tasks/${task.taskId}`)).task;
-  check('Passed live URL acceptance enters review instead of failed', reviewTask.status === 'review' && reviewTask.blockedReason.includes('实时网址'));
+  check('Passed live URL acceptance enters review instead of failed', reviewTask.status === 'review' && reviewTask.blockedReason.includes('A live URL'));
   await api('POST', `/api/repair-tasks/${task.taskId}/claim`, { claimedBy: 'Different owner' }, 400);
   await api('POST', `/api/repair-tasks/${task.taskId}/claim`, { claimedBy: 'Codex integration test' });
   await terminal((await api('POST', `/api/repair-tasks/${task.taskId}/rerun`, { expectedTargetFingerprint: newFingerprint })).runId);
