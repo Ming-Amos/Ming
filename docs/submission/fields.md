@@ -66,7 +66,7 @@ Keep manual plans, sample fixtures, and live model output distinct. Credit Bob f
 
 ## Remaining before submission
 
-- Refresh the private preview, video and slides for the current presentation. The compiled package has passed review; deployment is tracked separately.
+- Refresh the video and slides for the current presentation. The reviewed English package is deployed to the existing private preview as version 3; the URL is not yet publicly accessible to judges.
 - Configure the chosen external model and perform an actual generation/review/run if claiming a demonstrated live generation workflow. No provider key or such live result exists yet.
-- Obtain user approval before making the private repository and site public, then verify signed-out access. The private preview update follows testing.
+- Obtain user approval before making the private repository and site public, then verify signed-out access. The private preview has been updated after testing.
 - Obtain the organizer's account-eligibility confirmation, then review all fields and submit through the official event form.

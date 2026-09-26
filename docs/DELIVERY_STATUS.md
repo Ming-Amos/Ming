@@ -2,7 +2,7 @@
 
 Checkpoint: 2026-09-26. The current presentation is the English **Evidence Studio**, with new Shipboard execution evidence. This checklist separates implementation, recorded proof, earlier validation, and work still awaiting review. No automatic competition submission or public publication has occurred.
 
-Still needed for the current submission: refresh the private preview, record a current-interface video and refresh the deck, user approval for public repository/site access, organizer confirmation of account eligibility, and the final submission review. An external model key and a real generation/review/run are also needed if the entry will claim demonstrated live plan generation; manual acceptance already works without one.
+Still needed for the current submission: record a current-interface video and refresh the deck, user approval for public repository/site access, organizer confirmation of account eligibility, and the final submission review. An external model key and a real generation/review/run are also needed if the entry will claim demonstrated live plan generation; manual acceptance already works without one.
 
 ## Updated local product
 
@@ -21,7 +21,7 @@ Still needed for the current submission: refresh the private preview, record a c
 - [x] Current Evidence Studio and compiled read-only viewer: **47/47 checks passed**, including playback, focus, keyboard commands, direct comparison-slider interaction, original-image identity and 390px layout.
 - [x] Full type checking, production build and **7 Worker unit tests** passed. Reviewed frontend bundle: `index-Cw3An0o5.js`.
 - [x] Bounded publication review: **270 candidate files**, **60 evidence hashes** (26 legacy + 34 new), unchanged Bob files and no findings.
-- [ ] Update the existing private Sites preview with this reviewed package. This checklist does not yet claim the hosted preview contains the new revision.
+- [x] Updated the existing owner-private Sites preview to English Evidence Studio **version 3**, with deployment status **succeeded** at 2026-09-26 11:31 UTC. Source: `a25103de008777601c08bcac80b46f29e483ce19`; deployment: `appgdep_6ab7ad01c1dc8191b1627324e4b96ad8`. This source checkpoint includes the reviewed application, 20-route bundle and 12 original screenshots. Later documentation-only changes record the release outcome.
 
 ## Current English verification
 
@@ -65,7 +65,7 @@ Recorded repair: task `7ed27f84-aa14-43f8-90e2-f84702dc21b0`; baseline `65aece9c
 - [x] GitHub repository exists at https://github.com/Ming-Amos/Ming — **private**.
 - [x] Sites preview exists at https://ming-acceptance-proof.amosming.chatgpt.site — **owner-private**, historical read-only evidence.
 - [ ] Obtain final user review before changing either audience to public. Then verify signed-out access; a private URL is not a usable public judging link.
-- [x] The new English read-only package passed its own 47-check review and bounded publication review. It presents reviewed Shipboard records and original captures; provider settings, keys and unreviewed runtime data are excluded. Private preview deployment remains a separate unchecked step above.
+- [x] The new English read-only package passed its own 47-check review and bounded publication review. It presents reviewed Shipboard records and original captures; provider settings, keys and unreviewed runtime data are excluded. The same package is deployed privately as recorded above. All 17 evidence API responses and 12 served PNG hashes match the reviewed source; 3 hosted metadata endpoints deliberately enforce read-only settings.
 - [ ] Obtain organizer confirmation of the account's event eligibility.
 - [ ] If claiming live AI-generated plans, configure the user's chosen provider locally and perform an actual generation, human review and browser acceptance run.
 - [ ] Review final statements, media, repository and application URL, then submit through the official event form before its deadline.
