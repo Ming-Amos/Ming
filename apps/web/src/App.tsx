@@ -6,6 +6,11 @@ import {
   RunProgress,
   CriteriaResult,
   StepResult,
+  ProviderStatus,
+  ProjectRecord,
+  RequirementRecord,
+  DraftRecord,
+  ConfirmationRecord,
 } from "./types";
 
 // ── API helpers ────────────────────────────────────────────────────
@@ -373,9 +378,331 @@ function HistoryPanel({
   );
 }
 
+// ── Stage B: AI-Driven flow ────────────────────────────────────────
+
+function StageBFlow() {
+  const [providerStatus, setProviderStatus] = useState<ProviderStatus | null>(null);
+  const [projectName, setProjectName] = useState("日报系统验收项目");
+  const [targetVariant, setTargetVariant] = useState<"normal" | "buggy">("normal");
+  const [project, setProject] = useState<ProjectRecord | null>(null);
+  const [requirementText, setRequirementText] = useState(
+    "员工可以填写、保存并查看自己的每日工作日报。提交后刷新页面，内容应保持不变。"
+  );
+  const [requirement, setRequirement] = useState<RequirementRecord | null>(null);
+  const [draft, setDraft] = useState<DraftRecord | null>(null);
+  const [confirmation, setConfirmation] = useState<ConfirmationRecord | null>(null);
+  const [runId, setRunId] = useState<string | null>(null);
+  const [runRecord, setRunRecord] = useState<RunRecord | null>(null);
+  const [progress, setProgress] = useState<RunProgress | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    apiFetch<{ status: ProviderStatus }>("/api/provider/status").then((r) => {
+      if (r.ok && r.data) setProviderStatus(r.data.status);
+    });
+  }, []);
+
+  // Poll run progress
+  useEffect(() => {
+    if (!runId || runRecord) return;
+    pollRef.current = setInterval(async () => {
+      const r = await apiFetch<{ progress: RunProgress }>(`/api/run/${runId}/progress`);
+      if (!r.ok || !r.data) return;
+      setProgress(r.data.progress);
+      if (r.data.progress.status !== "running") {
+        clearInterval(pollRef.current!);
+        const rec = await apiFetch<{ run: RunRecord }>(`/api/run/${runId}`);
+        if (rec.ok && rec.data) setRunRecord(rec.data.run);
+      }
+    }, 1500);
+    return () => { if (pollRef.current) clearInterval(pollRef.current); };
+  }, [runId, runRecord]);
+
+  const reset = () => {
+    setProject(null); setRequirement(null); setDraft(null); setConfirmation(null);
+    setRunId(null); setRunRecord(null); setProgress(null); setError(null);
+  };
+
+  const step1CreateProject = useCallback(async () => {
+    setBusy(true); setError(null);
+    const r = await apiFetch<{ project: ProjectRecord }>("/api/projects", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: projectName, targetVariant }),
+    });
+    setBusy(false);
+    if (!r.ok) { setError(r.error ?? "创建项目失败"); return; }
+    setProject(r.data!.project);
+  }, [projectName, targetVariant]);
+
+  const step2SaveRequirement = useCallback(async () => {
+    if (!project) return;
+    setBusy(true); setError(null);
+    const r = await apiFetch<{ requirement: RequirementRecord }>(
+      `/api/projects/${project.projectId}/requirements`,
+      { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text: requirementText }) }
+    );
+    setBusy(false);
+    if (!r.ok) { setError(r.error ?? "保存需求失败"); return; }
+    setRequirement(r.data!.requirement);
+  }, [project, requirementText]);
+
+  const step3Generate = useCallback(async () => {
+    if (!requirement) return;
+    setBusy(true); setError(null); setDraft(null);
+    const r = await apiFetch<{ draft: DraftRecord }>("/api/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ requirementId: requirement.requirementId }),
+    });
+    setBusy(false);
+    if (!r.ok) { setError(r.error ?? "生成失败"); return; }
+    setDraft(r.data!.draft);
+  }, [requirement]);
+
+  const step4Confirm = useCallback(async () => {
+    if (!draft) return;
+    setBusy(true); setError(null);
+    const r = await apiFetch<{ confirmation: ConfirmationRecord }>("/api/confirm", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ draftId: draft.draftId, displayedPlanFingerprint: draft.plan.fingerprint }),
+    });
+    setBusy(false);
+    if (!r.ok) { setError(r.error ?? "确认失败"); return; }
+    setConfirmation(r.data!.confirmation);
+  }, [draft]);
+
+  const step5Run = useCallback(async () => {
+    if (!confirmation || busy) return;
+    setBusy(true); setError(null); setRunRecord(null); setProgress(null); setRunId(null);
+    const r = await apiFetch<{ runId: string }>("/api/run-confirmed", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ confirmationId: confirmation.confirmationId }),
+    });
+    setBusy(false);
+    if (!r.ok) { setError(r.error ?? "启动失败"); return; }
+    setRunId(r.data!.runId);
+    setProgress({ runId: r.data!.runId, status: "running", finishedCriteria: 0, totalCriteria: draft?.plan.criteria.length ?? 0 });
+  }, [confirmation, draft]);
+
+  const canConfirm = draft && draft.validationErrors.length === 0 && !draft.hasOpenQuestions;
+
+  return (
+    <div>
+      {/* Provider status banner */}
+      {providerStatus && !providerStatus.configured && (
+        <div style={{ background: "#fff3cd", border: "1px solid #ffc107", borderRadius: 6, padding: "8px 12px", marginBottom: 12, fontSize: "0.83rem", color: "#856404" }}>
+          ⚠ 模型提供商未配置（{providerStatus.missingFields.join("、")} 缺失）。
+          请在 <code>apps/server/.env</code> 中设置后重启服务器。
+          Stage B 流程的「生成草稿」步骤在配置之前不可用。
+        </div>
+      )}
+      {providerStatus?.configured && (
+        <div style={{ background: "#d4edda", border: "1px solid #c3e6cb", borderRadius: 6, padding: "8px 12px", marginBottom: 12, fontSize: "0.83rem", color: "#155724" }}>
+          模型已配置：{providerStatus.providerLabel} / {providerStatus.modelId}
+        </div>
+      )}
+
+      {/* Error banner */}
+      {error && (
+        <div style={{ background: "#f8d7da", border: "1px solid #f5c6cb", borderRadius: 6, padding: "8px 12px", marginBottom: 12, fontSize: "0.83rem", color: "#721c24" }}>
+          {error}
+        </div>
+      )}
+
+      {/* Step 1: Create project */}
+      {!project && (
+        <div style={{ background: "#f7f8fa", border: "1px solid #e5e7eb", borderRadius: 8, padding: "14px 16px", marginBottom: 12 }}>
+          <div style={{ fontWeight: 600, marginBottom: 8 }}>步骤 1：创建项目</div>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 8 }}>
+            <input
+              value={projectName}
+              onChange={(e) => setProjectName(e.target.value)}
+              placeholder="项目名称"
+              style={{ flex: "1 1 200px", padding: "6px 10px", border: "1px solid #dee2e6", borderRadius: 6, fontSize: "0.9rem" }}
+            />
+            <select
+              value={targetVariant}
+              onChange={(e) => setTargetVariant(e.target.value as "normal" | "buggy")}
+              style={{ padding: "6px 10px", border: "1px solid #dee2e6", borderRadius: 6, fontSize: "0.9rem" }}
+            >
+              <option value="normal">正常版</option>
+              <option value="buggy">缺陷版</option>
+            </select>
+          </div>
+          <button onClick={step1CreateProject} disabled={busy || !projectName.trim()} style={btnStyle(busy)}>
+            {busy ? "创建中…" : "创建项目"}
+          </button>
+        </div>
+      )}
+
+      {/* Project created — show badge */}
+      {project && (
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+          <span style={{ background: "#d4edda", border: "1px solid #c3e6cb", borderRadius: 4, padding: "2px 8px", fontSize: "0.8rem", color: "#155724" }}>
+            项目：{project.name} ({project.targetVariant})
+          </span>
+          <button onClick={reset} style={{ background: "none", border: "1px solid #dee2e6", borderRadius: 4, padding: "2px 8px", cursor: "pointer", fontSize: "0.75rem" }}>重置</button>
+        </div>
+      )}
+
+      {/* Step 2: Save requirement */}
+      {project && !requirement && (
+        <div style={{ background: "#f7f8fa", border: "1px solid #e5e7eb", borderRadius: 8, padding: "14px 16px", marginBottom: 12 }}>
+          <div style={{ fontWeight: 600, marginBottom: 8 }}>步骤 2：输入需求</div>
+          <textarea
+            value={requirementText}
+            onChange={(e) => setRequirementText(e.target.value)}
+            rows={3}
+            style={{ width: "100%", padding: "8px 10px", border: "1px solid #dee2e6", borderRadius: 6, fontSize: "0.88rem", boxSizing: "border-box", resize: "vertical" }}
+          />
+          <button onClick={step2SaveRequirement} disabled={busy || !requirementText.trim()} style={{ ...btnStyle(busy), marginTop: 8 }}>
+            {busy ? "保存中…" : "保存需求"}
+          </button>
+        </div>
+      )}
+
+      {requirement && !draft && (
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+          <span style={{ background: "#d4edda", border: "1px solid #c3e6cb", borderRadius: 4, padding: "2px 8px", fontSize: "0.8rem", color: "#155724" }}>
+            需求已保存（v{requirement.version}）
+          </span>
+        </div>
+      )}
+
+      {/* Step 3: Generate draft */}
+      {requirement && !draft && (
+        <div style={{ background: "#f7f8fa", border: "1px solid #e5e7eb", borderRadius: 8, padding: "14px 16px", marginBottom: 12 }}>
+          <div style={{ fontWeight: 600, marginBottom: 6 }}>步骤 3：AI 生成验收草稿</div>
+          {!providerStatus?.configured && (
+            <div style={{ fontSize: "0.8rem", color: "#856404", marginBottom: 8 }}>（模型未配置，生成将返回 503 错误）</div>
+          )}
+          <button onClick={step3Generate} disabled={busy} style={btnStyle(busy)}>
+            {busy ? "生成中…" : "生成草稿"}
+          </button>
+        </div>
+      )}
+
+      {/* Draft review */}
+      {draft && !confirmation && (
+        <div style={{ background: "#f7f8fa", border: "1px solid #e5e7eb", borderRadius: 8, padding: "14px 16px", marginBottom: 12 }}>
+          <div style={{ fontWeight: 600, marginBottom: 8 }}>步骤 4：审查草稿并确认</div>
+
+          {/* Generation usage */}
+          <div style={{ fontSize: "0.75rem", color: "#57606a", marginBottom: 8 }}>
+            模型：{draft.usage.providerLabel} / {draft.usage.modelId} · 来源：{draft.plan.transportProvenance ?? "未知"} ·
+            耗时：{draft.usage.durationMs}ms
+          </div>
+
+          {/* Validation errors */}
+          {draft.validationErrors.length > 0 && (
+            <div style={{ background: "#f8d7da", border: "1px solid #f5c6cb", borderRadius: 4, padding: "8px 12px", marginBottom: 8, fontSize: "0.82rem", color: "#721c24" }}>
+              <strong>校验错误（不可确认）：</strong>
+              <ul style={{ margin: "4px 0 0 16px", padding: 0 }}>
+                {draft.validationErrors.map((e, i) => <li key={i}>{e}</li>)}
+              </ul>
+            </div>
+          )}
+
+          {/* Open questions */}
+          {draft.hasOpenQuestions && (
+            <div style={{ background: "#fff3cd", border: "1px solid #ffc107", borderRadius: 4, padding: "8px 12px", marginBottom: 8, fontSize: "0.82rem", color: "#856404" }}>
+              草稿含有待确认问题（openQuestions），请修改需求重新生成后确认。
+            </div>
+          )}
+
+          {/* Plan summary */}
+          <div style={{ marginBottom: 8 }}>
+            <div style={{ fontWeight: 600, fontSize: "0.88rem", marginBottom: 4 }}>{draft.plan.title}</div>
+            <div style={{ fontSize: "0.8rem", color: "#57606a", marginBottom: 6 }}>{draft.plan.description}</div>
+            {draft.plan.criteria.map((c) => (
+              <div key={c.id} style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 6, padding: "6px 10px", marginBottom: 4, fontSize: "0.82rem" }}>
+                <span style={{ fontWeight: 600 }}>{c.id}</span> · {c.title}
+                {c.openQuestions && c.openQuestions.length > 0 && (
+                  <div style={{ color: "#856404", fontSize: "0.75rem", marginTop: 2 }}>
+                    待确认：{c.openQuestions.join("；")}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div style={{ fontSize: "0.72rem", color: "#aaa", marginBottom: 8 }}>
+            草稿 ID：{draft.draftId} · 指纹：{draft.plan.fingerprint}
+          </div>
+
+          <div style={{ display: "flex", gap: 8 }}>
+            <button onClick={step4Confirm} disabled={busy || !canConfirm} style={btnStyle(busy || !canConfirm)}>
+              {busy ? "确认中…" : canConfirm ? "确认计划" : "含错误/问题，无法确认"}
+            </button>
+            <button onClick={() => { setDraft(null); setError(null); }} style={{ padding: "7px 16px", borderRadius: 6, border: "1px solid #dee2e6", background: "#fff", cursor: "pointer", fontSize: "0.88rem" }}>
+              重新生成
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Confirmation badge + rerun button (always shown once confirmed) */}
+      {confirmation && (
+        <div style={{ background: "#f7f8fa", border: "1px solid #e5e7eb", borderRadius: 8, padding: "14px 16px", marginBottom: 12 }}>
+          <div style={{ fontWeight: 600, marginBottom: 6 }}>步骤 5：执行已确认计划</div>
+          <div style={{ fontSize: "0.8rem", color: "#155724", background: "#d4edda", border: "1px solid #c3e6cb", borderRadius: 4, padding: "6px 10px", marginBottom: 8 }}>
+            确认 ID：{confirmation.confirmationId} · 计划指纹：{confirmation.planFingerprint}
+          </div>
+          {(() => {
+            const running = !!progress && progress.status === "running";
+            const disabled = busy || running;
+            return (
+              <button onClick={step5Run} disabled={disabled} style={btnStyle(disabled)}>
+                {busy ? "启动中…" : running ? "运行中…" : "执行验收运行"}
+              </button>
+            );
+          })()}
+        </div>
+      )}
+
+      {/* Run progress */}
+      {progress && progress.status === "running" && (
+        <div style={{ background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 8, padding: "12px 16px", marginBottom: 12 }}>
+          <div style={{ fontWeight: 600, marginBottom: 6, color: "#1d4ed8" }}>运行中…</div>
+          <div style={{ background: "#dbeafe", borderRadius: 4, height: 8, marginBottom: 6 }}>
+            <div style={{ background: "#3b82f6", height: "100%", width: `${progress.totalCriteria > 0 ? Math.round(progress.finishedCriteria / progress.totalCriteria * 100) : 0}%`, transition: "width 0.3s" }} />
+          </div>
+          <div style={{ fontSize: "0.82rem", color: "#1d4ed8" }}>
+            已完成 {progress.finishedCriteria}/{progress.totalCriteria}
+            {progress.currentCriteria && ` · 最近：${progress.currentCriteria}`}
+          </div>
+        </div>
+      )}
+
+      {/* Run result */}
+      {runRecord && <RunResultPanel record={runRecord} />}
+    </div>
+  );
+}
+
+function btnStyle(disabled: boolean): React.CSSProperties {
+  return {
+    padding: "7px 18px",
+    borderRadius: 6,
+    border: "none",
+    background: disabled ? "#9ca3af" : "#3b82d4",
+    color: "#fff",
+    cursor: disabled ? "not-allowed" : "pointer",
+    fontWeight: 600,
+    fontSize: "0.88rem",
+  };
+}
+
 // ── Main App ───────────────────────────────────────────────────────
 
 export default function App() {
+  const [activeTab, setActiveTab] = useState<"stageA" | "stageB">("stageA");
+
   // Plan & target state
   const [plan, setPlan] = useState<PlanInfo | null>(null);
   const [targets, setTargets] = useState<TargetInfo[]>([]);
@@ -499,26 +826,44 @@ export default function App() {
       }}
     >
       {/* Header */}
-      <div style={{ marginBottom: 20 }}>
+      <div style={{ marginBottom: 16 }}>
         <h1 style={{ fontSize: "1.5rem", fontWeight: 700, margin: 0 }}>Ming</h1>
         <p style={{ color: "#57606a", margin: "4px 0 0" }}>
           每一句「已完成」，都有据可验
         </p>
-        <div
-          style={{
-            display: "inline-block",
-            marginTop: 6,
-            fontSize: "0.75rem",
-            background: "#fff3cd",
-            border: "1px solid #ffc107",
-            borderRadius: 4,
-            padding: "2px 8px",
-            color: "#856404",
-          }}
-        >
-          开发验证样例 · 尚未接入模型生成
-        </div>
       </div>
+
+      {/* Tab switcher */}
+      <div style={{ display: "flex", gap: 0, marginBottom: 20, borderBottom: "2px solid #e5e7eb" }}>
+        {[
+          { id: "stageA" as const, label: "Stage A · 固定计划" },
+          { id: "stageB" as const, label: "Stage B · AI 生成" },
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            style={{
+              padding: "8px 18px",
+              border: "none",
+              borderBottom: activeTab === tab.id ? "2px solid #3b82d4" : "2px solid transparent",
+              background: "none",
+              color: activeTab === tab.id ? "#3b82d4" : "#57606a",
+              cursor: "pointer",
+              fontWeight: activeTab === tab.id ? 700 : 400,
+              fontSize: "0.9rem",
+              marginBottom: -2,
+            }}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Stage B tab */}
+      {activeTab === "stageB" && <StageBFlow />}
+
+      {/* Stage A tab */}
+      {activeTab === "stageA" && <>
 
       {loadError && (
         <div
@@ -749,6 +1094,7 @@ export default function App() {
           </div>
         )}
       </div>
+      </>}
     </div>
   );
 }

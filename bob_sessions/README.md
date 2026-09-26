@@ -5,6 +5,10 @@
 | 日期 | 文件 | Task ID | Bobcoins | 说明 |
 | --- | --- | --- | --- | --- |
 | 2026-09-26 | `ming_task01_stage_a_workspace_handoff_summary.png` | `6fbf911e3cfc7536758d59aec3e9fe17` | 1.29 | 阶段 A 首段任务。任务绑定“日报系统”工作区，但实现目标是 Ming；因工作区不匹配主动停止，保留已生成文件，切换到 Ming 新任务续接。本段尚未完成验证。 |
+| 2026-09-26 | `ming_task02_stage_a_final_summary.png` | `2b41a80061020f364f496c02d0c9c5e7` | 19.59 | 阶段 A 完成：真实浏览器执行、网页证据与历史、29 项异常断言和 26 项网页断言；本地提交 `c917ca7`，Codex 独立构建及复核通过。 |
+| 2026-09-26 | `ming_task03_stage_b_final_summary.png` | `bfa75e6b4e53cc8425e6754a8b69c8f3` | 17.51 | 阶段 B：可切换模型适配器、草案校验、确认和真实网页执行/重跑。Bob 实现核心；Codex 独立 HTTP、边界及网页复核通过，真实供应商生成仍待用户配置。详见 `docs/STAGE_B_RESULTS.md`。 |
+
+各任务的 `pre_compaction` 与 `turn_limit` 图片是同一任务的中间摘要，不应重复计费。以上三项 IDE 显示值合计约 38.39 Bobcoins；不是账户剩余额度。最终摘要由 Codex 操作真实 Bob 窗口采集；界面及执行证据位于本机 `runtime/`，尚未发布。
 
 截图通过真实 Bob IDE 窗口直接采集，未改写画面。当前使用个人试用账号；主办方是否允许用于参赛仍待确认。原任务仍保留在 Bob Tasks 中，未删除。
 

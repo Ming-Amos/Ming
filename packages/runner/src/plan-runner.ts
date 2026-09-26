@@ -94,15 +94,22 @@ function validatePlan(plan: AcceptancePlan): void {
         }
       }
 
-      // assertCount: expected must be present and numeric
+      // assertCount: expected must be a proper integer literal without coercion
       if (s.type === "assertCount") {
         const exp = s.expected;
         if (exp === undefined || exp === null) {
           throw new Error(`步骤 "${s.id}" (assertCount) 缺少 expected 字段`);
         }
-        const n = typeof exp === "number" ? exp : parseInt(String(exp), 10);
-        if (!Number.isFinite(n)) {
-          throw new Error(`步骤 "${s.id}" (assertCount) expected 不是有效数字：${exp}`);
+        // Must be a number type (not string) and a non-negative integer — "2oops" must fail
+        if (typeof exp !== "number") {
+          throw new Error(
+            `步骤 "${s.id}" (assertCount) expected 必须是数字类型，不接受字符串（得到：${JSON.stringify(exp)}）`
+          );
+        }
+        if (!Number.isInteger(exp) || exp < 0) {
+          throw new Error(
+            `步骤 "${s.id}" (assertCount) expected 必须是非负整数，得到：${exp}`
+          );
         }
       }
 
@@ -114,6 +121,26 @@ function validatePlan(plan: AcceptancePlan): void {
       ) {
         throw new Error(`步骤 "${s.id}" 包含禁止字段 script/eval`);
       }
+
+      // Disallow unknown fields beyond the declared PlanStep interface
+      const KNOWN_STEP_KEYS = new Set([
+        "id", "type", "locator", "value", "url", "expected", "description",
+      ]);
+      for (const key of Object.keys(sAsRecord)) {
+        if (!KNOWN_STEP_KEYS.has(key)) {
+          throw new Error(`步骤 "${s.id}" 包含未知字段 "${key}"，拒绝执行`);
+        }
+      }
+    }
+
+    // Each executable criterion must have at least one assertion step
+    const ASSERTION_TYPES = new Set([
+      "assertVisible", "assertVisibleIn", "assertNotVisible",
+      "assertCount", "assertInputEnabled", "assertInputDisabled",
+    ]);
+    const hasAssertion = c.steps.some((s) => ASSERTION_TYPES.has(s.type));
+    if (!hasAssertion) {
+      throw new Error(`criteria "${c.id}" 没有任何断言步骤，无法验证预期行为`);
     }
   }
 
@@ -129,6 +156,40 @@ function validatePlan(plan: AcceptancePlan): void {
     }
     orderedIds.push(c.id);
   }
+}
+
+// ── 变量解析检查（用于生成计划提交前校验） ────────────────────────
+const KNOWN_TEMPLATE_VARS = new Set(["TARGET_URL", "UNIQUE_CONTENT"]);
+
+/** 从字符串中提取所有 {{VAR}} 变量名 */
+function extractTemplateVars(value: string | undefined): string[] {
+  if (!value) return [];
+  const matches = [...value.matchAll(/\{\{(\w+)\}\}/g)];
+  return matches.map((m) => m[1]);
+}
+
+/**
+ * 校验计划中的所有模板变量均在 KNOWN_TEMPLATE_VARS 中。
+ * 未知变量会阻止执行。
+ */
+export function validateTemplateVars(plan: AcceptancePlan): string[] {
+  const errors: string[] = [];
+  for (const c of plan.criteria) {
+    for (const s of c.steps) {
+      for (const varName of [
+        ...extractTemplateVars(s.url),
+        ...extractTemplateVars(s.value),
+        ...extractTemplateVars(s.locator),
+      ]) {
+        if (!KNOWN_TEMPLATE_VARS.has(varName)) {
+          errors.push(
+            `步骤 "${s.id}" 引用未知模板变量 {{${varName}}}，执行前必须解析`
+          );
+        }
+      }
+    }
+  }
+  return errors;
 }
 
 // ── 模板变量替换 ──────────────────────────────────────────────────

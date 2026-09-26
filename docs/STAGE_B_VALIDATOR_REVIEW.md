@@ -1,0 +1,11 @@
+# Codex Stage B validator review
+
+2026-09-26, static review while implementation continues. These are concrete acceptance blockers, not requests for extra features.
+
+1. **Navigation policy is bypassable.** `https://example.invalid/?x={{TARGET_URL}}` currently passes because it includes the template; `data:text/html,<p>OK</p>` passes because it does not start with http. For this stage, require every navigate step URL to equal `{{TARGET_URL}}` exactly. Reject all other URLs at generation and execution boundaries. Do not let a generated plan obtain green results on a page other than its configured target.
+2. **The validator must be total over arbitrary JSON.** `criteria:[null]`, `steps:null`, null steps, wrong scalar field types currently can throw after validateStructure catches its own error, because template and navigation checks still dereference invalid data. Accept unknown input, perform structural/type checks first, then semantic checks only on validated shapes. Always return readable errors; use a bounded async-route error boundary in Express 4 so malformed model responses cannot leave a hanging request or unhandled rejection.
+3. **Strict questions and fields.** `openQuestions: "Must refresh preserve it?"` is currently accepted and treated as no open questions by the route. Require a bounded string array; nonempty material questions prevent confirmation. Apply proper types/bounds and unknown-field checks to plan and criterion as well as steps before dropping/defaulting model fields. Check inherit really depends on the immediately preceding context-producing criterion, not merely any earlier ID. Use focused cases with those malformed values and verify no usable/confirmable draft or passing report is created.
+
+Provider follow-up: the real HTTP adapter is still hardcoded to `transportProvenance="live"` / `isLive=true`. The separate in-memory TestFixtureTransport does not fix labeling when the actual HTTP adapter is tested against a local fixture HTTP server. Add an explicit trusted constructor/config provenance defaulting to live and set it to test in that HTTP harness; propagate it on success AND error. Do not infer provenance from model output.
+
+Batch these corrections with planned Stage B tests, preserving completed modules and existing Stage A evidence.
