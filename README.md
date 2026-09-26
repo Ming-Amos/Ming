@@ -21,7 +21,7 @@ The local core has completed a real repair cycle. Codex used the actual stdio MC
 
 See the [reviewed evidence and source diff](docs/demo-evidence/README.md) and [manifest with record IDs and file hashes](docs/demo-evidence/manifest.json). These runs use **hand-authored fixture plans** and intentionally seeded defects. They are not live model-generation results or unknown production incidents.
 
-The final interface passed 43 integration checks, and the read-only viewer passed 10 browser checks. The narrated video and publication status are tracked in [DELIVERY_STATUS](docs/DELIVERY_STATUS.md). The model adapter is implemented but no external provider has been configured or quality-tested.
+The final interface passed 43 integration checks, and the read-only viewer passed 10 browser checks. A 164-second narrated demonstration is available below. Publication status is tracked in [DELIVERY_STATUS](docs/DELIVERY_STATUS.md). The model adapter is implemented but no external provider has been configured or quality-tested.
 
 ## Start locally
 
@@ -93,7 +93,7 @@ Other protocols require an additional adapter. Keys stay on the server and must 
 
 The prepared public viewer is **read-only history exploration**. It serves reviewed real records, screenshots, and the recorded repair comparison. It cannot execute new browser checks, call a model, or repair source code. Those actions require the local application.
 
-The Sites adapter and packaging instructions are in [`scripts/public-demo/README.md`](scripts/public-demo/README.md). No public URL is claimed until publication and signed-out access checks succeed. Only the explicitly selected `docs/demo-evidence` bundle is packaged; live local runtime data and credentials are excluded.
+The [deployed Sites preview](https://ming-acceptance-proof.amosming.chatgpt.site) is currently owner-private. It is not yet a public judging URL. The Sites adapter and packaging instructions are in [`scripts/public-demo/README.md`](scripts/public-demo/README.md). Only the explicitly selected `docs/demo-evidence` bundle is packaged; live local runtime data and credentials are excluded.
 
 ## Contributions and validation
 
@@ -117,6 +117,8 @@ These checks do not consume Bobcoins or call a real model. Test fixtures and adv
 - [IBM Bob Usage Statement](docs/submission/bob-usage.md)
 - [Submission fields](docs/submission/fields.md)
 - [Five-slide PDF](submission/ming-slides.pdf)
+- [Narrated MP4 demonstration](submission/ming-demo.mp4) — 164 seconds, with English captions
+- [English subtitles](submission/ming-demo.srt)
 - [Concept cover](submission/ming-cover.png) — illustration, not a product screenshot
 - [Delivery checklist](docs/DELIVERY_STATUS.md)
 - [Original product requirements](docs/MING_PRD.md)

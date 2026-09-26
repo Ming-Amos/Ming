@@ -1,5 +1,7 @@
 # Publication review — 2026-09-26
 
+Final artifact update: the narrated MP4 is 164 seconds and 10,410,417 bytes. Twelve representative frames, full decoding and audio levels passed review; see `submission/video-notes.md`. Git attributes preserve binary media and exact recorded-evidence bytes. The staged Git versions of all 26 manifest files matched their expected hashes, and the PDF and repaired target matched their local source bytes before the implementation commit.
+
 Scope: the current Git publication candidates, selected demo bundle, Bob evidence, submission assets, and the public/local startup boundary. This review does not publish anything or establish competition eligibility.
 
 ## Result

@@ -19,8 +19,10 @@ Checkpoint: 2026-09-26. This is a delivery checklist, not a claim that the proje
 
 - [x] Complete final Application X-ray interface checks: 43 integration checks passed; see `XRAY_UI_INTEGRATION_REVIEW.md` and root `design-qa.md`.
 - [x] Rebuild the public package from that validated interface: 10 read-only browser checks passed; see `evidence/xray-final/public-ui-report.json`.
-- [ ] Record and review a narrated MP4 of at most 180 seconds, with at least 90 seconds showing the solution running. Identify the recorded repair actor as Codex and show Bob's actual development evidence.
-- [ ] Review the exact public repository contents and public-viewer package with the user before publication; preserve existing authorization and avoid requesting it twice.
+- [x] Record and review the narrated MP4: 164 seconds total, 150 seconds of real application UI (135 seconds excluding the introduction), including explicitly labeled review of the earlier real Codex repair; final 14 seconds show the original Bob summary. Twelve key frames, full decode and audio checks passed. See `submission/video-notes.md`.
+- [x] Review repository and viewer contents; 26 evidence hashes and original runtime bytes match, eight original Bob screenshots and final UI captures reviewed. Public startup isolation and launcher mode-conflict fixes passed. See `PUBLICATION_REVIEW.md`.
+- [x] Upload the code to https://github.com/Ming-Amos/Ming as a private repository.
+- [x] Deploy the owner-private preview at https://ming-acceptance-proof.amosming.chatgpt.site . Sites deployment succeeded on 2026-09-26. This is not yet public access.
 - [ ] Publish the project repository and verify its URL works when signed out. A GitHub profile URL is not the project repository URL.
 - [ ] Publish the read-only evidence viewer with the intended public audience and verify the application URL independently. Update README and submission fields with the actual URL only after success.
 - [ ] Obtain the organizer's confirmation that the account used meets the event's account requirements. Saved screenshots and a successful login do not resolve participation eligibility.

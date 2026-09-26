@@ -7,14 +7,22 @@ pretend a replay is a new browser execution.
 
 ## Free hosting package
 
+The Sites viewer was successfully deployed on 2026-09-26 at
+https://ming-acceptance-proof.amosming.chatgpt.site . Its current audience is
+owner-private, pending an explicit public-access decision. This is a working
+private preview, not yet a public judging link. The packaged Worker serves the
+allowlisted recorded responses and screenshots; it cannot invoke a browser or model.
+
+## Alternative Render package
+
 `render.yaml` selects Render's **Free** web service and `Dockerfile` builds the
 same React app and API. No model API key or paid database is required. The
 launcher seeds only `docs/demo-evidence/runtime`, never arbitrary local data.
 The service rejects mutations in `MING_PUBLIC_DEMO=1` mode. Run this mode locally
 before publishing to verify that screenshots, run history and comparisons load.
 
-The published URL must be copied from the actual hosting dashboard after a
-successful deployment. There is no deployed URL at the time this file is created.
+The Render package has not been deployed or Docker-build-tested. Use the actual
+Sites preview above for the prepared remote viewer; do not claim a Render URL.
 
 Render's free web services sleep after 15 minutes of inactivity and may take
 about a minute to wake. Their filesystem is ephemeral. Bundling selected evidence
