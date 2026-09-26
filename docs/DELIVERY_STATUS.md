@@ -6,7 +6,7 @@ The uploaded-project workspace now presents each action sequence and its expecte
 
 Validation: full build, **8/8** summary tests, **33/33** review/apply/confirmation regressions, and **14/14** final browser/visual checks on frontend `index-BEsZ1ggY.js`. The original nine-step Shipboard plan is preserved exactly, with eight observed passes and the intended reload-persistence failure. Associated field labels are preferred over placeholders, including a real-browser regression for a form input named `labels`. Desktop and 390px mobile captures were inspected. No paid model or Bob calls were made for this update. [Final review](evidence/upload-plan-ux/2026-09-26T18-31-58-125Z-after-02840253/audit.md) · [Final report](evidence/upload-plan-ux/2026-09-26T18-31-58-125Z-after-02840253/report.json).
 
-The publication below is the preceding checkpoint; the new private deployment record is added after deployment succeeds. Historical evidence and original Bob records remain unchanged.
+Private publication succeeded at **2026-09-26 18:36:34 UTC**, application commit `1a4a7a682fe49a32e35baca470a8864a42cb3d4a`, deployment `appgdep_6ab810a311d48191919351c14d0b6455`. The owner-only audience and runtime secret revision 1 are unchanged. All 60 historical evidence hashes and original Bob records are unchanged; exact-key scanning found no configured key in the 484 checked source/deployment files. The entries below preserve earlier checkpoints.
 
 ## Shipboard model-format correction — 2026-09-27 (Asia/Shanghai)
 
