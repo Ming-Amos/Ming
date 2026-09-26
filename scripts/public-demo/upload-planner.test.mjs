@@ -180,3 +180,33 @@ test('exposes only allowlisted diagnostics for transport and draft failures', as
   assert.equal(JSON.stringify(logs).includes(secret), false);
   assert.deepEqual(logs.map(entry => JSON.parse(entry[1]).code), ['PLANNER_TRANSPORT', 'PLANNER_INVALID_DRAFT']);
 });
+
+test('reports constant validation reasons and actual usage for rejected provider drafts', async context => {
+  context.mock.method(console, 'warn', () => {});
+  const cases = [
+    [provider(draft, { choices: [{ finish_reason: 'length', message: { content: JSON.stringify(draft) } }] }), 'FINISH_REASON'],
+    [provider(draft, { choices: [{ finish_reason: 'stop', message: { content: null } }] }), 'CONTENT_TYPE'],
+    [provider(draft, { choices: [{ finish_reason: 'stop', message: { content: '{invalid' } }] }), 'JSON_SYNTAX'],
+    [provider({ steps: null, openQuestions: [] }), 'SCHEMA_ARRAY'],
+    [provider({ ...draft, steps: [{ ...draft.steps[0], description: 'x'.repeat(301) }] }), 'FIELD_LIMIT'],
+    [provider({ ...draft, steps: [{ ...draft.steps[0], value: null }] }), 'FIELD_TYPE'],
+    [provider({ ...draft, steps: [{ ...draft.steps[0], action: 'click' }] }), 'NO_ASSERTION'],
+  ];
+  for (const [upstream, reason] of cases) {
+    const response = await handleUploadPlanner(request(), env, async () => upstream);
+    assert.equal(response.status, 502); const data = await response.json();
+    assert.equal(data.code, 'PLANNER_INVALID_DRAFT'); assert.equal(data.reason, reason);
+    assert.deepEqual(data.usage, { inputTokens: 201, outputTokens: 43 });
+    assert.equal(data.draft, undefined);
+  }
+});
+
+test('distinguishes an internal draft-preparation error from provider validation and preserves usage', async context => {
+  const logs = []; context.mock.method(console, 'warn', (...args) => logs.push(args));
+  context.mock.method(globalThis.crypto, 'randomUUID', () => { throw new Error(`Internal synthetic failure ${secret}`); });
+  const response = await handleUploadPlanner(request(), env, async () => provider());
+  const text = await response.text(), data = JSON.parse(text);
+  assert.equal(data.code, 'PLANNER_INTERNAL'); assert.equal(data.reason, undefined);
+  assert.deepEqual(data.usage, { inputTokens: 201, outputTokens: 43 });
+  assert.equal(text.includes(secret), false); assert.equal(JSON.stringify(logs).includes(secret), false);
+});
