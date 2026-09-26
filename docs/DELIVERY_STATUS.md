@@ -4,6 +4,8 @@ Checkpoint: 2026-09-26. The current presentation is the English **Evidence Studi
 
 **Latest functional audit:** [FUNCTIONAL_COMPLETENESS_REVIEW](FUNCTIONAL_COMPLETENESS_REVIEW.md) records 12 reproduced defects and fixes, including Windows storage locks, live evidence, interruption recovery, screenshot identity, editor/import state and late failures in AI handoffs. Final own-project UI **32/32**, editor/live UI **17/17**, lifecycle **17/17**, storage durability **14/14**, and compiled viewer **50/50** passed. Type checking and build passed; the local launcher serves `index-BIVHrbt9.js`. This audit used no Bob or commercial model calls. The version-3 details below remain a historical publication checkpoint.
 
+**Current private release:** version **4** deployed successfully at **2026-09-26 12:08 UTC**, from application commit `8f6b8d9261d9ec75931755b6c6a69551d1aac4c0`. Deployment: `appgdep_6ab7b5989d2c8191a2ba9f75a000d3e0`. Authenticated production verification confirmed the latest frontend, read-only behavior and original featured baseline. The existing site remains owner-private. Source review checked **298 candidate files**, all **60 preserved evidence hashes** and unchanged Bob records, with no findings. Later documentation-only commits record this outcome.
+
 Still needed for the current submission: record a current-interface video and refresh the deck, user approval for public repository/site access, organizer confirmation of account eligibility, and the final submission review. An external model key and a real generation/review/run are also needed if the entry will claim demonstrated live plan generation; manual acceptance already works without one.
 
 ## Updated local product

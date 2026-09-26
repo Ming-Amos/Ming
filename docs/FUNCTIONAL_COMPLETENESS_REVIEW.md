@@ -45,6 +45,8 @@ These were actual pre-fix failures, not speculative findings. [UI reproduction](
 
 All scenarios use isolated temporary applications and runtime folders. Original Bob records and both preserved judge-evidence bundles are not rewritten. New runner code has a new implementation fingerprint; historical comparisons retain the runner identities recorded when those runs occurred.
 
+Release verification: the updated local service is running at `http://127.0.0.1:4001`; the existing owner-private online viewer is version 4. Authenticated production checks confirmed the reviewed frontend, read-only mode and original baseline evidence. No sharing permissions changed.
+
 ## Still required for a complete competition demonstration
 
 Configure the selected provider locally and complete an actual generate → human review → browser execution flow before claiming live AI plan-generation quality. The Codex MCP repair is proven; an actual Bob runtime repair remains unverified and must not be inferred from Bob's genuine earlier implementation work. Update the video/deck for the current product, make approved links accessible to judges, and complete the submission separately. The online deployment is a recorded viewer, not a remote execution backend.
