@@ -1,5 +1,28 @@
 # Ming Application X-ray — design QA
 
+## Pixel-art welcome page — 2026-09-26
+
+**Final result: passed.** The user selected the existing platform login-cover screenshot and requested the same initial composition with a **Start** action. The app now owns a welcome page at `/`; Start opens `/#studio`. The platform's private authentication gate is separate and was not changed.
+
+Source visual truth: [reference](docs/evidence/welcome-page/reference.png), 1908×890 pixels. Implementation: [desktop](docs/evidence/welcome-page/01-desktop-welcome.png), at the same 1908×890 CSS viewport and deviceScaleFactor 1. Full-view comparison: [reference above implementation](docs/evidence/welcome-page/03-reference-and-implementation.png), 1908×1780, with both originals at 1:1 density. [Focused side-by-side comparison](docs/evidence/welcome-page/04-focused-comparison.png) shows the central heading, button and helper text without rescaling. The source is an animated-frame screenshot; implementation capture pauses an original frame, so flame/character animation phases can differ.
+
+Required fidelity surfaces reviewed:
+
+- **Typography:** centered 32px bold sans-serif two-line title and 22px Start label preserve the reference hierarchy. The new Ming wordmark uses the existing Georgia brand family. Narrow layouts wrap the title without clipping.
+- **Spacing:** the 302×64px white pill, central alignment, title-to-button rhythm, dark full-height canvas and bottom-anchored scene retain the selected composition. The mobile control stays above the fold at 390×844.
+- **Colors:** original black, blue/purple and warm reflected light are preserved. White controls keep strong contrast. Helper text now has a dark backing instead of sitting directly over a bright animated character.
+- **Assets:** the original 1536×1024, 15-frame, 3-second GIF is reused byte-identically (SHA-256 in the provenance record). No invented pixel-art replacement. Pause/reduced motion displays a copied original frame, with no alterations to its artwork.
+- **Copy:** `Log in to access` becomes `Welcome to`; the button becomes `Start`. OpenAI login/privacy text and logo are replaced by Ming branding and a short product promise. These are intentional user-requested changes, not a claim that the platform login UI itself was edited.
+
+Comparison history:
+
+1. Initial desktop matched the selected composition. [Initial focused capture](docs/evidence/welcome-page/04-focused-before.png) exposed a **P2 helper-text contrast issue** over the fox; a dark backing fixed it. [Initial mobile capture](docs/evidence/welcome-page/02-mobile-before.png) showed **P2 excessive scene cropping**; reducing the mobile scene width preserved the character lineup. No functionality was changed by these adjustments.
+2. Final combined/focused comparisons and [mobile capture](docs/evidence/welcome-page/02-mobile-welcome.png) were opened and visually reviewed after both fixes. No actionable P0/P1/P2 findings remain. P3: the edge of the leftmost character is slightly cropped on a 390px screen, an intentional responsive crop with all controls visible.
+
+Validation: **13/13** entry, keyboard, Back, refresh, animation-pause, reduced-motion and mobile checks; final compiled **54/54** Studio checks; own-project workflow **32/32**. No uncaught browser errors or mutation requests. App APIs are not requested before Start. Local browser automation was used because an in-app Browser tool is unavailable in this session. No Bob or paid model calls occurred.
+
+final result: passed
+
 ## Functional follow-up, 2026-09-26
 
 The same English composition now shows completed browser observations during a running check, preserves the selected step, and excludes unexecuted steps from replay. Open editors also survive the global command shortcut. The compiled viewer passed **50/50** checks; editor/live-progress regressions passed **17/17**. Root visually inspected the actual running-state captures. See [functional review](docs/FUNCTIONAL_COMPLETENESS_REVIEW.md) for the wider lifecycle audit and its scope. The sections below retain their dated visual-release results.

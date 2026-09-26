@@ -1,0 +1,64 @@
+{
+  "checks": [
+    {
+      "label": "Start is directly available on the welcome screen",
+      "passed": true
+    },
+    {
+      "label": "Welcome contains no sign-in or ChatGPT controls",
+      "passed": true
+    },
+    {
+      "label": "The scene can be paused on an original frame",
+      "passed": true
+    },
+    {
+      "label": "Pause has an accessible resume control",
+      "passed": true
+    },
+    {
+      "label": "Keyboard Start enters the local workspace",
+      "passed": true
+    },
+    {
+      "label": "Browser Back returns to the welcome cover",
+      "passed": true
+    },
+    {
+      "label": "Reduced-motion preference shows a still original frame",
+      "passed": true
+    },
+    {
+      "label": "Mobile page has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "label": "Mobile Start remains above the fold and touch sized",
+      "passed": true
+    },
+    {
+      "label": "Mobile Start reaches the workspace",
+      "passed": true
+    },
+    {
+      "label": "Workspace refresh does not reinsert the cover",
+      "passed": true
+    },
+    {
+      "label": "Entry navigation makes no mutation requests",
+      "passed": true
+    },
+    {
+      "label": "No browser errors",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "screenshots": [
+    "C:\\Bob\\Projects\\Ming\\runtime\\welcome-review\\01-desktop-welcome.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\welcome-review\\02-mobile-welcome.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\welcome-review\\03-reference-and-implementation.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\welcome-review\\04-focused-comparison.png"
+  ],
+  "passed": true
+}

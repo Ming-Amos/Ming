@@ -1,0 +1,39 @@
+{
+  "source": "https://ming-acceptance-proof.amosming.chatgpt.site/_sites/dispatch-assets/401-petbouncer-black.gif",
+  "sourcePage": "https://ming-acceptance-proof.amosming.chatgpt.site/",
+  "sourceStatus": 401,
+  "filename": "pixel-door-original.gif",
+  "mediaType": "image/gif",
+  "byteLength": 496323,
+  "width": 1536,
+  "height": 1024,
+  "sha256": "0d95c97669f597dd7631cf2afe442823005fa42b360362b09ba0c1ea124ca008",
+  "retrievedAt": "2026-09-26T13:39:29.000Z",
+  "notes": [
+    "Original public platform sign-in background, downloaded without authentication.",
+    "Bytes preserved exactly; no screenshot crop, overlays, resizing, conversion, or editing.",
+    "Site access and publication settings were not changed."
+  ],
+  "animation": {
+    "frameCount": 15,
+    "frameDelaysMs": [
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200
+    ],
+    "durationMs": 3000,
+    "loopCount": 0
+  }
+}

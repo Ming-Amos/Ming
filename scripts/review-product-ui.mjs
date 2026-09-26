@@ -48,7 +48,7 @@ try {
   child=spawn(process.execPath,['apps/server/dist/index.js'],{cwd:root,windowsHide:true,env:{...process.env,PORT:String(port),HOST:'127.0.0.1',MING_RUNTIME_DIR:runtime,MING_TEST_MODE:'1',MING_PUBLIC_DEMO:'0',PROVIDER_API_KEY:'',PROVIDER_BASE_URL:'',PROVIDER_MODEL_ID:''},stdio:['ignore',log,log]});fs.closeSync(log);
   for(let i=0;i<80;i++){try{await api('/api/capabilities');break;}catch{await delay(100)}}
   browser=await chromium.launch({headless:true});const context=await browser.newContext({viewport:{width:1484,height:1060}});page=await context.newPage();page.setDefaultTimeout(15000);page.on('pageerror',e=>report.pageErrors.push(String(e)));
-  await page.goto(base,{waitUntil:'networkidle'});
+  await page.goto(base+'/#studio',{waitUntil:'networkidle'});
   await page.locator('.studio-hub').waitFor();check('New user enters project hub rather than an unexplained fixture',true);await shot('01-project-hub');
   await page.getByRole('button',{name:'Connect model',exact:true}).click();
   check('Settings opens without exposing a saved key',await page.locator('input[type="password"]').inputValue()==='');

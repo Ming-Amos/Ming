@@ -16,7 +16,7 @@ pnpm build
 pnpm start
 ```
 
-Open **http://127.0.0.1:4001**. On Windows, after the first installation/build, double-click **`scripts/Start-Ming.cmd`** instead. The launcher reuses a healthy local Ming service, opens the browser, and does not close unrelated applications. Startup does not call a model.
+Open **http://127.0.0.1:4001**, then choose **Start** on the pixel-art welcome page. The workspace lives at `/#studio`, so refreshing a working session keeps it open; browser Back returns to the cover. The welcome page makes no application API or model requests. On Windows, after the first installation/build, double-click **`scripts/Start-Ming.cmd`** instead. The launcher reuses a healthy local Ming service, opens the browser, and does not close unrelated applications. Startup does not call a model.
 
 For frontend development, run the backend and `pnpm --filter @ming/web dev --port 4000 --host 127.0.0.1`. Rebuild before using the normal launcher to see UI changes.
 
@@ -84,7 +84,9 @@ The new English Shipboard recording passed **21/21 evidence checks**, including 
 
 The English own-project workflow covers registration, PRD upload, manual plans, real acceptance, versioning, history, reload recovery and cancellation. Current validation reports and exact remaining limits are maintained in the [functional review](docs/FUNCTIONAL_COMPLETENESS_REVIEW.md). No Bob or commercial model calls were made in that audit.
 
-The current Evidence Studio and compiled read-only viewer passed **50/50 checks**, covering recorded playback, focus, keyboard commands, direct image-slider interaction, original evidence identity and 390px layout. No browser errors, missing resources, external requests or mutation requests were observed. See the [current Studio report](docs/evidence/functional-review/evidence-studio.json). The [earlier Studio review](docs/evidence/english-studio/review-report.json) remains its visual-release checkpoint.
+The current Evidence Studio and compiled read-only viewer passed **54/54 checks**, including the welcome-to-Start entry, recorded playback, focus, keyboard commands, direct image-slider interaction, original evidence identity and 390px layout. No browser errors, missing resources, external requests or mutation requests were observed. See the [current Studio report](docs/evidence/welcome-page/compiled-studio.json), [13-check welcome review](docs/evidence/welcome-page/report.json), and [32-check own-project workflow](docs/evidence/welcome-page/own-project-ui.json). Earlier reports remain their dated release checkpoints.
+
+The welcome scene reuses the unchanged original platform illustration selected by the user; [asset provenance](docs/evidence/welcome-page/asset-provenance.json) records its source and hash. It is presentation artwork, not acceptance evidence. Animation can be paused and honors reduced-motion preferences. The **Start** link opens Ming; it does not authenticate users. The hosting platform's private access gate remains separate until the owner explicitly changes sharing.
 
 ```text
 pnpm typecheck

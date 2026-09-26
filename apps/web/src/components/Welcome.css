@@ -1,0 +1,122 @@
+.welcome-page {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: 100px 24px;
+  overflow: hidden;
+  color: #fff;
+  background: #010002;
+  font-family: Arial, "Segoe UI", sans-serif;
+}
+.welcome-scene {
+  position: absolute;
+  z-index: -1;
+  bottom: -70px;
+  left: 50%;
+  width: min(1536px, calc(100vw - 40px));
+  aspect-ratio: 3 / 2;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.welcome-scene img, .welcome-scene canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.welcome-scene .welcome-frame-hidden { visibility: hidden; }
+.welcome-wordmark {
+  position: absolute;
+  left: 28px;
+  top: 19px;
+  font: 32px/1.2 Georgia, "Times New Roman", serif;
+  letter-spacing: -1.6px;
+}
+.welcome-content {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 28px;
+  width: min(100%, 830px);
+  text-align: center;
+  background: radial-gradient(ellipse 334px 153px at 50% 55%, #020617 0%, transparent 100%);
+}
+.welcome-content h1 {
+  margin: 0;
+  color: #fff;
+  font-family: inherit;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -.35px;
+  text-wrap: balance;
+}
+.welcome-content h1 span { display: block; }
+.welcome-start {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-width: 302px;
+  min-height: 64px;
+  padding: 16px 30px;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: #fff;
+  color: #111;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-decoration: none;
+  transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
+}
+.welcome-start:hover { transform: translateY(-2px); background: #eef2ff; box-shadow: 0 0 36px #7c88ff38; }
+.welcome-start:active { transform: translateY(0); }
+.welcome-start:focus-visible { outline: 3px solid #a6b8ff; outline-offset: 6px; }
+.welcome-content p { margin: -5px 0; padding: 5px 12px; border-radius: 4px; background: #02040de6; color: #b9bdcb; font-size: 15px; line-height: 1.45; }
+.welcome-motion {
+  position: absolute;
+  bottom: 22px;
+  right: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 40px;
+  padding: 9px 12px;
+  color: #bec4d3;
+  background: #080b16bd;
+  border: 1px solid #ffffff26;
+  border-radius: 999px;
+  font-size: 12px;
+}
+.welcome-motion:hover { color: #fff; background: #171e32; }
+@media (max-width: 1024px) {
+  .welcome-scene { bottom: 0; width: min(150vw, 150svh); }
+  .welcome-content { gap: 26px; }
+  .welcome-content h1 { font-size: clamp(25px, 3.8vw, 32px); }
+}
+@media (max-width: 600px) {
+  .welcome-page { padding: 90px 22px 185px; }
+  .welcome-scene { width: 122vw; bottom: 0; left: 50%; }
+  .welcome-wordmark { left: 22px; top: 21px; font-size: 30px; }
+  .welcome-content h1 { font-size: 27px; line-height: 1.3; }
+  .welcome-content h1 span:first-child { margin-bottom: 6px; font-size: 22px; }
+  .welcome-start { min-width: min(280px, 100%); min-height: 60px; font-size: 20px; }
+  .welcome-content p { font-size: 14px; }
+  .welcome-motion { bottom: 16px; right: 16px; }
+}
+@media (max-height: 530px) and (min-width: 601px) {
+  .welcome-page { padding: 75px 24px; }
+  .welcome-content { gap: 18px; }
+  .welcome-content h1 { font-size: 26px; }
+  .welcome-start { min-height: 54px; padding: 12px 28px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .welcome-start { transition: none; }
+  .welcome-start:hover { transform: none; }
+}

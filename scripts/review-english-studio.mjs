@@ -115,8 +115,15 @@ try {
     else if (!request.url().startsWith(base) && !request.url().startsWith('data:')) outsideRequests.push(request.url());
   });
   page.on('response', response => { if (response.status() >= 400 && !response.url().includes('/favicon.ico')) failedResources.push({ url: response.url(), status: response.status() }); });
-  await page.goto(base);
+  await page.goto(base, { waitUntil: 'networkidle' });
+  const start = page.getByRole('button', { name: 'Start', exact: true }).or(page.getByRole('link', { name: 'Start', exact: true }));
+  await start.waitFor({ state: 'visible' });
+  check('Fresh root visit shows the welcome page and Start action', await start.isVisible() && await page.getByRole('region', { name: 'Recorded acceptance timeline' }).count() === 0 && new URL(page.url()).hash === '');
+  check('Welcome page makes no application API requests before Start', requests.length === 0, requests.slice());
+  await capture(page, '00-welcome');
+  await start.click();
   await page.getByRole('region', { name: 'Recorded acceptance timeline' }).waitFor();
+  check('Start opens the existing workspace at #studio', new URL(page.url()).hash === '#studio' && !(await start.isVisible()));
   await page.getByRole('button', { name: 'Compare before and after', exact: true }).waitFor();
   await waitForImages(page, '.evidence-link img');
   fs.writeFileSync(path.join(out, 'initial-dom.txt'), await page.locator('body').innerText());
@@ -196,6 +203,7 @@ try {
   check('Opening follow-up retains its real run identity', followup.runId === manifest.featuredRerunId);
   await page.reload(); await trace.waitFor();
   check('Refresh restores the selected recorded follow-up', (await page.evaluate(() => JSON.parse(localStorage.getItem('ming.workspace.v2')))).runId === manifest.featuredRerunId);
+  check('Refreshing #studio stays in the workspace without another welcome screen', new URL(page.url()).hash === '#studio' && !(await start.isVisible()));
   const downloadPromise = page.waitForEvent('download'); await page.getByRole('button', { name: 'Export run', exact: true }).click();
   const download = await downloadPromise, exportPath = path.join(out, 'exported-followup.json'); await download.saveAs(exportPath);
   compare('JSON export equals the untouched recorded run', JSON.parse(fs.readFileSync(exportPath, 'utf8')), bundle.responses[`/api/run/${manifest.featuredRerunId}`].run);

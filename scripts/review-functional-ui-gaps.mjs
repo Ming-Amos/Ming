@@ -48,7 +48,7 @@ try {
   report.ids.projectId = project.projectId;
   browser = await chromium.launch({ headless: true });
   page = await browser.newPage({ viewport: { width: 1484, height: 1060 } }); page.setDefaultTimeout(10000); page.on('pageerror', e => report.pageErrors.push(String(e)));
-  await page.goto(base, { waitUntil: 'networkidle' });
+  await page.goto(base + '/#studio', { waitUntil: 'networkidle' });
   await page.locator('.project-card').getByRole('button', { name: /Open workspace/ }).click();
   await page.getByLabel('Requirements and boundaries', { exact: true }).fill('The task can be cleared and an empty option can be selected.');
   await page.getByRole('button', { name: 'Save requirements', exact: true }).click();
