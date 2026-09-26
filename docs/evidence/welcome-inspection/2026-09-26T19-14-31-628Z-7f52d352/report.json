@@ -1,0 +1,393 @@
+{
+  "id": "7f52d352-72eb-4584-bade-8ee3e7e0009e",
+  "startedAt": "2026-09-26T19:14:31.629Z",
+  "base": "http://127.0.0.1:4001",
+  "passed": true,
+  "checks": [
+    {
+      "name": "The welcome review uses the exact current compiled application",
+      "passed": true
+    },
+    {
+      "name": "The clean room and cast atlas load without the old crowd GIF",
+      "passed": true,
+      "detail": [
+        {
+          "source": "/welcome/inspection-room.png",
+          "width": 1536,
+          "height": 1024,
+          "complete": true
+        },
+        {
+          "source": "/welcome/inspection-cast.png",
+          "width": 1448,
+          "height": 1086,
+          "complete": true
+        }
+      ]
+    },
+    {
+      "name": "All seven visitors and one inspector belong to the illustrative stage",
+      "passed": true
+    },
+    {
+      "name": "desktop-1536: Start is visible, touch sized, and the page has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop-1536: the active visitor and inspector fit without colliding with the entry controls",
+      "passed": true
+    },
+    {
+      "name": "The inspector actually changes its writing frame while the visitor is inspected",
+      "passed": true
+    },
+    {
+      "name": "Pause freezes the inspector pen, elapsed timeline, and all visitor transforms",
+      "passed": true,
+      "detail": {
+        "phase": "inspect",
+        "elapsed": 2972,
+        "inspectorFrame": "2",
+        "cssAnimations": 0
+      }
+    },
+    {
+      "name": "Resuming continues the existing timeline instead of restarting or jumping",
+      "passed": true,
+      "detail": {
+        "before": 2972,
+        "after": 3301
+      }
+    },
+    {
+      "name": "The passing visitor receives a visible PASS verdict",
+      "passed": true
+    },
+    {
+      "name": "The passing visitor walks toward the doorway rather than the repair area",
+      "passed": true
+    },
+    {
+      "name": "Pause also freezes a walking visitor and its CSS stepping animation",
+      "passed": true,
+      "detail": {
+        "phase": "exit",
+        "elapsed": 5834,
+        "inspectorFrame": "0",
+        "cssAnimations": 1
+      }
+    },
+    {
+      "name": "Resuming continues the existing timeline instead of restarting or jumping",
+      "passed": true,
+      "detail": {
+        "before": 5834,
+        "after": 6146
+      }
+    },
+    {
+      "name": "The next visitor receives a distinct NEEDS FIX verdict",
+      "passed": true
+    },
+    {
+      "name": "The failed visitor moves into the visible return-for-fix area",
+      "passed": true
+    },
+    {
+      "name": "The visibility-change handler freezes the timeline and CSS motion while hidden",
+      "passed": true
+    },
+    {
+      "name": "Returning to visible resumes from the same elapsed position",
+      "passed": true
+    },
+    {
+      "name": "Before entering a workflow the scene has made no application API request",
+      "passed": true
+    },
+    {
+      "name": "desktop-1856: Start is visible, touch sized, and the page has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop-1856: the active visitor and inspector fit without colliding with the entry controls",
+      "passed": true
+    },
+    {
+      "name": "mobile-390: Start is visible, touch sized, and the page has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile-390: the active visitor and inspector fit without colliding with the entry controls",
+      "passed": true
+    },
+    {
+      "name": "Mobile Start opens the actual upload workflow",
+      "passed": true
+    },
+    {
+      "name": "The guided sample link opens the working sample route",
+      "passed": true
+    },
+    {
+      "name": "Reduced-motion preference starts with a fully paused scene and an available Play control",
+      "passed": true
+    },
+    {
+      "name": "Keyboard Start reaches the same upload route",
+      "passed": true
+    },
+    {
+      "name": "No POST, model/provider, external, or failed-resource request occurred",
+      "passed": true
+    },
+    {
+      "name": "No uncaught browser errors occurred",
+      "passed": true
+    }
+  ],
+  "screenshots": [
+    "01-desktop-writing.png",
+    "02-desktop-pass.png",
+    "03-desktop-needs-fix.png",
+    "04-desktop-return-for-fix.png",
+    "05-wide-desktop.png",
+    "05b-reference-sized-desktop.png",
+    "06-mobile-writing.png"
+  ],
+  "measurements": {
+    "desktop-1536": {
+      "width": 1536,
+      "height": 1024,
+      "documentWidth": 1536,
+      "documentHeight": 1024,
+      "start": {
+        "x": 617,
+        "y": 202.796875,
+        "width": 302,
+        "height": 67
+      },
+      "inspector": {
+        "x": 1045.1875,
+        "y": 613.3125,
+        "width": 264,
+        "height": 264
+      },
+      "active": {
+        "x": 904.6171875,
+        "y": 695.453125,
+        "width": 175.546875,
+        "height": 175.546875
+      },
+      "content": {
+        "x": 353,
+        "y": 63.796875,
+        "width": 830,
+        "height": 303.96875
+      },
+      "startInside": true,
+      "inspectorInside": true,
+      "activeInside": true,
+      "contentCollidesWithInspector": false,
+      "contentCollidesWithActive": false,
+      "scenePhase": "inspect"
+    },
+    "desktop-1856": {
+      "width": 1856,
+      "height": 900,
+      "documentWidth": 1856,
+      "documentHeight": 914,
+      "start": {
+        "x": 777,
+        "y": 214.796875,
+        "width": 302,
+        "height": 67
+      },
+      "inspector": {
+        "x": 1205.1875,
+        "y": 495.671875,
+        "width": 264,
+        "height": 264
+      },
+      "active": {
+        "x": 1064.6171875,
+        "y": 577.21875,
+        "width": 175.546875,
+        "height": 175.546875
+      },
+      "content": {
+        "x": 513,
+        "y": 63.796875,
+        "width": 830,
+        "height": 315.96875
+      },
+      "startInside": true,
+      "inspectorInside": true,
+      "activeInside": true,
+      "contentCollidesWithInspector": false,
+      "contentCollidesWithActive": false,
+      "scenePhase": "inspect"
+    },
+    "mobile-390": {
+      "width": 390,
+      "height": 844,
+      "documentWidth": 390,
+      "documentHeight": 844,
+      "start": {
+        "x": 125.203125,
+        "y": 216.96875,
+        "width": 139.578125,
+        "height": 64
+      },
+      "inspector": {
+        "x": 255.28750610351562,
+        "y": 542.671875,
+        "width": 134,
+        "height": 134
+      },
+      "active": {
+        "x": 183.93594360351562,
+        "y": 583.0625,
+        "width": 89.109375,
+        "height": 89.109375
+      },
+      "content": {
+        "x": 20,
+        "y": 56.1875,
+        "width": 350,
+        "height": 317.15625
+      },
+      "startInside": true,
+      "inspectorInside": true,
+      "activeInside": true,
+      "contentCollidesWithInspector": false,
+      "contentCollidesWithActive": false,
+      "scenePhase": "inspect"
+    },
+    "01-desktop-writing.png": {
+      "sha256": "7a30dc1527b7a34dd5a30df7dad33a66680e8a81ca9ca06721c940a523e959bc"
+    },
+    "02-desktop-pass.png": {
+      "sha256": "85cd3db51ca5f957f3fd0bcdae7c24eddb4ceaea89ef298af056619de7b8d4df"
+    },
+    "03-desktop-needs-fix.png": {
+      "sha256": "b7944fa95e4e769fcee932376079d50a105287c55399ff0579e0f5e8625de0e1"
+    },
+    "04-desktop-return-for-fix.png": {
+      "sha256": "c6d0578baf38e245bcc7f059589104be86181686c0f29655187d5880a51b6bcf"
+    },
+    "05-wide-desktop.png": {
+      "sha256": "c0b1863b4a882c478337fc7eca4697ade013fc373776b1a4dd7242052c36188e"
+    },
+    "05b-reference-sized-desktop.png": {
+      "sha256": "b174b009fdbf7b3e5e367f898730496128dff7e03a54cfbc420b063d8492b726"
+    },
+    "06-mobile-writing.png": {
+      "sha256": "80be6c6e25ed5147b6255be39abd665e8a5b9ffbb19b45c786fd91cc4a148e3e"
+    }
+  },
+  "requests": [
+    {
+      "path": "/",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/index-Buwe4vzp.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/index-CWB5hoeW.css",
+      "method": "GET"
+    },
+    {
+      "path": "/welcome/inspection-room.png",
+      "method": "GET"
+    },
+    {
+      "path": "/welcome/inspection-cast.png",
+      "method": "GET"
+    },
+    {
+      "path": "/",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/index-Buwe4vzp.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/index-CWB5hoeW.css",
+      "method": "GET"
+    },
+    {
+      "path": "/welcome/inspection-room.png",
+      "method": "GET"
+    },
+    {
+      "path": "/welcome/inspection-cast.png",
+      "method": "GET"
+    },
+    {
+      "path": "/",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/index-Buwe4vzp.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/index-CWB5hoeW.css",
+      "method": "GET"
+    },
+    {
+      "path": "/welcome/inspection-room.png",
+      "method": "GET"
+    },
+    {
+      "path": "/welcome/inspection-cast.png",
+      "method": "GET"
+    },
+    {
+      "path": "/api/upload/planner/status",
+      "method": "GET"
+    },
+    {
+      "path": "/",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/index-Buwe4vzp.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/index-CWB5hoeW.css",
+      "method": "GET"
+    },
+    {
+      "path": "/welcome/inspection-room.png",
+      "method": "GET"
+    },
+    {
+      "path": "/welcome/inspection-cast.png",
+      "method": "GET"
+    },
+    {
+      "path": "/api/upload/planner/status",
+      "method": "GET"
+    }
+  ],
+  "errors": [],
+  "outsideRequests": [],
+  "mutationRequests": [],
+  "failedResources": [],
+  "visibilityMode": "Synthetic document.visibilityState override and visibilitychange event. This verifies the application handler, not native OS tab switching.",
+  "reference": {
+    "file": "source-reference.png",
+    "width": 1887,
+    "height": 891,
+    "sha256": "61464d6634602df9829b134f4f113db9a2956696265682560ed086aa59e78641"
+  },
+  "bundle": "/assets/index-Buwe4vzp.js",
+  "finishedAt": "2026-09-26T19:14:56.686Z"
+}

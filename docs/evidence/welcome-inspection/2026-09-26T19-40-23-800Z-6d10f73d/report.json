@@ -1,0 +1,197 @@
+{
+  "id": "6d10f73d-92e3-4360-8d4c-82bded51a190",
+  "startedAt": "2026-09-26T19:40:23.801Z",
+  "base": "http://127.0.0.1:4001",
+  "passed": true,
+  "checks": [
+    {
+      "name": "The welcome review uses the exact current compiled application",
+      "passed": true
+    },
+    {
+      "name": "The clean room and cast atlas load without the old crowd GIF",
+      "passed": true,
+      "detail": [
+        {
+          "source": "/welcome/inspection-room.png",
+          "width": 1536,
+          "height": 1024,
+          "complete": true
+        },
+        {
+          "source": "/welcome/inspection-cast.png",
+          "width": 1448,
+          "height": 1086,
+          "complete": true
+        }
+      ]
+    },
+    {
+      "name": "All seven visitors and one inspector belong to the illustrative stage",
+      "passed": true
+    },
+    {
+      "name": "mobile-390: Start is visible, touch sized, and the page has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile-390: the active visitor and inspector fit without colliding with the entry controls",
+      "passed": true
+    },
+    {
+      "name": "Mobile Start retains the intended 280-pixel width",
+      "passed": true,
+      "detail": {
+        "x": 55,
+        "y": 216.96875,
+        "width": 280,
+        "height": 64
+      }
+    },
+    {
+      "name": "Mobile Start opens the actual upload workflow",
+      "passed": true
+    },
+    {
+      "name": "The guided sample link opens the working sample route",
+      "passed": true
+    },
+    {
+      "name": "Late return-route capture shows the failed visitor moving down and left",
+      "passed": true
+    },
+    {
+      "name": "No POST, model/provider, external, or failed-resource request occurred",
+      "passed": true
+    },
+    {
+      "name": "No uncaught browser errors occurred",
+      "passed": true
+    }
+  ],
+  "screenshots": [
+    "01-mobile-start-final.png",
+    "02-desktop-return-for-fix-final.png"
+  ],
+  "measurements": {
+    "mobile-390": {
+      "width": 390,
+      "height": 844,
+      "documentWidth": 390,
+      "documentHeight": 844,
+      "start": {
+        "x": 55,
+        "y": 216.96875,
+        "width": 280,
+        "height": 64
+      },
+      "inspector": {
+        "x": 255.28750610351562,
+        "y": 542.671875,
+        "width": 134,
+        "height": 134
+      },
+      "active": {
+        "x": 183.93594360351562,
+        "y": 583.0625,
+        "width": 89.109375,
+        "height": 89.109375
+      },
+      "content": {
+        "x": 20,
+        "y": 56.1875,
+        "width": 350,
+        "height": 317.15625
+      },
+      "startInside": true,
+      "inspectorInside": true,
+      "activeInside": true,
+      "contentCollidesWithInspector": false,
+      "contentCollidesWithActive": false,
+      "scenePhase": "inspect"
+    },
+    "01-mobile-start-final.png": {
+      "sha256": "1d3398e906f151dbed2bbb609de2c7baee69cf91d02f06ead3ddb39863e80f50"
+    },
+    "02-desktop-return-for-fix-final.png": {
+      "sha256": "aeec92ddc290b9a3a3a5b3c7684efa57d82a879e49521d2e75eb101e333469dd"
+    }
+  },
+  "requests": [
+    {
+      "path": "/",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/index-D_bsmEyy.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/index-a-pOcckO.css",
+      "method": "GET"
+    },
+    {
+      "path": "/welcome/inspection-room.png",
+      "method": "GET"
+    },
+    {
+      "path": "/welcome/inspection-cast.png",
+      "method": "GET"
+    },
+    {
+      "path": "/api/upload/planner/status",
+      "method": "GET"
+    },
+    {
+      "path": "/",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/index-D_bsmEyy.js",
+      "method": "GET"
+    },
+    {
+      "path": "/assets/index-a-pOcckO.css",
+      "method": "GET"
+    },
+    {
+      "path": "/welcome/inspection-room.png",
+      "method": "GET"
+    },
+    {
+      "path": "/welcome/inspection-cast.png",
+      "method": "GET"
+    }
+  ],
+  "errors": [],
+  "outsideRequests": [],
+  "mutationRequests": [],
+  "failedResources": [],
+  "visibilityMode": "Not repeated in the focused CSS follow-up.",
+  "scope": "Targeted mobile Start width/entry/layout and late return-route capture after the CSS-only revision. Original animation review is preserved separately.",
+  "reference": {
+    "file": "source-reference.png",
+    "width": 1887,
+    "height": 891,
+    "sha256": "61464d6634602df9829b134f4f113db9a2956696265682560ed086aa59e78641"
+  },
+  "bundle": "/assets/index-D_bsmEyy.js",
+  "returnedState": {
+    "elapsed": 15449,
+    "phase": "exit",
+    "visitor": "Flame",
+    "actor": {
+      "name": "Flame",
+      "left": "57.5689%",
+      "bottom": "8.05394%",
+      "opacity": "1",
+      "rect": {
+        "x": 780.1328125,
+        "y": 745.640625,
+        "width": 175.546875,
+        "height": 175.546875
+      }
+    }
+  },
+  "finishedAt": "2026-09-26T19:40:43.459Z"
+}

@@ -1,122 +1,13 @@
-.welcome-page {
-  position: relative;
-  isolation: isolate;
-  display: grid;
-  place-items: center;
-  min-height: 100vh;
-  min-height: 100svh;
-  padding: 100px 24px;
-  overflow: hidden;
-  color: #fff;
-  background: #010002;
-  font-family: Arial, "Segoe UI", sans-serif;
-}
-.welcome-scene {
-  position: absolute;
-  z-index: -1;
-  bottom: -70px;
-  left: 50%;
-  width: min(1536px, calc(100vw - 40px));
-  aspect-ratio: 3 / 2;
-  transform: translateX(-50%);
-  pointer-events: none;
-}
-.welcome-scene img, .welcome-scene canvas {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-.welcome-scene .welcome-frame-hidden { visibility: hidden; }
-.welcome-wordmark {
-  position: absolute;
-  left: 28px;
-  top: 19px;
-  font: 32px/1.2 Georgia, "Times New Roman", serif;
-  letter-spacing: -1.6px;
-}
-.welcome-content {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 28px;
-  width: min(100%, 830px);
-  text-align: center;
-  background: radial-gradient(ellipse 334px 153px at 50% 55%, #020617 0%, transparent 100%);
-}
-.welcome-content h1 {
-  margin: 0;
-  color: #fff;
-  font-family: inherit;
-  font-size: 32px;
-  font-weight: 700;
-  line-height: 1.25;
-  letter-spacing: -.35px;
-  text-wrap: balance;
-}
-.welcome-content h1 span { display: block; }
-.welcome-start {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  min-width: 302px;
-  min-height: 64px;
-  padding: 16px 30px;
-  border: 2px solid transparent;
-  border-radius: 999px;
-  background: #fff;
-  color: #111;
-  font-size: 22px;
-  font-weight: 700;
-  line-height: 1.3;
-  text-decoration: none;
-  transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
-}
-.welcome-start:hover { transform: translateY(-2px); background: #eef2ff; box-shadow: 0 0 36px #7c88ff38; }
-.welcome-start:active { transform: translateY(0); }
-.welcome-start:focus-visible { outline: 3px solid #a6b8ff; outline-offset: 6px; }
-.welcome-content p { margin: -5px 0; padding: 5px 12px; border-radius: 4px; background: #02040de6; color: #b9bdcb; font-size: 15px; line-height: 1.45; }
-.welcome-motion {
-  position: absolute;
-  bottom: 22px;
-  right: 24px;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  min-height: 40px;
-  padding: 9px 12px;
-  color: #bec4d3;
-  background: #080b16bd;
-  border: 1px solid #ffffff26;
-  border-radius: 999px;
-  font-size: 12px;
-}
-.welcome-motion:hover { color: #fff; background: #171e32; }
-@media (max-width: 1024px) {
-  .welcome-scene { bottom: 0; width: min(150vw, 150svh); }
-  .welcome-content { gap: 26px; }
-  .welcome-content h1 { font-size: clamp(25px, 3.8vw, 32px); }
-}
-@media (max-width: 600px) {
-  .welcome-page { padding: 90px 22px 185px; }
-  .welcome-scene { width: 122vw; bottom: 0; left: 50%; }
-  .welcome-wordmark { left: 22px; top: 21px; font-size: 30px; }
-  .welcome-content h1 { font-size: 27px; line-height: 1.3; }
-  .welcome-content h1 span:first-child { margin-bottom: 6px; font-size: 22px; }
-  .welcome-start { min-width: min(280px, 100%); min-height: 60px; font-size: 20px; }
-  .welcome-content p { font-size: 14px; }
-  .welcome-motion { bottom: 16px; right: 16px; }
-}
-@media (max-height: 530px) and (min-width: 601px) {
-  .welcome-page { padding: 75px 24px; }
-  .welcome-content { gap: 18px; }
-  .welcome-content h1 { font-size: 26px; }
-  .welcome-start { min-height: 54px; padding: 12px 28px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .welcome-start { transition: none; }
-  .welcome-start:hover { transform: none; }
-}
+.welcome-page{position:relative;isolation:isolate;display:flex;flex-direction:column;align-items:center;min-height:100vh;min-height:100svh;padding:23px 36px 20px;overflow:hidden;color:#fff;background:#02030b;font-family:Arial,"Segoe UI",sans-serif}
+.welcome-environment{position:absolute;inset:0;z-index:-2;overflow:hidden;pointer-events:none}.welcome-environment img{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:min(1536px,110vw);height:auto;max-width:none;display:block;image-rendering:pixelated}.welcome-environment::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#02030bef 0%,#02030bc4 24%,#02030b40 49%,transparent 68%,#02030b66 100%)}.welcome-atlas-loader{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.welcome-header{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1370px;gap:20px}.welcome-wordmark{font:34px/1.2 Georgia,"Times New Roman",serif;letter-spacing:-1.7px}.welcome-header>span{font-size:11px;line-height:1.6;color:#8c91ab;letter-spacing:.3px}
+.welcome-content{position:relative;z-index:3;display:flex;align-items:center;flex-direction:column;flex:none;gap:19px;width:min(100%,830px);padding:36px 15px 9px;text-align:center}.welcome-content .welcome-eyebrow{margin:0;color:#8c97c6;font-size:9px;line-height:1.5;font-weight:600;letter-spacing:2px}.welcome-content h1{font-family:inherit;font-size:32px;font-weight:700;line-height:1.25;letter-spacing:-.35px;margin:0;text-wrap:balance;color:#f3f5ff}.welcome-content h1>span{display:block;color:#fff}.welcome-content .welcome-intro{margin:0;font-size:13px;line-height:1.8;color:#a0a8c4}.welcome-entry-actions{display:flex;flex-direction:column;align-items:center;gap:17px;margin-top:4px}.welcome-start{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-width:302px;min-height:64px;padding:16px 30px;border:1px solid #e0e8ff;border-radius:999px;background:#fff;color:#111;font-size:22px;font-weight:700;line-height:1.5;text-decoration:none;box-shadow:0 6px 40px #7394ff16;transition:background 150ms ease,transform 150ms ease,box-shadow 150ms ease}.welcome-start:hover{background:#fff;transform:translateY(-2px);box-shadow:0 10px 35px #8ca8ff30}.welcome-start:active{transform:translateY(0)}.welcome-recorded-link{display:inline-flex;align-items:center;gap:8px;color:#aeb9dc;text-decoration:none;font-size:12px;line-height:1.6}.welcome-recorded-link:hover{color:#fff}.welcome-start:focus-visible,.welcome-recorded-link:focus-visible,.welcome-motion:focus-visible{outline:2px solid #b4caff;outline-offset:6px}
+.welcome-stage-frame{position:relative;flex:1;display:flex;align-items:flex-end;justify-content:center;width:100%;max-width:1320px;min-height:330px;margin-top:5px}.welcome-stage{position:relative;width:100%;height:clamp(330px,28vw,420px);flex:none;opacity:0;pointer-events:none;transition:opacity 400ms ease}.welcome-stage.is-ready{opacity:1}.welcome-sprite{position:absolute;bottom:0;left:0;width:100%;background-repeat:no-repeat;image-rendering:pixelated}.welcome-visitor{position:absolute;aspect-ratio:1;width:13.3%;max-width:176px;transform:translateX(-50%);will-change:left,bottom;pointer-events:none}.welcome-visitor-sprite{transform-origin:50% 90%}.welcome-visitor.is-walking .welcome-visitor-sprite{animation:welcome-walk 280ms steps(2,end) infinite}.welcome-ground-shadow{position:absolute;bottom:4%;left:27%;width:47%;height:8%;border-radius:50%;background:#0008;filter:blur(4px);z-index:-1}.welcome-inspector{position:absolute;left:81%;bottom:18.5%;width:20%;max-width:266px;aspect-ratio:1;transform:translateX(-50%);z-index:9}.welcome-inspector .welcome-ground-shadow{left:21%;width:60%;bottom:5%;height:9%}.welcome-door-glow{position:absolute;left:87%;bottom:18%;width:15%;height:50%;transform:translateX(-50%);background:radial-gradient(ellipse at bottom,#567cf91a,transparent 70%);filter:blur(4px)}
+.welcome-inspection-state{position:absolute;left:70%;bottom:76%;display:flex;align-items:center;justify-content:center;gap:7px;min-width:113px;padding:9px 13px;border:1px solid #60678b66;border-radius:6px;background:#080c1ee8;color:#a6afd0;font:10px/1.4 Consolas,monospace;letter-spacing:1px;z-index:10;box-shadow:0 8px 28px #0003}.welcome-state-light{width:5px;height:5px;flex:none;background:#6d769d;border-radius:50%}.welcome-inspection-state.checking{border-color:#879ae77d;color:#becbff}.welcome-inspection-state.checking .welcome-state-light{background:#aec3ff;box-shadow:0 0 8px #7e9aff80}.welcome-inspection-state.pass{border-color:#659f8b85;color:#aff4d1;background:#091e1bec}.welcome-inspection-state.pass .welcome-state-light{background:#79eab5;box-shadow:0 0 9px #56d69d77}.welcome-inspection-state.needs-fix{border-color:#b07a6080;color:#ffce9b;background:#21150fec}.welcome-inspection-state.needs-fix .welcome-state-light{background:#ffb87b;box-shadow:0 0 9px #e39c5680}
+.welcome-fix-area{position:absolute;left:52%;bottom:3%;width:17%;height:12%;transform:translateX(-50%) perspective(120px) rotateX(18deg);border:1px dashed #c5945840;border-radius:50%;background:#a1773110;opacity:.45;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px}.welcome-fix-area>span{font:8px/1.4 Consolas,monospace;color:#a1805f;letter-spacing:1.2px}.welcome-fix-area.is-active{opacity:1;border-color:#d7a8678c;background:#c3943520}.welcome-queue-label{position:absolute;bottom:14%;left:15%;display:flex;align-items:center;gap:7px;font:8px/1.4 Consolas,monospace;letter-spacing:1.5px;color:#707b9b}.welcome-queue-label>span{width:16px;height:1px;background:#607193}.welcome-footer{position:relative;z-index:12;width:100%;max-width:1370px;display:flex;align-items:center;justify-content:space-between;gap:18px;padding-top:12px}.welcome-footer p{font-size:10px;line-height:1.7;color:#707a97;margin:0}.welcome-motion{display:inline-flex;align-items:center;gap:7px;min-height:37px;padding:8px 12px;border:1px solid #ffffff22;border-radius:999px;background:#070c1db3;color:#aeb8d2;font-size:11px;line-height:1.5;white-space:nowrap;cursor:pointer}.welcome-motion:hover{background:#18213b;color:#fff}
+.welcome-page[data-scene-paused="true"] .welcome-visitor-sprite{animation-play-state:paused}@keyframes welcome-walk{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-4px) rotate(1deg)}}
+@media(min-width:1600px){.welcome-content{padding-top:48px}.welcome-stage-frame{min-height:390px}.welcome-stage{height:460px}}
+@media(max-width:900px){.welcome-page{padding:22px 23px 18px}.welcome-content{padding-top:34px}.welcome-stage-frame{min-height:320px}.welcome-stage{width:850px;height:350px;transform:translateX(-4%)}.welcome-environment img{width:1100px}.welcome-inspection-state{bottom:75%;font-size:9px;min-width:105px}.welcome-header>span{font-size:10px}.welcome-footer p{max-width:220px}}
+@media(max-width:600px){.welcome-page{padding:19px 20px 16px;min-height:100svh}.welcome-header{align-items:center}.welcome-wordmark{font-size:31px}.welcome-header>span{max-width:130px;text-align:right;font-size:9px}.welcome-content{padding:35px 0 8px;gap:18px}.welcome-content .welcome-eyebrow{font-size:8px;letter-spacing:1.4px}.welcome-content h1{font-size:27px;line-height:1.3;letter-spacing:-.35px}.welcome-content h1 span:first-child{font-size:22px;margin-bottom:6px}.welcome-content .welcome-intro{font-size:12px;line-height:1.8}.welcome-entry-actions{flex-direction:column;gap:17px;margin-top:3px;width:min(280px,100%)}.welcome-start{min-height:60px;min-width:0;width:100%;font-size:20px}.welcome-recorded-link{font-size:11px}.welcome-stage-frame{min-height:280px;margin-top:5px;align-items:center}.welcome-stage{width:670px;height:300px;transform:translateX(-12%)}.welcome-environment img{width:910px;left:8%}.welcome-inspection-state{left:70%;bottom:68%;padding:7px 10px;min-width:96px;font-size:8px}.welcome-inspector{bottom:18.5%}.welcome-queue-label{display:none}.welcome-footer{padding-top:4px;gap:13px;align-items:center}.welcome-footer p{font-size:9px;max-width:165px}.welcome-motion{font-size:10px;min-height:38px;padding:8px 11px}.welcome-fix-area>span{font-size:7px}.welcome-stage-frame .welcome-fix-area{bottom:2%}}
+@media(max-height:650px) and (min-width:901px){.welcome-content{padding-top:19px;gap:12px}.welcome-content h1{font-size:26px}.welcome-content .welcome-intro{font-size:11px}.welcome-stage-frame{min-height:280px}.welcome-stage{height:300px}.welcome-inspection-state{bottom:82%}}
+@media(prefers-reduced-motion:reduce){.welcome-start,.welcome-stage{transition:none}.welcome-start:hover{transform:none}.welcome-visitor.is-walking .welcome-visitor-sprite{animation:none}}

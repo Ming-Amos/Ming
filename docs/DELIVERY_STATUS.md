@@ -1,6 +1,12 @@
 # Ming delivery status
 
-## Latest: readable acceptance checklists — 2026-09-27 (Asia/Shanghai)
+## Latest: animated inspection welcome — 2026-09-27 (Asia/Shanghai)
+
+The selected pixel-art welcome scene now has seven independent visitors approaching a blue inspector one at a time. The inspector writes on a clipboard; passing visitors enter and visitors needing a fix take a separate return route. The original Ming heading, Start entry and guided sample remain. The scene is explicitly illustrative, separate from actual project acceptance evidence. Animation playback uses no Bob or model calls. The inner workspace retains its existing appearance while the user's style preference is unresolved.
+
+The full frontend build passed. Browser review passed **27/27** checks for animation, distinct outcomes, pause/resume, reduced motion, entry routes, and desktop/mobile layout, followed by **11/11** targeted checks of the final mobile Start width and entry behavior. Final frontend: `index-D_bsmEyy.js`, stylesheet `index-a-pOcckO.css`. [Review and evidence](WELCOME_INSPECTION_REVIEW.md) · [Asset provenance](WELCOME_ART_ASSETS.md). Historical Bob evidence and the original welcome GIF remain unchanged. Publication details will be recorded after deployment succeeds.
+
+## Readable acceptance checklists — 2026-09-27 (Asia/Shanghai)
 
 The uploaded-project workspace now presents each action sequence and its expected results as readable **Ming will / Passes when** cards. The original action and selector editor remains available under **Edit technical steps**. Draft selection is labeled **Use this checklist**, followed by **These checks match my requirements.** No plan executes until that separate confirmation. Stale drafts and unresolved questions still block applying; summary cards never claim complete requirements coverage or predict success.
 
