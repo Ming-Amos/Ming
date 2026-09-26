@@ -814,7 +814,8 @@ export default function App() {
           Ming<span>Every done comes with proof.</span>
         </a>
         <nav aria-label="Workspace tools">
-          <a className="trial-nav-link" href="#trial"><Play size={15} weight="fill" />Live sample</a>
+          <a className="trial-nav-link" href="#upload" aria-label="Check your app" title="Check your app"><Plus size={15} /><span>Check your app</span></a>
+          <a className="trial-nav-link" href="#trial" aria-label="Live sample" title="Live sample"><Play size={15} weight="fill" /><span>Live sample</span></a>
           <button className="command-trigger" onClick={() => setSheet("commands")} aria-label="Open command menu"><MagnifyingGlass size={16}/><span>Jump to…</span><kbd>Ctrl K</kbd></button>
           <button
             aria-label="Projects"

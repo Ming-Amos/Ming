@@ -1,9 +1,11 @@
 # Public demo and local application
 
-Ming has two explicit modes. The local app runs real browser checks and exposes
-MCP tools to a coding agent. The public demo is an interactive, read-only viewer
-of reviewed real local runs. It does not connect to the visitor's computer or
-pretend a replay is a new browser execution.
+Ming's hosted frontend offers an own-project static upload workspace (`/#upload`),
+a fresh bundled browser sample (`/#trial`), and a read-only viewer of reviewed
+local runs (`/#studio`). Upload and sample checks execute in the visitor's browser;
+the hosted server APIs remain read-only. The local app additionally runs Playwright
+and exposes MCP tools to a coding agent. Recorded playback is identified separately
+from fresh execution. See [uploaded-project workflow](UPLOADED_PROJECTS.md).
 
 ## Free hosting package
 

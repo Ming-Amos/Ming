@@ -1,0 +1,55 @@
+{
+  "checks": [
+    {
+      "name": "Upload 1440 width",
+      "passed": true,
+      "metrics": {
+        "width": 1440,
+        "scroll": 1440
+      }
+    },
+    {
+      "name": "Upload 390 width",
+      "passed": true,
+      "metrics": {
+        "width": 390,
+        "scroll": 390
+      }
+    },
+    {
+      "name": "Studio 1440 width",
+      "passed": true,
+      "metrics": {
+        "width": 1440,
+        "scroll": 1440,
+        "navRight": 1406
+      }
+    },
+    {
+      "name": "Studio 1100 width",
+      "passed": true,
+      "metrics": {
+        "width": 1100,
+        "scroll": 1100,
+        "navRight": 1076
+      }
+    },
+    {
+      "name": "Studio 390 width",
+      "passed": true,
+      "metrics": {
+        "width": 390,
+        "scroll": 390,
+        "navRight": 373
+      }
+    }
+  ],
+  "errors": [],
+  "screenshots": [
+    "C:\\Bob\\Projects\\Ming\\runtime\\upload-visual-review\\upload-1440.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\upload-visual-review\\upload-390.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\upload-visual-review\\studio-1440.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\upload-visual-review\\studio-1100.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\upload-visual-review\\studio-390.png"
+  ]
+}

@@ -128,8 +128,11 @@ try {
   await page.evaluate(({ key, value }) => localStorage.setItem(key, value), { key: sentinelKey, value: sentinelValue });
   const start = page.getByRole('link', { name: 'Start', exact: true }).or(page.getByRole('button', { name: 'Start', exact: true }));
   check('Welcome presents Start before mounting an application workspace', await start.isVisible() && !new URL(page.url()).hash);
-  await start.click(); await ui.trial(page).waitFor();
-  check('Start opens the live trial at #trial', new URL(page.url()).hash === '#trial');
+  await start.click(); await page.getByTestId('upload-studio').waitFor();
+  check('Start opens the own-project upload workspace', new URL(page.url()).hash === '#upload');
+  await page.getByRole('link', { name: 'Try a sample', exact: true }).click();
+  await ui.trial(page).waitFor();
+  check('The guided live trial remains accessible', new URL(page.url()).hash === '#trial');
   await screenshot(page, '01-live-trial-ready');
 
   const trialRequestStart = report.requests.length;

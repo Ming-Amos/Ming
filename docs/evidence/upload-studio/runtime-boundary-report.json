@@ -1,0 +1,41 @@
+{
+  "checks": [
+    {
+      "name": "CSSresource rewriting still handles nestedZIP aftertokenprotection",
+      "passed": true
+    },
+    {
+      "name": "CSScomments and quotedcontent are not mistaken forresources",
+      "passed": true
+    },
+    {
+      "name": "SVGfragmentpaint references preserved",
+      "passed": true
+    },
+    {
+      "name": "supersededpreviewcannotclosefreshpreview",
+      "passed": true
+    },
+    {
+      "name": "commentheadcannotbypassactual CSP/bridge insertion",
+      "passed": true
+    },
+    {
+      "name": "nonformemptyvalue assertion no longer falselypasses",
+      "passed": true
+    },
+    {
+      "name": "assertText searchesfulltext beyond1000chars",
+      "passed": true
+    },
+    {
+      "name": "opaqueorigin blocks parentdocument access",
+      "passed": true
+    }
+  ],
+  "runStatuses": {
+    "invalid": "error",
+    "long": "passed",
+    "isolation": "passed"
+  }
+}

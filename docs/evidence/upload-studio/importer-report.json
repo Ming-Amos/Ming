@@ -1,0 +1,94 @@
+{
+  "checks": [
+    {
+      "name": "nested dist entry, CSSimports, rootrelative SVG assets and classic script extraction",
+      "passed": true
+    },
+    {
+      "name": "import executes no uploaded scripts",
+      "passed": true
+    },
+    {
+      "name": "stable project fingerprint with fresh import identity",
+      "passed": true
+    },
+    {
+      "name": "acyclic local ESmodules/JSON/image and dynamic literal imports inline",
+      "passed": true
+    },
+    {
+      "name": "network references explicitly warn without executing",
+      "passed": true
+    },
+    {
+      "name": "reject traversal",
+      "passed": true
+    },
+    {
+      "name": "reject duplicate",
+      "passed": true
+    },
+    {
+      "name": "reject secret",
+      "passed": true
+    },
+    {
+      "name": "reject source",
+      "passed": true
+    },
+    {
+      "name": "reject cycle",
+      "passed": true
+    },
+    {
+      "name": "reject bare",
+      "passed": true
+    },
+    {
+      "name": "reject external",
+      "passed": true
+    },
+    {
+      "name": "reject missing",
+      "passed": true
+    },
+    {
+      "name": "reject big",
+      "passed": true
+    },
+    {
+      "name": "reject encrypted",
+      "passed": true
+    },
+    {
+      "name": "reject forged",
+      "passed": true
+    },
+    {
+      "name": "input size rejected before parsing",
+      "passed": true
+    },
+    {
+      "name": "singleHTML accepted without execution",
+      "passed": true
+    },
+    {
+      "name": "no external requests occurred during parsing/import",
+      "passed": true
+    }
+  ],
+  "details": {
+    "traversal": "Unsafe archive path: ../index.html. Parent traversal and ambiguous paths are not supported.",
+    "duplicate": "Duplicate archive path: INDEX.html. File names must be unique, including letter case.",
+    "secret": "Remove private configuration or secrets before importing: .env.",
+    "source": "No HTML entry page was found. Build the project first, then ZIP the generated dist/build folder, or upload one self-contained HTML file. Server code and uncompiled source cannot run in this online browser sandbox.",
+    "cycle": "Circular module imports are not supported: a.js → b.js → a.js. Bundle these modules first.",
+    "bare": "Bare or external module import “react” in index.html. Build the project first, then ZIP the generated dist/build folder, or upload one self-contained HTML file. Server code and uncompiled source cannot run in this online browser sandbox.",
+    "external": "External or invalid resource “https://never-send.invalid/image.png” in index.html. Include assets inside the ZIP; network requests are not supported.",
+    "missing": "Missing local asset “missing.css” referenced by index.html. Include the complete static build folder. Build the project first, then ZIP the generated dist/build folder, or upload one self-contained HTML file. Server code and uncompiled source cannot run in this online browser sandbox.",
+    "big": "The unpacked project exceeds the 20 MB limit.",
+    "encrypted": "Encrypted ZIP files are not supported. Export an unencrypted static build.",
+    "forged": "Cannot safely unpack index.html: Decompressed size exceeds the declared limit for index.html."
+  },
+  "external": []
+}

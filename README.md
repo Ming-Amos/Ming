@@ -16,17 +16,25 @@ pnpm build
 pnpm start
 ```
 
-Open **http://127.0.0.1:4001**, then choose **Start** on the pixel-art welcome page to enter the live sample at `/#trial`. Use **Evidence Studio** at `/#studio` for your own local projects and saved runs. Refreshing either route keeps that view open. The welcome page makes no application API or model requests. On Windows, after the first installation/build, double-click **`scripts/Start-Ming.cmd`** instead. The launcher reuses a healthy local Ming service, opens the browser, and does not close unrelated applications. Startup does not call a model.
+Open **http://127.0.0.1:4001**, then choose **Start** on the pixel-art welcome page to enter your own-project upload workspace at `/#upload`. **Try a sample** opens `/#trial`; **Evidence Studio** at `/#studio` connects local running applications and saved runs. The welcome page makes no application API or model requests. On Windows, after the first installation/build, double-click **`scripts/Start-Ming.cmd`** instead. The launcher reuses a healthy local Ming service, opens the browser, and does not close unrelated applications. Startup does not call a model.
 
 For frontend development, run the backend and `pnpm --filter @ming/web dev --port 4000 --host 127.0.0.1`. Rebuild before using the normal launcher to see UI changes.
 
-## Try a fresh browser check online
+## Check your own static project online
+
+Open `/#upload`, choose a self-contained HTML file or ZIP of a built static website, and preview the actual imported application. Files are read in your browser, not uploaded to a server. Import or paste requirements, define ordered actions and assertions, review and confirm the plan, then choose **Run acceptance checks**. Page element suggestions help select targets. No model API or Bobcoins are needed.
+
+Results include observed versus expected behavior, DOM-rendered snapshots, run/source/plan fingerprints, cancellation and unchecked states, a JSON export and a copyable AI repair brief. Upload a revised file and rerun the same plan to compare both real outcomes while preserving the baseline. The hosted page does not edit your repository or automatically contact a coding AI.
+
+This path supports browser-ready static HTML/CSS/JavaScript and bundled local assets, bounded to 10 MB input, 20 MB unpacked, 100 files and 30 approved steps. Backend code, package installation, remote APIs, external assets, IndexedDB, cookies and cross-page navigation are outside this preview. A memory storage adapter simulates local/session storage across isolated page reloads; it is not native application storage. Images are DOM renders, not Playwright screenshots. Files/results disappear when the page closes unless exported. See [uploaded-project scope and workflow](docs/UPLOADED_PROJECTS.md).
+
+## Try a guided browser check online
 
 The hosted **Live sample** at `/#trial` runs the bundled Shipboard application in the visitor's browser. Enter a task name, choose **Run live checks**, inspect the observed failure, copy a repair brief, and apply a **prepared sample fix** before rerunning the same acceptance standard. Each execution creates new identities, timestamps, task content and observations. A completed baseline remains separate from the follow-up result; the original recorded repair is still accessible in Evidence Studio.
 
 This is real browser DOM interaction against a controlled same-origin example: input, submit, reload and assertions execute anew. Images are **DOM-rendered snapshots** of that current page, not native Playwright screenshots; rendering may differ from the exact screen. The prepared fix restores sample persistence; it is not an AI-generated repair or a modification to your repository. No model API, Bobcoins, remote browser service or always-on owner computer is needed. This session's results live in page memory and can be exported before leaving or reloading. Trial storage uses unique session keys and removes only its own data.
 
-This hosted sample does not accept arbitrary URLs, uploaded projects or API keys. Use the local workflow below for your own application and coding-agent repair. See [live trial scope](docs/LIVE_TRIAL.md).
+Use **Check your app** for uploaded static projects. Use the local workflow below for running full-stack applications, model planning and connected coding-agent repair. See [live trial scope](docs/LIVE_TRIAL.md).
 
 ## Use your own project
 
@@ -85,6 +93,8 @@ The [new judge evidence](docs/judge-evidence/README.md) records a real source re
 The hosted Evidence Studio APIs and `MING_PUBLIC_DEMO=1` startup use `docs/judge-evidence` for recorded proof. The separately bundled live sample executes independently in the visitor's browser. The earlier [daily-report/Focus bundle](docs/demo-evidence/README.md) remains byte-for-byte unchanged and available for provenance review.
 
 ## Validation and delivery
+
+The uploaded-project workflow passed **47/47** compiled UI checks across ten actual runs. Importer validation passed **19/19**, additional runtime boundaries **8/8**, responsive visual checks **5/5**, recorded Studio regression **55/55**, and guided sample regression **41/41**. The tests uploaded real HTML and nested static ZIP files, observed a genuine defect, verified a changed source passing the same plan, preserved original evidence, and checked cancellation, rejection cases and browser isolation. [Upload evidence](docs/evidence/upload-studio/2026-09-26T15-08-23-466Z-4a6f15e1/report.json).
 
 The new live browser sample passed **40/40** compiled UI checks across eight actual runs, including a disabled-submit counterfactual, cancellation, rerun state, independent tabs, storage cleanup and 390px layout. Isolated engine **10/10** and boundary **5/5** checks also passed. The preserved recorded Studio passed **55/55** and the hosted Worker **8/8**. See [live trial report](docs/evidence/live-trial/2026-09-26T14-33-39-458Z-c853317e/report.json). These checks used no Bob or external model calls.
 

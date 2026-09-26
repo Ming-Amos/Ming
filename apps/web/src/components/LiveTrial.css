@@ -4,3 +4,4 @@
 @media(prefers-reduced-motion:reduce){.trial-spin{animation:none}}
 .trial-browser-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:35px;background:radial-gradient(ellipse at 50% 20%,#f4f7ff,#fff 70%);color:#7591b5}.trial-browser-placeholder>svg{margin-bottom:22px}.trial-browser-placeholder strong{font:25px/1.35 Georgia,serif;color:#344e72}.trial-browser-placeholder p{font-size:12px;line-height:1.9;max-width:300px;margin-top:13px;color:#6c819e}
 
+@media(max-width:740px){.topbar .trial-nav-link{width:30px;min-height:32px;padding:7px;justify-content:center}.topbar .trial-nav-link span{display:none}}

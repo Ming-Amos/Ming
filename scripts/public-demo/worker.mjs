@@ -24,11 +24,11 @@ export function createWorker(bundle) {
       const url = new URL(request.url);
       const head = request.method === 'HEAD';
       if (!['GET', 'HEAD'].includes(request.method)) {
-        return json({ ok: false, error: 'Hosted API records are read-only. Use the live sample in your browser, or run Ming locally to check your own application.' }, 403);
+        return json({ ok: false, error: 'Hosted API records are read-only. Upload a static project for browser checks, try the live sample, or run Ming locally for server-backed applications.' }, 403);
       }
 
       if (url.pathname === '/api/capabilities') {
-        return json({ ok: true, readOnly: true, sourceBinding: 'self-contained-html-snapshot', demoMode: 'recorded-evidence', liveTrial: { available: true, path: '/#trial', execution: 'visitor-browser', scope: 'bundled-shipboard', captureKind: 'dom-render', modelCalls: false } }, 200, head);
+        return json({ ok: true, readOnly: true, sourceBinding: 'self-contained-html-snapshot', demoMode: 'recorded-evidence', uploadedProjects: { available: true, path: '/#upload', formats: ['html', 'static-zip'], execution: 'isolated-visitor-browser', planning: 'manually-confirmed', captureKind: 'dom-render', modelCalls: false }, liveTrial: { available: true, path: '/#trial', execution: 'visitor-browser', scope: 'bundled-shipboard', captureKind: 'dom-render', modelCalls: false } }, 200, head);
       }
       if (url.pathname === '/api/provider/status') {
         return json({ ok: true, status: { configured: false, providerLabel: 'Recorded evidence demo — model calls disabled', baseUrl: '(disabled)', modelId: '(disabled)', missingFields: ['LOCAL_MODEL_CONFIGURATION_REQUIRED'] } }, 200, head);

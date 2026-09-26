@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, ArrowSquareOut, Check, CheckCircle, CircleNotch, ClockCounterClockwise, Copy, DownloadSimple, Fingerprint, Flask, Info, ListChecks, Play, ShieldCheck, Stop, WarningCircle, X, XCircle } from "@phosphor-icons/react";
+import { ArrowLeft, ArrowRight, ArrowSquareOut, Check, CheckCircle, CircleNotch, ClockCounterClockwise, Copy, DownloadSimple, Fingerprint, Flask, FileText, Info, ListChecks, Play, ShieldCheck, Stop, WarningCircle, X, XCircle } from "@phosphor-icons/react";
 import { runTrial, makeRepairBrief } from "../trial/engine";
 import type { TrialRun } from "../trial/types";
 import { downloadText } from "../lib/api";
@@ -16,7 +16,6 @@ function Badge({ status }: { status: string }) {
   const Icon = status === "passed" ? CheckCircle : status === "failed" || status === "error" ? XCircle : CircleNotch;
   return <span className={`trial-badge trial-${status}`}><Icon size={14} weight="fill" />{status === "unchecked" ? "Unchecked" : status.charAt(0).toUpperCase() + status.slice(1)}</span>;
 }
-
 export default function LiveTrial() {
   const iframe = useRef<HTMLIFrameElement>(null);
   const controller = useRef<AbortController | null>(null);
@@ -98,7 +97,7 @@ export default function LiveTrial() {
   function showCapture(source: string, title: string) { setPreview({ source, title }); }
 
   return <div className="trial-shell" data-testid="live-trial">
-    <header className="trial-topbar"><a className="trial-brand" href="#">Ming<span>Every done comes with proof.</span></a><nav aria-label="Trial navigation"><a href="#studio"><ClockCounterClockwise size={17} />Evidence Studio</a><a href="#"><ArrowLeft size={16} />Cover</a></nav></header>
+    <header className="trial-topbar"><a className="trial-brand" href="#">Ming<span>Every done comes with proof.</span></a><nav aria-label="Trial navigation"><a href="#upload"><FileText size={17} />Check your app</a><a href="#studio"><ClockCounterClockwise size={17} />Evidence Studio</a><a href="#"><ArrowLeft size={16} />Cover</a></nav></header>
     <main>
       <section className="trial-hero">
         <div><div className="trial-eyebrow"><span className="trial-live-dot" />THE LIVE PROOF LAB</div><h1>Don’t take “done”<br />for an <em>answer.</em></h1><p>Give the sample a task. Watch Ming check it.<br />Find the failure, then prove the fix.</p></div>
@@ -128,11 +127,8 @@ export default function LiveTrial() {
       {brief && <section className="trial-card trial-brief"><div><h2>Ready for your coding AI</h2><button aria-label="Close repair brief" onClick={() => setBrief("")}><X size={18} /></button></div><p>This text describes the actual failure. Copy it into your coding assistant; this trial does not send it automatically.</p><textarea aria-label="Repair brief" value={brief} readOnly rows={9} onFocus={event => event.target.select()} /></section>}
       {baseline && rerun && <section className="trial-comparison"><div className="trial-comparison-heading"><div><span className="trial-kicker">ONE STANDARD. TWO REAL RUNS.</span><h2>{verified ? "From broken promise to proof." : "Compare what changed."}</h2></div><span className={`trial-compare-state ${verified ? "verified" : ""}`}>{verified ? <CheckCircle size={18} /> : <WarningCircle size={18} />}{verified ? "All criteria passed after the prepared fix" : !samePlan ? "Plans differ — comparison is not verified" : "Review the results below"}</span></div><div className="trial-comparison-grid">{[{ run: baseline, result: failure, label: "BEFORE / ORIGINAL SAMPLE" }, { run: rerun, result: fixed, label: "AFTER / PREPARED FIX" }].map(({ run, result, label }) => <article key={label}><div><span>{label}</span><Badge status={result?.status || "unchecked"} /></div><p>{result?.observed || "The relevant check did not produce an observation."}</p>{result?.capture && <button onClick={() => showCapture(result.capture!, label)} aria-label={`Expand ${label.toLowerCase()} DOM snapshot`}><img src={result.capture} alt={`${label} DOM snapshot`} /></button>}<footer>{date(run.startedAt)} · Run {run.id.slice(0, 12)}</footer></article>)}</div><p><Fingerprint size={15} />{samePlan ? "Same acceptance plan" : "Different acceptance plans"} · DOM snapshots from these runs · Original baseline preserved</p></section>}
       {runs.length > 0 && <section className="trial-recent"><div><ClockCounterClockwise size={18} /><h2>This visit’s runs</h2><span>Latest 6 · kept only while this page is open</span></div><div>{runs.map(run => <button key={run.id} className={selectedId === run.id ? "selected" : ""} disabled={running} onClick={() => choose(run)}><span>{run.variant === "fixed" ? "Prepared fix" : "Original sample"}</span><span>{date(run.startedAt)}</span><Badge status={run.status === "completed" ? run.criteria.some(criterion => criterion.status === "failed") ? "failed" : run.criteria.every(criterion => criterion.status === "passed") ? "passed" : "unchecked" : run.status} /></button>)}</div></section>}
-      <footer className="trial-footer"><div><strong>Bring the loop to your own project.</strong><p>The full local workspace connects your app, requirements, and coding AI. This online trial checks the included Shipboard sample.</p></div><a href="#studio">Explore the full evidence workflow<ArrowRight size={17} /></a></footer>
+      <footer className="trial-footer"><div><strong>Bring the loop to your own project.</strong><p>The full local workspace connects your app, requirements, and coding AI. This online trial checks the included Shipboard sample.</p></div><a href="#upload">Check your own HTML or static ZIP<ArrowRight size={17} /></a></footer>
     </main>
     <dialog ref={dialog} className="trial-preview" onClose={() => setPreview(null)} onClick={event => { if (event.target === dialog.current) dialog.current.close(); }}><div><strong>{preview?.title}</strong><button aria-label="Close DOM snapshot" onClick={() => dialog.current?.close()}><X size={21} /></button></div>{preview && <img src={preview.source} alt={preview.title} />}<p>DOM snapshot rendered from the observed page, not a browser screenshot.</p></dialog>
   </div>;
 }
-
-
-

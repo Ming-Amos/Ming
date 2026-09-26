@@ -73,7 +73,7 @@ try {
   check('All 34 judge evidence files retain their exact manifest hashes', checkedFiles === 34);
   compare('Compiled history matches the English reviewed bundle', await (await fetch(base + '/api/history')).json(), bundle.responses['/api/history']);
   const metadataPolicies = {
-    '/api/capabilities': { ok: true, readOnly: true, sourceBinding: 'self-contained-html-snapshot', demoMode: 'recorded-evidence', liveTrial: { available: true, path: '/#trial', execution: 'visitor-browser', scope: 'bundled-shipboard', captureKind: 'dom-render', modelCalls: false } },
+    '/api/capabilities': { ok: true, readOnly: true, sourceBinding: 'self-contained-html-snapshot', demoMode: 'recorded-evidence', uploadedProjects: { available: true, path: '/#upload', formats: ['html', 'static-zip'], execution: 'isolated-visitor-browser', planning: 'manually-confirmed', captureKind: 'dom-render', modelCalls: false }, liveTrial: { available: true, path: '/#trial', execution: 'visitor-browser', scope: 'bundled-shipboard', captureKind: 'dom-render', modelCalls: false } },
     '/api/provider/status': { ok: true, status: { configured: false, providerLabel: 'Recorded evidence demo — model calls disabled', baseUrl: '(disabled)', modelId: '(disabled)', missingFields: ['LOCAL_MODEL_CONFIGURATION_REQUIRED'] } },
     '/api/projects': { ok: true, projects: [], readOnly: true },
   };
@@ -123,7 +123,7 @@ try {
   await capture(page, '00-welcome');
   await start.click();
   await page.getByRole('link', { name: 'Evidence Studio', exact: true }).waitFor();
-  check('Start opens the fresh browser trial at #trial', new URL(page.url()).hash === '#trial' && !(await start.isVisible()));
+  check('Start opens the own-project acceptance workspace at #upload', new URL(page.url()).hash === '#upload' && await page.getByTestId('upload-studio').isVisible() && !(await start.isVisible()));
   await page.getByRole('link', { name: 'Evidence Studio', exact: true }).click();
   await page.getByRole('region', { name: 'Recorded acceptance timeline' }).waitFor();
   check('Evidence Studio opens the preserved workspace at #studio', new URL(page.url()).hash === '#studio' && !(await start.isVisible()));
@@ -201,6 +201,7 @@ try {
   await verifyEnglish(page, 'Repair comparison');
   await capture(page, '03-repair-comparison');
   await comparison.getByRole('button', { name: 'View the complete follow-up run', exact: true }).click();
+  await page.waitForFunction(expected => JSON.parse(localStorage.getItem('ming.workspace.v2') || '{}').runId === expected, manifest.featuredRerunId);
   await page.getByRole('button', { name: 'Compare before and after', exact: true }).waitFor();
   const followup = await page.evaluate(() => JSON.parse(localStorage.getItem('ming.workspace.v2')));
   check('Opening follow-up retains its real run identity', followup.runId === manifest.featuredRerunId);
