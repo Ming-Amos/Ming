@@ -7,10 +7,10 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 const require = createRequire(new URL('../apps/mcp/package.json', import.meta.url));
 const { Client } = require('@modelcontextprotocol/sdk/client/index.js');
-const { StdioClientTransport } = require('@modelcontextprotocol/sdk/client/stdio.js');
+const { StdioClientTransport, getDefaultEnvironment } = require('@modelcontextprotocol/sdk/client/stdio.js');
 const root = fileURLToPath(new URL('..', import.meta.url));
 const client = new Client({ name: 'ming-codex-operator', version: '1.0.0' });
-const transport = new StdioClientTransport({ command: process.execPath, args: [path.join(root, 'apps/mcp/dist/index.js')], cwd: root, stderr: 'pipe' });
+const transport = new StdioClientTransport({ command: process.execPath, args: [path.join(root, 'apps/mcp/dist/index.js')], cwd: root, stderr: 'pipe', env: { ...getDefaultEnvironment(), ...(process.env.MING_BASE_URL ? { MING_BASE_URL: process.env.MING_BASE_URL } : {}) } });
 try {
   await client.connect(transport);
   const [name, json = '{}'] = process.argv.slice(2);

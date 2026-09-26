@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
- * Ming MCP stdio adapter (Stage C)
+ * Ming MCP stdio adapter
  *
- * Exposes five bounded tools for Bob IDE:
+ * Exposes twelve bounded tools for project discovery, confirmed acceptance,
+ * progress, cancellation, and the repair workflow:
  *   ming_get_failed_run     — read a failed run's evidence (size-bounded)
  *   ming_get_repair_task    — retrieve a repair task by ID
  *   ming_claim_repair_task  — atomically claim a waiting task
  *   ming_rerun_plan         — start the repair rerun, returns runId promptly
  *   ming_get_comparison     — poll comparison after rerun completes
  *
- * All calls go to http://127.0.0.1:4001 (fixed, local-only).
+ * Calls use http://127.0.0.1:4001 by default (local-only override available).
  * No arbitrary filesystem paths or external URLs are accepted.
  */
 
@@ -17,7 +18,11 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod/v4";
 
-const MING_BASE = "http://127.0.0.1:4001";
+const MING_BASE = process.env.MING_BASE_URL || "http://127.0.0.1:4001";
+const baseUrl = new URL(MING_BASE);
+if (baseUrl.protocol !== "http:" || !["127.0.0.1", "localhost", "[::1]"].includes(baseUrl.hostname) || baseUrl.username || baseUrl.password || baseUrl.pathname !== "/" || baseUrl.search || baseUrl.hash) {
+  throw new Error("MING_BASE_URL must be a local HTTP origin without credentials, path, query or fragment");
+}
 const MAX_EVIDENCE_STEPS = 20; // cap number of steps returned per criteria
 
 // ── HTTP helper ───────────────────────────────────────────────────
@@ -62,8 +67,42 @@ async function mingFetch(
 
 const server = new McpServer({
   name: "ming-local",
-  version: "0.1.0",
+  version: "0.2.0",
 });
+
+function payload(data: unknown) { return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] }; }
+function toolError(error: unknown) { return { isError: true, content: [{ type: "text" as const, text: String(error instanceof Error ? error.message : error) }] }; }
+const recordId = z.string().regex(/^[0-9a-f-]{36}$/, "Use a returned Ming record UUID");
+
+server.registerTool("ming_list_projects", {
+  description: "List saved Ming projects before working on an application's acceptance checks. No model request, browser execution or file edit is made.", inputSchema: {},
+}, async () => { try { return payload(await mingFetch("/api/projects")); } catch (error) { return toolError(error); } });
+
+server.registerTool("ming_get_project", {
+  description: "Read a project's saved requirements, plan drafts and human confirmations. Never treat an unconfirmed draft as permission to run. Reuse the newest active human confirmation after completing a feature; do not silently rewrite the user's standard.",
+  inputSchema: { projectId: recordId },
+}, async ({ projectId }: { projectId: string }) => { try { return payload(await mingFetch(`/api/projects/${projectId}/workspace`)); } catch (error) { return toolError(error); } });
+
+server.registerTool("ming_get_targets", {
+  description: "List registered application targets with current source fingerprints and optional source locations. A live URL is an observed target, not a frozen application snapshot. Use the registered project's source location to locate code; do not edit Ming's own testing code to make a check pass.", inputSchema: {},
+}, async () => { try { return payload(await mingFetch("/api/targets")); } catch (error) { return toolError(error); } });
+
+server.registerTool("ming_run_acceptance", {
+  description: "Run an existing human-confirmed plan after completing a feature or code change. Browser actions can modify the connected test application's data. Supply the active confirmation returned by ming_get_project. This does not generate, approve or weaken a plan. Returns immediately with a runId; poll ming_get_run for real results.",
+  inputSchema: { confirmationId: recordId },
+}, async ({ confirmationId }: { confirmationId: string }) => { try { return payload(await mingFetch("/api/run-confirmed", { method: "POST", body: { confirmationId } })); } catch (error) { return toolError(error); } });
+
+server.registerTool("ming_get_run", {
+  description: "Read real progress and evidence for a run. A running, cancelled, blocked or error result is not a passing acceptance check. Retain original runId when reporting a failure.", inputSchema: { runId: recordId },
+}, async ({ runId }: { runId: string }) => { try { return payload(await mingFetch(`/api/run/${runId}`)); } catch (error) { return toolError(error); } });
+
+server.registerTool("ming_create_repair_task", {
+  description: "Create an evidence-backed repair handoff from a completed failed run. Creating a task does not wake another coding agent; claim it and repair the registered target source using your own authorized editing tools, then rerun the original standard.", inputSchema: { runId: recordId },
+}, async ({ runId }: { runId: string }) => { try { return payload(await mingFetch("/api/repair-tasks", { method: "POST", body: { baselineRunId: runId } })); } catch (error) { return toolError(error); } });
+
+server.registerTool("ming_cancel_run", {
+  description: "Cancel an active local acceptance run when the user asks to stop or when further browser actions would be inappropriate. Preserves a terminal record and does not undo application actions already performed.", inputSchema: { runId: recordId },
+}, async ({ runId }: { runId: string }) => { try { return payload(await mingFetch(`/api/run/${runId}/cancel`, { method: "POST" })); } catch (error) { return toolError(error); } });
 
 // ── Tool: ming_get_failed_run ─────────────────────────────────────
 
@@ -239,20 +278,17 @@ server.registerTool(
   {
     description:
       "Start a rerun of the same acceptance plan for a claimed repair task. " +
-      "Returns a runId promptly; poll /api/run/:runId/progress for completion. " +
+      "Returns a runId promptly; poll ming_get_run for completion. " +
       "Validates that the plan fingerprint is unchanged and the source fingerprint " +
-      "matches expectedTargetFingerprint (binding source version to execution). " +
+      "matches expectedTargetFingerprint. A self-contained HTML snapshot binds source to execution; a live URL only records source observation. " +
       "Prevents duplicate concurrent reruns. " +
-      "Supply expectedTargetFingerprint: compute it from the target file AFTER your " +
-      "repair edit to confirm the exact source version you intend to test.",
+      "Supply expectedTargetFingerprint from ming_get_targets AFTER your repair edit. Never modify the acceptance plan to make the repair pass.",
     inputSchema: {
       taskId: z.string().describe("The taskId of the claimed repair task"),
       expectedTargetFingerprint: z
         .string()
         .describe(
-          "Ming fingerprint of the repaired HTML source: SHA-256 of JSON.stringify(UTF-8 file text), first 16 hex characters (baselineTargetFingerprint from " +
-          "the repair task if no change yet, or newly computed after your edit). " +
-          "Binds the rerun to the exact source version you repaired."
+          "The registered target's current fingerprint from ming_get_targets after editing the source. This is observed metadata for a live URL, not proof that the served application executes those exact source bytes."
         ),
     },
   },

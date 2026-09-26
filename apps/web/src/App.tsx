@@ -1,161 +1,2147 @@
+import { api, downloadText, type ApiError } from "./lib/api";
+import Sheet from "./components/Sheet";
+import { EvidenceImage, Status } from "./components/Evidence";
+import ProjectConnect from "./components/ProjectConnect";
+import ProjectHub from "./components/ProjectHub";
+import RequirementEditor from "./components/RequirementEditor";
+import PlanEditor from "./components/PlanEditor";
+import RunHistory from "./components/RunHistory";
+import ProviderSettings from "./components/ProviderSettings";
+import AiConnection from "./components/AiConnection";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowDown, ArrowRight, ArrowSquareOut, ArrowsClockwise, Check, CheckCircle, CircleNotch, ClockCounterClockwise, Copy, FileText, Fingerprint, GearSix, GitBranch, Info, ListChecks, MagnifyingGlass, PaperPlaneTilt, Play, Robot, ShieldCheck, Sparkle, TerminalWindow, WarningCircle, X, XCircle } from "@phosphor-icons/react";
-import type { PlanInfo, TargetInfo, RunRecord, RunProgress, StepResult, ProviderStatus, ProjectRecord, RequirementRecord, DraftRecord, ConfirmationRecord, RepairTaskRecord, RepairComparison } from "./types";
+import {
+  ArrowDown,
+  ArrowRight,
+  Check,
+  CheckCircle,
+  CircleNotch,
+  ClockCounterClockwise,
+  Copy,
+  DownloadSimple,
+  FileText,
+  Fingerprint,
+  FolderOpen,
+  GearSix,
+  GitBranch,
+  Info,
+  ListChecks,
+  MagnifyingGlass,
+  PaperPlaneTilt,
+  PencilSimple,
+  Play,
+  Plus,
+  ShieldCheck,
+  Sparkle,
+  Stop,
+  TerminalWindow,
+  WarningCircle,
+  X,
+  XCircle,
+} from "@phosphor-icons/react";
+import type {
+  PlanInfo,
+  TargetInfo,
+  RunRecord,
+  RunProgress,
+  StepResult,
+  ProviderStatus,
+  ProjectRecord,
+  RequirementRecord,
+  DraftRecord,
+  ConfirmationRecord,
+  RepairTaskRecord,
+  RepairComparison,
+} from "./types";
 
 type Mode = "sample" | "requirement";
-type HistoryRun = Pick<RunRecord, "runId" | "status" | "startedAt" | "targetVariant" | "planFingerprint">;
-type Session = { mode: Mode; variant: string; projectId?: string; requirementId?: string; draftId?: string; confirmationId?: string; runId?: string };
-type ApiError = Error & { existingTaskId?: string };
+type HistoryRun = Pick<
+  RunRecord,
+  "runId" | "status" | "startedAt" | "targetVariant" | "planFingerprint"
+>;
+type Session = {
+  mode: Mode;
+  variant: string;
+  projectId?: string;
+  requirementId?: string;
+  draftId?: string;
+  confirmationId?: string;
+  runId?: string;
+};
 const STORAGE_KEY = "ming.workspace.v2";
-const labels: Record<string, string> = { passed: "通过", failed: "未通过", error: "执行错误", blocked: "已阻塞", not_run: "未执行", pending: "等待执行", running: "检查中", skipped: "已跳过", waiting: "等待 AI 接手", claimed: "已领取", rerunning: "复验中" };
-async function api<T>(url: string, body?: unknown): Promise<T> {
-  const response = await fetch(url, body === undefined ? undefined : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
-  const data = await response.json();
-  if (!response.ok || data.ok === false) { const error = new Error(data.error || `请求失败 (${response.status})`) as ApiError; error.existingTaskId = data.existingTaskId; throw error; }
-  return data as T;
+const labels: Record<string, string> = {
+  passed: "通过",
+  failed: "未通过",
+  error: "执行错误",
+  blocked: "已阻塞",
+  not_run: "未执行",
+  pending: "等待执行",
+  running: "检查中",
+  skipped: "已跳过",
+  waiting: "等待 AI 接手",
+  claimed: "已领取",
+  rerunning: "复验中",
+  review: "复验通过 · 待确认",
+};
+function savedSession(): Session {
+  try {
+    return (
+      JSON.parse(localStorage.getItem(STORAGE_KEY) || "null") || {
+        mode: "sample",
+        variant: "buggy",
+      }
+    );
+  } catch {
+    return { mode: "sample", variant: "buggy" };
+  }
 }
-function savedSession(): Session { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "null") || { mode: "sample", variant: "buggy" }; } catch { return { mode: "sample", variant: "buggy" }; } }
-function time(value: string) { return new Date(value).toLocaleString("zh-CN", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" }); }
-function short(value?: string) { return value && value !== "unknown" ? value.slice(0, 10) : "未记录"; }
-function last<T>(items: T[] | undefined): T | undefined { return items?.[items.length - 1]; }
-function screenshot(path?: string) { return path ? `/api/screenshots/${encodeURIComponent(path.split(/[\\/]/).pop()!)}` : ""; }
-function Status({ value }: { value: string }) { const Icon = value === "passed" ? CheckCircle : value === "failed" || value === "error" ? XCircle : value === "running" || value === "rerunning" ? CircleNotch : value === "blocked" ? WarningCircle : Info; return <span className={`status status-${value}`}><Icon size={15} weight="fill" className={value === "running" || value === "rerunning" ? "spin" : ""} />{labels[value] || value}</span>; }
-function EvidenceImage({ step, run, caption }: { step: StepResult; run: RunRecord; caption: string }) {
-  const [failed, setFailed] = useState(false), [zoom, setZoom] = useState(1);
-  const viewport = useRef<HTMLDivElement>(null);
-  useEffect(() => { setFailed(false); setZoom(1); }, [step.screenshotPath]);
-  useEffect(() => { if (viewport.current) viewport.current.scrollLeft = (viewport.current.scrollWidth - viewport.current.clientWidth) / 2; }, [zoom]);
-  return <figure className="evidence-frame"><div className="frame-toolbar"><span><MagnifyingGlass size={15} />浏览器实拍</span><span className="frame-address" title={run.targetUrl}>{run.targetUrl}</span><button className="image-zoom-button" onClick={() => setZoom(z => z === 1 ? 1.8 : 1)} aria-label={zoom === 1 ? "放大证据" : "适应宽度"}>{zoom === 1 ? "放大" : "适应"}</button><a href={screenshot(step.screenshotPath)} target="_blank" rel="noreferrer" aria-label={`打开${caption}原图`}><ArrowSquareOut size={17} /></a></div>{failed ? <div className="image-missing"><WarningCircle size={28} /><p>证据图片暂时无法读取</p><small>运行记录仍保留，请检查证据存储。</small></div> : <div ref={viewport} className="image-viewport" tabIndex={0} aria-label="可滚动的原始截图窗口"><a className="evidence-link" href={screenshot(step.screenshotPath)} target="_blank" rel="noreferrer" style={{ width: `${zoom * 100}%` }}><img src={screenshot(step.screenshotPath)} alt={`${caption}：${step.description}`} onError={() => setFailed(true)} /></a></div>}<figcaption><span>{caption}</span><span>{step.stepId}<small>滚动查看 · 可打开原图</small></span></figcaption></figure>;
+function time(value: string) {
+  return new Date(value).toLocaleString("zh-CN", {
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
 }
-function Sheet({ title, onClose, children, wide = false }: { title: string; onClose: () => void; children: React.ReactNode; wide?: boolean }) {
-  const dialogRef = useRef<HTMLDialogElement>(null); useEffect(() => { const el = dialogRef.current; if (el && !el.open) el.showModal(); return () => el?.close(); }, []);
-  return <dialog ref={dialogRef} aria-label={title} className={`sheet ${wide ? "sheet-wide" : ""}`} onCancel={onClose} onClick={e => { if (e.target === e.currentTarget) onClose(); }}><div className="sheet-heading"><h2>{title}</h2><button className="icon-button" onClick={onClose} aria-label="关闭面板"><X size={21} /></button></div><div className="sheet-content">{children}</div></dialog>;
+function short(value?: string) {
+  return value && value !== "unknown" ? value.slice(0, 10) : "未记录";
 }
-
+function last<T>(items: T[] | undefined): T | undefined {
+  return items?.[items.length - 1];
+}
 export default function App() {
   const [session, setSession] = useState<Session>(savedSession);
-  const [ready, setReady] = useState(false), [readOnly, setReadOnly] = useState(false);
-  const [targets, setTargets] = useState<TargetInfo[]>([]), [fixture, setFixture] = useState<PlanInfo | null>(null);
-  const [provider, setProvider] = useState<ProviderStatus | null>(null), [project, setProject] = useState<ProjectRecord | null>(null);
-  const [requirement, setRequirement] = useState<RequirementRecord | null>(null), [draft, setDraft] = useState<DraftRecord | null>(null);
-  const [confirmation, setConfirmation] = useState<ConfirmationRecord | null>(null), [sampleConfirmed, setSampleConfirmed] = useState(false);
-  const [record, setRecord] = useState<RunRecord | null>(null), [progress, setProgress] = useState<RunProgress | null>(null);
-  const [history, setHistory] = useState<HistoryRun[]>([]), [tasks, setTasks] = useState<RepairTaskRecord[]>([]);
-  const [comparison, setComparison] = useState<RepairComparison | null>(null), [rerun, setRerun] = useState<RunRecord | null>(null);
+  const [view, setView] = useState<"projects" | "workspace">(() =>
+    savedSession().runId || savedSession().projectId ? "workspace" : "projects",
+  );
+  const [projects, setProjects] = useState<ProjectRecord[]>([]);
+  const [ready, setReady] = useState(false),
+    [readOnly, setReadOnly] = useState(false);
+  const [targets, setTargets] = useState<TargetInfo[]>([]),
+    [fixture, setFixture] = useState<PlanInfo | null>(null);
+  const [provider, setProvider] = useState<ProviderStatus | null>(null),
+    [project, setProject] = useState<ProjectRecord | null>(null);
+  const [requirement, setRequirement] = useState<RequirementRecord | null>(
+      null,
+    ),
+    [draft, setDraft] = useState<DraftRecord | null>(null);
+  const [confirmation, setConfirmation] = useState<ConfirmationRecord | null>(
+      null,
+    ),
+    [sampleConfirmed, setSampleConfirmed] = useState(false);
+  const [record, setRecord] = useState<RunRecord | null>(null),
+    [progress, setProgress] = useState<RunProgress | null>(null);
+  const [history, setHistory] = useState<HistoryRun[]>([]),
+    [tasks, setTasks] = useState<RepairTaskRecord[]>([]);
+  const [comparison, setComparison] = useState<RepairComparison | null>(null),
+    [rerun, setRerun] = useState<RunRecord | null>(null);
   const [baseline, setBaseline] = useState<RunRecord | null>(null);
-  const [criterionId, setCriterionId] = useState(""), [stepId, setStepId] = useState("");
-  const [sheet, setSheet] = useState<"setup" | "history" | "model" | "comparison" | "prompt" | null>(null);
-  const [projectName, setProjectName] = useState(""), [requirementText, setRequirementText] = useState("");
-  const [busy, setBusy] = useState(""), [error, setError] = useState(""), [notice, setNotice] = useState(""), [copied, setCopied] = useState(false);
+  const [criterionId, setCriterionId] = useState(""),
+    [stepId, setStepId] = useState("");
+  const [sheet, setSheet] = useState<
+    | "setup"
+    | "history"
+    | "model"
+    | "ai"
+    | "comparison"
+    | "prompt"
+    | "connect"
+    | "requirements"
+    | "plan"
+    | null
+  >(null);
+  const [projectName, setProjectName] = useState(""),
+    [requirementText, setRequirementText] = useState("");
+  const [busy, setBusy] = useState(""),
+    [error, setError] = useState(""),
+    [notice, setNotice] = useState(""),
+    [copied, setCopied] = useState(false);
   const loadEpoch = useRef(0);
-  const running = progress?.status === "running" || progress?.status === "pending";
-  const task = tasks.find(t => t.baselineRunId === record?.runId || t.rerunId === record?.runId) || null;
-  const workingPlan = session.mode === "sample" ? fixture : confirmation?.planSnapshot || draft?.plan || null;
-  const plan = record?.planSnapshot || (record && task?.planSnapshot?.fingerprint === record.planFingerprint ? task.planSnapshot : null) || (record && workingPlan?.fingerprint !== record.planFingerprint ? null : workingPlan);
-  const selectedCriterion = plan?.criteria.find(c => c.id === criterionId), result = record?.criteria.find(c => c.criteriaId === criterionId);
-  const criteria = plan?.criteria || record?.criteria.map(c => ({ id: c.criteriaId, title: c.title, description: "该历史记录没有完整的需求快照。" })) || [];
-  const selectedStep = result?.steps.find(s => s.stepId === stepId) || result?.steps.find(s => s.status === "failed" || s.status === "error") || last(result?.steps.filter(s => s.screenshotPath));
-  const evidenceSteps = result?.steps.filter(s => s.screenshotPath) || [], imageStep = selectedStep?.screenshotPath ? selectedStep : last(evidenceSteps);
-  const predecessor = record && selectedCriterion?.dependsOn?.length ? last(record.criteria.find(c => c.criteriaId === selectedCriterion.dependsOn![0])?.steps.filter(s => s.screenshotPath)) : undefined;
-  const selectedTarget = targets.find(t => t.variant === session.variant);
-  const isConfirmed = session.mode === "sample" ? sampleConfirmed || (!!record && record.planFingerprint === fixture?.fingerprint) : !!confirmation;
-  const activeCount = record?.criteria.filter(c => c.status === "passed").length || 0, failedCount = record?.criteria.filter(c => c.status === "failed").length || 0;
-  const taskBusy = !!task && ["waiting", "claimed", "rerunning"].includes(task.status);
+  const running =
+    progress?.status === "running" || progress?.status === "pending";
+  const task =
+    tasks.find(
+      (t) => t.baselineRunId === record?.runId || t.rerunId === record?.runId,
+    ) || null;
+  const workingPlan =
+    session.mode === "sample"
+      ? fixture
+      : confirmation?.planSnapshot || draft?.plan || null;
+  const plan =
+    record?.planSnapshot ||
+    (record && task?.planSnapshot?.fingerprint === record.planFingerprint
+      ? task.planSnapshot
+      : null) ||
+    (record && workingPlan?.fingerprint !== record.planFingerprint
+      ? null
+      : workingPlan);
+  const selectedCriterion = plan?.criteria.find((c) => c.id === criterionId),
+    result = record?.criteria.find((c) => c.criteriaId === criterionId);
+  const criteria =
+    plan?.criteria ||
+    record?.criteria.map((c) => ({
+      id: c.criteriaId,
+      title: c.title,
+      description: "该历史记录没有完整的需求快照。",
+    })) ||
+    [];
+  const selectedStep =
+    result?.steps.find((s) => s.stepId === stepId) ||
+    result?.steps.find((s) => s.status === "failed" || s.status === "error") ||
+    last(result?.steps.filter((s) => s.screenshotPath));
+  const evidenceSteps = result?.steps.filter((s) => s.screenshotPath) || [],
+    imageStep = selectedStep?.screenshotPath
+      ? selectedStep
+      : last(evidenceSteps);
+  const predecessor =
+    record && selectedCriterion?.dependsOn?.length
+      ? last(
+          record.criteria
+            .find((c) => c.criteriaId === selectedCriterion.dependsOn![0])
+            ?.steps.filter((s) => s.screenshotPath),
+        )
+      : undefined;
+  const selectedTarget = targets.find((t) => t.variant === session.variant);
+  const isConfirmed =
+    session.mode === "sample"
+      ? sampleConfirmed ||
+        (!!record && record.planFingerprint === fixture?.fingerprint)
+      : !!confirmation && confirmation.active !== false;
+  const activeCount =
+      record?.criteria.filter((c) => c.status === "passed").length || 0,
+    failedCount =
+      record?.criteria.filter((c) => c.status === "failed").length || 0;
+  const taskBusy =
+    !!task && ["waiting", "claimed", "rerunning"].includes(task.status);
 
-  const refreshLists = useCallback(async () => { const [h, t] = await Promise.all([api<{ runs: HistoryRun[] }>("/api/history"), api<{ tasks: RepairTaskRecord[] }>("/api/repair-tasks")]); setHistory(h.runs); setTasks(t.tasks.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))); return h.runs; }, []);
-  const showRun = useCallback(async (id: string, restoreContext = true) => {
-    const epoch = ++loadEpoch.current; const { run } = await api<{ run: RunRecord }>(`/api/run/${id}`); if (epoch !== loadEpoch.current) return;
-    let c: ConfirmationRecord | null = null; if (restoreContext && run.confirmationId) c = (await api<{ confirmation: ConfirmationRecord }>(`/api/confirmations/${run.confirmationId}`)).confirmation;
-    if (epoch !== loadEpoch.current) return;
-    setRecord(run); setProgress(null); setComparison(null); setRerun(null); setBaseline(null);
-    const first = run.criteria.find(x => x.status === "failed" || x.status === "error") || run.criteria[0]; setCriterionId(first?.criteriaId || ""); setStepId("");
-    if (restoreContext) {
-      setConfirmation(c); setSampleConfirmed(false); setSession(s => ({ ...s, runId: id, variant: run.targetVariant, mode: c ? "requirement" : "sample", confirmationId: c?.confirmationId, projectId: c?.projectId, requirementId: c?.requirementId, draftId: c?.draftId }));
-      if (c) { const [p, r, d] = await Promise.all([api<{ project: ProjectRecord }>(`/api/projects/${c.projectId}`), api<{ requirement: RequirementRecord }>(`/api/requirements/${c.requirementId}`), api<{ draft: DraftRecord }>(`/api/drafts/${c.draftId}`)]); if (epoch !== loadEpoch.current) return; setProject(p.project); setRequirement(r.requirement); setDraft(d.draft); setRequirementText(r.requirement.text); setProjectName(p.project.name); }
-      else { setProject(null); setRequirement(null); setDraft(null); setRequirementText(""); setProjectName(""); }
-    } else setSession(s => ({ ...s, runId: id }));
+  const refreshLists = useCallback(async () => {
+    const [h, t] = await Promise.all([
+      api<{ runs: HistoryRun[] }>("/api/history"),
+      api<{ tasks: RepairTaskRecord[] }>("/api/repair-tasks"),
+    ]);
+    setHistory(h.runs);
+    setTasks(t.tasks.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)));
+    return h.runs;
   }, []);
-  useEffect(() => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(session)); } catch { /* Browser storage can be unavailable; current-session use still works. */ } }, [session]);
+  const showRun = useCallback(async (id: string, restoreContext = true) => {
+    const epoch = ++loadEpoch.current;
+    const { run } = await api<{ run: RunRecord }>(`/api/run/${id}`);
+    if (epoch !== loadEpoch.current) return;
+    let c: ConfirmationRecord | null = null;
+    if (restoreContext && run.confirmationId)
+      c = (
+        await api<{ confirmation: ConfirmationRecord }>(
+          `/api/confirmations/${run.confirmationId}`,
+        )
+      ).confirmation;
+    if (epoch !== loadEpoch.current) return;
+    setView("workspace");
+    setRecord(run);
+    setProgress(
+      run.status === "running" || run.status === "pending"
+        ? {
+            runId: run.runId,
+            status: run.status,
+            finishedCriteria: run.criteria.filter(
+              (c) => !["pending", "running", "not_run"].includes(c.status),
+            ).length,
+            totalCriteria: run.criteria.length,
+          }
+        : null,
+    );
+    setComparison(null);
+    setRerun(null);
+    setBaseline(null);
+    const first =
+      run.criteria.find((x) => x.status === "failed" || x.status === "error") ||
+      run.criteria[0];
+    setCriterionId(first?.criteriaId || "");
+    setStepId("");
+    if (restoreContext) {
+      setConfirmation(c);
+      setSampleConfirmed(false);
+      setSession((s) => ({
+        ...s,
+        runId: id,
+        variant: run.targetVariant,
+        mode: c ? "requirement" : "sample",
+        confirmationId: c?.confirmationId,
+        projectId: c?.projectId,
+        requirementId: c?.requirementId,
+        draftId: c?.draftId,
+      }));
+      if (c) {
+        const [p, r, d] = await Promise.all([
+          api<{ project: ProjectRecord }>(`/api/projects/${c.projectId}`),
+          api<{ requirement: RequirementRecord }>(
+            `/api/requirements/${c.requirementId}`,
+          ),
+          api<{ draft: DraftRecord }>(`/api/drafts/${c.draftId}`),
+        ]);
+        if (epoch !== loadEpoch.current) return;
+        setProject(p.project);
+        setRequirement(r.requirement);
+        setDraft(d.draft);
+        setRequirementText(r.requirement.text);
+        setProjectName(p.project.name);
+      } else {
+        setProject(null);
+        setRequirement(null);
+        setDraft(null);
+        setRequirementText("");
+        setProjectName("");
+      }
+    } else setSession((s) => ({ ...s, runId: id }));
+  }, []);
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+    } catch {
+      /* Browser storage can be unavailable; current-session use still works. */
+    }
+  }, [session]);
   useEffect(() => {
     let live = true;
-    (async () => { try {
-      const saved = savedSession(); const [t, p, list, caps] = await Promise.all([api<{ targets: TargetInfo[] }>("/api/targets"), api<{ status: ProviderStatus }>("/api/provider/status"), refreshLists(), api<{ readOnly: boolean }>("/api/capabilities").catch(() => ({ readOnly: false }))]);
-      if (!live) return; setTargets(t.targets); setProvider(p.status); setReadOnly(caps.readOnly);
-      if (!t.targets.some(x => x.variant === saved.variant)) setSession(s => ({ ...s, variant: t.targets[0]?.variant || "normal" }));
-      if (saved.runId) { try { await showRun(saved.runId); } catch { setSession(s => ({ ...s, runId: undefined })); if (caps.readOnly && list[0]) await showRun(list[0].runId); } }
-      else if (caps.readOnly && list[0]) await showRun(list[0].runId);
-      else if (saved.mode === "requirement" && saved.projectId) {
-        const { project: p2 } = await api<{ project: ProjectRecord }>(`/api/projects/${saved.projectId}`); if (!live) return; setProject(p2); setProjectName(p2.name);
-        if (saved.requirementId) { const { requirement: r } = await api<{ requirement: RequirementRecord }>(`/api/requirements/${saved.requirementId}`); if (live) { setRequirement(r); setRequirementText(r.text); } }
-        if (saved.draftId) { const { draft: d } = await api<{ draft: DraftRecord }>(`/api/drafts/${saved.draftId}`); if (live) setDraft(d); }
-        if (saved.confirmationId) { const { confirmation: c } = await api<{ confirmation: ConfirmationRecord }>(`/api/confirmations/${saved.confirmationId}`); if (live) setConfirmation(c); }
+    (async () => {
+      try {
+        const saved = savedSession();
+        const [t, p, list, caps, projectList] = await Promise.all([
+          api<{ targets: TargetInfo[] }>("/api/targets"),
+          api<{ status: ProviderStatus }>("/api/provider/status"),
+          refreshLists(),
+          api<{ readOnly: boolean }>("/api/capabilities").catch(() => ({
+            readOnly: false,
+          })),
+          api<{ projects: ProjectRecord[] }>("/api/projects").catch(() => ({
+            projects: [],
+          })),
+        ]);
+        if (!live) return;
+        setTargets(t.targets);
+        setProvider(p.status);
+        setReadOnly(caps.readOnly);
+        setProjects(projectList.projects);
+        if (!t.targets.some((x) => x.variant === saved.variant))
+          setSession((s) => ({
+            ...s,
+            variant: t.targets[0]?.variant || "normal",
+          }));
+        let resumeInFlight = false;
+        if (saved.runId) {
+          try {
+            const { progress: current } = await api<{ progress: RunProgress }>(
+              `/api/run/${saved.runId}/progress`,
+            );
+            if (current.status === "running" || current.status === "pending") {
+              resumeInFlight = true;
+              setRecord(null);
+              setProgress(current);
+              setView("workspace");
+            } else await showRun(saved.runId);
+          } catch {
+            setSession((s) => ({ ...s, runId: undefined }));
+            if (caps.readOnly && list[0]) await showRun(list[0].runId);
+          }
+        } else if (caps.readOnly && list[0]) await showRun(list[0].runId);
+        if (
+          (resumeInFlight || !saved.runId) &&
+          !caps.readOnly &&
+          saved.mode === "requirement" &&
+          saved.projectId
+        ) {
+          const { project: p2 } = await api<{ project: ProjectRecord }>(
+            `/api/projects/${saved.projectId}`,
+          );
+          if (!live) return;
+          setProject(p2);
+          setProjectName(p2.name);
+          if (saved.requirementId) {
+            const { requirement: r } = await api<{
+              requirement: RequirementRecord;
+            }>(`/api/requirements/${saved.requirementId}`);
+            if (live) {
+              setRequirement(r);
+              setRequirementText(r.text);
+            }
+          }
+          if (saved.draftId) {
+            const { draft: d } = await api<{ draft: DraftRecord }>(
+              `/api/drafts/${saved.draftId}`,
+            );
+            if (live) setDraft(d);
+          }
+          if (saved.confirmationId) {
+            const { confirmation: c } = await api<{
+              confirmation: ConfirmationRecord;
+            }>(`/api/confirmations/${saved.confirmationId}`);
+            if (live) setConfirmation(c);
+          }
+        }
+      } catch (e) {
+        if (live) setError(`工作区恢复未完成：${(e as Error).message}`);
+      } finally {
+        if (live) setReady(true);
       }
-    } catch (e) { if (live) setError(`工作区恢复未完成：${(e as Error).message}`); } finally { if (live) setReady(true); } })();
-    return () => { live = false; };
+    })();
+    return () => {
+      live = false;
+    };
   }, [refreshLists, showRun]);
-  useEffect(() => { let live = true; api<{ plan: PlanInfo }>(`/api/plan?variant=${encodeURIComponent(session.variant)}`).then(x => { if (live) { setFixture(x.plan); setSampleConfirmed(false); } }).catch(e => { if (live) { setFixture(null); setError(e.message); } }); return () => { live = false; }; }, [session.variant]);
-  useEffect(() => { if (!criteria.some(c => c.id === criterionId)) setCriterionId(criteria[0]?.id || ""); }, [criteria, criterionId]);
   useEffect(() => {
-    if (!session.runId || !running) return; let disposed = false; let timer: ReturnType<typeof setTimeout>;
-    const poll = async () => { try { const { progress: p } = await api<{ progress: RunProgress }>(`/api/run/${session.runId}/progress`); if (disposed) return; setProgress(p); if (p.status !== "running" && p.status !== "pending") { await showRun(session.runId!, false); await refreshLists(); } else timer = setTimeout(poll, 900); } catch (e) { if (!disposed) { setError((e as Error).message); timer = setTimeout(poll, 3000); } } };
-    timer = setTimeout(poll, 500); return () => { disposed = true; clearTimeout(timer); };
+    let live = true;
+    api<{ plan: PlanInfo | null }>(
+      `/api/plan?variant=${encodeURIComponent(session.variant)}`,
+    )
+      .then((x) => {
+        if (live) {
+          setFixture(x.plan);
+          setSampleConfirmed(false);
+        }
+      })
+      .catch((e) => {
+        if (live) {
+          setFixture(null);
+          setError(e.message);
+        }
+      });
+    return () => {
+      live = false;
+    };
+  }, [session.variant]);
+  useEffect(() => {
+    if (!criteria.some((c) => c.id === criterionId))
+      setCriterionId(criteria[0]?.id || "");
+  }, [criteria, criterionId]);
+  useEffect(() => {
+    if (!session.runId || !running) return;
+    let disposed = false;
+    let timer: ReturnType<typeof setTimeout>;
+    const poll = async () => {
+      try {
+        const { progress: p } = await api<{ progress: RunProgress }>(
+          `/api/run/${session.runId}/progress`,
+        );
+        if (disposed) return;
+        setProgress(p);
+        if (p.status !== "running" && p.status !== "pending") {
+          await showRun(session.runId!, false);
+          await refreshLists();
+        } else timer = setTimeout(poll, 900);
+      } catch (e) {
+        if (!disposed) {
+          setError((e as Error).message);
+          timer = setTimeout(poll, 3000);
+        }
+      }
+    };
+    timer = setTimeout(poll, 500);
+    return () => {
+      disposed = true;
+      clearTimeout(timer);
+    };
   }, [session.runId, running, refreshLists, showRun]);
-  useEffect(() => { if (!taskBusy || readOnly) return; const timer = setInterval(() => { void refreshLists().catch(e => setError(e.message)); }, 2500); return () => clearInterval(timer); }, [taskBusy, readOnly, refreshLists]);
   useEffect(() => {
-    if (!task?.rerunId || task.status === "rerunning") { setComparison(null); setRerun(null); setBaseline(null); return; } let live = true;
-    Promise.all([api<{ comparison: RepairComparison }>(`/api/repair-tasks/${task.taskId}/comparison`), api<{ run: RunRecord }>(`/api/run/${task.rerunId}`), api<{ run: RunRecord }>(`/api/run/${task.baselineRunId}`)]).then(([c, r, b]) => { if (live) { setComparison(c.comparison); setRerun(r.run); setBaseline(b.run); } }).catch(e => { if (live) setError(e.message); }); return () => { live = false; };
+    if (!taskBusy || readOnly) return;
+    const timer = setInterval(() => {
+      void refreshLists().catch((e) => setError(e.message));
+    }, 2500);
+    return () => clearInterval(timer);
+  }, [taskBusy, readOnly, refreshLists]);
+  useEffect(() => {
+    if (!task?.rerunId || task.status === "rerunning") {
+      setComparison(null);
+      setRerun(null);
+      setBaseline(null);
+      return;
+    }
+    let live = true;
+    Promise.all([
+      api<{ comparison: RepairComparison }>(
+        `/api/repair-tasks/${task.taskId}/comparison`,
+      ),
+      api<{ run: RunRecord }>(`/api/run/${task.rerunId}`),
+      api<{ run: RunRecord }>(`/api/run/${task.baselineRunId}`),
+    ])
+      .then(([c, r, b]) => {
+        if (live) {
+          setComparison(c.comparison);
+          setRerun(r.run);
+          setBaseline(b.run);
+        }
+      })
+      .catch((e) => {
+        if (live) setError(e.message);
+      });
+    return () => {
+      live = false;
+    };
   }, [task?.taskId, task?.rerunId, task?.status, record?.runId]);
-  async function act(label: string, action: () => Promise<void>) { if (busy) return; setBusy(label); setError(""); setNotice(""); try { await action(); } catch (e) { setError((e as Error).message); } finally { setBusy(""); } }
-  function resetContext(mode: Mode, variant = session.variant) { if (busy || running) return; ++loadEpoch.current; setSession({ mode, variant }); setProject(null); setRequirement(null); setDraft(null); setConfirmation(null); setRecord(null); setProgress(null); setSampleConfirmed(false); setComparison(null); setRerun(null); setStepId(""); setError(""); setNotice(""); }
-  async function startRun() { if (!workingPlan || !isConfirmed || readOnly || (record && workingPlan.fingerprint !== record.planFingerprint)) return; await act("run", async () => {
-    const response = session.mode === "sample" ? await api<{ runId: string }>("/api/run", { variant: session.variant, confirmed: true, confirmedPlanId: workingPlan.planId, confirmedPlanFingerprint: workingPlan.fingerprint }) : await api<{ runId: string }>("/api/run-confirmed", { confirmationId: confirmation?.confirmationId });
-    ++loadEpoch.current; setRecord(null); setComparison(null); setRerun(null); setStepId(""); setSession(s => ({ ...s, runId: response.runId })); setProgress({ runId: response.runId, status: "running", finishedCriteria: 0, totalCriteria: workingPlan.criteria.length });
-  }); }
-  async function generatePlan() { if (readOnly) return; const epoch = ++loadEpoch.current; await act("generate", async () => {
-    let p = project; if (!p || p.targetVariant !== session.variant) p = (await api<{ project: ProjectRecord }>("/api/projects", { name: projectName.trim() || "我的验收项目", targetVariant: session.variant })).project;
-    if (epoch !== loadEpoch.current) return; setProject(p); setSession(s => ({ ...s, projectId: p!.projectId }));
-    const { requirement: r } = await api<{ requirement: RequirementRecord }>(`/api/projects/${p.projectId}/requirements`, { text: requirementText }); if (epoch !== loadEpoch.current) return; setRequirement(r); setDraft(null); setConfirmation(null); setRecord(null); setProgress(null); setSession(s => ({ ...s, requirementId: r.requirementId, draftId: undefined, confirmationId: undefined, runId: undefined }));
-    const { draft: d } = await api<{ draft: DraftRecord }>("/api/generate", { requirementId: r.requirementId }); if (epoch !== loadEpoch.current) return; setDraft(d); setSession(s => ({ ...s, draftId: d.draftId })); setCriterionId(d.plan.criteria[0]?.id || ""); setSheet(null);
-  }); }
-  async function confirmPlan() { if (readOnly) return; if (session.mode === "sample") { setSampleConfirmed(true); setNotice("验收标准已确认，可以开始真实浏览器检查。"); return; } if (!draft) return; await act("confirm", async () => { const { confirmation: c } = await api<{ confirmation: ConfirmationRecord }>("/api/confirm", { draftId: draft.draftId, displayedPlanFingerprint: draft.plan.fingerprint }); setConfirmation(c); setSession(s => ({ ...s, confirmationId: c.confirmationId })); setNotice("已保存确认版本。后续修复会沿用相同验收标准。"); }); }
-  async function createRepair() { if (!record || readOnly) return; await act("repair", async () => { try { await api("/api/repair-tasks", { baselineRunId: record.runId }); } catch (e) { if (!(e as ApiError).existingTaskId) throw e; } await refreshLists(); setNotice("证据包已就绪。让连接 Ming MCP 的 AI 领取任务后进行修复。"); setSheet("prompt"); }); }
-  const repairPrompt = task ? `Please use the connected Ming MCP server to repair task ${task.taskId}.\nRead ming_get_repair_task and ming_get_failed_run before changing code. Claim the task with your actual agent name.\nFix only the target application (${task.targetVariant}); preserve the original acceptance plan, runner, assertions, target identity, and baseline evidence. Do not switch to a healthy sample.\nAfter changing the source, call ming_rerun_plan with the current expectedTargetFingerprint, then ming_get_comparison. Report a verified repair only when comparison.verifiedRepair is true.\nBaseline: ${task.baselineRunId}\nPlan fingerprint: ${task.planFingerprint}\n${task.reproductionSteps}` : "";
-  const stalePlan = !!record && !!workingPlan && record.planFingerprint !== workingPlan.fingerprint;
-  const staleSource = !!record && !!selectedTarget && record.targetFingerprint !== selectedTarget.fingerprint;
-  const canConfirm = !!workingPlan && !stalePlan && (session.mode === "sample" || (!!draft && !draft.hasOpenQuestions && draft.validationErrors.length === 0));
-  const canRepair = record?.criteria.some(c => c.status === "failed") && !task;
+  async function act(label: string, action: () => Promise<void>) {
+    if (busy) return;
+    setBusy(label);
+    setError("");
+    setNotice("");
+    try {
+      await action();
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy("");
+    }
+  }
+  function resetContext(mode: Mode, variant = session.variant) {
+    if (busy || running) return;
+    ++loadEpoch.current;
+    setSession({ mode, variant });
+    setProject(null);
+    setRequirement(null);
+    setDraft(null);
+    setConfirmation(null);
+    setRecord(null);
+    setProgress(null);
+    setSampleConfirmed(false);
+    setComparison(null);
+    setRerun(null);
+    setStepId("");
+    setError("");
+    setNotice("");
+  }
+  async function startRun() {
+    if (
+      !workingPlan ||
+      !isConfirmed ||
+      readOnly ||
+      (record && workingPlan.fingerprint !== record.planFingerprint)
+    )
+      return;
+    await act("run", async () => {
+      const response =
+        session.mode === "sample"
+          ? await api<{ runId: string }>("/api/run", {
+              variant: session.variant,
+              confirmed: true,
+              confirmedPlanId: workingPlan.planId,
+              confirmedPlanFingerprint: workingPlan.fingerprint,
+            })
+          : await api<{ runId: string }>("/api/run-confirmed", {
+              confirmationId: confirmation?.confirmationId,
+            });
+      ++loadEpoch.current;
+      setRecord(null);
+      setComparison(null);
+      setRerun(null);
+      setStepId("");
+      setSession((s) => ({ ...s, runId: response.runId }));
+      setProgress({
+        runId: response.runId,
+        status: "running",
+        finishedCriteria: 0,
+        totalCriteria: workingPlan.criteria.length,
+      });
+    });
+  }
+  async function generatePlan() {
+    if (readOnly) return;
+    const epoch = ++loadEpoch.current;
+    await act("generate", async () => {
+      let p =
+        project ||
+        projects.find((p) => p.projectId === selectedTarget?.projectId) ||
+        projects.find((p) => p.targetVariant === session.variant);
+      if (!p || p.targetVariant !== session.variant)
+        p = (
+          await api<{ project: ProjectRecord }>("/api/projects", {
+            name: projectName.trim() || "我的验收项目",
+            targetVariant: session.variant,
+          })
+        ).project;
+      if (epoch !== loadEpoch.current) return;
+      setProject(p);
+      setSession((s) => ({ ...s, projectId: p!.projectId }));
+      const { requirement: r } = await api<{ requirement: RequirementRecord }>(
+        `/api/projects/${p.projectId}/requirements`,
+        { text: requirementText },
+      );
+      if (epoch !== loadEpoch.current) return;
+      setRequirement(r);
+      setDraft(null);
+      setConfirmation(null);
+      setRecord(null);
+      setProgress(null);
+      setSession((s) => ({
+        ...s,
+        requirementId: r.requirementId,
+        draftId: undefined,
+        confirmationId: undefined,
+        runId: undefined,
+      }));
+      const { draft: d } = await api<{ draft: DraftRecord }>("/api/generate", {
+        requirementId: r.requirementId,
+      });
+      if (epoch !== loadEpoch.current) return;
+      setDraft(d);
+      setSession((s) => ({ ...s, draftId: d.draftId }));
+      setCriterionId(d.plan.criteria[0]?.id || "");
+      setSheet(null);
+    });
+  }
+  async function confirmPlan() {
+    if (readOnly) return;
+    if (session.mode === "sample") {
+      setSampleConfirmed(true);
+      setNotice("验收标准已确认，可以开始真实浏览器检查。");
+      return;
+    }
+    if (!draft) return;
+    await act("confirm", async () => {
+      const { confirmation: c } = await api<{
+        confirmation: ConfirmationRecord;
+      }>("/api/confirm", {
+        draftId: draft.draftId,
+        displayedPlanFingerprint: draft.plan.fingerprint,
+      });
+      setConfirmation(c);
+      setSession((s) => ({ ...s, confirmationId: c.confirmationId }));
+      setNotice("已保存确认版本。后续修复会沿用相同验收标准。");
+    });
+  }
+  async function createRepair() {
+    if (!record || readOnly) return;
+    await act("repair", async () => {
+      try {
+        await api("/api/repair-tasks", { baselineRunId: record.runId });
+      } catch (e) {
+        if (!(e as ApiError).existingTaskId) throw e;
+      }
+      await refreshLists();
+      setNotice("证据包已就绪。让连接 Ming MCP 的 AI 领取任务后进行修复。");
+      setSheet("prompt");
+    });
+  }
+  async function refreshProjects() {
+    const [targetList, projectList] = await Promise.all([
+      api<{ targets: TargetInfo[] }>("/api/targets"),
+      api<{ projects: ProjectRecord[] }>("/api/projects"),
+    ]);
+    setTargets(targetList.targets);
+    setProjects(projectList.projects);
+  }
+  async function openProject(target: TargetInfo, hint?: ProjectRecord) {
+    if (busy || running) return;
+    if (readOnly) {
+      const historical = history.find(
+        (run) => run.targetVariant === target.variant,
+      );
+      if (historical) await act("history", () => showRun(historical.runId));
+      else setNotice("此项目尚无公开演示记录。");
+      return;
+    }
+    if (target.isSample !== false) {
+      resetContext("sample", target.variant);
+      setView("workspace");
+      return;
+    }
+    await act("project", async () => {
+      const projectId =
+        hint?.projectId ||
+        target.projectId ||
+        projects.find((p) => p.targetVariant === target.variant)?.projectId;
+      if (!projectId) throw new Error("项目记录暂时无法读取，请刷新项目列表。");
+      const data = await api<{
+        project: ProjectRecord;
+        requirements: RequirementRecord[];
+        drafts: DraftRecord[];
+        confirmations: ConfirmationRecord[];
+      }>(`/api/projects/${projectId}/workspace`);
+      ++loadEpoch.current;
+      const newestRequirement = data.requirements[0] || null;
+      const newestDraft =
+        data.drafts.find(
+          (d) => d.requirementId === newestRequirement?.requirementId,
+        ) || null;
+      const currentConfirmation =
+        data.confirmations.find(
+          (c) => c.draftId === newestDraft?.draftId && c.active !== false,
+        ) || null;
+      setProject(data.project);
+      setProjectName(data.project.name);
+      setRequirement(newestRequirement);
+      setRequirementText(newestRequirement?.text || "");
+      setDraft(newestDraft);
+      setConfirmation(currentConfirmation);
+      setRecord(null);
+      setProgress(null);
+      setComparison(null);
+      setRerun(null);
+      setSampleConfirmed(false);
+      setSession({
+        mode: "requirement",
+        variant: target.variant,
+        projectId,
+        requirementId: newestRequirement?.requirementId,
+        draftId: newestDraft?.draftId,
+        confirmationId: currentConfirmation?.confirmationId,
+      });
+      setView("workspace");
+      if (!newestRequirement) setSheet("requirements");
+    });
+  }
+  function requirementSaved(next: RequirementRecord) {
+    setRequirement(next);
+    setRequirementText(next.text);
+    setDraft(null);
+    setConfirmation(null);
+    setRecord(null);
+    setProgress(null);
+    setSession((s) => ({
+      ...s,
+      mode: "requirement",
+      requirementId: next.requirementId,
+      draftId: undefined,
+      confirmationId: undefined,
+      runId: undefined,
+    }));
+  }
+  function draftSaved(next: DraftRecord) {
+    setDraft(next);
+    setConfirmation(null);
+    setRecord(null);
+    setProgress(null);
+    setSession((s) => ({
+      ...s,
+      mode: "requirement",
+      draftId: next.draftId,
+      requirementId: next.requirementId,
+      confirmationId: undefined,
+      runId: undefined,
+    }));
+    setCriterionId(next.plan.criteria[0]?.id || "");
+    setStepId("");
+    setSheet(null);
+    setView("workspace");
+    setNotice(
+      next.hasOpenQuestions
+        ? "草稿已保存，仍有需要澄清的问题。修改标准后再确认。"
+        : "草稿已保存。请审查每项条件、操作和预期，再确认执行。",
+    );
+  }
+  function projectConnected(target: TargetInfo, created: ProjectRecord) {
+    resetContext("requirement", target.variant);
+    setProject(created);
+    setProjectName(created.name);
+    setSession({
+      mode: "requirement",
+      variant: target.variant,
+      projectId: created.projectId,
+    });
+    setView("workspace");
+    setSheet("requirements");
+    void refreshProjects().catch((e) => setError(e.message));
+  }
+  function reviewStandards() {
+    if (busy || running) return;
+    ++loadEpoch.current;
+    setRecord(null);
+    setProgress(null);
+    setStepId("");
+    setSession((s) => ({ ...s, runId: undefined }));
+  }
+  async function cancelRun() {
+    if (!session.runId || !running || readOnly) return;
+    await act("cancel", async () => {
+      await api(`/api/run/${session.runId}/cancel`, {});
+      setNotice(
+        "已请求停止本次检查。已经采集的证据会保留，未完成项不会显示为通过。",
+      );
+    });
+  }
+  const repairPrompt = task
+    ? `Please use the connected Ming MCP server to repair task ${task.taskId}.\nRead ming_get_repair_task and ming_get_failed_run before changing code. Claim the task with your actual agent name.\nFix only the target application (${task.targetVariant}); preserve the original acceptance plan, runner, assertions, target identity, and baseline evidence. Do not switch to a healthy sample.\nAfter changing the source, call ming_rerun_plan with the current expectedTargetFingerprint, then ming_get_comparison. Report a verified repair only when comparison.verifiedRepair is true.\nBaseline: ${task.baselineRunId}\nPlan fingerprint: ${task.planFingerprint}\n${task.reproductionSteps}`
+    : "";
+  const stalePlan =
+    !!record &&
+    !!workingPlan &&
+    record.planFingerprint !== workingPlan.fingerprint;
+  const staleSource =
+    !!record &&
+    !!selectedTarget &&
+    record.sourceBinding !== "live-url-observed" &&
+    selectedTarget.fingerprint !== "unknown" &&
+    record.targetFingerprint !== selectedTarget.fingerprint;
+  const canConfirm =
+    !!workingPlan &&
+    !stalePlan &&
+    (session.mode === "sample" ||
+      (!!draft &&
+        !draft.hasOpenQuestions &&
+        draft.validationErrors.length === 0));
+  const canRepair =
+    record?.criteria.some((c) => c.status === "failed") && !task;
 
-  return <div className="app-shell">
-    <header className="topbar"><a className="brand" href="#workspace" aria-label="Ming 验收工作区">Ming<span>Every done comes with proof.</span></a><nav aria-label="工作区工具"><button className="subtle-button" aria-label={provider?.configured ? "模型已配置" : "模型未配置"} onClick={() => setSheet("model")}><Sparkle size={17} /><span>{provider?.configured ? "模型已配置" : "模型未配置"}</span></button><button className="subtle-button" aria-label="验收记录" onClick={() => { setSheet("history"); void refreshLists().catch(e => setError(e.message)); }}><ClockCounterClockwise size={18} /><span>验收记录</span></button><button className="icon-button" aria-label="配置项目" disabled={running || !!busy || readOnly} onClick={() => setSheet("setup")}><GearSix size={20} /></button></nav></header>
-    <main id="workspace">
-      <section className="workspace-intro"><div><div className="eyebrow">APPLICATION X-RAY <span>应用透视</span></div><h1>看见功能背后的每一步<span className="heading-dot">.</span></h1><p>从需求到真实操作，再到修复复验。让每一句「已完成」，都有据可验。</p></div><div className="run-summary" aria-label="验收结果概览"><span><CheckCircle size={20} weight="fill" className="green" /><strong>{activeCount}</strong> 项通过</span><span><XCircle size={20} weight="fill" className="red" /><strong>{failedCount}</strong> 项未通过</span><span><CircleNotch size={20} className={running ? "spin" : "muted"} /><strong>{record ? record.criteria.length - activeCount - failedCount : criteria.length}</strong> 项{running ? "检查中" : "待验证"}</span></div></section>
-      {readOnly && <div className="message public-notice"><Info size={19} /><span><strong>公开演示 · 真实历史运行，只读回放</strong>　可查看步骤、原始截图与修复对照。完整运行和 AI 修复请使用本地版。</span></div>}
-      <div className="workspace-toolbar"><div className="project-picker"><span className="project-label">验收项目</span><select aria-label="验收项目" value={session.variant} disabled={running || !!busy} onChange={e => { if (readOnly) { const item = history.find(h => h.targetVariant === e.target.value); if (item) void act("history", () => showRun(item.runId)); else setNotice("此项目尚无公开演示记录。"); } else resetContext("sample", e.target.value); }}>{targets.map(t => <option key={t.variant} value={t.variant}>{t.label}</option>)}</select></div><span className="plan-origin"><FileText size={15} />{plan?.source === "generated" ? plan.transportProvenance === "live" ? "AI 生成 · 已记录来源" : "测试传输生成 · 非真实模型" : "预设演示计划 · 无模型调用"}</span><div className="toolbar-actions"><button className="secondary-button" disabled={running || !!busy || readOnly} onClick={() => setSheet("setup")}>自定义需求</button><button className="primary-button" disabled={!ready || !isConfirmed || !!busy || !!running || readOnly || stalePlan} onClick={() => void startRun()}>{running || busy === "run" ? <CircleNotch className="spin" size={17} /> : <Play size={16} weight="fill" />}{readOnly ? "历史运行回放" : running ? "正在检查" : record ? "再次验收" : "开始验收"}</button></div></div>
-      <div aria-live="polite">{error && <div className="message error-message" role="alert"><WarningCircle size={20} /><span>{error}</span><button className="icon-button" aria-label="关闭错误提示" onClick={() => setError("")}><X size={17} /></button></div>}{notice && <div className="message notice-message"><Info size={18} /><span>{notice}</span><button className="icon-button" aria-label="关闭提示" onClick={() => setNotice("")}><X size={17} /></button></div>}{running && <div className="message progress-message"><CircleNotch className="spin" size={19} /><span>浏览器正在真实操作页面。已完成 {progress?.finishedCriteria} / {progress?.totalCriteria} 项{progress?.currentCriteria ? ` · 最近完成 ${progress.currentCriteria}` : ""}</span><progress value={progress?.finishedCriteria} max={progress?.totalCriteria || 1} /></div>}</div>
-      {(stalePlan || staleSource) && <div className="message history-notice"><ClockCounterClockwise size={18} /><span>正在查看历史证据。{staleSource ? "目标代码已发生变化，原始运行结果保留。" : ""}{stalePlan ? "当前验收标准已更新，请先审查当前版本再运行。" : ""}</span>{stalePlan && !readOnly && <button className="secondary-button" onClick={() => resetContext(session.mode)}>查看当前验收标准</button>}</div>}
-      <div className="xray-layout">
-        <aside className="requirements-column" aria-label="需求与验收标准">
-          <div className="column-heading"><span>01</span><h2>需求与标准</h2><FileText size={19} /></div>
-          <section className="panel requirement-panel"><div className="panel-kicker">{session.mode === "sample" ? "演示需求" : "原始需求"}<span>{plan ? `v${plan.version}` : "等待计划"}</span></div><h3>{selectedCriterion?.title || "把「做完了」变成可验证的标准"}</h3><p>{selectedCriterion?.requirementRef || selectedCriterion?.expectedBehavior || selectedCriterion?.description || "选择演示项目，或输入自己的需求。审查标准后开始验收。"}</p>{(requirement?.text || plan?.originalRequirement) && <details><summary>查看完整需求</summary><p className="requirement-text">{plan?.originalRequirement || requirement?.text}</p></details>}{selectedCriterion?.openQuestions?.length ? <div className="inline-warning">待澄清：{selectedCriterion.openQuestions.join("；")}</div> : null}<div className="source-note"><Fingerprint size={14} /><span>计划 {short(record?.planFingerprint || plan?.fingerprint)}</span></div></section>
-          <section className="panel criteria-panel"><div className="panel-heading"><h3><ListChecks size={19} />验收条件</h3><span className="small-muted">{criteria.length} 项</span></div><div className="criteria-list">{criteria.map(c => { const r = record?.criteria.find(x => x.criteriaId === c.id); return <button key={c.id} className={`criterion-button ${criterionId === c.id ? "selected" : ""}`} aria-pressed={criterionId === c.id} onClick={() => { setCriterionId(c.id); setStepId(""); }}><span className="criterion-code">{c.id}</span><span className="criterion-title">{c.title}</span><Status value={r?.status || "pending"} /></button>; })}</div>{workingPlan && !readOnly && !record && <div className="confirmation-area">{draft?.validationErrors.length && session.mode === "requirement" ? <div className="inline-warning">草稿校验未通过：{draft.validationErrors.join("；")}</div> : null}{draft?.hasOpenQuestions && session.mode === "requirement" && <div className="inline-warning">需求有待澄清问题，请修改后重新生成。</div>}{!isConfirmed ? <><p>审查各项条件、前置依赖和操作，再确认本次验收标准。</p><button className="secondary-button full-width" disabled={!canConfirm || !!busy} onClick={() => void confirmPlan()}><Check size={16} />确认验收标准</button></> : <div className="confirmed-note"><ShieldCheck size={18} />标准已确认，修复后沿用同一版本</div>}</div>}</section>
-          <section className="panel steps-panel"><div className="panel-heading"><h3><GitBranch size={18} />{record ? "实际交互记录" : "计划操作"}</h3>{result && <Status value={result.status} />}</div>{selectedCriterion?.dependsOn?.length ? <p className="context-note">前置：{selectedCriterion.dependsOn.join("、")} · {selectedCriterion.contextMode === "inherit" ? "沿用同一浏览器" : "独立浏览器"}</p> : <p className="context-note">{selectedCriterion?.prerequisites || "使用独立浏览器上下文检查"}</p>}<ol className="step-list">{(result?.steps || selectedCriterion?.steps || []).map((s, i) => { const observed = "stepId" in s ? s as StepResult : undefined; const id = observed?.stepId || ("id" in s ? s.id : String(i)); return <li key={id}><button className={selectedStep?.stepId === id ? "step-button active" : "step-button"} disabled={!observed} onClick={() => setStepId(id)}><span className={`step-number ${observed?.status || ""}`}>{observed?.status === "passed" ? <Check size={12} /> : observed?.status === "failed" ? <X size={12} /> : i + 1}</span><span>{s.description}{observed && <small>{labels[observed.status]}{observed.durationMs !== undefined ? ` · ${observed.durationMs} ms` : ""}</small>}</span></button></li>; })}</ol>{!result && !selectedCriterion?.steps?.length && <p className="empty-copy">确认需求后，操作步骤会显示在这里。</p>}</section>
-        </aside>
-        <section className="evidence-column" aria-label="真实浏览器证据"><div className="column-heading"><span>02</span><h2>真实页面 · 行为证据</h2>{record ? <span className="small-muted">{time(record.startedAt)}</span> : <MagnifyingGlass size={19} />}</div>
-          {record && imageStep ? <div className="evidence-canvas">{predecessor?.screenshotPath && predecessor.screenshotPath !== imageStep.screenshotPath && <><EvidenceImage step={predecessor} run={record} caption="前置操作后的页面" /><div className="transition-label"><ArrowDown size={27} /><span>{selectedCriterion?.contextMode === "inherit" ? "同一浏览器 · 继续检查" : "进入下一项验收"}</span></div></>}{selectedStep && selectedStep.stepId !== imageStep.stepId && <p className="image-context-note">所选步骤未单独截图，显示本项证据：{imageStep.stepId}。</p>}<EvidenceImage step={imageStep} run={record} caption={imageStep.description} /><div className={`evidence-verdict verdict-${result?.status || "pending"}`}><div className="verdict-icon">{result?.status === "failed" ? <XCircle size={28} weight="fill" /> : result?.status === "passed" ? <CheckCircle size={28} weight="fill" /> : <WarningCircle size={28} />}</div><div><strong>{result?.status === "passed" ? "验收通过" : result?.status === "failed" ? "验收未通过" : labels[result?.status || "pending"]}：{result?.title}</strong><p>{result?.blockedReason || selectedStep?.actual || "结论来自本次浏览器操作与断言。"}</p></div></div>{evidenceSteps.length > 1 && <div className="evidence-strip" aria-label="截图步骤选择">{evidenceSteps.map((s, i) => <button key={s.stepId} className={s.stepId === imageStep.stepId ? "active" : ""} onClick={() => setStepId(s.stepId)} aria-label={`查看第 ${i + 1} 张截图：${s.description}`}><span>{String(i + 1).padStart(2, "0")}</span>{s.status === "failed" ? "失败证据" : `操作 ${i + 1}`}<Status value={s.status} /></button>)}</div>}</div> : <div className={`empty-canvas ${running ? "is-running" : ""}`}><div className="empty-icon">{running ? <CircleNotch size={38} className="spin" /> : <MagnifyingGlass size={38} weight="light" />}</div><div className="eyebrow">PROOF, NOT PROMISES</div><h2>{running ? "正在看见真实的结果" : "让完成的功能，接受一次检验"}</h2><p>{running ? "Ming 正在操作浏览器、执行断言并保存截图。完成后，每一步证据都会呈现在这里。" : "从左侧确认验收标准，点击「开始验收」。这里将呈现真实页面、实际操作和可追溯的结果。"}</p>{!running && <span className="empty-footnote">演示计划可直接使用，无需模型额度</span>}{record?.fatalError && <div className="inline-warning">{record.fatalError}</div>}</div>}<div className="evidence-footer"><ShieldCheck size={16} /><span>{record ? "每张图片来自本次浏览器运行，可打开原图核查" : "真实操作 · 独立检查 · 可追溯证据"}</span>{record && <code>{short(record.runId)}</code>}</div>
-        </section>
-        <aside className="inspection-column" aria-label="检查结果与修复"><div className="column-heading"><span>03</span><h2>结果与修复</h2><ShieldCheck size={20} /></div>
-          <section className={`panel observation-panel ${result?.status === "failed" ? "has-failure" : ""}`}><div className="panel-heading"><h3>预期与实际</h3>{result && <Status value={result.status} />}</div><div className="observation-block"><span className="observation-label">应该发生</span><p>{selectedStep?.expected !== undefined ? String(selectedStep.expected) : selectedCriterion?.expectedBehavior || selectedCriterion?.description || "由需求和已确认的验收条件定义。"}</p></div><div className="observation-block actual-block"><span className="observation-label">真实发生</span><p>{selectedStep?.actual || result?.blockedReason || (record ? "当前步骤未记录单独的观察值，请查看操作和截图。" : "等待浏览器执行，还没有结果。")}</p></div>{selectedStep?.error && <details className="error-detail"><summary>断言详情</summary><pre>{selectedStep.error}</pre></details>}<div className="capture-note"><Info size={14} /><span>网络请求与控制台日志：本版本未采集</span></div></section>
-          {result?.status === "failed" && <section className={`hypothesis-panel ${comparison?.verifiedRepair ? "resolved" : ""}`}><WarningCircle size={20} /><div><h3>{comparison?.verifiedRepair ? "这次失败已有复验结果" : "问题已复现，原因仍待定位"}</h3><p>{comparison?.verifiedRepair ? "原始失败证据保持不变。修改后的代码已通过同标准检查。" : "行为与需求不符。具体根因由 AI 读取项目后确认。"}</p><span>{comparison?.verifiedRepair ? "查看下方修复前后对照" : "未验证推断不会当作事实"}</span></div></section>}
-          <section className="panel repair-panel"><div className="panel-heading"><h3><PaperPlaneTilt size={20} />交给 AI 的证据包</h3></div><ul className="packet-list"><li><span>01</span><div><strong>原始标准</strong><small>需求、计划版本与前置条件</small></div></li><li><span>02</span><div><strong>复现步骤</strong><small>已执行动作、期望与实际结果</small></div></li><li><span>03</span><div><strong>失败现场</strong><small>原始截图与不可覆盖的运行记录</small></div></li><li><span>04</span><div><strong>同标准复验</strong><small>代码修改后，重新检验相同行为</small></div></li></ul>{task ? <div className="task-state"><div><Status value={task.status} /><code>{short(task.taskId)}</code></div><p>{task.status === "waiting" ? "证据包已准备好，等待已连接的 AI 领取。" : task.status === "claimed" ? `已由 ${task.claimedBy || "AI"} 领取。领取不代表修复完成。` : task.status === "rerunning" ? "正在用原始标准复验修改后的代码。" : comparison?.verifiedRepair ? "代码已修改，并通过同一标准的复验。" : task.blockedReason || "复验已有结果，请检查对照与阻塞原因。"}</p>{task.attemptCount !== undefined && <small>已复验 {task.attemptCount} / {task.maxAttempts ?? 2} 次</small>}<button className="secondary-button full-width" onClick={() => setSheet("prompt")}><Copy size={16} />查看 AI 交接指令</button>{comparison && <button className={`full-width ${comparison.verifiedRepair ? "success-button" : "secondary-button"}`} onClick={() => setSheet("comparison")}><GitBranch size={17} />查看修复前后对照<ArrowRight size={17} /></button>}</div> : <><button className="primary-button full-width" disabled={!canRepair || !!busy || !!running || readOnly} onClick={() => void createRepair()}><PaperPlaneTilt size={17} />{busy === "repair" ? "整理证据中…" : "创建 AI 修复任务"}<ArrowRight size={17} /></button><p className="repair-footnote">{readOnly ? "公开演示为只读回放，请在本地版创建修复任务。" : canRepair ? "创建后，由连接 Ming MCP 的 AI 读取证据并修复。" : "发现功能未通过时，即可生成完整修复证据包。"}</p></>}</section>
-          <details className="provenance-panel"><summary><Fingerprint size={16} />这次结论从哪里来</summary><dl><dt>计划</dt><dd>{record?.planFingerprint || plan?.fingerprint || "未生成"}</dd><dt>目标代码</dt><dd>{record?.targetFingerprint || selectedTarget?.fingerprint || "未记录"}</dd><dt>执行器</dt><dd>{record?.runnerFingerprint || "运行后记录"}</dd><dt>代码绑定</dt><dd>{record?.sourceBinding === "self-contained-html-snapshot" ? "执行本次捕获的 HTML 快照" : "未记录快照绑定"}</dd><dt>执行时变更</dt><dd>{record ? record.sourceChangedDuringRun ? "检测到变化，不能认定修复通过" : record.sourceChangedDuringRun === false ? "未检测到" : "未记录" : "等待检查"}</dd></dl></details>
-        </aside>
-      </div>
-    </main>
-    <footer className="app-footer"><span className="footer-brand">Ming <span>让软件可靠地工作</span></span><span>从「AI 说完成了」到「我看见它通过了」</span></footer>
-    {sheet === "setup" && <Sheet title="设置验收项目" onClose={() => setSheet(null)}><p className="sheet-lead">先定义什么才算完成，再让浏览器逐项验证。</p><div className="mode-switch"><button disabled={!!busy} className={session.mode === "sample" ? "active" : ""} onClick={() => resetContext("sample")}><Play size={17} />体验演示项目</button><button disabled={!!busy} className={session.mode === "requirement" ? "active" : ""} onClick={() => resetContext("requirement")}><FileText size={17} />用自己的需求</button></div><label className="field">检查哪个项目<select disabled={!!busy} value={session.variant} onChange={e => resetContext(session.mode, e.target.value)}>{targets.map(t => <option key={t.variant} value={t.variant}>{t.label}</option>)}</select></label>{session.mode === "sample" ? <><div className="info-box"><Info size={20} /><p>演示使用预先编写的验收计划，浏览器检查是真实执行的，不消耗模型额度。预置缺陷用于展示发现问题。</p></div><button className="primary-button full-width" onClick={() => setSheet(null)}>审查演示验收标准<ArrowRight size={17} /></button></> : <><label className="field">项目名称<input disabled={!!busy} value={projectName} maxLength={120} onChange={e => setProjectName(e.target.value)} placeholder="例如：我的任务管理工具" /></label><label className="field">需求与验收边界<textarea disabled={!!busy} rows={7} value={requirementText} onChange={e => setRequirementText(e.target.value)} placeholder="例如：用户添加任务后，任务出现在列表。标记完成后，刷新页面仍保留该任务及完成状态。" /></label><p className="field-help">写清操作、预期结果和失败边界。AI 会读取页面结构并生成可审查的计划。</p>{!provider?.configured && <div className="info-box warning-box"><WarningCircle size={20} /><p>模型尚未配置。可以先体验演示计划；生成新计划需要在服务端配置模型。</p></div>}<button className="primary-button full-width" disabled={!!busy || !requirementText.trim() || readOnly} onClick={() => void generatePlan()}>{busy === "generate" ? <CircleNotch className="spin" size={17} /> : <Sparkle size={18} />}{busy === "generate" ? "正在保存需求并生成…" : "生成验收草稿"}</button>{error && <p className="inline-warning" role="alert">{error}</p>}{requirement && <p className="small-muted">需求已保存，可在配置模型后重试。</p>}</>}<details className="scope-note"><summary>接入其他项目</summary><p>本地版支持在目标配置中登记独立 Web 页面，再为它生成验收计划。目前运行器绑定自包含 HTML 快照；多文件应用、登录态和外部服务需要额外接入。公开演示只允许预设项目。</p></details></Sheet>}
-    {sheet === "history" && <Sheet title="验收记录" wide onClose={() => setSheet(null)}><p className="sheet-lead">每次检查单独留档，修复不会覆盖原来的失败证据。</p><div className="history-list">{history.length ? history.map(r => <button key={r.runId} disabled={!!busy || !!running} className={`history-item ${r.runId === record?.runId ? "active" : ""}`} onClick={() => void act("history", async () => { await showRun(r.runId); setSheet(null); })}><div><strong>{targets.find(t => t.variant === r.targetVariant)?.label || r.targetVariant}</strong><span>{time(r.startedAt)} · {short(r.runId)}</span></div><Status value={r.status} /><ArrowRight size={18} /></button>) : <div className="empty-list"><ClockCounterClockwise size={32} /><p>还没有验收记录，开始第一次检查吧。</p></div>}</div></Sheet>}
-    {sheet === "model" && <Sheet title="模型连接" onClose={() => setSheet(null)}><div className="model-state"><Robot size={32} weight="light" /><h3>{provider?.configured ? "已配置模型连接" : "还没有配置模型"}</h3><p>模型把需求转成验收草稿；实际点击、断言和截图由浏览器执行器完成。</p></div><dl className="model-details"><dt>提供商</dt><dd>{provider?.providerLabel || "未设置"}</dd><dt>模型</dt><dd>{provider?.modelId || "未设置"}</dd><dt>状态</dt><dd>{provider?.configured ? "配置齐全，是否可用以实际调用为准" : "缺少连接配置"}</dd></dl><div className="info-box"><Info size={20} /><p>演示计划无需 API 密钥。生成自己的计划会使用你配置的模型服务，费用由该服务计费。</p></div><details className="scope-note"><summary>本地配置说明</summary><p>在服务端环境文件中填写提供商名称、API 地址、模型和密钥，然后重启服务。不要把密钥放进浏览器或公开仓库。</p><p>支持 OpenAI-compatible Chat Completions 接口。配置模板见项目根目录的 .env.example。</p></details><button className="secondary-button full-width" onClick={() => void act("provider", async () => setProvider((await api<{ status: ProviderStatus }>("/api/provider/status")).status))}><ArrowsClockwise size={17} />刷新连接状态</button></Sheet>}
-    {sheet === "prompt" && <Sheet title="交接给你的 AI" onClose={() => setSheet(null)}><p className="sheet-lead">把指令交给已连接 Ming MCP 的编程 AI。它会读取证据、修改目标代码，并重新执行原始验收标准。</p>{task ? <><div className="info-box"><TerminalWindow size={20} /><p>任务 {short(task.taskId)} · {labels[task.status]}<br />创建任务不会自动唤醒 AI；领取和复验状态会自动更新。</p></div><textarea className="prompt-text" readOnly rows={12} value={repairPrompt} aria-label="AI 修复交接指令" /><button className="primary-button full-width" onClick={() => { void navigator.clipboard.writeText(repairPrompt).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); }).catch(() => setError("无法复制，请从文本框手动复制指令。")); }}><Copy size={17} />{copied ? "已复制" : "复制英文修复指令"}</button></> : <p>正在读取修复任务…</p>}</Sheet>}
-    {sheet === "comparison" && comparison && task && <Sheet title={comparison.verifiedRepair ? "这一次，修复有了证据" : "修复复验对照"} wide onClose={() => setSheet(null)}><div className={`comparison-head ${comparison.verifiedRepair ? "verified" : "unverified"}`}><ShieldCheck size={27} /><div><h3>{comparison.verifiedRepair ? "已验证修复" : "尚未验证修复"}</h3><p>{comparison.verifiedRepair ? "同一目标、同一验收标准和执行器；代码发生变化，原失败项复验通过。" : "仅有新的运行结果不足以认定修复，请检查阻塞原因。"}</p></div></div><div className="comparison-checks">{[["验收标准相同", comparison.planFingerprintMatch], ["执行器相同且已知", comparison.runnerFingerprintMatch && comparison.runnerFingerprintKnown], ["检查目标相同", comparison.targetIdentityMatch], ["目标代码已修改", comparison.targetFingerprintChanged && comparison.sourceFingerprintKnown]].map(([label, good]) => <span key={String(label)} className={good ? "check-good" : "check-bad"}>{good ? <CheckCircle size={17} /> : <WarningCircle size={17} />}{label}</span>)}</div>{comparison.blockers.length > 0 && <div className="inline-warning"><strong>仍需解决</strong><ul>{comparison.blockers.map(b => <li key={b}>{b}</li>)}</ul></div>}<div className="compare-versions"><div><span>修复前</span><code>{short(comparison.baselineTargetFingerprint)}</code><small>运行 {short(comparison.baselineRunId)}</small></div><ArrowRight size={21} /><div><span>修改后</span><code>{short(comparison.repairedTargetFingerprint)}</code><small>运行 {short(comparison.rerunId)}</small></div></div><div className="comparison-table"><div className="comparison-row table-header"><span>验收条件</span><span>修复前</span><span>修改后</span></div>{(task.planSnapshot?.criteria || baseline?.criteria.map(c => ({ id: c.criteriaId, title: c.title })) || []).map(c => <div className="comparison-row" key={c.id}><span>{c.id} · {c.title}</span><Status value={baseline?.criteria.find(x => x.criteriaId === c.id)?.status || "not_run"} /><Status value={rerun?.criteria.find(x => x.criteriaId === c.id)?.status || "not_run"} /></div>)}</div>{baseline && rerun && <div className="compare-evidence">{[baseline, rerun].map((r, i) => { const cr = r.criteria.find(c => c.criteriaId === criterionId) || r.criteria.find(c => task.failedCriteria.some(f => f.criteriaId === c.criteriaId)); const st = last(cr?.steps.filter(s => s.screenshotPath)); return st ? <EvidenceImage key={r.runId} run={r} step={st} caption={i ? "修改后 · 同标准复验" : "修复前 · 原始证据"} /> : <p key={r.runId}>此项没有截图证据</p>; })}</div>}{rerun && <button className="secondary-button full-width" onClick={() => void act("open-rerun", async () => { await showRun(rerun.runId); setSheet(null); })}>查看修改后的完整运行与截图<ArrowRight size={17} /></button>}</Sheet>}
-  </div>;
+  return (
+    <div className="app-shell">
+      <header className="topbar">
+        <a className="brand" href="#workspace" aria-label="Ming 验收工作区">
+          Ming<span>Every done comes with proof.</span>
+        </a>
+        <nav aria-label="工作区工具">
+          <button
+            aria-label="我的项目"
+            className={`subtle-button ${view === "projects" ? "active-nav" : ""}`}
+            disabled={!!busy || !!running}
+            onClick={() => {
+              setView("projects");
+              void refreshProjects().catch((e) => setError(e.message));
+            }}
+          >
+            <FolderOpen size={18} />
+            <span>我的项目</span>
+          </button>
+          {!readOnly && (
+            <button
+              aria-label="接入项目"
+              className="subtle-button connect-project-button"
+              disabled={!!busy || !!running}
+              onClick={() => setSheet("connect")}
+            >
+              <Plus size={17} />
+              <span>接入项目</span>
+            </button>
+          )}
+          <button
+            className="subtle-button"
+            aria-label={provider?.configured ? "模型已配置" : "模型未配置"}
+            onClick={() => setSheet("model")}
+          >
+            <Sparkle size={17} />
+            <span>{provider?.configured ? "模型已配置" : "模型未配置"}</span>
+          </button>
+          <button
+            className="subtle-button"
+            aria-label="验收记录"
+            onClick={() => {
+              setSheet("history");
+              void refreshLists().catch((e) => setError(e.message));
+            }}
+          >
+            <ClockCounterClockwise size={18} />
+            <span>验收记录</span>
+          </button>
+          <button
+            className="subtle-button"
+            aria-label="连接编码 AI"
+            onClick={() => setSheet("ai")}
+          >
+            <TerminalWindow size={18} />
+            <span>连接 AI</span>
+          </button>
+          <button
+            className="icon-button"
+            aria-label="配置项目"
+            disabled={running || !!busy || readOnly}
+            onClick={() =>
+              setSheet(
+                view === "projects"
+                  ? "connect"
+                  : selectedTarget?.isSample === false
+                    ? "requirements"
+                    : "setup",
+              )
+            }
+          >
+            <GearSix size={20} />
+          </button>
+        </nav>
+      </header>
+      <main id="workspace">
+        {view === "projects" && (error || notice) && (
+          <div
+            className={`message ${error ? "error-message" : "notice-message"}`}
+            role={error ? "alert" : "status"}
+          >
+            <Info size={18} />
+            <span>{error || notice}</span>
+          </div>
+        )}
+        {view === "projects" ? (
+          <ProjectHub
+            targets={targets}
+            projects={projects}
+            history={history}
+            readOnly={readOnly}
+            onConnect={() => setSheet("connect")}
+            onOpen={(target, p) => void openProject(target, p)}
+            onArchived={() =>
+              void refreshProjects().catch((e) => setError(e.message))
+            }
+          />
+        ) : (
+          <>
+            <section className="workspace-intro">
+              <div>
+                <div className="eyebrow">
+                  APPLICATION X-RAY <span>应用透视</span>
+                </div>
+                <h1>
+                  看见功能背后的每一步<span className="heading-dot">.</span>
+                </h1>
+                <p>
+                  从需求到真实操作，再到修复复验。让每一句「已完成」，都有据可验。
+                </p>
+              </div>
+              <div className="run-summary" aria-label="验收结果概览">
+                <span>
+                  <CheckCircle size={20} weight="fill" className="green" />
+                  <strong>{activeCount}</strong> 项通过
+                </span>
+                <span>
+                  <XCircle size={20} weight="fill" className="red" />
+                  <strong>{failedCount}</strong> 项未通过
+                </span>
+                <span>
+                  <CircleNotch
+                    size={20}
+                    className={running ? "spin" : "muted"}
+                  />
+                  <strong>
+                    {record
+                      ? record.criteria.length - activeCount - failedCount
+                      : criteria.length}
+                  </strong>{" "}
+                  项{running ? "检查中" : "待验证"}
+                </span>
+              </div>
+            </section>
+            {readOnly && (
+              <div className="message public-notice">
+                <Info size={19} />
+                <span>
+                  <strong>公开演示 · 真实历史运行，只读回放</strong>
+                  　可查看步骤、原始截图与修复对照。完整运行和 AI
+                  修复请使用本地版。
+                </span>
+              </div>
+            )}
+            <div className="workspace-toolbar">
+              <div className="project-picker">
+                <span className="project-label">验收项目</span>
+                <select
+                  aria-label="验收项目"
+                  value={session.variant}
+                  disabled={running || !!busy}
+                  onChange={(e) => {
+                    const next = targets.find(
+                      (t) => t.variant === e.target.value,
+                    );
+                    if (next) void openProject(next);
+                  }}
+                >
+                  <optgroup label="我的项目">
+                    {targets
+                      .filter(
+                        (t) =>
+                          t.isSample === false &&
+                          (!t.archived || t.variant === session.variant),
+                      )
+                      .map((t) => (
+                        <option key={t.variant} value={t.variant}>
+                          {t.label}
+                          {t.archived ? "（已归档）" : ""}
+                        </option>
+                      ))}
+                  </optgroup>
+                  <optgroup label="预置演示">
+                    {targets
+                      .filter((t) => t.isSample !== false)
+                      .map((t) => (
+                        <option key={t.variant} value={t.variant}>
+                          {t.label}
+                        </option>
+                      ))}
+                  </optgroup>
+                </select>
+              </div>
+              <span className="plan-origin">
+                <FileText size={15} />
+                {plan?.source === "manual"
+                  ? "手动编写 · 无模型调用"
+                  : plan?.source === "generated"
+                    ? plan.transportProvenance === "live"
+                      ? "AI 生成 · 已记录来源"
+                      : "测试传输生成 · 非真实模型"
+                    : selectedTarget?.isSample === false
+                      ? "等待制定验收标准"
+                      : "预设演示计划 · 无模型调用"}
+              </span>
+              <div className="toolbar-actions">
+                <button
+                  className="secondary-button"
+                  disabled={running || !!busy || readOnly}
+                  onClick={() =>
+                    setSheet(
+                      selectedTarget?.isSample === false
+                        ? "requirements"
+                        : "setup",
+                    )
+                  }
+                >
+                  {selectedTarget?.isSample === false
+                    ? "需求与标准"
+                    : "自定义需求"}
+                </button>
+                {draft && session.mode === "requirement" && (
+                  <button
+                    className="secondary-button"
+                    disabled={!!busy || !!running || readOnly}
+                    onClick={() => setSheet("plan")}
+                  >
+                    <PencilSimple size={16} />
+                    编辑标准
+                  </button>
+                )}
+                {record && readOnly && (
+                  <button
+                    className="secondary-button"
+                    onClick={() =>
+                      downloadText(
+                        `ming-run-${record.runId}.json`,
+                        JSON.stringify(record, null, 2),
+                      )
+                    }
+                  >
+                    <DownloadSimple size={16} />
+                    导出记录
+                  </button>
+                )}
+                {record && !readOnly && (
+                  <details className="report-export">
+                    <summary className="secondary-button">
+                      <DownloadSimple size={16} />
+                      导出报告
+                    </summary>
+                    <div>
+                      {[
+                        ["html", "网页报告"],
+                        ["json", "完整数据 JSON"],
+                        ["markdown", "Markdown 文本"],
+                      ].map(([format, label]) => (
+                        <a
+                          key={format}
+                          href={`/api/run/${record.runId}/report?format=${format}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {label}
+                        </a>
+                      ))}
+                    </div>
+                  </details>
+                )}
+                <button
+                  className="primary-button"
+                  disabled={
+                    !ready ||
+                    !isConfirmed ||
+                    !!busy ||
+                    !!running ||
+                    readOnly ||
+                    stalePlan
+                  }
+                  onClick={() => void startRun()}
+                >
+                  {running || busy === "run" ? (
+                    <CircleNotch className="spin" size={17} />
+                  ) : (
+                    <Play size={16} weight="fill" />
+                  )}
+                  {readOnly
+                    ? "历史运行回放"
+                    : running
+                      ? "正在检查"
+                      : record
+                        ? "再次验收"
+                        : "开始验收"}
+                </button>
+              </div>
+            </div>
+            <div aria-live="polite">
+              {error && (
+                <div className="message error-message" role="alert">
+                  <WarningCircle size={20} />
+                  <span>{error}</span>
+                  <button
+                    className="icon-button"
+                    aria-label="关闭错误提示"
+                    onClick={() => setError("")}
+                  >
+                    <X size={17} />
+                  </button>
+                </div>
+              )}
+              {notice && (
+                <div className="message notice-message">
+                  <Info size={18} />
+                  <span>{notice}</span>
+                  <button
+                    className="icon-button"
+                    aria-label="关闭提示"
+                    onClick={() => setNotice("")}
+                  >
+                    <X size={17} />
+                  </button>
+                </div>
+              )}
+              {running && (
+                <div className="message progress-message">
+                  <CircleNotch className="spin" size={19} />
+                  <span>
+                    浏览器正在真实操作页面。已完成 {progress?.finishedCriteria}{" "}
+                    / {progress?.totalCriteria} 项
+                    {progress?.currentCriteria
+                      ? ` · 最近完成 ${progress.currentCriteria}`
+                      : ""}
+                  </span>
+                  <progress
+                    value={progress?.finishedCriteria}
+                    max={progress?.totalCriteria || 1}
+                  />
+                  <button
+                    className="secondary-button"
+                    disabled={!!busy || readOnly}
+                    onClick={() => void cancelRun()}
+                  >
+                    <Stop size={14} />
+                    {busy === "cancel" ? "停止中…" : "停止本次检查"}
+                  </button>
+                </div>
+              )}
+            </div>
+            {(stalePlan || staleSource) && (
+              <div className="message history-notice">
+                <ClockCounterClockwise size={18} />
+                <span>
+                  正在查看历史证据。
+                  {staleSource ? "目标代码已发生变化，原始运行结果保留。" : ""}
+                  {stalePlan
+                    ? "当前验收标准已更新，请先审查当前版本再运行。"
+                    : ""}
+                </span>
+                {stalePlan && !readOnly && (
+                  <button
+                    className="secondary-button"
+                    onClick={() =>
+                      selectedTarget?.isSample === false
+                        ? void openProject(selectedTarget)
+                        : resetContext("sample")
+                    }
+                  >
+                    查看当前验收标准
+                  </button>
+                )}
+              </div>
+            )}
+            {confirmation?.active === false && (
+              <div className="message history-notice">
+                <Info size={18} />
+                <span>
+                  这份历史标准已被新版本替代。旧证据仍可查看，新验收需要确认当前版本。
+                </span>
+                <button
+                  className="secondary-button"
+                  onClick={() =>
+                    selectedTarget && void openProject(selectedTarget)
+                  }
+                >
+                  审查当前版本
+                </button>
+              </div>
+            )}
+            {selectedTarget?.isSample === false && (
+              <div className="project-workflow-bar">
+                <span>
+                  <CheckCircle size={16} />
+                  项目已接入
+                </span>
+                <button
+                  className={requirement ? "complete" : "current"}
+                  disabled={!!busy || !!running}
+                  onClick={() => setSheet("requirements")}
+                >
+                  1. {requirement ? "需求已保存" : "编写需求"}
+                </button>
+                <ArrowRight size={14} />
+                <button
+                  className={isConfirmed ? "complete" : draft ? "current" : ""}
+                  disabled={!requirement || !!busy || !!running}
+                  onClick={() => (draft ? reviewStandards() : setSheet("plan"))}
+                >
+                  2.{" "}
+                  {isConfirmed
+                    ? "标准已确认"
+                    : draft
+                      ? "审查验收标准"
+                      : "编写验收标准"}
+                </button>
+                <ArrowRight size={14} />
+                <span className={record ? "complete" : ""}>
+                  3. {record ? "查看运行证据" : "执行验收"}
+                </span>
+              </div>
+            )}
+            <div className="xray-layout">
+              <aside
+                className="requirements-column"
+                aria-label="需求与验收标准"
+              >
+                <div className="column-heading">
+                  <span>01</span>
+                  <h2>需求与标准</h2>
+                  <FileText size={19} />
+                </div>
+                <section className="panel requirement-panel">
+                  <div className="panel-kicker">
+                    {session.mode === "sample" ? "演示需求" : "原始需求"}
+                    <span>{plan ? `v${plan.version}` : "等待计划"}</span>
+                  </div>
+                  <h3>
+                    {selectedCriterion?.title || "把「做完了」变成可验证的标准"}
+                  </h3>
+                  <p>
+                    {selectedCriterion?.requirementRef ||
+                      selectedCriterion?.expectedBehavior ||
+                      selectedCriterion?.description ||
+                      "选择演示项目，或输入自己的需求。审查标准后开始验收。"}
+                  </p>
+                  {(requirement?.text || plan?.originalRequirement) && (
+                    <details>
+                      <summary>查看完整需求</summary>
+                      <p className="requirement-text">
+                        {plan?.originalRequirement || requirement?.text}
+                      </p>
+                    </details>
+                  )}
+                  {selectedCriterion?.openQuestions?.length ? (
+                    <div className="inline-warning">
+                      待澄清：{selectedCriterion.openQuestions.join("；")}
+                    </div>
+                  ) : null}
+                  <div className="source-note">
+                    <Fingerprint size={14} />
+                    <span>
+                      计划 {short(record?.planFingerprint || plan?.fingerprint)}
+                    </span>
+                  </div>
+                </section>
+                <section className="panel criteria-panel">
+                  <div className="panel-heading">
+                    <h3>
+                      <ListChecks size={19} />
+                      验收条件
+                    </h3>
+                    <span className="small-muted">{criteria.length} 项</span>
+                  </div>
+                  <div className="criteria-list">
+                    {criteria.map((c) => {
+                      const r = record?.criteria.find(
+                        (x) => x.criteriaId === c.id,
+                      );
+                      return (
+                        <button
+                          key={c.id}
+                          className={`criterion-button ${criterionId === c.id ? "selected" : ""}`}
+                          aria-pressed={criterionId === c.id}
+                          onClick={() => {
+                            setCriterionId(c.id);
+                            setStepId("");
+                          }}
+                        >
+                          <span className="criterion-code">{c.id}</span>
+                          <span className="criterion-title">{c.title}</span>
+                          <Status value={r?.status || "pending"} />
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {workingPlan && !readOnly && !record && (
+                    <div className="confirmation-area">
+                      {draft?.validationErrors.length &&
+                      session.mode === "requirement" ? (
+                        <div className="inline-warning">
+                          草稿校验未通过：{draft.validationErrors.join("；")}
+                        </div>
+                      ) : null}
+                      {draft?.hasOpenQuestions &&
+                        session.mode === "requirement" && (
+                          <div className="inline-warning">
+                            需求有待澄清问题，请修改后重新生成。
+                          </div>
+                        )}
+                      {!isConfirmed ? (
+                        <>
+                          <p>
+                            审查各项条件、前置依赖和操作，再确认本次验收标准。
+                          </p>
+                          <button
+                            className="secondary-button full-width"
+                            disabled={!canConfirm || !!busy}
+                            onClick={() => void confirmPlan()}
+                          >
+                            <Check size={16} />
+                            确认验收标准
+                          </button>
+                        </>
+                      ) : (
+                        <div className="confirmed-note">
+                          <ShieldCheck size={18} />
+                          标准已确认，修复后沿用同一版本
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </section>
+                <section className="panel steps-panel">
+                  <div className="panel-heading">
+                    <h3>
+                      <GitBranch size={18} />
+                      {record ? "实际交互记录" : "计划操作"}
+                    </h3>
+                    {result && <Status value={result.status} />}
+                  </div>
+                  {selectedCriterion?.dependsOn?.length ? (
+                    <p className="context-note">
+                      前置：{selectedCriterion.dependsOn.join("、")} ·{" "}
+                      {selectedCriterion.contextMode === "inherit"
+                        ? "沿用同一浏览器"
+                        : "独立浏览器"}
+                    </p>
+                  ) : (
+                    <p className="context-note">
+                      {selectedCriterion?.prerequisites ||
+                        "使用独立浏览器上下文检查"}
+                    </p>
+                  )}
+                  <ol className="step-list">
+                    {(result?.steps || selectedCriterion?.steps || []).map(
+                      (s, i) => {
+                        const observed =
+                          "stepId" in s ? (s as StepResult) : undefined;
+                        const id =
+                          observed?.stepId || ("id" in s ? s.id : String(i));
+                        return (
+                          <li key={id}>
+                            <button
+                              className={
+                                selectedStep?.stepId === id
+                                  ? "step-button active"
+                                  : "step-button"
+                              }
+                              disabled={!observed}
+                              onClick={() => setStepId(id)}
+                            >
+                              <span
+                                className={`step-number ${observed?.status || ""}`}
+                              >
+                                {observed?.status === "passed" ? (
+                                  <Check size={12} />
+                                ) : observed?.status === "failed" ? (
+                                  <X size={12} />
+                                ) : (
+                                  i + 1
+                                )}
+                              </span>
+                              <span>
+                                {s.description}
+                                {observed && (
+                                  <small>
+                                    {labels[observed.status]}
+                                    {observed.durationMs !== undefined
+                                      ? ` · ${observed.durationMs} ms`
+                                      : ""}
+                                  </small>
+                                )}
+                              </span>
+                            </button>
+                          </li>
+                        );
+                      },
+                    )}
+                  </ol>
+                  {!result && !selectedCriterion?.steps?.length && (
+                    <p className="empty-copy">
+                      确认需求后，操作步骤会显示在这里。
+                    </p>
+                  )}
+                </section>
+              </aside>
+              <section className="evidence-column" aria-label="真实浏览器证据">
+                <div className="column-heading">
+                  <span>02</span>
+                  <h2>真实页面 · 行为证据</h2>
+                  {record ? (
+                    <span className="small-muted">
+                      {time(record.startedAt)}
+                    </span>
+                  ) : (
+                    <MagnifyingGlass size={19} />
+                  )}
+                </div>
+                {record && imageStep ? (
+                  <div className="evidence-canvas">
+                    {predecessor?.screenshotPath &&
+                      predecessor.screenshotPath !==
+                        imageStep.screenshotPath && (
+                        <>
+                          <EvidenceImage
+                            step={predecessor}
+                            run={record}
+                            caption="前置操作后的页面"
+                          />
+                          <div className="transition-label">
+                            <ArrowDown size={27} />
+                            <span>
+                              {selectedCriterion?.contextMode === "inherit"
+                                ? "同一浏览器 · 继续检查"
+                                : "进入下一项验收"}
+                            </span>
+                          </div>
+                        </>
+                      )}
+                    {selectedStep &&
+                      selectedStep.stepId !== imageStep.stepId && (
+                        <p className="image-context-note">
+                          所选步骤未单独截图，显示本项证据：{imageStep.stepId}。
+                        </p>
+                      )}
+                    <EvidenceImage
+                      step={imageStep}
+                      run={record}
+                      caption={imageStep.description}
+                    />
+                    <div
+                      className={`evidence-verdict verdict-${result?.status || "pending"}`}
+                    >
+                      <div className="verdict-icon">
+                        {result?.status === "failed" ? (
+                          <XCircle size={28} weight="fill" />
+                        ) : result?.status === "passed" ? (
+                          <CheckCircle size={28} weight="fill" />
+                        ) : (
+                          <WarningCircle size={28} />
+                        )}
+                      </div>
+                      <div>
+                        <strong>
+                          {result?.status === "passed"
+                            ? "验收通过"
+                            : result?.status === "failed"
+                              ? "验收未通过"
+                              : labels[result?.status || "pending"]}
+                          ：{result?.title}
+                        </strong>
+                        <p>
+                          {result?.blockedReason ||
+                            selectedStep?.actual ||
+                            "结论来自本次浏览器操作与断言。"}
+                        </p>
+                      </div>
+                    </div>
+                    {evidenceSteps.length > 1 && (
+                      <div className="evidence-strip" aria-label="截图步骤选择">
+                        {evidenceSteps.map((s, i) => (
+                          <button
+                            key={s.stepId}
+                            className={
+                              s.stepId === imageStep.stepId ? "active" : ""
+                            }
+                            onClick={() => setStepId(s.stepId)}
+                            aria-label={`查看第 ${i + 1} 张截图：${s.description}`}
+                          >
+                            <span>{String(i + 1).padStart(2, "0")}</span>
+                            {s.status === "failed"
+                              ? "失败证据"
+                              : `操作 ${i + 1}`}
+                            <Status value={s.status} />
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div
+                    className={`empty-canvas ${running ? "is-running" : ""}`}
+                  >
+                    <div className="empty-icon">
+                      {running ? (
+                        <CircleNotch size={38} className="spin" />
+                      ) : (
+                        <MagnifyingGlass size={38} weight="light" />
+                      )}
+                    </div>
+                    <div className="eyebrow">PROOF, NOT PROMISES</div>
+                    <h2>
+                      {running
+                        ? "正在看见真实的结果"
+                        : "让完成的功能，接受一次检验"}
+                    </h2>
+                    <p>
+                      {running
+                        ? "Ming 正在操作浏览器、执行断言并保存截图。完成后，每一步证据都会呈现在这里。"
+                        : "从左侧确认验收标准，点击「开始验收」。这里将呈现真实页面、实际操作和可追溯的结果。"}
+                    </p>
+                    {!running && (
+                      <span className="empty-footnote">
+                        {selectedTarget?.isSample === false
+                          ? "可以用 AI 生成草稿，也可以手动编写标准"
+                          : "演示计划可直接使用，无需模型额度"}
+                      </span>
+                    )}
+                    {record?.fatalError && (
+                      <div className="inline-warning">
+                        {record.terminationReason === "cancelled"
+                          ? "本次检查已取消，未完成项目不会视为通过。"
+                          : record.terminationReason === "deadline"
+                            ? "本次检查超时，请检查页面连接或缩小验收范围。"
+                            : record.fatalError}
+                      </div>
+                    )}
+                    {!record &&
+                      !running &&
+                      selectedTarget?.isSample === false && (
+                        <button
+                          className="primary-button onboarding-inline-cta"
+                          onClick={() =>
+                            setSheet(requirement ? "plan" : "requirements")
+                          }
+                        >
+                          {requirement ? "编写验收标准" : "编写项目需求"}
+                          <ArrowRight size={16} />
+                        </button>
+                      )}
+                  </div>
+                )}
+                <div className="evidence-footer">
+                  <ShieldCheck size={16} />
+                  <span>
+                    {record
+                      ? "每张图片来自本次浏览器运行，可打开原图核查"
+                      : "真实操作 · 独立检查 · 可追溯证据"}
+                  </span>
+                  {record && <code>{short(record.runId)}</code>}
+                </div>
+              </section>
+              <aside className="inspection-column" aria-label="检查结果与修复">
+                <div className="column-heading">
+                  <span>03</span>
+                  <h2>结果与修复</h2>
+                  <ShieldCheck size={20} />
+                </div>
+                <section
+                  className={`panel observation-panel ${result?.status === "failed" ? "has-failure" : ""}`}
+                >
+                  <div className="panel-heading">
+                    <h3>预期与实际</h3>
+                    {result && <Status value={result.status} />}
+                  </div>
+                  <div className="observation-block">
+                    <span className="observation-label">应该发生</span>
+                    <p>
+                      {selectedStep?.expected !== undefined
+                        ? String(selectedStep.expected)
+                        : selectedCriterion?.expectedBehavior ||
+                          selectedCriterion?.description ||
+                          "由需求和已确认的验收条件定义。"}
+                    </p>
+                  </div>
+                  <div className="observation-block actual-block">
+                    <span className="observation-label">真实发生</span>
+                    <p>
+                      {selectedStep?.actual ||
+                        result?.blockedReason ||
+                        (record
+                          ? "当前步骤未记录单独的观察值，请查看操作和截图。"
+                          : "等待浏览器执行，还没有结果。")}
+                    </p>
+                  </div>
+                  {selectedStep?.error && (
+                    <details className="error-detail">
+                      <summary>断言详情</summary>
+                      <pre>{selectedStep.error}</pre>
+                    </details>
+                  )}
+                  <div className="capture-note">
+                    <Info size={14} />
+                    <span>
+                      {record?.diagnostics
+                        ? `已采集 ${record.diagnostics.length} 条浏览器诊断`
+                        : "本次记录未包含浏览器诊断"}
+                    </span>
+                  </div>
+                  {!!record?.diagnostics?.length && (
+                    <details className="diagnostics-panel">
+                      <summary>查看网络与控制台记录</summary>
+                      <ul>
+                        {record.diagnostics.map((item, i) => (
+                          <li key={i}>
+                            <strong>
+                              {item.kind}
+                              {item.status ? ` · ${item.status}` : ""}
+                            </strong>
+                            <p>{item.message}</p>
+                            {item.url && <code>{item.url}</code>}
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
+                  )}
+                </section>
+                {result?.status === "failed" && (
+                  <section
+                    className={`hypothesis-panel ${comparison?.verifiedRepair ? "resolved" : ""}`}
+                  >
+                    <WarningCircle size={20} />
+                    <div>
+                      <h3>
+                        {comparison?.verifiedRepair
+                          ? "这次失败已有复验结果"
+                          : "问题已复现，原因仍待定位"}
+                      </h3>
+                      <p>
+                        {comparison?.verifiedRepair
+                          ? "原始失败证据保持不变。修改后的代码已通过同标准检查。"
+                          : "行为与需求不符。具体根因由 AI 读取项目后确认。"}
+                      </p>
+                      <span>
+                        {comparison?.verifiedRepair
+                          ? "查看下方修复前后对照"
+                          : "未验证推断不会当作事实"}
+                      </span>
+                    </div>
+                  </section>
+                )}
+                <section className="panel repair-panel">
+                  <div className="panel-heading">
+                    <h3>
+                      <PaperPlaneTilt size={20} />
+                      交给 AI 的证据包
+                    </h3>
+                  </div>
+                  <ul className="packet-list">
+                    <li>
+                      <span>01</span>
+                      <div>
+                        <strong>原始标准</strong>
+                        <small>需求、计划版本与前置条件</small>
+                      </div>
+                    </li>
+                    <li>
+                      <span>02</span>
+                      <div>
+                        <strong>复现步骤</strong>
+                        <small>已执行动作、期望与实际结果</small>
+                      </div>
+                    </li>
+                    <li>
+                      <span>03</span>
+                      <div>
+                        <strong>失败现场</strong>
+                        <small>原始截图与不可覆盖的运行记录</small>
+                      </div>
+                    </li>
+                    <li>
+                      <span>04</span>
+                      <div>
+                        <strong>同标准复验</strong>
+                        <small>代码修改后，重新检验相同行为</small>
+                      </div>
+                    </li>
+                  </ul>
+                  {task ? (
+                    <div className="task-state">
+                      <div>
+                        <Status value={task.status} />
+                        <code>{short(task.taskId)}</code>
+                      </div>
+                      <p>
+                        {task.status === "waiting"
+                          ? "证据包已准备好，等待已连接的 AI 领取。"
+                          : task.status === "claimed"
+                            ? `已由 ${task.claimedBy || "AI"} 领取。领取不代表修复完成。`
+                            : task.status === "rerunning"
+                              ? "正在用原始标准复验修改后的代码。"
+                              : comparison?.verifiedRepair
+                                ? "代码已修改，并通过同一标准的复验。"
+                                : task.status === "review"
+                                  ? "同标准复验已通过。真实网页未冻结整个应用代码，仍需人工确认修复归因。"
+                                  : task.blockedReason ||
+                                    "复验已有结果，请检查对照与阻塞原因。"}
+                      </p>
+                      {task.attemptCount !== undefined && (
+                        <small>
+                          已复验 {task.attemptCount} / {task.maxAttempts ?? 2}{" "}
+                          次
+                        </small>
+                      )}
+                      <button
+                        className="secondary-button full-width"
+                        onClick={() => setSheet("prompt")}
+                      >
+                        <Copy size={16} />
+                        查看 AI 交接指令
+                      </button>
+                      {comparison && (
+                        <button
+                          className={`full-width ${comparison.verifiedRepair ? "success-button" : "secondary-button"}`}
+                          onClick={() => setSheet("comparison")}
+                        >
+                          <GitBranch size={17} />
+                          查看修复前后对照
+                          <ArrowRight size={17} />
+                        </button>
+                      )}
+                    </div>
+                  ) : (
+                    <>
+                      <button
+                        className="primary-button full-width"
+                        disabled={!canRepair || !!busy || !!running || readOnly}
+                        onClick={() => void createRepair()}
+                      >
+                        <PaperPlaneTilt size={17} />
+                        {busy === "repair" ? "整理证据中…" : "创建 AI 修复任务"}
+                        <ArrowRight size={17} />
+                      </button>
+                      <p className="repair-footnote">
+                        {readOnly
+                          ? "公开演示为只读回放，请在本地版创建修复任务。"
+                          : canRepair
+                            ? "创建后，由连接 Ming MCP 的 AI 读取证据并修复。"
+                            : "发现功能未通过时，即可生成完整修复证据包。"}
+                      </p>
+                    </>
+                  )}
+                </section>
+                <details className="provenance-panel">
+                  <summary>
+                    <Fingerprint size={16} />
+                    这次结论从哪里来
+                  </summary>
+                  <dl>
+                    <dt>计划</dt>
+                    <dd>
+                      {record?.planFingerprint || plan?.fingerprint || "未生成"}
+                    </dd>
+                    <dt>目标代码</dt>
+                    <dd>
+                      {record?.targetFingerprint ||
+                        selectedTarget?.fingerprint ||
+                        "未记录"}
+                    </dd>
+                    <dt>执行器</dt>
+                    <dd>{record?.runnerFingerprint || "运行后记录"}</dd>
+                    <dt>代码绑定</dt>
+                    <dd>
+                      {record?.sourceBinding === "self-contained-html-snapshot"
+                        ? "执行本次捕获的 HTML 快照"
+                        : record?.sourceBinding === "live-url-observed"
+                          ? "真实页面观察；未冻结整个应用代码"
+                          : "未记录快照绑定"}
+                    </dd>
+                    <dt>执行时变更</dt>
+                    <dd>
+                      {record
+                        ? record.sourceChangedDuringRun
+                          ? "检测到变化，不能认定修复通过"
+                          : record.sourceChangedDuringRun === false
+                            ? "未检测到"
+                            : "未记录"
+                        : "等待检查"}
+                    </dd>
+                  </dl>
+                </details>
+              </aside>
+            </div>
+          </>
+        )}
+      </main>
+      <footer className="app-footer">
+        <span className="footer-brand">
+          Ming <span>让软件可靠地工作</span>
+        </span>
+        <span>从「AI 说完成了」到「我看见它通过了」</span>
+      </footer>
+      <ProviderSettings
+        open={sheet === "model"}
+        onClose={() => setSheet(null)}
+        onSaved={() => {
+          void api<{ status: ProviderStatus }>("/api/provider/status")
+            .then((r) => setProvider(r.status))
+            .catch((e) => setError(e.message));
+        }}
+        readOnly={readOnly}
+      />
+      {sheet === "connect" && !readOnly && (
+        <ProjectConnect
+          onClose={() => setSheet(null)}
+          onConnected={projectConnected}
+        />
+      )}
+      {sheet === "requirements" && project && (
+        <RequirementEditor
+          project={project}
+          requirement={requirement}
+          onClose={() => setSheet(null)}
+          onSaved={requirementSaved}
+          onDraft={draftSaved}
+          onManual={(next) => {
+            setRequirement(next);
+            setSheet("plan");
+          }}
+          onConfigureModel={() => setSheet("model")}
+          providerConfigured={!!provider?.configured}
+          readOnly={readOnly}
+        />
+      )}
+      {sheet === "plan" && project && requirement && (
+        <PlanEditor
+          project={project}
+          requirement={requirement}
+          draft={draft}
+          onClose={() => setSheet(null)}
+          onSaved={draftSaved}
+          readOnly={readOnly}
+        />
+      )}
+      {sheet === "history" && (
+        <RunHistory
+          runs={history}
+          targets={targets}
+          currentRunId={record?.runId}
+          disabled={!!busy || !!running}
+          onClose={() => setSheet(null)}
+          onSelect={(id) =>
+            void act("history", async () => {
+              await showRun(id);
+              setSheet(null);
+            })
+          }
+        />
+      )}
+      {sheet === "ai" && (
+        <AiConnection onClose={() => setSheet(null)} readOnly={readOnly} />
+      )}
+      {sheet === "setup" && (
+        <Sheet title="设置验收项目" onClose={() => setSheet(null)}>
+          <p className="sheet-lead">先定义什么才算完成，再让浏览器逐项验证。</p>
+          <div className="mode-switch">
+            <button
+              disabled={!!busy}
+              className={session.mode === "sample" ? "active" : ""}
+              onClick={() => resetContext("sample")}
+            >
+              <Play size={17} />
+              体验演示项目
+            </button>
+            <button
+              disabled={!!busy}
+              className={session.mode === "requirement" ? "active" : ""}
+              onClick={() => resetContext("requirement")}
+            >
+              <FileText size={17} />
+              用自己的需求
+            </button>
+          </div>
+          <label className="field">
+            检查哪个项目
+            <select
+              disabled={!!busy}
+              value={session.variant}
+              onChange={(e) => resetContext(session.mode, e.target.value)}
+            >
+              {targets
+                .filter((t) => t.isSample !== false)
+                .map((t) => (
+                  <option key={t.variant} value={t.variant}>
+                    {t.label}
+                  </option>
+                ))}
+            </select>
+          </label>
+          {session.mode === "sample" ? (
+            <>
+              <div className="info-box">
+                <Info size={20} />
+                <p>
+                  演示使用预先编写的验收计划，浏览器检查是真实执行的，不消耗模型额度。预置缺陷用于展示发现问题。
+                </p>
+              </div>
+              <button
+                className="primary-button full-width"
+                onClick={() => setSheet(null)}
+              >
+                审查演示验收标准
+                <ArrowRight size={17} />
+              </button>
+            </>
+          ) : (
+            <>
+              <label className="field">
+                项目名称
+                <input
+                  disabled={!!busy}
+                  value={projectName}
+                  maxLength={120}
+                  onChange={(e) => setProjectName(e.target.value)}
+                  placeholder="例如：我的任务管理工具"
+                />
+              </label>
+              <label className="field">
+                需求与验收边界
+                <textarea
+                  disabled={!!busy}
+                  rows={7}
+                  value={requirementText}
+                  onChange={(e) => setRequirementText(e.target.value)}
+                  placeholder="例如：用户添加任务后，任务出现在列表。标记完成后，刷新页面仍保留该任务及完成状态。"
+                />
+              </label>
+              <p className="field-help">
+                写清操作、预期结果和失败边界。AI
+                会读取页面结构并生成可审查的计划。
+              </p>
+              {!provider?.configured && (
+                <div className="info-box warning-box">
+                  <WarningCircle size={20} />
+                  <p>
+                    模型尚未配置。可以先体验演示计划；可以从右上角连接模型，也可以在「我的项目」中编写手动标准。
+                  </p>
+                </div>
+              )}
+              <button
+                className="primary-button full-width"
+                disabled={!!busy || !requirementText.trim() || readOnly}
+                onClick={() => void generatePlan()}
+              >
+                {busy === "generate" ? (
+                  <CircleNotch className="spin" size={17} />
+                ) : (
+                  <Sparkle size={18} />
+                )}
+                {busy === "generate" ? "正在保存需求并生成…" : "生成验收草稿"}
+              </button>
+              {error && (
+                <p className="inline-warning" role="alert">
+                  {error}
+                </p>
+              )}
+              {requirement && (
+                <p className="small-muted">需求已保存，可在配置模型后重试。</p>
+              )}
+            </>
+          )}
+          <details className="scope-note">
+            <summary>接入其他项目</summary>
+            <p>
+              通过「接入项目」登记运行中的本地网页，支持同源的页面、脚本和接口；跨域接口请配置开发服务器代理。也可接入自包含
+              HTML 文件。真实网页属于现场观察，不会声称整个应用代码已经被冻结。
+            </p>
+          </details>
+        </Sheet>
+      )}
+      {sheet === "prompt" && (
+        <Sheet title="交接给你的 AI" onClose={() => setSheet(null)}>
+          <p className="sheet-lead">
+            把指令交给已连接 Ming MCP 的编程
+            AI。它会读取证据、修改目标代码，并重新执行原始验收标准。
+          </p>
+          {task ? (
+            <>
+              <div className="info-box">
+                <TerminalWindow size={20} />
+                <p>
+                  任务 {short(task.taskId)} · {labels[task.status]}
+                  <br />
+                  创建任务不会自动唤醒 AI；领取和复验状态会自动更新。
+                </p>
+              </div>
+              <textarea
+                className="prompt-text"
+                readOnly
+                rows={12}
+                value={repairPrompt}
+                aria-label="AI 修复交接指令"
+              />
+              <button
+                className="primary-button full-width"
+                onClick={() => {
+                  void navigator.clipboard
+                    .writeText(repairPrompt)
+                    .then(() => {
+                      setCopied(true);
+                      setTimeout(() => setCopied(false), 2000);
+                    })
+                    .catch(() =>
+                      setError("无法复制，请从文本框手动复制指令。"),
+                    );
+                }}
+              >
+                <Copy size={17} />
+                {copied ? "已复制" : "复制英文修复指令"}
+              </button>
+            </>
+          ) : (
+            <p>正在读取修复任务…</p>
+          )}
+        </Sheet>
+      )}
+      {sheet === "comparison" && comparison && task && (
+        <Sheet
+          title={
+            comparison.verifiedRepair ? "这一次，修复有了证据" : "修复复验对照"
+          }
+          wide
+          onClose={() => setSheet(null)}
+        >
+          <div
+            className={`comparison-head ${comparison.verifiedRepair ? "verified" : "unverified"}`}
+          >
+            <ShieldCheck size={27} />
+            <div>
+              <h3>
+                {comparison.verifiedRepair
+                  ? "已验证修复"
+                  : comparison.acceptancePassed
+                    ? "复验通过 · 待确认"
+                    : "尚未验证修复"}
+              </h3>
+              <p>
+                {comparison.verifiedRepair
+                  ? "同一目标、同一验收标准和执行器；代码发生变化，原失败项复验通过。"
+                  : comparison.acceptancePassed
+                    ? "相同标准下的检查已经通过；完整代码快照未绑定，暂不认定为已验证修复。"
+                    : "仅有新的运行结果不足以认定修复，请检查阻塞原因。"}
+              </p>
+            </div>
+          </div>
+          <div className="comparison-checks">
+            {[
+              ["验收标准相同", comparison.planFingerprintMatch],
+              [
+                "执行器相同且已知",
+                comparison.runnerFingerprintMatch &&
+                  comparison.runnerFingerprintKnown,
+              ],
+              ["检查目标相同", comparison.targetIdentityMatch],
+              [
+                "目标代码已修改",
+                comparison.targetFingerprintChanged &&
+                  comparison.sourceFingerprintKnown,
+              ],
+            ].map(([label, good]) => (
+              <span
+                key={String(label)}
+                className={good ? "check-good" : "check-bad"}
+              >
+                {good ? <CheckCircle size={17} /> : <WarningCircle size={17} />}
+                {label}
+              </span>
+            ))}
+          </div>
+          {comparison.blockers.length > 0 && (
+            <div className="inline-warning">
+              <strong>仍需解决</strong>
+              <ul>
+                {comparison.blockers.map((b) => (
+                  <li key={b}>{b}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          <div className="compare-versions">
+            <div>
+              <span>修复前</span>
+              <code>{short(comparison.baselineTargetFingerprint)}</code>
+              <small>运行 {short(comparison.baselineRunId)}</small>
+            </div>
+            <ArrowRight size={21} />
+            <div>
+              <span>修改后</span>
+              <code>{short(comparison.repairedTargetFingerprint)}</code>
+              <small>运行 {short(comparison.rerunId)}</small>
+            </div>
+          </div>
+          <div className="comparison-table">
+            <div className="comparison-row table-header">
+              <span>验收条件</span>
+              <span>修复前</span>
+              <span>修改后</span>
+            </div>
+            {(
+              task.planSnapshot?.criteria ||
+              baseline?.criteria.map((c) => ({
+                id: c.criteriaId,
+                title: c.title,
+              })) ||
+              []
+            ).map((c) => (
+              <div className="comparison-row" key={c.id}>
+                <span>
+                  {c.id} · {c.title}
+                </span>
+                <Status
+                  value={
+                    baseline?.criteria.find((x) => x.criteriaId === c.id)
+                      ?.status || "not_run"
+                  }
+                />
+                <Status
+                  value={
+                    rerun?.criteria.find((x) => x.criteriaId === c.id)
+                      ?.status || "not_run"
+                  }
+                />
+              </div>
+            ))}
+          </div>
+          {baseline && rerun && (
+            <div className="compare-evidence">
+              {[baseline, rerun].map((r, i) => {
+                const cr =
+                  r.criteria.find((c) => c.criteriaId === criterionId) ||
+                  r.criteria.find((c) =>
+                    task.failedCriteria.some(
+                      (f) => f.criteriaId === c.criteriaId,
+                    ),
+                  );
+                const st = last(cr?.steps.filter((s) => s.screenshotPath));
+                return st ? (
+                  <EvidenceImage
+                    key={r.runId}
+                    run={r}
+                    step={st}
+                    caption={i ? "修改后 · 同标准复验" : "修复前 · 原始证据"}
+                  />
+                ) : (
+                  <p key={r.runId}>此项没有截图证据</p>
+                );
+              })}
+            </div>
+          )}
+          {rerun && (
+            <button
+              className="secondary-button full-width"
+              onClick={() =>
+                void act("open-rerun", async () => {
+                  await showRun(rerun.runId);
+                  setSheet(null);
+                })
+              }
+            >
+              查看修改后的完整运行与截图
+              <ArrowRight size={17} />
+            </button>
+          )}
+        </Sheet>
+      )}
+    </div>
+  );
 }

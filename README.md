@@ -3,124 +3,86 @@
 **Every “done” comes with proof.**  
 每一句「已完成」，都有据可验。
 
-Ming helps developers verify features built with AI. Review an acceptance plan, run it in a real browser, inspect the failure evidence, and hand the issue to a coding agent. After the agent edits the application, rerun the same standard and compare the evidence.
-
-The **Application X-ray** workspace connects requirements, actual browser screenshots, expected versus observed behavior, and the repair handoff. It does not invent network traces or assume that creating a task automatically wakes an AI editor.
-
-## What is verified
-
-The local core has completed a real repair cycle. Codex used the actual stdio MCP tools to retrieve and claim a failed daily-report acceptance task, changed the **same target's source**, and reran the unchanged plan. The persistence criterion changed from failed to passed; all three rerun criteria passed. The comparison retained matching plan, runner, and target identities while the target source fingerprint changed.
-
-| Real browser demonstration | Recorded outcome |
-| --- | --- |
-| Daily-report normal sample | 3 / 3 criteria passed |
-| Daily-report deliberately defective sample | Persistence criterion AC-02 failed |
-| Independent Focus todo normal sample | 3 / 3 criteria passed |
-| Focus todo deliberately defective sample | Completion-state persistence criterion TODO-03 failed |
-| Daily-report repair workspace, after actual source edit | 3 / 3 criteria passed; `verifiedRepair: true` |
-
-See the [reviewed evidence and source diff](docs/demo-evidence/README.md) and [manifest with record IDs and file hashes](docs/demo-evidence/manifest.json). These runs use **hand-authored fixture plans** and intentionally seeded defects. They are not live model-generation results or unknown production incidents.
-
-The final interface passed 43 integration checks, and the read-only viewer passed 10 browser checks. A 164-second narrated demonstration is available below. Publication status is tracked in [DELIVERY_STATUS](docs/DELIVERY_STATUS.md). The model adapter is implemented but no external provider has been configured or quality-tested.
+Ming checks features built with AI against a standard you review. Connect your development app, save its requirements, edit and confirm an acceptance plan, then run real browser checks. Failed checks include observations and screenshots that a coding agent can use to fix the app and rerun the same standard.
 
 ## Start locally
 
-Validated development environment: **Node.js 24.14.0** and **pnpm 11.2.2**. The repository pins pnpm in `package.json` and includes its lockfile.
-
-From the project folder, install and build once:
+Validated environment: **Node.js 24.14.0 / pnpm 11.2.2**.
 
 ```text
 pnpm install
 pnpm --filter @ming/runner exec playwright install chromium
 pnpm build
-```
-
-Then either double-click **`scripts/Start-Ming.cmd`** on Windows, or run:
-
-```text
 pnpm start
 ```
 
-Open **http://127.0.0.1:4001**. The built interface and API use the same local service; a separate frontend server is unnecessary. The Windows launcher opens the browser and runs the service in the background. It reuses a healthy existing Ming service and does not close other programs. Starting Ming does not invoke a model.
+Open **http://127.0.0.1:4001**. On Windows, after the first installation/build, double-click **`scripts/Start-Ming.cmd`** instead. The launcher reuses a healthy local Ming service, opens the browser, and does not close unrelated applications. Startup does not call a model.
 
-For interface development, run the local backend and `pnpm --filter @ming/web dev --port 4000 --host 127.0.0.1`. Rebuild the frontend before using the normal launcher to see those changes.
+For frontend development, run the backend and `pnpm --filter @ming/web dev --port 4000 --host 127.0.0.1`. Rebuild before using the normal launcher to see UI changes.
 
-## Try the workflow
+## Use your own project
 
-1. Select a sample project and inspect its acceptance criteria, prerequisites, and planned browser steps.
-2. Confirm the standard and start an acceptance run. Fixture runs require no model API or Bobcoins.
-3. Select a failed criterion to inspect its actual observations and original screenshot. Not every step has an individual screenshot; the interface identifies the evidence it displays.
-4. Create a repair task and give its English handoff instruction to a coding agent connected to Ming's MCP adapter.
-5. The agent reads and claims the task, edits the target application, and starts a rerun with the expected source fingerprint. Ming compares the actual results against the original standard.
+1. Start your development app, then choose **接入你的项目** in Ming. Register its local URL, or a self-contained HTML file. Optionally associate its source folder so the coding agent can locate the application.
+2. Save your PRD or feature requirements. Saved projects, requirements, plan revisions and confirmations survive restarts.
+3. Create a plan manually, or configure a compatible model to generate a draft. Review each criterion, boundary case, locator and expected result before confirming. An edited generated plan is recorded as a manual revision.
+4. Run the confirmed plan. The workspace shows real progress, expected versus observed behavior and captured browser evidence. You can cancel; cancellation stops remaining work but does not undo clicks or data changes already performed.
+5. Create a repair task for a failure. A connected coding agent retrieves and claims it, edits the application's source, and reruns the original plan. The webpage does not automatically wake an editor.
+6. Use history and repair comparison to inspect outcomes. Export a completed run as JSON, Markdown or a standalone HTML report with selected original screenshots.
 
-The preserved `buggy` sample remains defective so failure detection can be demonstrated repeatedly. `repair-demo` contains the completed, in-place repair; its original failure and source diff remain in the evidence bundle. Do not switch from a defective target to the normal sample and describe that as a repair.
+Changing the requirement or revising a plan requires a new confirmation. Old records remain history, rather than silently becoming approval for a different standard.
 
-## Sample targets and scope
+The plan editor supports **15 actions/assertions**: navigation, fill, click, reload, option selection, check/uncheck, visible/scoped-visible/absent text, element count, enabled/disabled input, input value and URL checks. Use accessible labels or explicit `css=` selectors. These are browser acceptance checks; they are not arbitrary code execution.
 
-Targets are registered in [`fixtures/targets.json`](fixtures/targets.json). Business-specific requirements and selectors belong to each plan, not to the generic browser runner.
+## Supported targets
 
-| Target | Local route | Plan |
+| Target | What works | Evidence boundary |
 | --- | --- | --- |
-| `normal` | `/normal` | Daily-report fixture |
-| `buggy` | `/buggy` | Daily-report fixture |
-| `repair-demo` | `/repair-demo` | Daily-report fixture |
-| `todo-normal` | `/todo-normal` | Focus todo fixture |
-| `todo-buggy` | `/todo-buggy` | Focus todo fixture |
+| Running local app | Multi-file frontend served from `http://localhost:1024–65535` or `http://127.0.0.1:1024–65535`; Ming's own ports are excluded | Observes the running app. A source-folder hash does not prove the server executed those exact source bytes. |
+| Self-contained HTML | A local `.html` / `.htm` file containing its own scripts and styles | Executes a captured file snapshot, including reloads; eligible for the stricter source-bound repair comparison. |
 
-The current binding guarantee covers **registered, self-contained HTML documents**: every browser context executes the captured document, including reloads. It does not freeze external assets, backend state, or remote applications. Multi-file apps, authentication, and external services need additional integration. Passing registered criteria does not prove an entire application is defect-free.
+For a running app, page navigation, scripts and API requests must stay on the **same origin**. HTTP redirects and cross-origin requests are blocked. If your backend uses another port, expose it through the frontend development server's proxy. Local HTTPS, public websites, arbitrary remote services, mini programs, CAPTCHA and automatic login setup are outside the current supported workflow.
 
-## Coding-agent connection
+The optional source folder helps the agent locate code and records a bounded source fingerprint. Ming does not edit it automatically. Passing the registered criteria does not prove that every feature is correct. A live URL passing its rerun is acceptance evidence; it must not be described as a verified frozen-source repair.
 
-Build `apps/mcp` as part of `pnpm build`. The stdio adapter provides five tools:
+## Model settings and costs
 
-- `ming_get_failed_run`
-- `ming_get_repair_task`
-- `ming_claim_repair_task`
-- `ming_rerun_plan`
-- `ming_get_comparison`
+Open **模型设置** to save an OpenAI-compatible Chat Completions API root, model ID and API key. The adapter appends `/chat/completions`; include the provider's required version prefix in the root.
 
-[The Bob MCP configuration](.bob/mcp.json) contains the original Windows workspace paths. On another machine, change its Node executable, adapter path, and working directory to your local absolute paths. The adapter currently connects to **127.0.0.1:4001**, so keep the backend on that port when using MCP.
+- Saving activates local settings without a restart and makes **no model call**.
+- The password field never reads a saved key back. Leave it blank to retain the existing key, replace it by entering a new one, or use **删除本地配置与密钥**.
+- Settings are stored in the ignored local `runtime/provider-config.json`. Existing `PROVIDER_*` environment configuration takes precedence and is explicitly shown; the UI will not silently override it.
+- **测试连接** sends one real request, with up to 8 requested output tokens and a 10-second deadline. It may incur provider charges. Plan generation is a separate explicit request.
+- The interface records actual returned token counts for the latest 200 calls and marks missing usage. It does not invent prices or silently fall back to sample plans.
 
-The coding agent calls Ming. The web interface queues evidence and displays state; it does not remotely control an arbitrary editor. Bob's actual tool-discovery screenshot and Codex's subsequent real MCP repair are documented separately.
+No provider key has been supplied and no external live model has been quality-tested. Manual plans and sample runs need no model API or Bobcoins. Your coding agent's own analysis and edits use its separate service/account.
 
-## Optional model provider
+## Connect a coding agent
 
-The server implements **OpenAI-compatible Chat Completions**. To use a compatible provider, configure `PROVIDER_LABEL`, `PROVIDER_BASE_URL`, `PROVIDER_MODEL_ID`, and `PROVIDER_API_KEY` in the ignored local file **`apps/server/.env`**, using [`.env.example`](.env.example) as the field reference, then restart the service. Preserve any existing configuration. The base URL includes the provider's API-version prefix; the adapter appends `/chat/completions`.
+Open **让编码 AI 调用 Ming** and copy its local MCP configuration and English workflow instruction. The adapter offers **12 tools** for project discovery, confirmed acceptance, progress, cancellation, evidence, repair and comparison.
 
-Other protocols require an additional adapter. Keys stay on the server and must not appear in browser code, screenshots, or the public repository. The adapter does not silently replace a failed model call with a fixture. A real provider still needs end-to-end generation, human review, and browser validation; compatibility or model quality is not established by the local simulated-response tests.
+See [AI connection and full workflow](docs/AI_CONNECTION.md). The default API is `http://127.0.0.1:4001`; `MING_BASE_URL` can point the adapter to another local HTTP origin. Update the absolute adapter path when moving the repository. Bob can use [the existing project configuration](.bob/mcp.json).
 
-## Public evidence viewer
+## Samples and recorded proof
 
-The prepared public viewer is **read-only history exploration**. It serves reviewed real records, screenshots, and the recorded repair comparison. It cannot execute new browser checks, call a model, or repair source code. Those actions require the local application.
+The daily-report and independent Focus todo samples include normal and deliberately defective variants. Their plans are hand-authored fixtures, clearly distinguished from manual user plans and live model output.
 
-The [deployed Sites preview](https://ming-acceptance-proof.amosming.chatgpt.site) is currently owner-private. It is not yet a public judging URL. The Sites adapter and packaging instructions are in [`scripts/public-demo/README.md`](scripts/public-demo/README.md). Only the explicitly selected `docs/demo-evidence` bundle is packaged; live local runtime data and credentials are excluded.
+The [reviewed evidence bundle](docs/demo-evidence/README.md) preserves a real earlier repair: **Codex used stdio MCP, changed the same daily-report target's source, and reran the unchanged plan**. The persistence failure became a pass, all three criteria passed, and the recorded comparison returned `verifiedRepair: true`. The original buggy variant remains defective for repeatable demonstrations. [Record IDs and hashes](docs/demo-evidence/manifest.json) identify that checkpoint; they are not new-interface test results.
 
-## Contributions and validation
+## Validation and delivery
 
-IBM Bob implemented the initial browser runner, evidence/history workflow, provider adapter, plan validation and confirmation, and repair/MCP foundations. After its trial quota ended, the user authorized Codex to finish the integrity checks, final interface, second sample, and delivery work. **Codex performed the recorded target repair.** These contributions are not attributed to Bob.
-
-Genuine Bob task summaries are in [`bob_sessions`](bob_sessions/README.md). Historical Stage A/B reports describe their respective checkpoints, rather than the final interface. Current core verification includes the snapshot/repair-integrity tests, API origin-boundary tests, and public-adapter tests. For local validation:
+Current checks passed: **13 provider**, **36 backend integration**, **13 runner**, **16 actual-SDK MCP/report**, **32 updated-product browser UI**, and **27 compiled read-only viewer checks**. The full typecheck and build passed. Provider settings also passed a real-browser save/test/reopen/delete/read-only smoke check using a local mock server. These checks made no commercial model calls. See [DELIVERY_STATUS](docs/DELIVERY_STATUS.md) and [product UI review](docs/PRODUCT_UI_REVIEW.md) for their scopes and reports.
 
 ```text
 pnpm typecheck
 pnpm build
-node scripts/review-repair-integrity.mjs
-node scripts/review-repair-integrity-origin.mjs
-node --test scripts/public-demo/worker.test.mjs
+pnpm --filter @ming/server exec ts-node src/provider/provider-settings.test.ts
+node apps/web/src/components/ProviderSettings.smoke.mjs
+node scripts/review-product-runner.mjs
+node scripts/review-real-targets.mjs
 ```
 
-These checks do not consume Bobcoins or call a real model. Test fixtures and adversarial verification records are separate from the selected demonstration evidence.
+IBM Bob built the initial runner, evidence/history, provider, plan validation/confirmation and repair/MCP foundations. After its trial quota ended, the user authorized **Codex** to complete and extend the application, including the new project workflow and model settings. [Original Bob session summaries](bob_sessions/README.md) remain unchanged; Codex's work and the recorded source repair are not attributed to Bob.
 
-## Delivery materials
+The [GitHub repository](https://github.com/Ming-Amos/Ming) and [Sites preview](https://ming-acceptance-proof.amosming.chatgpt.site) remain **private, pending user approval to publish**. Sites serves a read-only selection of reviewed historical evidence, not a remotely controlled development environment. Local runtime settings and keys are excluded.
 
-- [Problem & Solution Statement](docs/submission/problem-solution.md)
-- [IBM Bob Usage Statement](docs/submission/bob-usage.md)
-- [Submission fields](docs/submission/fields.md)
-- [Five-slide PDF](submission/ming-slides.pdf)
-- [Narrated MP4 demonstration](submission/ming-demo.mp4) — 164 seconds, with English captions
-- [English subtitles](submission/ming-demo.srt)
-- [Concept cover](submission/ming-cover.png) — illustration, not a product screenshot
-- [Delivery checklist](docs/DELIVERY_STATUS.md)
-- [Original product requirements](docs/MING_PRD.md)
-
-Event: [IBM Bob 2.0 Hackathon](https://lablab.ai/ai-hackathons/ibm-bob-2-hackathon). Participation-account eligibility remains subject to the organizer's confirmation; the saved implementation evidence alone does not establish eligibility.
+[The 164-second video](submission/ming-demo.mp4), [five-slide deck](submission/ming-slides.pdf), and existing interface screenshots show the **previous prototype checkpoint**, not all features in the updated UI. [Submission statements](docs/submission/fields.md), [concept cover](submission/ming-cover.png), and [delivery checklist](docs/DELIVERY_STATUS.md) are available for final review. The cover is artwork, not execution evidence. The project has not been submitted automatically; account eligibility remains subject to organizer confirmation.

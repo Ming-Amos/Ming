@@ -18,12 +18,15 @@ import {
   FailedCriteriaSummary,
 } from "@ming/contracts";
 import { PlanRunner, computeFingerprint } from "@ming/runner";
-import { getProviderStatus, createLiveTransport } from "./provider/index";
+import { createLiveTransport } from "./provider/index";
 import { TestFixtureTransport, buildEndpointUrl } from "./provider/openai-transport";
-import { inspectPage } from "./inspector/page-inspector";
 import { validateDraftPlan } from "./validator/draft-validator";
 import type { ProviderTransport } from "./provider/types";
 import { compareRepair, planIntegrity } from "./repair-integrity";
+import { TargetRegistry, RegisteredTarget, RequestError, captureTarget, targetFingerprint, inspectRegisteredTarget } from "./target-registry";
+import { mountProviderRoutes } from "./provider-routes";
+import { recordProviderUsage } from "./provider/index";
+import { mountRunReportRoutes } from "./report-routes";
 
 // Allow injecting a test transport (used by integration tests via MING_TEST_TRANSPORT env)
 // The test transport is set at module level by the integration test harness.
@@ -57,7 +60,7 @@ app.use((req, res, next) => {
   next();
 });
 app.use(cors({ origin: (origin, callback) => callback(null, !origin || trustedBrowserOrigin(origin)) }));
-app.use(express.json());
+app.use(express.json({ limit: "256kb" }));
 app.use((req, res, next) => {
   if (process.env.MING_PUBLIC_DEMO === "1" && !["GET", "HEAD", "OPTIONS"].includes(req.method)) {
     res.status(403).json({ ok: false, error: "此公开演示仅展示已记录的真实运行。请在本地启动 Ming 执行新验收。" });
@@ -82,34 +85,9 @@ const CONFIRMATIONS_DIR = path.join(RUNTIME_DIR, "confirmations");
 // Stage C data dir
 const REPAIR_TASKS_DIR = path.join(RUNTIME_DIR, "repair-tasks");
 
-// 允许的目标地址（限制只能访问本机样例，不提供任意URL执行端点）
-interface RegisteredTarget { url: string; htmlPath: string; label: string; planPath: string; route: string }
-const ALLOWED_VARIANTS: Record<string, RegisteredTarget> = Object.create(null) as Record<string, RegisteredTarget>;
-function resolveRepoFile(relativePath: string): string {
-  if (typeof relativePath !== "string" || path.isAbsolute(relativePath)) throw new Error("Registry paths must be repo-relative");
-  const resolved = path.resolve(PROJECT_ROOT, relativePath);
-  const relative = path.relative(PROJECT_ROOT, resolved);
-  if (!relative || relative.startsWith("..") || path.isAbsolute(relative)) throw new Error("Registry path escapes repository");
-  return resolved;
-}
 const registryPath = process.env.MING_TARGET_REGISTRY ? path.resolve(process.env.MING_TARGET_REGISTRY) : path.join(FIXTURES_DIR, "targets.json");
-const defaultTargets = [
-  { variant: "normal", route: "/normal", label: "日报 · 正常示例", htmlPath: "examples/daily-report/normal/index.html", planPath: "fixtures/stage-a-plan.json" },
-  { variant: "buggy", route: "/buggy", label: "日报 · 缺陷示例", htmlPath: "examples/daily-report/buggy/index.html", planPath: "fixtures/stage-a-plan.json" },
-];
-const registry: typeof defaultTargets = fs.existsSync(registryPath) ? JSON.parse(fs.readFileSync(registryPath, "utf-8")) : defaultTargets;
-const registeredRoutes = new Set<string>();
-for (const entry of registry) {
-  if (!/^[a-z][a-z0-9-]{0,63}$/.test(entry.variant) || !/^\/[a-z][a-z0-9-]{0,63}$/.test(entry.route) ||
-      ["/api", "/admin"].includes(entry.route) || ALLOWED_VARIANTS[entry.variant] || registeredRoutes.has(entry.route)) {
-    throw new Error("Invalid or duplicate target registration");
-  }
-  registeredRoutes.add(entry.route);
-  ALLOWED_VARIANTS[entry.variant] = {
-    url: `http://localhost:${PORT}${entry.route}`, htmlPath: resolveRepoFile(entry.htmlPath), label: entry.label,
-    planPath: resolveRepoFile(entry.planPath ?? "fixtures/stage-a-plan.json"), route: entry.route,
-  };
-}
+const targetRegistry = new TargetRegistry(PROJECT_ROOT, RUNTIME_DIR, PORT, registryPath);
+const ALLOWED_VARIANTS = targetRegistry.targets;
 
 // ── 目录初始化 ────────────────────────────────────────────────────
 [RUNS_DIR, SCREENSHOTS_DIR, PROJECTS_DIR, REQUIREMENTS_DIR, DRAFTS_DIR, CONFIRMATIONS_DIR, REPAIR_TASKS_DIR]
@@ -117,6 +95,8 @@ for (const entry of registry) {
 
 // ── 运行状态（内存缓存+文件持久化） ──────────────────────────────
 const runningJobs = new Map<string, Promise<RunRecord>>();
+const runControllers = new Map<string, { variant: string; controller: AbortController }>();
+const inspectingTargets = new Set<string>();
 
 // Live progress tracking: map from runId → partial progress
 interface LiveProgress {
@@ -127,8 +107,7 @@ interface LiveProgress {
 const liveProgress = new Map<string, LiveProgress>();
 
 function saveRun(record: RunRecord): void {
-  const filePath = path.join(RUNS_DIR, `${record.runId}.json`);
-  fs.writeFileSync(filePath, JSON.stringify(record, null, 2), "utf-8");
+  saveJson(RUNS_DIR, record.runId, record);
 }
 
 function loadRun(runId: string): RunRecord | null {
@@ -159,25 +138,20 @@ function listRuns(): RunRecord[] {
 
 // ── 加载计划 ─────────────────────────────────────────────────────
 function loadPlan(variant = "normal"): AcceptancePlan {
-  const planPath = ALLOWED_VARIANTS[variant]?.planPath ?? path.join(FIXTURES_DIR, "stage-a-plan.json");
+  const target = ALLOWED_VARIANTS[variant];
+  if (!target?.isSample || !target.planPath) throw new RequestError(400, "自有项目没有预设验收计划，请先建立并确认自己的标准");
+  const planPath = target.planPath;
   const raw = JSON.parse(fs.readFileSync(planPath, "utf-8")) as AcceptancePlan;
   raw.fingerprint = computeFingerprint(raw);
   return raw;
 }
 
 // ── 目标指纹（基于 HTML 内容） ───────────────────────────────────
-function computeTargetFingerprint(htmlPath: string): string {
-  try {
-    const content = fs.readFileSync(htmlPath, "utf-8");
-    return computeFingerprint(content);
-  } catch {
-    return "unknown";
-  }
-}
-
 // ── Stage B: JSON 文件存取辅助 ────────────────────────────────────
 function saveJson<T>(dir: string, id: string, data: T): void {
-  fs.writeFileSync(path.join(dir, `${id}.json`), JSON.stringify(data, null, 2), "utf-8");
+  const file = path.join(dir, `${id}.json`), temporary = `${file}.tmp`;
+  fs.writeFileSync(temporary, JSON.stringify(data, null, 2), "utf-8");
+  fs.renameSync(temporary, file);
 }
 function loadJson<T>(dir: string, id: string): T | null {
   if (typeof id !== "string" || !/^[a-zA-Z0-9_-]+$/.test(id)) return null;
@@ -229,100 +203,138 @@ function resolveRunPlan(run: RunRecord): AcceptancePlan {
 }
 
 // ── 启动运行的内部函数（Stage A 和 Stage B 共用） ────────────────
+function activeTarget(variant: string): RegisteredTarget {
+  const cfg = ALLOWED_VARIANTS[variant];
+  if (!cfg) throw new RequestError(404, "目标不存在");
+  if (cfg.archived) throw new RequestError(409, "项目已归档，不能执行新任务；历史证据仍可查看");
+  return cfg;
+}
+
+function hasActiveTarget(variant: string): boolean {
+  return inspectingTargets.has(variant) || [...runControllers.values()].some(job => job.variant === variant);
+}
+
+function assertRunCapacity(variant: string): void {
+  if (hasActiveTarget(variant)) throw new RequestError(409, "该项目已有运行或连接检查，请等待完成或取消运行");
+  if (runControllers.size + inspectingTargets.size >= 2) throw new RequestError(429, "同时最多执行两个浏览器任务，请稍后重试");
+}
+
 function launchRun(opts: {
   plan: AcceptancePlan;
   variant: string;
-  targetCfg: { url: string; htmlPath: string };
+  targetCfg: RegisteredTarget;
   confirmationId?: string;
   requirementId?: string;
   capturedTarget?: TargetConfig;
 }): string {
   const { plan, variant, targetCfg, confirmationId, requirementId } = opts;
+  activeTarget(variant);
+  assertRunCapacity(variant);
   const runId = uuidv4();
-  const htmlSnapshot = opts.capturedTarget?.htmlSnapshot ?? fs.readFileSync(targetCfg.htmlPath, "utf-8");
-  const target: TargetConfig = opts.capturedTarget ?? {
-    variant, url: targetCfg.url, fingerprint: computeFingerprint(htmlSnapshot), htmlSnapshot,
+  const target = opts.capturedTarget ?? captureTarget(targetCfg);
+  const controller = new AbortController();
+  const startedAt = new Date().toISOString();
+  const pending: RunRecord = {
+    runId, planId: plan.planId, planVersion: plan.version, planFingerprint: plan.fingerprint,
+    targetVariant: variant, targetUrl: target.url, targetFingerprint: target.fingerprint,
+    status: "pending", startedAt, confirmationId, requirementId,
+    planSnapshot: JSON.parse(JSON.stringify(plan)) as AcceptancePlan,
+    sourceBinding: target.sourceBinding,
+    criteria: plan.criteria.map(c => ({ criteriaId: c.id, title: c.title, status: "pending", steps: c.steps.map(s => ({ stepId: s.id, description: s.description, status: "pending" })) })),
   };
-  let sourceChanged = false;
-  const watcher = fs.watch(path.dirname(targetCfg.htmlPath), (_event, filename) => {
-    if (!filename || filename.toString() === path.basename(targetCfg.htmlPath)) sourceChanged = true;
-  });
-  watcher.on("error", () => { sourceChanged = true; });
-  if (computeTargetFingerprint(targetCfg.htmlPath) !== target.fingerprint) sourceChanged = true;
-  const uniqueContent = `Ming测试-${variant}-${Date.now()}`;
-
-  liveProgress.set(runId, {
-    totalCriteria: plan.criteria.length,
-    finishedCriteria: 0,
-  });
-
-  const job = (async (): Promise<RunRecord> => {
+  saveRun(pending);
+  runControllers.set(runId, { variant, controller });
+  liveProgress.set(runId, { totalCriteria: plan.criteria.length, finishedCriteria: 0 });
+  // Defer execution until maps are populated, including synchronous validation failures.
+  const job = Promise.resolve().then(async (): Promise<RunRecord> => {
+    let sourceChanged = false;
+    let watcher: fs.FSWatcher | undefined;
     try {
+      if (targetCfg.kind === "html" && targetCfg.htmlPath) {
+        watcher = fs.watch(path.dirname(targetCfg.htmlPath), (_event, filename) => {
+          if (!filename || filename.toString() === path.basename(targetCfg.htmlPath!)) sourceChanged = true;
+        });
+        watcher.on("error", () => { sourceChanged = true; });
+      }
+      if (targetFingerprint(targetCfg) !== target.fingerprint) sourceChanged = true;
+      saveRun({ ...pending, status: "running" });
       const runner = new PlanRunner({
-        screenshotDir: SCREENSHOTS_DIR,
-        runId,
+        screenshotDir: SCREENSHOTS_DIR, runId, signal: controller.signal,
         onCriteriaComplete: (criteriaId: string, _status: CriteriaStatus) => {
           const lp = liveProgress.get(runId);
-          if (lp) {
-            lp.finishedCriteria += 1;
-            lp.currentCriteria = criteriaId;
-          }
+          if (lp) { lp.finishedCriteria += 1; lp.currentCriteria = criteriaId; }
         },
       });
-      const record = await runner.run(plan, target, uniqueContent);
-      record.sourceChangedDuringRun = sourceChanged || computeTargetFingerprint(targetCfg.htmlPath) !== target.fingerprint;
-      // Attach Stage B linkage
+      const record = await runner.run(plan, target, `Ming测试-${variant}-${Date.now()}`);
+      record.sourceBinding = target.sourceBinding;
+      record.sourceChangedDuringRun = sourceChanged || targetFingerprint(targetCfg) !== target.fingerprint;
+      if (controller.signal.aborted) {
+        record.status = "error";
+        record.terminationReason = "cancelled";
+        record.fatalError = "用户已取消本次验收；未完成的检查不代表通过。";
+      }
       if (confirmationId) record.confirmationId = confirmationId;
       if (requirementId) record.requirementId = requirementId;
       saveRun(record);
       return record;
-    } catch (err: unknown) {
-      const fatalError = err instanceof Error ? err.message : String(err);
-      const errorRecord: RunRecord = {
-        runId,
-        planId: plan.planId,
-        planVersion: plan.version,
-        planFingerprint: plan.fingerprint,
-        targetVariant: variant,
-        targetUrl: targetCfg.url,
-        targetFingerprint: target.fingerprint,
-        status: "error",
-        startedAt: new Date().toISOString(),
-        finishedAt: new Date().toISOString(),
-        criteria: plan.criteria.map((c) => ({
-          criteriaId: c.id,
-          title: c.title,
-          status: "not_run",
-          blockedReason: `致命错误：${fatalError}`,
-          steps: c.steps.map((s) => ({
-            stepId: s.id,
-            description: s.description,
-            status: "skipped",
-          })),
-        })),
-        fatalError,
-        confirmationId,
-        requirementId,
-        planSnapshot: plan,
-        sourceBinding: "self-contained-html-snapshot",
-        sourceChangedDuringRun: sourceChanged || computeTargetFingerprint(targetCfg.htmlPath) !== target.fingerprint,
+    } catch (error) {
+      const fatalError = controller.signal.aborted ? "用户已取消本次验收；未完成的检查不代表通过。" : error instanceof Error ? error.message : String(error);
+      const record: RunRecord = {
+        ...pending, status: "error", finishedAt: new Date().toISOString(), fatalError,
+        terminationReason: controller.signal.aborted ? "cancelled" : undefined,
+        sourceChangedDuringRun: sourceChanged || targetFingerprint(targetCfg) !== target.fingerprint,
+        criteria: pending.criteria.map(c => ({ ...c, status: "not_run", blockedReason: fatalError, steps: c.steps.map(step => ({ ...step, status: "skipped" })) })),
       };
-      saveRun(errorRecord);
-      return errorRecord;
+      saveRun(record);
+      return record;
     } finally {
-      watcher.close();
+      watcher?.close();
       runningJobs.delete(runId);
+      runControllers.delete(runId);
       liveProgress.delete(runId);
     }
-  })();
-
+  });
   runningJobs.set(runId, job);
   return runId;
 }
 
+function listJson<T>(directory: string): T[] {
+  return fs.readdirSync(directory).filter(f => f.endsWith(".json")).map(f => loadJson<T>(directory, f.slice(0, -5))).filter((item): item is T => item !== null);
+}
+
+function draftSuperseded(draftId: string): boolean {
+  return listJson<DraftRecord>(DRAFTS_DIR).some(draft => draft.supersedesDraftId === draftId);
+}
+
+function latestRequirement(projectId: string): RequirementRecord | undefined {
+  return listJson<RequirementRecord>(REQUIREMENTS_DIR).filter(r => r.projectId === projectId).sort((a, b) => b.version - a.version || b.createdAt.localeCompare(a.createdAt))[0];
+}
+
+function assertCurrentDraft(draft: DraftRecord): void {
+  const project = loadJson<ProjectRecord>(PROJECTS_DIR, draft.projectId);
+  if (!project) throw new RequestError(404, "草稿关联的项目不存在");
+  activeTarget(project.targetVariant);
+  if (draftSuperseded(draft.draftId)) throw new RequestError(409, "草稿已有修订版本，请重新审阅并确认新版；原始证据仍保留");
+  if (latestRequirement(project.projectId)?.requirementId !== draft.requirementId) throw new RequestError(409, "项目需求已有新版本，请基于最新需求建立并确认验收标准");
+}
+
+// A terminated process cannot leave a run or task appearing to execute forever.
+if (process.env.MING_PUBLIC_DEMO !== "1") {
+  for (const run of listRuns()) {
+    if (run.status !== "running" && run.status !== "pending") continue;
+    saveRun({ ...run, status: "error", terminationReason: "interrupted", finishedAt: new Date().toISOString(), fatalError: "服务重新启动，此次验收被中断，请重新运行。", criteria: run.criteria.map(c => ({ ...c, status: "not_run", blockedReason: "服务重新启动，未得到完整结果", steps: c.steps.map(step => ({ ...step, status: "skipped" })) })) });
+  }
+  for (const task of listJson<RepairTaskRecord>(REPAIR_TASKS_DIR)) {
+    if (task.status === "rerunning") saveJson(REPAIR_TASKS_DIR, task.taskId, { ...task, status: "error", blockedReason: "服务重新启动，修复复验已中断。", updatedAt: new Date().toISOString() });
+  }
+}
+
+mountProviderRoutes(app, RUNTIME_DIR);
+mountRunReportRoutes(app, { loadRun, screenshotsDir: SCREENSHOTS_DIR });
+
 // ── API 路由 ─────────────────────────────────────────────────────
 app.get("/api/capabilities", (_req: Request, res: Response) => {
-  res.json({ ok: true, readOnly: process.env.MING_PUBLIC_DEMO === "1", sourceBinding: "self-contained-html-snapshot" });
+  res.json({ ok: true, readOnly: process.env.MING_PUBLIC_DEMO === "1", sourceBinding: "self-contained-html-snapshot", customTargets: true, manualPlans: true, maxConcurrentRuns: 2 });
 });
 
 // GET /api/plan  返回固定计划（含真实指纹）
@@ -330,6 +342,7 @@ app.get("/api/plan", (req: Request, res: Response) => {
   try {
     const variant = typeof req.query.variant === "string" ? req.query.variant : "normal";
     if (!ALLOWED_VARIANTS[variant]) { res.status(400).json({ ok: false, error: "未知目标" }); return; }
+    if (!ALLOWED_VARIANTS[variant].isSample) { res.json({ ok: true, plan: null }); return; }
     const plan = loadPlan(variant);
     res.json({ ok: true, plan });
   } catch (err: unknown) {
@@ -339,13 +352,45 @@ app.get("/api/plan", (req: Request, res: Response) => {
 
 // GET /api/targets  返回允许的目标列表
 app.get("/api/targets", (_req: Request, res: Response) => {
-  const targets = Object.entries(ALLOWED_VARIANTS).map(([variant, cfg]) => ({
-    variant,
-    url: cfg.url,
-    label: cfg.label,
-    fingerprint: computeTargetFingerprint(cfg.htmlPath),
-  }));
-  res.json({ ok: true, targets });
+  res.json({ ok: true, targets: targetRegistry.list() });
+});
+
+app.post("/api/targets", (req: Request, res: Response) => {
+  if (!req.body || typeof req.body !== "object" || Array.isArray(req.body)) throw new RequestError(400, "目标配置必须为 JSON 对象");
+  const projectId = uuidv4();
+  const target = targetRegistry.create(req.body as Record<string, unknown>, projectId);
+  const now = new Date().toISOString();
+  const project: ProjectRecord = { projectId, name: target.label, targetVariant: target.variant, targetUrl: target.url, createdAt: now, updatedAt: now };
+  saveJson(PROJECTS_DIR, projectId, project);
+  res.json({ ok: true, target: targetRegistry.list().find(t => t.variant === target.variant), project });
+});
+
+app.delete("/api/targets/:variant", (req: Request, res: Response) => {
+  const target = ALLOWED_VARIANTS[req.params.variant];
+  if (!target) throw new RequestError(404, "目标不存在");
+  if (target.isSample) throw new RequestError(400, "内置示例不能归档");
+  if (hasActiveTarget(target.variant) || listRepairTasks().some(t => t.targetVariant === target.variant && ["claimed", "rerunning"].includes(t.status))) throw new RequestError(409, "项目仍有正在执行的验收或修复任务，不能归档");
+  const updated = { ...target, archived: true };
+  targetRegistry.persist(updated);
+  ALLOWED_VARIANTS[target.variant] = updated;
+  for (const project of listJson<ProjectRecord>(PROJECTS_DIR).filter(p => p.targetVariant === target.variant)) saveJson(PROJECTS_DIR, project.projectId, { ...project, archived: true, updatedAt: new Date().toISOString() });
+  res.json({ ok: true, target: updated });
+});
+
+async function inspectTarget(target: RegisteredTarget, projectId: string) {
+  activeTarget(target.variant);
+  assertRunCapacity(target.variant);
+  inspectingTargets.add(target.variant);
+  try { return await inspectRegisteredTarget(target, projectId); }
+  finally { inspectingTargets.delete(target.variant); }
+}
+
+app.post("/api/targets/:variant/probe", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const target = activeTarget(req.params.variant);
+    const context = await inspectTarget(target, target.projectId ?? "sample");
+    res.status(context.error ? 502 : 200).json({ ok: !context.error, reachable: !context.error, context, error: context.error });
+  } catch (error) { next(error); }
 });
 
 // POST /api/run  发起验收运行（Stage A 固定夹具）
@@ -373,6 +418,7 @@ app.post("/api/run", (req: Request, res: Response) => {
     });
     return;
   }
+  if (!ALLOWED_VARIANTS[variant].isSample) throw new RequestError(400, "自有项目必须通过已确认的手动或模型计划运行，不能使用示例计划");
 
   let plan: AcceptancePlan;
   try {
@@ -408,6 +454,15 @@ app.post("/api/run", (req: Request, res: Response) => {
   });
 
   res.json({ ok: true, runId });
+});
+
+app.post("/api/run/:runId/cancel", (req: Request, res: Response) => {
+  const record = loadRun(req.params.runId);
+  if (!record) throw new RequestError(404, "运行不存在");
+  const active = runControllers.get(record.runId);
+  if (!active) { res.json({ ok: true, runId: record.runId, status: record.status, alreadyFinished: true }); return; }
+  active.controller.abort(new Error("用户取消验收"));
+  res.json({ ok: true, runId: record.runId, status: "cancelling" });
 });
 
 // GET /api/run/:runId/progress  轮询进度
@@ -450,14 +505,11 @@ app.get("/api/run/:runId/progress", async (req: Request, res: Response) => {
 });
 
 // GET /api/run/:runId  获取完整结果
-app.get("/api/run/:runId", async (req: Request, res: Response) => {
+app.get("/api/run/:runId", (req: Request, res: Response) => {
   const { runId } = req.params;
-
-  const running = runningJobs.get(runId);
-  if (running) {
-    try { await running; } catch { /* Error already saved */ }
-  }
-
+  // Pending/running records are persisted before browser execution. Readers get
+  // that truthful snapshot immediately and can poll progress; GET never waits
+  // for the entire browser job or turns a client timeout into a lost run.
   const record = loadRun(runId);
   if (!record) {
     res.status(404).json({ ok: false, error: `runId ${runId} 不存在` });
@@ -485,6 +537,8 @@ app.get("/api/history", (_req: Request, res: Response) => {
     fatalError: r.fatalError,
     confirmationId: r.confirmationId,
     requirementId: r.requirementId,
+    sourceBinding: r.sourceBinding,
+    terminationReason: r.terminationReason,
   }));
   res.json({ ok: true, runs: summary });
 });
@@ -502,12 +556,6 @@ app.get("/api/screenshots/:filename", (req: Request, res: Response) => {
 
 // ── Stage B Routes ────────────────────────────────────────────────
 
-// GET /api/provider/status  返回提供商配置状态（不含密钥）
-app.get("/api/provider/status", (_req: Request, res: Response) => {
-  const status = getProviderStatus();
-  res.json({ ok: true, status });
-});
-
 // POST /api/projects  创建项目记录
 // body: { name: string, targetVariant: string }
 app.post("/api/projects", (req: Request, res: Response) => {
@@ -523,6 +571,11 @@ app.post("/api/projects", (req: Request, res: Response) => {
     });
     return;
   }
+  const target = activeTarget(targetVariant);
+  if (!target.isSample && target.projectId) {
+    const project = loadJson<ProjectRecord>(PROJECTS_DIR, target.projectId);
+    if (project) { res.json({ ok: true, project }); return; }
+  }
   const projectId = uuidv4();
   const now = new Date().toISOString();
   const project: ProjectRecord = {
@@ -537,6 +590,23 @@ app.post("/api/projects", (req: Request, res: Response) => {
   res.json({ ok: true, project });
 });
 
+app.get("/api/projects", (_req: Request, res: Response) => {
+  const projects = listJson<ProjectRecord>(PROJECTS_DIR).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)).slice(0, 200);
+  res.json({ ok: true, projects });
+});
+
+app.get("/api/projects/:projectId/workspace", (req: Request, res: Response) => {
+  const project = loadJson<ProjectRecord>(PROJECTS_DIR, req.params.projectId);
+  if (!project) throw new RequestError(404, "项目不存在");
+  const requirements = listJson<RequirementRecord>(REQUIREMENTS_DIR).filter(r => r.projectId === project.projectId).sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 50);
+  const allDrafts = listJson<DraftRecord>(DRAFTS_DIR).filter(d => d.projectId === project.projectId);
+  const superseded = new Set(allDrafts.map(d => d.supersedesDraftId).filter(Boolean));
+  const drafts = allDrafts.sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 50);
+  const currentRequirementId = latestRequirement(project.projectId)?.requirementId;
+  const confirmations = listJson<ConfirmationRecord>(CONFIRMATIONS_DIR).filter(c => c.projectId === project.projectId).sort((a, b) => b.confirmedAt.localeCompare(a.confirmedAt)).slice(0, 50).map(c => ({ ...c, active: !superseded.has(c.draftId) && c.requirementId === currentRequirementId && !ALLOWED_VARIANTS[project.targetVariant]?.archived }));
+  res.json({ ok: true, project, requirements, drafts, confirmations });
+});
+
 // GET /api/projects/:projectId  获取项目
 app.get("/api/projects/:projectId", (req: Request, res: Response) => {
   const project = loadJson<ProjectRecord>(PROJECTS_DIR, req.params.projectId);
@@ -545,7 +615,7 @@ app.get("/api/projects/:projectId", (req: Request, res: Response) => {
 });
 
 // GET /api/projects/:projectId/context  检查目标页面结构
-app.get("/api/projects/:projectId/context", async (req: Request, res: Response) => {
+app.get("/api/projects/:projectId/context", async (req: Request, res: Response, next: NextFunction) => {
   if (process.env.MING_PUBLIC_DEMO === "1") {
     res.status(403).json({ ok: false, error: "公开演示仅提供已保存证据，不执行新的浏览器检查。" });
     return;
@@ -556,14 +626,10 @@ app.get("/api/projects/:projectId/context", async (req: Request, res: Response) 
   if (!targetCfg) { res.status(400).json({ ok: false, error: "项目目标变体不在允许列表中" }); return; }
 
   try {
-    const context = await inspectPage({
-      projectId: project.projectId,
-      targetVariant: project.targetVariant,
-      targetUrl: targetCfg.url,
-    });
+    const context = await inspectTarget(targetCfg, project.projectId);
     res.json({ ok: true, context });
   } catch (err: unknown) {
-    res.status(500).json({ ok: false, error: String(err) });
+    next(err);
   }
 });
 
@@ -572,22 +638,25 @@ app.get("/api/projects/:projectId/context", async (req: Request, res: Response) 
 app.post("/api/projects/:projectId/requirements", (req: Request, res: Response) => {
   const project = loadJson<ProjectRecord>(PROJECTS_DIR, req.params.projectId);
   if (!project) { res.status(404).json({ ok: false, error: "项目不存在" }); return; }
+  activeTarget(project.targetVariant);
 
   const { text } = req.body as { text?: unknown };
   if (!text || typeof text !== "string" || !text.trim()) {
     res.status(400).json({ ok: false, error: "需求 text 不能为空" });
     return;
   }
+  if (text.length > 20000) throw new RequestError(400, "需求最多支持 20,000 字符，请聚焦本次验收范围");
 
   const requirementId = uuidv4();
   const record: RequirementRecord = {
     requirementId,
     projectId: project.projectId,
-    version: 1,
+    version: 1 + Math.max(0, ...listJson<RequirementRecord>(REQUIREMENTS_DIR).filter(r => r.projectId === project.projectId).map(r => r.version)),
     text: text.trim(),
     createdAt: new Date().toISOString(),
   };
   saveJson(REQUIREMENTS_DIR, requirementId, record);
+  saveJson(PROJECTS_DIR, project.projectId, { ...project, updatedAt: record.createdAt });
   res.json({ ok: true, requirement: record });
 });
 
@@ -613,31 +682,23 @@ app.post("/api/generate", async (req: Request, res: Response, next: NextFunction
 
   const project = loadJson<ProjectRecord>(PROJECTS_DIR, requirement.projectId);
   if (!project) { res.status(404).json({ ok: false, error: "关联项目不存在" }); return; }
+  try { activeTarget(project.targetVariant); } catch (error) { next(error); return; }
+
+  const transport = getTransport();
+  if (!transport) {
+    res.status(503).json({ ok: false, error: "模型未配置：请连接模型，或使用手动验收标准，无需 API 密钥。", notConfigured: true });
+    return;
+  }
 
   // Get page context (best-effort; non-blocking on failure)
   let pageContext = null;
   const targetCfg = ALLOWED_VARIANTS[project.targetVariant];
   if (targetCfg) {
     try {
-      pageContext = await inspectPage({
-        projectId: project.projectId,
-        targetVariant: project.targetVariant,
-        targetUrl: targetCfg.url,
-      });
+      pageContext = await inspectTarget(targetCfg, project.projectId);
     } catch {
       // page context failure is non-fatal; model will receive null context
     }
-  }
-
-  const transport = getTransport();
-  if (!transport) {
-    // No transport configured — return distinct "model not configured" response
-    res.status(503).json({
-      ok: false,
-      error: "模型未配置：请在 apps/server/.env 中设置 PROVIDER_BASE_URL、PROVIDER_MODEL_ID 和 PROVIDER_API_KEY",
-      notConfigured: true,
-    });
-    return;
   }
 
   let outcome;
@@ -652,6 +713,7 @@ app.post("/api/generate", async (req: Request, res: Response, next: NextFunction
     next(err);
     return;
   }
+  recordProviderUsage(outcome.usage, "generation");
 
   if (!outcome.ok) {
     res.status(502).json({
@@ -701,6 +763,53 @@ app.post("/api/generate", async (req: Request, res: Response, next: NextFunction
   res.json({ ok: true, draft: draftRecord });
 });
 
+function createManualDraft(body: unknown, previous?: DraftRecord): DraftRecord {
+  if (!body || typeof body !== "object" || Array.isArray(body)) throw new RequestError(400, "手动计划必须为 JSON 对象");
+  const input = body as { projectId?: unknown; requirementId?: unknown; plan?: unknown };
+  if (typeof input.projectId !== "string" || typeof input.requirementId !== "string") throw new RequestError(400, "必须关联已有项目和原始需求");
+  const project = loadJson<ProjectRecord>(PROJECTS_DIR, input.projectId);
+  const requirement = loadJson<RequirementRecord>(REQUIREMENTS_DIR, input.requirementId);
+  if (!project || !requirement || requirement.projectId !== project.projectId) throw new RequestError(400, "项目与需求的关联不一致");
+  activeTarget(project.targetVariant);
+  if (latestRequirement(project.projectId)?.requirementId !== requirement.requirementId) throw new RequestError(409, "请使用项目最新需求版本");
+  if (previous && (previous.projectId !== project.projectId || previous.requirementId !== requirement.requirementId)) throw new RequestError(400, "修订不能切换项目或需求，请创建新的验收计划");
+  if (previous && draftSuperseded(previous.draftId)) throw new RequestError(409, "此草稿已有新版本，请从最新版本继续修订");
+  if (!input.plan || typeof input.plan !== "object" || Array.isArray(input.plan)) throw new RequestError(400, "plan 必须包含 title、description 和 criteria");
+  const content = input.plan as Record<string, unknown>;
+  if (Object.keys(content).some(key => !["title", "description", "criteria"].includes(key))) throw new RequestError(400, "手动计划只接受 title、description、criteria，身份及指纹由服务器生成");
+  if (typeof content.title !== "string" || !content.title.trim() || content.title.length > 200 || typeof content.description !== "string" || content.description.length > 4000) throw new RequestError(400, "标题须为 1–200 字符，描述须为不超过 4000 字符的文本");
+  const createdAt = new Date().toISOString();
+  const draftVersion = 1 + Math.max(0, ...listJson<DraftRecord>(DRAFTS_DIR).filter(d => d.requirementId === requirement.requirementId).map(d => d.draftVersion));
+  const plan: AcceptancePlan = {
+    planId: uuidv4(), version: String(draftVersion), source: "manual", title: content.title.trim(), description: content.description,
+    criteria: content.criteria as AcceptancePlan["criteria"], fingerprint: "", createdAt,
+    projectId: project.projectId, requirementId: requirement.requirementId, originalRequirement: requirement.text,
+  };
+  const errors = validateDraftPlan(plan);
+  if (errors.length) throw new RequestError(422, `验收标准不完整：${errors.join("；")}`);
+  plan.fingerprint = computeFingerprint(plan);
+  const draft: DraftRecord = {
+    draftId: uuidv4(), projectId: project.projectId, requirementId: requirement.requirementId, draftVersion, plan,
+    supersedesDraftId: previous?.draftId, createdAt, validationErrors: [], hasOpenQuestions: plan.criteria.some(c => c.openQuestions?.some(q => q.trim())),
+    usage: { providerLabel: "Manual editor", modelId: "none", isLive: false, status: "success", durationMs: 0, inputTokens: null, outputTokens: null, invokedAt: createdAt },
+  };
+  saveJson(DRAFTS_DIR, draft.draftId, draft);
+  saveJson(PROJECTS_DIR, project.projectId, { ...project, updatedAt: createdAt });
+  return draft;
+}
+
+app.post("/api/drafts/manual", (req: Request, res: Response) => {
+  const draft = createManualDraft(req.body);
+  res.json({ ok: true, draft });
+});
+
+app.post("/api/drafts/:draftId/revise", (req: Request, res: Response) => {
+  const previous = loadJson<DraftRecord>(DRAFTS_DIR, req.params.draftId);
+  if (!previous) throw new RequestError(404, "原始草稿不存在");
+  const draft = createManualDraft(req.body, previous);
+  res.json({ ok: true, draft });
+});
+
 // GET /api/drafts/:draftId  获取草稿
 app.get("/api/drafts/:draftId", (req: Request, res: Response) => {
   const draft = loadJson<DraftRecord>(DRAFTS_DIR, req.params.draftId);
@@ -726,6 +835,7 @@ app.post("/api/confirm", (req: Request, res: Response) => {
 
   const draft = loadJson<DraftRecord>(DRAFTS_DIR, draftId);
   if (!draft) { res.status(404).json({ ok: false, error: "草稿不存在" }); return; }
+  assertCurrentDraft(draft);
 
   // Validate fingerprint match (ensures user confirmed the exact displayed plan)
   if (!planIntegrity(draft.plan, displayedPlanFingerprint)) {
@@ -781,7 +891,8 @@ app.post("/api/confirm", (req: Request, res: Response) => {
 app.get("/api/confirmations/:confirmationId", (req: Request, res: Response) => {
   const confirmation = loadJson<ConfirmationRecord>(CONFIRMATIONS_DIR, req.params.confirmationId);
   if (!confirmation) { res.status(404).json({ ok: false, error: "确认记录不存在" }); return; }
-  res.json({ ok: true, confirmation });
+  const active = !draftSuperseded(confirmation.draftId) && !ALLOWED_VARIANTS[confirmation.targetVariant]?.archived && latestRequirement(confirmation.projectId)?.requirementId === confirmation.requirementId;
+  res.json({ ok: true, confirmation: { ...confirmation, active } });
 });
 
 // POST /api/run-confirmed  从已确认计划发起执行
@@ -795,6 +906,9 @@ app.post("/api/run-confirmed", (req: Request, res: Response) => {
 
   const confirmation = loadJson<ConfirmationRecord>(CONFIRMATIONS_DIR, confirmationId);
   if (!confirmation) { res.status(404).json({ ok: false, error: "确认记录不存在" }); return; }
+  const draft = loadJson<DraftRecord>(DRAFTS_DIR, confirmation.draftId);
+  if (!draft) throw new RequestError(422, "确认关联的草稿不存在");
+  assertCurrentDraft(draft);
 
   const targetCfg = ALLOWED_VARIANTS[confirmation.targetVariant];
   if (!targetCfg) {
@@ -847,6 +961,7 @@ app.post("/api/repair-tasks", (req: Request, res: Response) => {
     res.status(404).json({ ok: false, error: `运行 ${baselineRunId} 不存在` });
     return;
   }
+  activeTarget(run.targetVariant);
 
   // Only create repair tasks for failed or error runs
   if (run.status === "passed" || run.status === "running" || run.status === "pending") {
@@ -979,6 +1094,7 @@ app.post("/api/repair-tasks/:taskId/claim", (req: Request, res: Response) => {
     res.status(404).json({ ok: false, error: `修复任务 ${req.params.taskId} 不存在` });
     return;
   }
+  activeTarget(task.targetVariant);
 
   const { claimedBy } = req.body as { claimedBy?: unknown };
   if (!claimedBy || typeof claimedBy !== "string" || !claimedBy.trim()) {
@@ -1002,7 +1118,7 @@ app.post("/api/repair-tasks/:taskId/claim", (req: Request, res: Response) => {
     return;
   }
 
-  if ((task.status === "failed" || task.status === "error") && task.claimedBy === owner && (task.attemptCount ?? 0) < 2) {
+  if (["failed", "error", "review"].includes(task.status) && task.claimedBy === owner && (task.attemptCount ?? 0) < 2) {
     const updated: RepairTaskRecord = { ...task, status: "claimed", updatedAt: new Date().toISOString() };
     saveJson(REPAIR_TASKS_DIR, task.taskId, updated);
     res.json({ ok: true, task: updated }); return;
@@ -1072,11 +1188,11 @@ app.post("/api/repair-tasks/:taskId/rerun", (req: Request, res: Response) => {
   }
 
   // Compute current source fingerprint and validate it matches the caller's expectation
-  let capturedHtml: string;
-  try { capturedHtml = fs.readFileSync(targetCfg.htmlPath, "utf-8"); }
+  let capturedTarget: TargetConfig;
+  try { activeTarget(task.targetVariant); capturedTarget = captureTarget(targetCfg); }
   catch { res.status(422).json({ ok: false, error: "无法读取目标源文件" }); return; }
-  const currentTargetFingerprint = computeFingerprint(capturedHtml);
-  if (currentTargetFingerprint === "unknown") {
+  const currentTargetFingerprint = capturedTarget.fingerprint;
+  if (targetCfg.kind === "html" && currentTargetFingerprint === "unknown") {
     res.status(422).json({
       ok: false,
       error: `无法读取目标源文件以计算指纹（路径: ${targetCfg.htmlPath}）`,
@@ -1113,7 +1229,7 @@ app.post("/api/repair-tasks/:taskId/rerun", (req: Request, res: Response) => {
     targetCfg,
     confirmationId: task.confirmationId,
     requirementId: task.requirementId,
-    capturedTarget: { variant: task.targetVariant, url: targetCfg.url, fingerprint: currentTargetFingerprint, htmlSnapshot: capturedHtml },
+    capturedTarget,
   });
 
   const now = new Date().toISOString();
@@ -1140,6 +1256,7 @@ app.post("/api/repair-tasks/:taskId/rerun", (req: Request, res: Response) => {
       const comparison = base ? compareRepair(latest, base, record) : null;
       let newStatus: RepairTaskStatus;
       if (comparison?.verifiedRepair) newStatus = "passed";
+      else if (comparison?.acceptancePassed) newStatus = "review";
       else if ((latest.attemptCount ?? 0) >= 2) newStatus = "blocked";
       else if (record.status === "error") newStatus = "error";
       else newStatus = "failed";
@@ -1147,7 +1264,7 @@ app.post("/api/repair-tasks/:taskId/rerun", (req: Request, res: Response) => {
       saveJson(REPAIR_TASKS_DIR, task.taskId, {
         ...latest,
         status: newStatus,
-        blockedReason: newStatus === "blocked" ? "两次修复尝试后仍未验证通过，请人工检查失败证据。" : undefined,
+        blockedReason: newStatus === "blocked" ? "两次修复尝试后仍未验证通过，请人工检查失败证据。" : comparison?.verifiedRepair ? undefined : comparison?.blockers.join("；"),
         updatedAt: new Date().toISOString(),
       });
     }).catch(() => {
@@ -1280,8 +1397,15 @@ app.get("/admin/test-endpoint-url", (req: Request, res: Response) => {
 
 // ── 静态文件服务（玩具日报样例） ──────────────────────────────────
 for (const cfg of Object.values(ALLOWED_VARIANTS)) {
-  app.get(cfg.route, (_req: Request, res: Response) => res.sendFile(cfg.htmlPath));
+  if (cfg.isSample && cfg.route && cfg.htmlPath) app.get(cfg.route, (_req: Request, res: Response) => res.sendFile(cfg.htmlPath!));
 }
+app.get("/local-target/:variant", (req: Request, res: Response) => {
+  const cfg = activeTarget(req.params.variant);
+  if (cfg.isSample || cfg.kind !== "html" || !cfg.htmlPath) throw new RequestError(404, "目标 HTML 不存在");
+  // No directory serving: importing one HTML file does not expose neighbouring files.
+  res.setHeader("Content-Security-Policy", "sandbox allow-scripts; default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'");
+  res.type("html").send(captureTarget(cfg).htmlSnapshot);
+});
 const webDist = path.join(PROJECT_ROOT, "apps", "web", "dist");
 if (fs.existsSync(path.join(webDist, "index.html"))) {
   app.use(express.static(webDist));
@@ -1292,9 +1416,9 @@ if (fs.existsSync(path.join(webDist, "index.html"))) {
 }
 
 // ── 错误处理 ──────────────────────────────────────────────────────
-app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+app.use((err: Error & { status?: number }, _req: Request, res: Response, _next: NextFunction) => {
   console.error("[server error]", err);
-  res.status(500).json({ ok: false, error: err.message });
+  res.status(err.status && err.status >= 400 && err.status <= 599 ? err.status : 500).json({ ok: false, error: err.message });
 });
 
 app.listen(PORT, process.env.HOST ?? "127.0.0.1", () => {

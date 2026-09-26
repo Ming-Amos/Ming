@@ -1,4 +1,4 @@
-import { chromium, Browser, BrowserContext, Page } from "playwright";
+import { chromium, Browser, BrowserContext, Page, Locator } from "playwright";
 import * as path from "path";
 import * as fs from "fs";
 import { createHash } from "crypto";
@@ -20,6 +20,9 @@ export interface RunnerOptions {
   runId: string;
   /** Optional callback fired after each criterion completes (for live progress). */
   onCriteriaComplete?: (criteriaId: string, status: CriteriaStatus) => void;
+  onStepComplete?: (criteriaId: string, step: StepResult) => void;
+  signal?: AbortSignal;
+  deadlineMs?: number;
 }
 
 const ALLOWED_STEP_TYPES = new Set([
@@ -33,6 +36,7 @@ const ALLOWED_STEP_TYPES = new Set([
   "assertCount",
   "assertInputEnabled",
   "assertInputDisabled",
+  "selectOption", "check", "uncheck", "assertValue", "assertUrl",
 ]);
 
 // Required fields per step type (validated before execution)
@@ -47,6 +51,8 @@ const REQUIRED_FIELDS: Record<string, string[]> = {
   assertCount: ["locator"],
   assertInputEnabled: ["locator"],
   assertInputDisabled: ["locator"],
+  selectOption: ["locator", "value"], check: ["locator"], uncheck: ["locator"],
+  assertValue: ["locator", "value"], assertUrl: ["value"],
 };
 
 // ── 计划结构深度校验 ──────────────────────────────────────────────
@@ -57,11 +63,14 @@ function validatePlan(plan: AcceptancePlan): void {
   if (!Array.isArray(plan.criteria) || plan.criteria.length === 0) {
     throw new Error("计划结构无效：criteria 为空或不是数组");
   }
+  if (plan.criteria.length > 20 || plan.criteria.reduce((n, c) => n + (Array.isArray(c.steps) ? c.steps.length : 0), 0) > 120) {
+    throw new Error("每次验收最多 20 条标准、120 个步骤，请拆分验收范围。");
+  }
 
   const seenCriteriaIds = new Set<string>();
 
   for (const c of plan.criteria) {
-    if (!c.id || typeof c.id !== "string") {
+    if (!c.id || typeof c.id !== "string" || !/^[A-Za-z0-9_-]{1,80}$/.test(c.id)) {
       throw new Error("criteria 缺少有效 id");
     }
     if (seenCriteriaIds.has(c.id)) {
@@ -75,7 +84,7 @@ function validatePlan(plan: AcceptancePlan): void {
 
     const seenStepIds = new Set<string>();
     for (const s of c.steps) {
-      if (!s.id || typeof s.id !== "string") {
+      if (!s.id || typeof s.id !== "string" || !/^[A-Za-z0-9_-]{1,80}$/.test(s.id)) {
         throw new Error(`criteria "${c.id}" 包含没有有效 id 的步骤`);
       }
       if (seenStepIds.has(s.id)) {
@@ -137,7 +146,7 @@ function validatePlan(plan: AcceptancePlan): void {
     // Each executable criterion must have at least one assertion step
     const ASSERTION_TYPES = new Set([
       "assertVisible", "assertVisibleIn", "assertNotVisible",
-      "assertCount", "assertInputEnabled", "assertInputDisabled",
+      "assertCount", "assertInputEnabled", "assertInputDisabled", "assertValue", "assertUrl",
     ]);
     const hasAssertion = c.steps.some((s) => ASSERTION_TYPES.has(s.type));
     if (!hasAssertion) {
@@ -208,9 +217,10 @@ async function takeScreenshot(
   label: string
 ): Promise<string | undefined> {
   try {
-    const filename = `${runId}_${stepId}_${label}.png`;
+    const filename = `${runId}_${stepId}_${label}`.replace(/[^A-Za-z0-9_-]/g, "_") + ".png";
     const fullPath = path.join(screenshotDir, filename);
-    await page.screenshot({ path: fullPath, fullPage: false });
+    await page.screenshot({ path: fullPath, fullPage: false, timeout: 4000,
+      mask: [page.locator('input[type="password"], input[name*="token" i], input[name*="api_key" i], input[name*="secret" i]')] });
     return filename;
   } catch {
     return undefined;
@@ -218,6 +228,35 @@ async function takeScreenshot(
 }
 
 // ── 单步执行 ─────────────────────────────────────────────────────
+function safeMessage(value: string): string {
+  return value.replace(/\x1b\[[0-9;]*m/g, "").replace(/\b(?:Bearer\s+|sk-[a-zA-Z0-9_-]{8,})[^\s"'<>]*/gi, "[REDACTED]")
+    .replace(/((?:api[_-]?key|password|secret|token)["']?\s*[=:]\s*["']?)[^\s,;"'<>]+/gi, "$1[REDACTED]")
+    .replace(/https?:\/\/[^\s"'<>]+/g, value => { try { const u = new URL(value); return u.origin + u.pathname; } catch { return "[URL]"; } })
+    .slice(0, 1200);
+}
+async function actionLocator(page: Page, value: string, mode: "fill" | "click" | "input" = "input"): Promise<Locator> {
+  if (value.startsWith("css=")) return page.locator(value.slice(4));
+  if (mode === "click") {
+    const button = page.getByRole("button", { name: value, exact: true });
+    if (await button.count()) return button;
+    const link = page.getByRole("link", { name: value, exact: true });
+    if (await link.count()) return link;
+  }
+  const label = page.getByLabel(value, { exact: true });
+  if (await label.count()) return label;
+  const partial = page.getByLabel(value, { exact: false });
+  const count = await partial.count();
+  if (count === 1) return partial;
+  if (count > 1) throw new Error(`有多个控件匹配 "${value}"，请使用更准确的名称或 css= 定位器`);
+  const button = page.getByRole("button", { name: value, exact: true });
+  if (await button.count()) return button;
+  throw new Error(`无法找到控件 "${value}"，请核对可访问名称或使用 css= 定位器`);
+}
+async function eventually(check: () => Promise<boolean>): Promise<boolean> {
+  const until = Date.now() + 2500;
+  do { if (await check()) return true; await new Promise(resolve => setTimeout(resolve, 100)); } while (Date.now() < until);
+  return false;
+}
 async function executeStep(
   page: Page,
   step: AcceptanceCriteria["steps"][0],
@@ -246,7 +285,7 @@ async function executeStep(
       case "fill": {
         const locator = resolveTemplate(step.locator, vars);
         const value = resolveTemplate(step.value, vars);
-        const el = page.getByLabel(locator);
+        const el = await actionLocator(page, locator, "fill");
         if (await el.count() === 0) throw new Error(`找不到可访问名称为 "${locator}" 的元素`);
         await el.fill(value);
         result.actual = `已填入内容（长度=${value.length}）`;
@@ -256,8 +295,7 @@ async function executeStep(
 
       case "click": {
         const locator = resolveTemplate(step.locator, vars);
-        let el = page.getByRole("button", { name: locator });
-        if (await el.count() === 0) el = page.getByLabel(locator);
+        const el = await actionLocator(page, locator, "click");
         if (await el.count() === 0) throw new Error(`找不到可点击元素 "${locator}"`);
         await el.click();
         result.actual = `已点击 "${locator}"`;
@@ -274,7 +312,7 @@ async function executeStep(
 
       case "assertVisible": {
         const text = resolveTemplate(step.value, vars);
-        const visible = await page.getByText(text, { exact: false }).isVisible();
+        const visible = await eventually(() => page.getByText(text, { exact: false }).isVisible());
         result.actual = visible ? `文本 "${text}" 可见` : `文本 "${text}" 不可见`;
         result.expected = text;
         result.status = visible ? "passed" : "failed";
@@ -293,7 +331,7 @@ async function executeStep(
           result.actual = `找不到 "${scopeLocator}"`;
           break;
         }
-        const visible = await scope.getByText(text, { exact: false }).isVisible();
+        const visible = await eventually(() => scope.getByText(text, { exact: false }).isVisible());
         result.actual = visible
           ? `文本 "${text}" 在 "${scopeLocator}" 中可见`
           : `文本 "${text}" 在 "${scopeLocator}" 中不可见`;
@@ -307,7 +345,7 @@ async function executeStep(
 
       case "assertNotVisible": {
         const text = resolveTemplate(step.value, vars);
-        const visible = await page.getByText(text, { exact: false }).isVisible();
+        const visible = !await eventually(async () => !(await page.getByText(text, { exact: false }).isVisible()));
         result.actual = visible ? `文本 "${text}" 仍可见` : `文本 "${text}" 不可见`;
         result.expected = `"${text}" 不可见`;
         result.status = visible ? "failed" : "passed";
@@ -321,7 +359,8 @@ async function executeStep(
           typeof step.expected === "number"
             ? step.expected
             : parseInt(String(step.expected), 10);
-        const count = await page.locator(locator).count();
+        let count = 0;
+        await eventually(async () => { count = await page.locator(locator).count(); return count === expected; });
         result.actual = String(count);
         result.expected = expected;
         result.status = count === expected ? "passed" : "failed";
@@ -333,8 +372,8 @@ async function executeStep(
 
       case "assertInputEnabled": {
         const locator = resolveTemplate(step.locator, vars);
-        const el = page.getByRole("button", { name: locator });
-        const enabled = await el.isEnabled();
+        const el = await actionLocator(page, locator);
+        const enabled = await eventually(() => el.isEnabled());
         result.actual = enabled ? "已启用" : "已禁用";
         result.status = enabled ? "passed" : "failed";
         if (!enabled) result.error = `预期按钮 "${locator}" 可用，实际已禁用`;
@@ -343,12 +382,32 @@ async function executeStep(
 
       case "assertInputDisabled": {
         const locator = resolveTemplate(step.locator, vars);
-        const el = page.getByRole("button", { name: locator });
-        const disabled = await el.isDisabled();
+        const el = await actionLocator(page, locator);
+        const disabled = await eventually(() => el.isDisabled());
         result.actual = disabled ? "已禁用" : "已启用";
         result.status = disabled ? "passed" : "failed";
         if (!disabled) result.error = `预期按钮 "${locator}" 已禁用，实际可用`;
         break;
+      }
+      case "selectOption": case "check": case "uncheck": {
+        const el = await actionLocator(page, resolveTemplate(step.locator, vars));
+        if (step.type === "selectOption") await el.selectOption(resolveTemplate(step.value, vars));
+        else await el.setChecked(step.type === "check");
+        result.status = "passed"; result.actual = "页面操作已完成"; break;
+      }
+      case "assertValue": {
+        const el = await actionLocator(page, resolveTemplate(step.locator, vars));
+        const expected = resolveTemplate(step.value, vars);
+        let actual = "";
+        const passed = await eventually(async () => { actual = await el.inputValue(); return actual === expected; });
+        result.status = passed ? "passed" : "failed"; result.expected = expected; result.actual = actual;
+        if (!passed) result.error = "输入值与验收标准不一致"; break;
+      }
+      case "assertUrl": {
+        const expected = resolveTemplate(step.value, vars);
+        const passed = await eventually(async () => expected.startsWith("/") ? new URL(page.url()).pathname === expected : page.url() === expected);
+        result.status = passed ? "passed" : "failed"; result.expected = expected; result.actual = page.url();
+        if (!passed) result.error = "当前页面地址与验收标准不一致"; break;
       }
     }
   } catch (err: unknown) {
@@ -359,6 +418,9 @@ async function executeStep(
   }
 
   result.durationMs = Date.now() - start;
+  if (result.actual) result.actual = safeMessage(result.actual);
+  if (result.error) result.error = safeMessage(result.error);
+  if (typeof result.expected === "string") result.expected = safeMessage(result.expected);
 
   // Screenshot on failure or error
   if (result.status === "failed" || result.status === "error") {
@@ -390,7 +452,8 @@ async function runCriteriaWithContext(
   runId: string,
   dependencyFailed: boolean,
   inheritedContext?: { context: BrowserContext; page: Page },
-  target?: TargetConfig
+  target?: TargetConfig,
+  lifecycle?: { stopReason: () => string | undefined; diagnostics: NonNullable<RunRecord["diagnostics"]>; onStepComplete?: RunnerOptions["onStepComplete"] }
 ): Promise<CriteriaRunOutcome> {
   if (dependencyFailed) {
     return {
@@ -420,18 +483,44 @@ async function runCriteriaWithContext(
   } else {
     // Fresh isolated context
     context = await browser.newContext({ storageState: undefined, serviceWorkers: "block" });
-    if (target?.htmlSnapshot !== undefined) {
-      const documentUrl = new URL(target.url);
-      documentUrl.hash = "";
-      await context.route((url) => url.href === documentUrl.href, async (route) => {
-        if (route.request().isNavigationRequest()) {
-          await route.fulfill({ status: 200, contentType: "text/html; charset=utf-8", body: target.htmlSnapshot });
-        } else {
-          await route.continue();
+    context.setDefaultTimeout(5000);
+    context.setDefaultNavigationTimeout(15000);
+    if (target) {
+      const documentUrl = new URL(target.url); documentUrl.hash = "";
+      await context.route("**/*", async route => {
+        const request = route.request(); const url = new URL(request.url());
+        if (url.origin !== documentUrl.origin || !["http:", "https:"].includes(url.protocol)) return route.abort("blockedbyclient");
+        if (target.htmlSnapshot !== undefined) {
+          if (url.href === documentUrl.href && request.isNavigationRequest()) return route.fulfill({ status: 200, contentType: "text/html; charset=utf-8", body: target.htmlSnapshot });
+          return route.abort("blockedbyclient");
         }
+        try {
+          // Browser redirect chains can bypass a routing handler. Inspect the
+          // first response without following redirects, rather than sending a
+          // second probe that could repeat an application mutation.
+          const response = await route.fetch({ maxRedirects: 0, timeout: 15000 });
+          if (response.status() >= 300 && response.status() < 400 && response.status() !== 304) {
+            if (lifecycle && lifecycle.diagnostics.length < 80) lifecycle.diagnostics.push({ kind: "network", message: "HTTP 跳转已拦截；请使用最终本地页面地址。当前执行器不跟随服务端重定向。", status: response.status(), url: url.origin + url.pathname, at: new Date().toISOString() });
+            return route.abort("blockedbyresponse");
+          }
+          await route.fulfill({ response });
+        } catch { await route.abort("failed").catch(() => undefined); }
+      });
+      // Vite/local development sockets remain available; external sockets do not.
+      await context.routeWebSocket("**/*", socket => {
+        const url = new URL(socket.url());
+        if (target.htmlSnapshot === undefined && url.host === documentUrl.host && ["ws:", "wss:"].includes(url.protocol)) socket.connectToServer();
+        else socket.close();
       });
     }
     page = await context.newPage();
+    const addDiagnostic = (entry: Omit<NonNullable<RunRecord["diagnostics"]>[number], "at">) => {
+      if (lifecycle && lifecycle.diagnostics.length < 80) lifecycle.diagnostics.push({ ...entry, message: safeMessage(entry.message), at: new Date().toISOString() });
+    };
+    page.on("console", message => { if (["error", "warning"].includes(message.type())) addDiagnostic({ kind: "console", level: message.type(), message: message.text() }); });
+    page.on("pageerror", error => addDiagnostic({ kind: "pageerror", message: error.message }));
+    page.on("response", response => { if (response.status() >= 400) { const url = new URL(response.url()); addDiagnostic({ kind: "network", message: `HTTP ${response.status()}`, url: url.origin + url.pathname, status: response.status() }); } });
+    page.on("requestfailed", request => { try { const url = new URL(request.url()); addDiagnostic({ kind: "network", message: request.failure()?.errorText || "请求失败", url: url.origin + url.pathname }); } catch { /* Ignore non-URL browser internals. */ } });
     weOwnContext = true;
   }
 
@@ -440,8 +529,10 @@ async function runCriteriaWithContext(
 
   try {
     for (const step of criteria.steps) {
+      if (lifecycle?.stopReason()) throw new Error(lifecycle.stopReason());
       const stepResult = await executeStep(page, step, vars, screenshotDir, runId);
       stepResults.push(stepResult);
+      lifecycle?.onStepComplete?.(criteria.id, stepResult);
 
       if (stepResult.status === "failed" || stepResult.status === "error") {
         const shot = await takeScreenshot(page, screenshotDir, runId, step.id, "failure_scene");
@@ -463,8 +554,8 @@ async function runCriteriaWithContext(
     // Final state screenshot attached to last step
     const finalShot = await takeScreenshot(page, screenshotDir, runId, criteria.id, "final");
     if (finalShot && stepResults.length > 0) {
-      const last = stepResults[stepResults.length - 1];
-      if (!last.screenshotPath) last.screenshotPath = finalShot;
+      const last = [...stepResults].reverse().find(step => step.status !== "skipped");
+      if (last && !last.screenshotPath) last.screenshotPath = finalShot;
     }
   } finally {
     // If we own the context and it failed, close it now (no point passing it on)
@@ -531,14 +622,25 @@ export class PlanRunner {
     let browser: Browser | null = null;
     const criteriaResults: CriteriaResult[] = [];
     let fatalError: string | undefined;
+    let terminationReason: RunRecord["terminationReason"];
+    const diagnostics: NonNullable<RunRecord["diagnostics"]> = [];
+    const stopReason = () => terminationReason === "cancelled" ? "验收已取消，未执行的步骤不会标记为通过。" : terminationReason === "deadline" ? "验收超时，请缩小范围或检查页面响应后重试。" : undefined;
+    const abort = () => { terminationReason = terminationReason ?? "cancelled"; void browser?.close().catch(() => undefined); };
+    this.opts.signal?.addEventListener("abort", abort, { once: true });
+    if (this.opts.signal?.aborted) abort();
+    const timeoutMs = Math.min(180000, Math.max(1000, this.opts.deadlineMs ?? 120000));
+    const deadline = setTimeout(() => { terminationReason = "deadline"; void browser?.close().catch(() => undefined); }, timeoutMs);
 
     try {
+      if (stopReason()) throw new Error(stopReason());
       browser = await chromium.launch({ headless: true });
+      if (stopReason()) throw new Error(stopReason());
 
       const passedIds = new Set<string>();
       let liveContextForNext: { context: BrowserContext; page: Page } | undefined;
 
       for (let i = 0; i < plan.criteria.length; i++) {
+        if (stopReason()) throw new Error(stopReason());
         const criteria = plan.criteria[i];
 
         const depFailed =
@@ -557,7 +659,8 @@ export class PlanRunner {
           this.opts.runId,
           depFailed,
           passedInContext,
-          target
+          target,
+          { stopReason, diagnostics, onStepComplete: this.opts.onStepComplete }
         );
 
         criteriaResults.push(outcome.result);
@@ -592,13 +695,16 @@ export class PlanRunner {
         await liveContextForNext.context.close();
       }
     } catch (err: unknown) {
-      fatalError = err instanceof Error ? err.message : String(err);
+      fatalError = stopReason() ?? safeMessage(err instanceof Error ? err.message : String(err));
     } finally {
+      clearTimeout(deadline);
+      this.opts.signal?.removeEventListener("abort", abort);
       if (browser) {
         try { await browser.close(); }
         catch (err) { fatalError = fatalError ?? (err instanceof Error ? err.message : String(err)); }
       }
     }
+    if (stopReason()) fatalError = stopReason();
 
     const finishedAt = new Date().toISOString();
 
@@ -645,7 +751,9 @@ export class PlanRunner {
       fatalError,
       runnerFingerprint: RUNNER_FINGERPRINT,
       planSnapshot: JSON.parse(JSON.stringify(plan)) as AcceptancePlan,
-      sourceBinding: target.htmlSnapshot !== undefined ? "self-contained-html-snapshot" : undefined,
+      sourceBinding: target.htmlSnapshot !== undefined ? "self-contained-html-snapshot" : "live-url-observed",
+      terminationReason,
+      diagnostics,
     };
   }
 }

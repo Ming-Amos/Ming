@@ -61,9 +61,9 @@ Schema rules:
   - contextMode: "fresh" | "inherit"
   - steps: array of PlanStep, at least 1; MUST include at least one assertion step
     - id: e.g. "AC-01-S1"
-    - type: one of navigate|fill|click|reload|assertVisible|assertVisibleIn|assertNotVisible|assertCount|assertInputEnabled|assertInputDisabled
-    - locator: accessible label or CSS selector (required for fill/click/assertVisibleIn/assertCount/assertInputEnabled/assertInputDisabled)
-    - value: text to fill or assert (required for fill/assertVisible/assertVisibleIn/assertNotVisible)
+    - type: one of navigate|fill|click|reload|selectOption|check|uncheck|assertVisible|assertVisibleIn|assertNotVisible|assertCount|assertInputEnabled|assertInputDisabled|assertValue|assertUrl
+    - locator: plain accessible label, or an explicit CSS selector prefixed with "css=" (required for fill/click/selectOption/check/uncheck/assertVisibleIn/assertCount/assertInputEnabled/assertInputDisabled/assertValue). Never treat arbitrary CSS as an accessible label.
+    - value: text to fill or assert (required for fill/assertVisible/assertVisibleIn/assertNotVisible/assertValue). For selectOption, use the option's value attribute. For assertUrl, use the exact pathname beginning with / or the exact full URL (including any query/hash when using a full URL).
     - url: URL (required for navigate; use {{TARGET_URL}} for the configured target)
     - expected: non-negative integer (required for assertCount, must be a JSON number not string)
     - description: human-readable step description
@@ -99,9 +99,8 @@ function buildUserPrompt(req: GenerateRequest): string {
  * Used to prevent API keys from appearing in error messages or logs.
  */
 function redactSecret(text: string, secret: string): string {
-  if (!secret || secret.length < 4) return text;
-  // Replace exact match
-  return text.split(secret).join("[REDACTED]");
+  if (!secret) return text;
+  return text.split(secret).join("[REDACTED]").split(encodeURIComponent(secret)).join("[REDACTED]");
 }
 
 function makeUsage(
@@ -154,7 +153,7 @@ function errorUsage(
  *  - a response byte cap (maxBytes)
  * Returns { statusCode, body } or throws on network / timeout / oversize error.
  */
-function httpRequest(opts: {
+export function httpRequest(opts: {
   url: string;
   method: string;
   headers: Record<string, string>;
@@ -165,16 +164,27 @@ function httpRequest(opts: {
 }): Promise<{ statusCode: number; body: string }> {
   return new Promise((resolve, reject) => {
     let settled = false;
+    let req: http.ClientRequest | undefined;
+    let response: http.IncomingMessage | undefined;
     function settle(fn: () => void) {
       if (settled) return;
       settled = true;
       clearTimeout(wallTimer);
       fn();
     }
+    function fail(error: Error): void {
+      settle(() => {
+        // Reject once, then close both streams without emitting a second socket error.
+        // Passing the same error to destroy() can escape through a reused keep-alive socket.
+        response?.destroy();
+        req?.destroy();
+        reject(error);
+      });
+    }
 
     // Hard wall-clock timer — destroys the request unconditionally
     const wallTimer = setTimeout(() => {
-      req.destroy(Object.assign(new Error("请求超时"), { _isTimeout: true }));
+      fail(Object.assign(new Error("请求超时"), { _isTimeout: true }));
     }, opts.wallClockMs);
 
     const parsed = new URL(opts.url);
@@ -182,21 +192,22 @@ function httpRequest(opts: {
     const transport = isHttps ? https : http;
 
     const reqOpts = {
-      hostname: parsed.hostname,
+      hostname: parsed.hostname.replace(/^\[|\]$/g, ""),
       port: parsed.port || (isHttps ? 443 : 80),
       path: parsed.pathname + parsed.search,
       method: opts.method,
       headers: opts.headers,
     };
 
-    const req = transport.request(reqOpts, (res) => {
+    try { req = transport.request(reqOpts, (res) => {
+      response = res;
       let received = 0;
       const chunks: Buffer[] = [];
 
       res.on("data", (chunk: Buffer) => {
         received += chunk.length;
         if (received > opts.maxBytes) {
-          req.destroy(new Error(`响应超过限制 ${opts.maxBytes} 字节`));
+          fail(new Error(`响应超过限制 ${opts.maxBytes} 字节`));
           return;
         }
         chunks.push(chunk);
@@ -211,21 +222,21 @@ function httpRequest(opts: {
         );
       });
 
-      res.on("error", (err) => settle(() => reject(err)));
-    });
+      res.on("error", fail);
+      res.on("aborted", () => fail(new Error("服务商提前中断响应")));
+    }); } catch (error) {
+      fail(error instanceof Error ? error : new Error("请求无法创建"));
+      return;
+    }
 
     // Socket idle timeout (covers read stalls; wall-clock timer is the final backstop)
     req.setTimeout(opts.socketIdleMs, () => {
-      req.destroy(Object.assign(new Error("请求超时"), { _isTimeout: true }));
+      fail(Object.assign(new Error("请求超时"), { _isTimeout: true }));
     });
 
     req.on("error", (err) => {
-      settle(() => {
-        const isTimeout =
-          (err as { _isTimeout?: boolean })._isTimeout === true ||
-          err.message === "请求超时";
-        reject(Object.assign(err, { _isTimeout: isTimeout }));
-      });
+      const isTimeout = (err as { _isTimeout?: boolean })._isTimeout === true || err.message === "请求超时";
+      fail(Object.assign(err, { _isTimeout: isTimeout }));
     });
 
     req.write(opts.body);

@@ -1,5 +1,13 @@
 # Ming Application X-ray — design QA
 
+## Product workflow extension — 2026-09-26
+
+**PASS: own-project workflow and responsive visual review.** The frontend now adds a first-use project hub, local URL/HTML connection, PRD upload and persisted requirements, a visual manual acceptance editor, model configuration, and searchable history. These retain the original light Application X-ray styling while providing a complete entry path for a user's application.
+
+The compiled UI passed **32/32** real browser checks against an independent multi-file task application. It covered actual passing and failing operations, evidence provenance, immutable plan revision, historical review, queued repair handoff, and cancellation after reloading an active run. No Bob or model calls were made. Both desktop and 390-pixel views had zero horizontal overflow and no browser exceptions.
+
+Final captures and detailed scope: [PRODUCT_UI_REVIEW.md](docs/PRODUCT_UI_REVIEW.md) and [machine-readable report](docs/evidence/product-ui/review-report.json). The project hub, manual editor, failure workspace, and narrow layouts were opened and visually inspected. The manual editor's sticky save control was corrected to remain fully inside the dialog. Explicit accessible names were added to editable textareas and selects so their labels remain stable after file import and editing. The original source comparison below remains the visual basis; new workflow captures are actual browser renders, not regenerated concept imagery.
+
 Reviewed by Codex on 2026-09-26. Core implementation and final visual work in this revision are by Codex; this report is not Bob usage evidence.
 
 The final desktop, combined comparison, repair dialog, and mobile captures are also preserved in `docs/evidence/xray-final/`. The latest read-only browser review passed all 10 checks; its report is `docs/evidence/xray-final/public-ui-report.json`.

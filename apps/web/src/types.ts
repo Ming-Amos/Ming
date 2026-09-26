@@ -1,8 +1,21 @@
 // Shared types mirrored from @ming/contracts
 // Web app uses these directly since it cannot import workspace TS source at runtime.
 
-export type StepStatus = "pending" | "running" | "passed" | "failed" | "error" | "skipped";
-export type CriteriaStatus = "pending" | "running" | "passed" | "failed" | "blocked" | "error" | "not_run";
+export type StepStatus =
+  | "pending"
+  | "running"
+  | "passed"
+  | "failed"
+  | "error"
+  | "skipped";
+export type CriteriaStatus =
+  | "pending"
+  | "running"
+  | "passed"
+  | "failed"
+  | "blocked"
+  | "error"
+  | "not_run";
 export type RunStatus = "pending" | "running" | "passed" | "failed" | "error";
 
 export interface StepResult {
@@ -43,6 +56,15 @@ export interface RunRecord {
   sourceChangedDuringRun?: boolean;
   sourceBinding?: string;
   planSnapshot?: PlanInfo;
+  terminationReason?: "cancelled" | "deadline" | "interrupted";
+  diagnostics?: Array<{
+    kind: "console" | "pageerror" | "network";
+    level?: string;
+    message: string;
+    url?: string;
+    status?: number;
+    at: string;
+  }>;
 }
 
 export interface RunProgress {
@@ -64,13 +86,23 @@ export interface AcceptanceCriteriaInfo {
   openQuestions?: string[];
   prerequisites?: string;
   contextMode?: "fresh" | "inherit";
-  steps?: Array<{ id: string; type: string; description: string; expected?: string | number; locator?: string; value?: string }>;
+  steps?: PlanStepInfo[];
+}
+
+export interface PlanStepInfo {
+  id: string;
+  type: string;
+  description: string;
+  url?: string;
+  expected?: string | number;
+  locator?: string;
+  value?: string;
 }
 
 export interface PlanInfo {
   planId: string;
   version: string;
-  source: "fixture" | "generated";
+  source: "fixture" | "generated" | "manual";
   transportProvenance?: "live" | "test";
   title: string;
   description: string;
@@ -87,12 +119,23 @@ export interface TargetInfo {
   url: string;
   label: string;
   fingerprint: string;
+  kind?: "url" | "html";
+  isSample?: boolean;
+  archived?: boolean;
+  projectId?: string;
+  sourceDir?: string;
 }
 
 // ── Stage B types ────────────────────────────────────────────────
 
 export type ProviderErrorCategory =
-  | "missing_config" | "auth" | "quota" | "timeout" | "network" | "invalid_output" | "unknown";
+  | "missing_config"
+  | "auth"
+  | "quota"
+  | "timeout"
+  | "network"
+  | "invalid_output"
+  | "unknown";
 
 export interface GenerationUsage {
   providerLabel: string;
@@ -113,7 +156,7 @@ export interface DraftRecord {
   requirementId: string;
   draftVersion: number;
   plan: PlanInfo;
-  usage: GenerationUsage;
+  usage?: GenerationUsage;
   hasOpenQuestions: boolean;
   validationErrors: string[];
   createdAt: string;
@@ -130,6 +173,7 @@ export interface ConfirmationRecord {
   targetVariant: string;
   confirmedAt: string;
   planSnapshot: PlanInfo;
+  active?: boolean;
 }
 
 export interface ProviderStatus {
@@ -160,7 +204,14 @@ export interface RequirementRecord {
 // ── Stage C types ────────────────────────────────────────────────
 
 export type RepairTaskStatus =
-  | "waiting" | "claimed" | "rerunning" | "passed" | "failed" | "error" | "blocked";
+  | "waiting"
+  | "claimed"
+  | "rerunning"
+  | "review"
+  | "passed"
+  | "failed"
+  | "error"
+  | "blocked";
 
 export interface FailedCriteriaSummary {
   criteriaId: string;
@@ -224,5 +275,6 @@ export interface RepairComparison {
   previouslyFailedStillFailing: string[];
   newFailures: string[];
   verifiedRepair: boolean;
+  acceptancePassed?: boolean;
   blockers: string[];
 }

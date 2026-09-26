@@ -30,13 +30,16 @@ export function compareRepair(task: RepairTaskRecord, baseline: RunRecord, rerun
     task.baselineTargetFingerprint === baseline.targetFingerprint && task.repairedTargetFingerprint === rerun.targetFingerprint &&
     baseline.sourceBinding === "self-contained-html-snapshot" && rerun.sourceBinding === "self-contained-html-snapshot" &&
     baseline.sourceChangedDuringRun === false && rerun.sourceChangedDuringRun === false;
-  if (!sourceFingerprintKnown) blockers.push("源码快照来源缺失、不一致或在运行过程中发生变化。");
+  if (!sourceFingerprintKnown) blockers.push(baseline.sourceBinding === "live-url-observed" || rerun.sourceBinding === "live-url-observed"
+    ? "实时网址未绑定执行源码快照；可以查看实际验收结果，但不能仅凭文件指纹确认修复来源。"
+    : "源码快照来源缺失、不一致或在运行过程中发生变化。");
   const targetFingerprintChanged = known(baseline.targetFingerprint) && known(rerun.targetFingerprint) &&
     baseline.targetFingerprint !== rerun.targetFingerprint;
   if (!targetFingerprintChanged) blockers.push("目标源码未发生变化，重跑通过也不能证明代码已修复。");
-  if (baseline.runId !== task.baselineRunId || rerun.runId !== task.rerunId ||
-      baseline.confirmationId !== task.confirmationId || rerun.confirmationId !== task.confirmationId ||
-      baseline.requirementId !== task.requirementId || rerun.requirementId !== task.requirementId) {
+  const linksMatch = baseline.runId === task.baselineRunId && rerun.runId === task.rerunId &&
+    baseline.confirmationId === task.confirmationId && rerun.confirmationId === task.confirmationId &&
+    baseline.requirementId === task.requirementId && rerun.requirementId === task.requirementId;
+  if (!linksMatch) {
     blockers.push("运行、确认或需求记录的关联不一致。");
   }
   const expected = plan?.criteria ?? [];
@@ -50,13 +53,16 @@ export function compareRepair(task: RepairTaskRecord, baseline: RunRecord, rerun
   if (!assertionFailure || baseline.status !== "failed" || baseline.fatalError) {
     blockers.push("基准没有完整的业务断言失败；基础设施错误恢复不算功能修复。");
   }
-  if (rerun.status !== "passed" || rerun.fatalError || !rerun.finishedAt ||
-      !rerun.criteria.every(c => c.status === "passed" && c.steps.every(s => s.status === "passed"))) {
+  const rerunFullyPassed = rerun.status === "passed" && !rerun.fatalError && Boolean(rerun.finishedAt) &&
+    rerun.criteria.every(c => c.status === "passed" && c.steps.every(s => s.status === "passed"));
+  if (!rerunFullyPassed) {
     blockers.push("重跑尚未全部通过，或存在执行错误。");
   }
   const failedIds = new Set(baseline.criteria.filter(c => c.status !== "passed").map(c => c.criteriaId));
   const passedIds = new Set(rerun.criteria.filter(c => c.status === "passed").map(c => c.criteriaId));
   const notPassedIds = new Set(rerun.criteria.filter(c => c.status !== "passed").map(c => c.criteriaId));
+  const acceptancePassed = planFingerprintMatch && runnerFingerprintMatch && targetIdentityMatch && linksMatch &&
+    complete(baseline) && complete(rerun) && rerunFullyPassed;
   return {
     taskId: task.taskId, baselineRunId: task.baselineRunId, rerunId: task.rerunId ?? rerun.runId,
     planFingerprintMatch, runnerFingerprintMatch, runnerFingerprintKnown, targetIdentityMatch,
@@ -66,6 +72,6 @@ export function compareRepair(task: RepairTaskRecord, baseline: RunRecord, rerun
     previouslyFailedNowPassed: [...failedIds].filter(id => passedIds.has(id)),
     previouslyFailedStillFailing: [...failedIds].filter(id => !passedIds.has(id)),
     newFailures: [...notPassedIds].filter(id => !failedIds.has(id)),
-    verifiedRepair: blockers.length === 0, blockers,
+    acceptancePassed, verifiedRepair: blockers.length === 0, blockers,
   };
 }

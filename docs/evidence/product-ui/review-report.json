@@ -1,0 +1,157 @@
+{
+  "reviewId": "00b08d50-67fd-4ffc-aa35-5d1ebca3db48",
+  "startedAt": "2026-09-26T10:39:00.285Z",
+  "checks": [
+    {
+      "label": "New user enters project hub rather than an unexplained fixture",
+      "passed": true
+    },
+    {
+      "label": "Settings opens without exposing a saved key",
+      "passed": true
+    },
+    {
+      "label": "Ming itself is rejected as an acceptance target",
+      "passed": true
+    },
+    {
+      "label": "User registers their own running multi-file application",
+      "passed": true
+    },
+    {
+      "label": "PRD upload reads the actual Markdown contents",
+      "passed": true
+    },
+    {
+      "label": "Project requirement is persisted with a version",
+      "passed": true
+    },
+    {
+      "label": "Unconfigured AI generation returns a real error rather than fabricated plan",
+      "passed": true
+    },
+    {
+      "label": "Plan save action remains fully visible while editing long plans",
+      "passed": true
+    },
+    {
+      "label": "Visual editor persists two real criteria without a model call",
+      "passed": true
+    },
+    {
+      "label": "Execution waits for explicit standard confirmation",
+      "passed": true
+    },
+    {
+      "label": "Manual origin is visible in the workspace",
+      "passed": true
+    },
+    {
+      "label": "Real custom project passes add and refresh operations",
+      "passed": true
+    },
+    {
+      "label": "Live URL evidence accurately declares observation, not frozen application source",
+      "passed": true
+    },
+    {
+      "label": "Mutation reached the application exactly once",
+      "passed": true
+    },
+    {
+      "label": "Displayed screenshots belong to this actual run",
+      "passed": true
+    },
+    {
+      "label": "Desktop workspace has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "label": "Reload restores project, confirmed standards and real evidence",
+      "passed": true
+    },
+    {
+      "label": "Saved PRD survives reload",
+      "passed": true
+    },
+    {
+      "label": "Project hub probes the real application",
+      "passed": true
+    },
+    {
+      "label": "Opening a project restores its saved active confirmation",
+      "passed": true
+    },
+    {
+      "label": "Editing saves a new immutable draft and requires confirmation",
+      "passed": true
+    },
+    {
+      "label": "Previous confirmation is invalidated for new execution",
+      "passed": true
+    },
+    {
+      "label": "Real persistence defect fails only the refresh criterion",
+      "passed": true
+    },
+    {
+      "label": "Repair handoff is queued and never claims an agent has started",
+      "passed": true
+    },
+    {
+      "label": "History supports project search and status filtering",
+      "passed": true
+    },
+    {
+      "label": "Historical original evidence remains accessible after revision",
+      "passed": true
+    },
+    {
+      "label": "Inactive historical confirmation cannot launch an unseen standard",
+      "passed": true
+    },
+    {
+      "label": "Reload during an active run restores progress and cancellation",
+      "passed": true
+    },
+    {
+      "label": "Cancellation records an incomplete execution, never a pass",
+      "passed": true
+    },
+    {
+      "label": "390px workspace has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "label": "390px project hub has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "label": "No uncaught browser errors across the full workflow",
+      "passed": true
+    }
+  ],
+  "ids": {
+    "projectId": "95a961a9-2714-4e33-88fa-d505bf5cf538",
+    "variant": "custom-bc19811b-a308-4259-b5f0-d5ec847c5721",
+    "requirementId": "204a128e-61ae-41cc-af3e-c366aadd5884",
+    "draftId": "e05fd376-00c1-40ae-ad43-834eaf318677",
+    "confirmationId": "d5e9d174-d56e-425d-9f99-477fc03ae5eb",
+    "passedRunId": "312b1c19-f10c-434f-aba9-76ac2c9b2f05",
+    "failedRunId": "16629f56-58db-411b-baea-57f48760f505",
+    "repairTaskId": "6e6bf1d8-647a-4fea-8c25-f39ca1f72bd3",
+    "cancelledRunId": "77665f56-f595-43e2-9190-484a21333a13"
+  },
+  "pageErrors": [],
+  "screenshots": [
+    "C:\\Bob\\Projects\\Ming\\runtime\\product-ui-00b08d50-67fd-4ffc-aa35-5d1ebca3db48\\screenshots\\01-project-hub.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\product-ui-00b08d50-67fd-4ffc-aa35-5d1ebca3db48\\screenshots\\02-manual-plan-editor.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\product-ui-00b08d50-67fd-4ffc-aa35-5d1ebca3db48\\screenshots\\03-live-project-passed.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\product-ui-00b08d50-67fd-4ffc-aa35-5d1ebca3db48\\screenshots\\04-live-project-failed.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\product-ui-00b08d50-67fd-4ffc-aa35-5d1ebca3db48\\screenshots\\05-live-project-mobile.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\product-ui-00b08d50-67fd-4ffc-aa35-5d1ebca3db48\\screenshots\\06-project-hub-mobile.png"
+  ],
+  "passed": true,
+  "finishedAt": "2026-09-26T10:39:23.303Z",
+  "postCount": 2
+}

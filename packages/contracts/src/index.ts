@@ -7,6 +7,11 @@ export type StepType =
   | "fill"
   | "click"
   | "reload"
+  | "selectOption"
+  | "check"
+  | "uncheck"
+  | "assertValue"
+  | "assertUrl"
   | "assertVisible"
   | "assertVisibleIn"    // text visible within a scoped CSS locator
   | "assertNotVisible"
@@ -57,7 +62,7 @@ export interface AcceptancePlan {
   planId: string;
   version: string;
   /** fixture = 固定开发验证夹具；generated = 模型生成（阶段B） */
-  source: "fixture" | "generated";
+  source: "fixture" | "generated" | "manual";
   /**
    * 传输来源标记（Stage B）：
    *   "live" = 真实模型 API 返回；"test" = 本地测试传输夹具
@@ -144,7 +149,9 @@ export interface RunRecord {
   /** Exact execution plan retained for provenance and later repair. */
   planSnapshot?: AcceptancePlan;
   /** Only the captured document is frozen; this does not cover external assets/APIs. */
-  sourceBinding?: "self-contained-html-snapshot";
+  sourceBinding?: "self-contained-html-snapshot" | "live-url-observed";
+  terminationReason?: "cancelled" | "deadline" | "interrupted";
+  diagnostics?: Array<{ kind: "console" | "pageerror" | "network"; level?: string; message: string; url?: string; status?: number; at: string }>;
 }
 
 /** 前端轮询进度用的精简格式 */
@@ -168,6 +175,23 @@ export interface TargetConfig {
    * instead of fetching live content, binding execution to a specific source version.
    */
   htmlSnapshot?: string;
+  sourceBinding?: "self-contained-html-snapshot" | "live-url-observed";
+}
+
+/** Persisted local target. A URL observation is not a frozen source snapshot. */
+export interface TargetRecord {
+  variant: string;
+  label: string;
+  url: string;
+  kind: "url" | "html";
+  projectId?: string;
+  htmlPath?: string;
+  sourceDir?: string;
+  isSample: boolean;
+  archived: boolean;
+  createdAt?: string;
+  fingerprint?: string;
+  sourceBinding?: "self-contained-html-snapshot" | "live-url-observed";
 }
 
 // ============================================================
@@ -183,6 +207,7 @@ export interface ProjectRecord {
   targetUrl: string;
   createdAt: string;
   updatedAt: string;
+  archived?: boolean;
 }
 
 /** 需求记录：保存原始需求文本和版本 */
@@ -223,6 +248,8 @@ export interface DraftRecord {
   requirementId: string;
   /** 草稿版本（同一需求可多次生成） */
   draftVersion: number;
+  /** Revising creates a new record; the old draft and its evidence are retained. */
+  supersedesDraftId?: string;
   plan: AcceptancePlan;
   /** 模型调用信息 */
   usage: GenerationUsage;
@@ -302,6 +329,7 @@ export interface ProviderStatus {
  *   claimed  — Bob 已认领，正在修复中
  *   rerunning — 正在重新执行验收计划
  *   passed   — 修复后重跑全部通过（已验证修复）
+ *   review   — 同一标准复验全部通过，但修复来源证据仍需确认
  *   failed   — 重跑后仍有失败
  *   error    — 执行错误（非业务失败）
  *   blocked  — 停止进展（工具错误或两次尝试无进展）
@@ -311,6 +339,7 @@ export type RepairTaskStatus =
   | "claimed"
   | "rerunning"
   | "passed"
+  | "review"
   | "failed"
   | "error"
   | "blocked";
@@ -409,6 +438,8 @@ export interface RepairComparison {
   previouslyFailedStillFailing: string[];
   /** 重跑新出现的失败 */
   newFailures: string[];
+  /** Same plan, runner and target; complete terminal rerun passes. Source proof is separate. */
+  acceptancePassed: boolean;
   /**
    * 整体验证修复：
    *   - 重跑 status === "passed"

@@ -1,19 +1,21 @@
 # IBM Bob Usage Statement
 
-**Review copy — contribution attribution is based on saved Bob sessions and the recorded Codex repair.** The statement below is under 500 English words. Copy only the text below the divider into the submission field.
+**Review copy based on original Bob task summaries and separately attributed Codex implementation and repair evidence.** Statement body: **377 English words**. Copy only the text below the divider into the submission field. This file is not a submitted entry or an eligibility determination.
 
 ---
 
-IBM Bob was used to build the core of Ming, a web application for verifying AI-developed features through real browser acceptance checks and structured failure evidence.
+IBM Bob built the initial core of Ming, a local web application for accepting AI-developed features through real browser checks and structured failure evidence.
 
-In Stage A, Bob implemented the TypeScript workspace, shared acceptance contracts, Playwright runner, local service, and initial React interface. This included real browser actions, dependent acceptance conditions, run history, and screenshots linked to executed checks. Bob also created the normal and deliberately defective daily-report samples and validation scripts. The resulting implementation was independently built and reviewed with Codex.
+In Stage A, Bob implemented the TypeScript workspace, shared acceptance contracts, Playwright runner, local service, and initial React interface. This included dependent acceptance conditions, real browser actions, run history, and screenshots linked to executed checks. Bob also created normal and deliberately defective daily-report samples and validation scripts. Codex independently built and reviewed the implementation.
 
-In Stage B, Bob implemented the configurable model-provider adapter, bounded page inspection, draft-plan validation, user confirmation, and execution of the confirmed plan. Codex's independent review found issues in sensitive-error redaction and repeat-run availability; Bob corrected them, and the changes were tested again. The recorded provider tests use local simulated responses rather than a live external model. We do not present those responses as genuine model-generated acceptance plans.
+In Stage B, Bob implemented the configurable model-provider adapter, bounded page inspection, draft-plan validation, user confirmation, and execution of confirmed plans. Codex's review identified sensitive-error redaction and repeat-run issues; Bob corrected them. Tests used explicitly identified local provider fixtures, not an external model. Those responses are not presented as live model-generated plans.
 
-Bob also began Stage C: repair-task contracts and service routes, run comparison, and a stdio MCP adapter exposing five tools for retrieving evidence, claiming a repair task, rerunning a plan, and reading the comparison. The adapter connected to Bob and its tools were discovered. This confirms tool registration; it does not establish that Bob executed a target repair.
+Bob began Stage C with repair-task contracts and service routes, run comparison, and a stdio MCP adapter exposing five tools for evidence, claiming, rerunning, and comparison. Bob's settings showed the adapter connected and its tools discovered. That screenshot demonstrates registration, not Bob executing a repair.
 
-After Bob's trial quota ended, Codex completed the core integrity constraints, independent todo sample, Application X-ray interface implementation, and public evidence adapter, and prepared the delivery materials. The final interface passed 43 integration checks. These additions are attributed to Codex rather than Bob.
+When Bob's trial quota ended, the user authorized Codex to finish and extend the application. Codex completed source-binding and comparison integrity, the visual interface, the independent todo sample, and the read-only evidence viewer. Codex subsequently added persistent user-project registration, multi-file local URL support, manual plan editing and revisions, model-settings controls, cancellation and restart recovery, report export, and the expanded 12-tool MCP workflow. These later contributions are attributed to Codex.
 
-The recorded target repair was also performed by Codex: it retrieved and claimed the task through the real stdio MCP adapter, edited the same target's persistence logic, and reran the original plan. The comparison reports a verified repair with unchanged acceptance and runner fingerprints. This evidence demonstrates the MCP workflow without claiming that Bob performed the later repair.
+The genuine recorded target repair was also performed by Codex: it retrieved and claimed the task through stdio MCP, changed the same daily-report target's persistence logic, and reran the original acceptance plan. The saved comparison reports a verified repair with unchanged acceptance and runner fingerprints. Live URL checks now distinguish passing acceptance from the stronger frozen-source repair guarantee.
 
-The repository's `bob_sessions` directory contains genuine task-session summary screenshots, with task IDs and contributions documented in its README. Stage A and B result reports provide further implementation and validation records. Neither IBM watsonx.ai nor watsonx Orchestrate was used in the verified implementation.
+The repository's bob_sessions directory contains original task-session summary screenshots, with task IDs and contributions documented in its README. They remain unchanged. The 164-second video and five-slide deck document the earlier demonstration checkpoint and authentic Bob contribution; they do not show all later product features.
+
+No additional Bob calls were made for these later extensions. No external model provider has been configured or quality-tested. Neither IBM watsonx.ai nor watsonx Orchestrate was used in the verified implementation.

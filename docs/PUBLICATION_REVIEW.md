@@ -1,5 +1,15 @@
 # Publication review — 2026-09-26
 
+## Local product extension checkpoint — 10:43 UTC
+
+The updated product source passed a new bounded candidate review: 212 tracked or unignored files, all 26 original evidence SHA-256 values unchanged, and all original Bob session files unchanged. No candidate credential, personal email or private runtime configuration was found by the checks in `scripts/review-product-publication.mjs`. New browser captures contain only an isolated, deliberately created test application, its test PRD and local addresses.
+
+Full workspace type checking and production builds passed. Current focused results: 36 real-target API checks, 13 runner checks, 16 real stdio MCP/report checks, 13 provider checks, 32 end-to-end product UI checks and 27 recorded-viewer checks. Provider requests used a local mock only. Core proof regression 32/32, original Worker 7/7, local-origin/public-server boundary 12/12 and expanded Worker mutation rejection 11/11 also passed. These counts cover distinct bounded checks, not a claim of exhaustive security review.
+
+The local service was restarted only after matching its recorded process identity and confirming there were no active runs. The new server exposes project registration, manual plans and bounded concurrent execution. Model settings remain in ignored local runtime; no external API key or Bob quota was used. GitHub and Sites retain their private audiences. The original six-run evidence bundle is still served unchanged, while the updated interface supports new local work. The video and slide deck are explicitly labeled as the earlier prototype checkpoint.
+
+The remainder below records the earlier submission-material review; its historical wording and measurements do not replace the current product checks.
+
 Final artifact update: the narrated MP4 is 164 seconds and 10,410,417 bytes. Twelve representative frames, full decoding and audio levels passed review; see `submission/video-notes.md`. Git attributes preserve binary media and exact recorded-evidence bytes. The staged Git versions of all 26 manifest files matched their expected hashes, and the PDF and repaired target matched their local source bytes before the implementation commit.
 
 Scope: the current Git publication candidates, selected demo bundle, Bob evidence, submission assets, and the public/local startup boundary. This review does not publish anything or establish competition eligibility.

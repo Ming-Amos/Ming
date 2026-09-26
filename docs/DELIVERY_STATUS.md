@@ -1,36 +1,49 @@
 # Ming delivery status
 
-Checkpoint: 2026-09-26. This is a delivery checklist, not a claim that the project has been submitted or approved by the organizer.
+Checkpoint: 2026-09-26. This checklist distinguishes the updated local product from its earlier recorded prototype. No automatic competition submission or public publication has occurred.
 
-## Completed and evidenced
+## Updated local product
 
-- [x] Bob's original browser-execution, evidence/history, and confirmed-plan foundations, with genuine task-session summaries in `bob_sessions/`.
-- [x] Configurable compatible-provider adapter, strict plan validation, and local simulated-response verification. This does not establish live provider success.
-- [x] Source-snapshot binding, strict repair comparison, confirmation linkage, and focused core regression checks.
-- [x] Real coding-agent repair: **Codex through actual stdio MCP** retrieved and claimed the task, edited the same target source, and reran the unchanged plan. The recorded comparison reports `verifiedRepair: true`.
-- [x] Daily-report and independent Focus todo samples executed by the same runner, with normal and deliberately defective outcomes.
-- [x] Reviewed real records and 19 screenshots selected for a read-only public viewer. See `demo-evidence/manifest.json` and `demo-evidence/README.md`.
-- [x] Read-only Sites-compatible Worker and packaging scripts; seven adapter tests and a browser smoke check passed. No remote site is implied by a successful local package.
-- [x] Windows double-click launcher; hidden startup and healthy-service reuse verified without model calls.
-- [x] English statement review copies, each below 500 words, in `submission/` under this docs directory.
-- [x] Concept cover at `../submission/ming-cover.png` and five-slide PDF at `../submission/ming-slides.pdf`. The cover is artwork, not execution evidence.
+- [x] Register a running local development URL or self-contained HTML file; optionally associate a source directory.
+- [x] Persist projects, requirements, plan revisions and human confirmations; keep historical records separate from current approval.
+- [x] Manual editor for 15 browser actions/assertions; revised generated plans are identified as manual revisions.
+- [x] Confirmed acceptance execution, progress, cancellation, history, failed-run handoff and JSON/Markdown/HTML exports.
+- [x] Local provider settings: save/replace/delete key, explicit environment precedence, activation without restart, no request on save/start.
+- [x] Explicit bounded connection test and actual token-usage ledger. No external model key has been configured; no live model quality claim.
+- [x] Extend stdio MCP to 12 tools for discovery, confirmed execution, progress/cancellation, repair and comparison.
+- [x] Provider suite: **13/13 passed**, including key retention/deletion, environment fallback, fresh-process persistence, atomic-write failure, response bounds, 10-second timeout and public-mode isolation.
+- [x] ProviderSettings real-browser smoke: save/test/reopen/delete/read-only checks passed against a local HTTP fixture; no key readback or automatic model requests.
+- [x] Backend integration: **36/36 passed**, including the live-URL review state and a responsive GET while reachability probing continues (16 ms in that check).
+- [x] Runner checks: **13/13 passed** for its reported scope.
+- [x] Final full-repository typecheck and build passed.
+- [x] Updated own-project browser UI: **32/32 passed**, including restoring an in-flight run after reload and cancellation. See [PRODUCT_UI_REVIEW](PRODUCT_UI_REVIEW.md).
+- [x] Latest compiled read-only viewer: **27/27 passed**. Exact baseline/rerun/comparison responses and all 19 screenshot hashes match the preserved bundle; history search/switch/reload, JSON export, read-only model/AI help, 390px layout and write rejection passed with no frontend JavaScript errors. Desktop and mobile captures were visually reviewed.
+- [x] Actual-SDK MCP/report suite: **16/16 passed** across the expanded 12-tool workflow. A passing live-URL rerun remains “复验通过 · 待确认” with `verifiedRepair: false`.
 
-## Remaining before final handoff / submission
+These scoped tests do not establish compatibility or quality for an external model. Running local apps are observed live; only self-contained HTML is bound to the exact captured source snapshot. HTTP target redirects and cross-origin requests are blocked; separate backend services need a same-origin development proxy.
 
-- [x] Complete final Application X-ray interface checks: 43 integration checks passed; see `XRAY_UI_INTEGRATION_REVIEW.md` and root `design-qa.md`.
-- [x] Rebuild the public package from that validated interface: 10 read-only browser checks passed; see `evidence/xray-final/public-ui-report.json`.
-- [x] Record and review the narrated MP4: 164 seconds total, 150 seconds of real application UI (135 seconds excluding the introduction), including explicitly labeled review of the earlier real Codex repair; final 14 seconds show the original Bob summary. Twelve key frames, full decode and audio checks passed. See `submission/video-notes.md`.
-- [x] Review repository and viewer contents; 26 evidence hashes and original runtime bytes match, eight original Bob screenshots and final UI captures reviewed. Public startup isolation and launcher mode-conflict fixes passed. See `PUBLICATION_REVIEW.md`.
-- [x] Upload the code to https://github.com/Ming-Amos/Ming as a private repository.
-- [x] Deploy the owner-private preview at https://ming-acceptance-proof.amosming.chatgpt.site . Sites deployment succeeded on 2026-09-26. This is not yet public access.
-- [ ] Publish the project repository and verify its URL works when signed out. A GitHub profile URL is not the project repository URL.
-- [ ] Publish the read-only evidence viewer with the intended public audience and verify the application URL independently. Update README and submission fields with the actual URL only after success.
-- [ ] Obtain the organizer's confirmation that the account used meets the event's account requirements. Saved screenshots and a successful login do not resolve participation eligibility.
-- [ ] If claiming live AI-generated plans, configure the user's selected provider locally and perform a real generation, plan review, and browser run. Until then, retain the explicit fixture/unconfigured disclosure and do not claim model quality or API cost results.
-- [ ] Final user review of statements, video, cover, deck, repository, and app URL; submit through the official event form before its deadline.
+Local reports: `runtime/real-targets-047c1b1c-db4a-4cd2-9c44-af7e4e78423e/review-report.json` (backend), `runtime/product-runner-77b8c790-57f1-49b0-a9bf-91a8d28164ea/report.json` (runner), `runtime/product-mcp-15cad0a2-c4aa-4501-b9f8-223ab7294a12/review-report.json` (MCP/report), and `runtime/public-ui-15576ca0-9d23-402d-b54a-3526f8867f64/report.json` (compiled read-only viewer, with screenshots alongside). Runtime files remain local and are not automatically published. The compiled UI reviews used `index-CtFySXMn.js`; the final build's AI-help button-class adjustment is cosmetic.
 
-## Evidence anchor
+## Preserved earlier evidence and materials
 
-The recorded repair task is `7ed27f84-aa14-43f8-90e2-f84702dc21b0`. Its baseline is `65aece9c-b145-4045-8096-60331a4c6ae1`; its rerun is `2cf3cc33-507f-41c2-8b9f-6a16c712a7ae`. The plan fingerprint remains `660582f7fbabccc5`, the runner fingerprint remains `b3ad939dcb5d51b5`, and source content changes from `4d61d95b3ffbc28d` to `29ebdc69fb588289`. All three rerun criteria pass; the original AC-02 failure remains available.
+- [x] Genuine Bob task summaries retained in `bob_sessions/`. Bob built the initial core and partial repair foundations; Codex completed and extended the product after Bob's trial quota ended.
+- [x] Real prior Codex source repair through stdio MCP, with unchanged acceptance standard and a successful strict comparison.
+- [x] Reviewed demo bundle: six selected runs, 19 screenshots, source diff and manifest hashes. Original evidence was not rewritten for the new interface.
+- [x] Earlier Application X-ray checkpoint: 43 UI integration checks and 10 read-only viewer checks passed. These counts describe that checkpoint, not the updated interface.
+- [x] Existing concept cover, five-slide PDF, English statements and 164-second narrated video are present.
+- [x] Existing video/deck and historical captures are clearly identified as the **previous prototype checkpoint** in current onboarding. A future recording of the expanded interface is optional and does not block local product use.
+- [x] Updated source review checked 212 candidate files, all 26 original evidence hashes and unchanged Bob files. Final local startup and AI-connection panel passed browser smoke checks.
 
-Earlier PRD and stage reports are dated development checkpoints. Their original scope and incomplete states remain useful history; use this checklist and the linked recorded evidence for the latest delivery status.
+Recorded repair: task `7ed27f84-aa14-43f8-90e2-f84702dc21b0`; baseline `65aece9c-b145-4045-8096-60331a4c6ae1`; rerun `2cf3cc33-507f-41c2-8b9f-6a16c712a7ae`. Its plan/runner identities match, source changes from `4d61d95b3ffbc28d` to `29ebdc69fb588289`, all three rerun criteria pass, and `verifiedRepair` is true. See [the manifest](demo-evidence/manifest.json).
+
+## Before public sharing or submission
+
+- [x] GitHub repository exists at https://github.com/Ming-Amos/Ming — **private**.
+- [x] Sites preview exists at https://ming-acceptance-proof.amosming.chatgpt.site — **owner-private**, historical read-only evidence.
+- [ ] Obtain final user review before changing either audience to public. Then verify signed-out access; a private URL is not a usable public judging link.
+- [x] Reviewed the refreshed package: compiled UI, an explicit 25-route recorded-response map and 19 original screenshots; no local provider settings, keys or unreviewed runtime data are included.
+- [ ] Obtain organizer confirmation of the account's event eligibility.
+- [ ] If claiming live AI-generated plans, configure the user's chosen provider locally and perform an actual generation, human review and browser acceptance run.
+- [ ] Review final statements, media, repository and application URL, then submit through the official event form before its deadline.
+
+See [local onboarding](../README.md), [中文使用说明](../交付说明.md), and [AI connection](AI_CONNECTION.md). Historical PRD and stage reports remain dated development records.

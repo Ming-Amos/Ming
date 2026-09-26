@@ -79,6 +79,7 @@ const ALLOWED_STEP_TYPES = new Set([
   "navigate", "fill", "click", "reload",
   "assertVisible", "assertVisibleIn", "assertNotVisible",
   "assertCount", "assertInputEnabled", "assertInputDisabled",
+  "selectOption", "check", "uncheck", "assertValue", "assertUrl",
 ]);
 
 const REQUIRED_FIELDS: Record<string, string[]> = {
@@ -92,6 +93,11 @@ const REQUIRED_FIELDS: Record<string, string[]> = {
   assertCount: ["locator"],
   assertInputEnabled: ["locator"],
   assertInputDisabled: ["locator"],
+  selectOption: ["locator", "value"],
+  check: ["locator"],
+  uncheck: ["locator"],
+  assertValue: ["locator", "value"],
+  assertUrl: ["value"],
 };
 
 const KNOWN_STEP_KEYS = new Set([
@@ -101,6 +107,7 @@ const KNOWN_STEP_KEYS = new Set([
 const ASSERTION_TYPES = new Set([
   "assertVisible", "assertVisibleIn", "assertNotVisible",
   "assertCount", "assertInputEnabled", "assertInputDisabled",
+  "assertValue", "assertUrl",
 ]);
 
 function validateStructure(plan: AcceptancePlan, errors: string[]): void {
@@ -112,11 +119,24 @@ function validateStructure(plan: AcceptancePlan, errors: string[]): void {
     errors.push("计划结构无效：criteria 为空或不是数组");
     return;
   }
+  if (plan.criteria.length > 20) { errors.push("最多支持 20 条验收标准"); return; }
+  if (plan.criteria.reduce((count, c) => count + (Array.isArray(c?.steps) ? c.steps.length : 0), 0) > 120) { errors.push("计划最多支持 120 个步骤"); return; }
+  if (!["fixture", "generated", "manual"].includes(plan.source)) errors.push("计划 source 必须为 fixture、generated 或 manual");
+  if (typeof plan.title !== "string" || !plan.title.trim() || plan.title.length > 200) errors.push("计划标题须为 1–200 字符");
+  if (typeof plan.description !== "string" || plan.description.length > 4000) errors.push("计划描述必须为不超过 4000 字符的文本");
 
   const seenCriteriaIds = new Set<string>();
 
   for (const c of plan.criteria) {
-    if (!c.id || typeof c.id !== "string") {
+    if (!c || typeof c !== "object") { errors.push("验收标准必须为对象"); continue; }
+    if (typeof c.title !== "string" || !c.title.trim() || c.title.length > 200) errors.push("验收标准标题须为 1–200 字符");
+    if (typeof c.description !== "string" || c.description.length > 4000) errors.push("验收标准描述必须为不超过 4000 字符的文本");
+    for (const field of ["requirementRef", "expectedBehavior", "prerequisites"] as const) {
+      if (c[field] !== undefined && (typeof c[field] !== "string" || c[field]!.length > 4000)) errors.push(`criteria "${c.id}" 的 ${field} 必须为不超过 4000 字符的文本`);
+    }
+    if (c.contextMode !== undefined && !["fresh", "inherit"].includes(c.contextMode)) errors.push(`criteria "${c.id}" contextMode 必须为 fresh 或 inherit`);
+    if (c.dependsOn !== undefined && (!Array.isArray(c.dependsOn) || c.dependsOn.some(d => typeof d !== "string"))) errors.push(`criteria "${c.id}" dependsOn 必须为字符串数组`);
+    if (!c.id || typeof c.id !== "string" || !/^[A-Za-z0-9_-]{1,80}$/.test(c.id)) {
       errors.push("criteria 缺少有效 id");
       continue;
     }
@@ -135,7 +155,9 @@ function validateStructure(plan: AcceptancePlan, errors: string[]): void {
     let hasAssertion = false;
 
     for (const s of c.steps) {
-      if (!s.id || typeof s.id !== "string") {
+      if (!s || typeof s !== "object") { errors.push(`criteria "${c.id}" 包含无效步骤`); continue; }
+      if (typeof s.description !== "string" || s.description.length > 1000) errors.push(`criteria "${c.id}" 的步骤说明必须为不超过 1000 字符的文本`);
+      if (!s.id || typeof s.id !== "string" || !/^[A-Za-z0-9_-]{1,80}$/.test(s.id)) {
         errors.push(`criteria "${c.id}" 包含没有有效 id 的步骤`);
         continue;
       }
@@ -155,6 +177,7 @@ function validateStructure(plan: AcceptancePlan, errors: string[]): void {
         if (val === undefined || val === null) {
           errors.push(`步骤 "${s.id}" (${s.type}) 缺少必填字段 "${field}"`);
         }
+        else if (typeof val !== "string" || val.length > 4000 || (field !== "value" && !val.trim())) errors.push(`步骤 "${s.id}" 的 ${field} 必须为有效字符串（不超过 4000 字符）`);
       }
 
       if (s.type === "assertCount") {
@@ -190,6 +213,7 @@ function validateStructure(plan: AcceptancePlan, errors: string[]): void {
   }
 
   // Dependency references
+  if (errors.length) return;
   const orderedIds: string[] = [];
   for (const c of plan.criteria) {
     for (const dep of c.dependsOn ?? []) {
@@ -212,10 +236,12 @@ function validateStructure(plan: AcceptancePlan, errors: string[]): void {
           `（值：${JSON.stringify(oq)}），此草稿将被标记为含待确认问题`
         );
       } else {
+        if (oq.length > 20) errors.push(`criteria "${c.id}" 最多支持 20 个待确认问题`);
         for (const q of oq) {
           if (typeof q !== "string") {
             errors.push(`criteria "${c.id}" 的 openQuestions 包含非字符串元素：${JSON.stringify(q)}`);
           }
+          else if (q.length > 1000) errors.push(`criteria "${c.id}" 的待确认问题不能超过 1000 字符`);
         }
       }
     }
@@ -236,6 +262,7 @@ function validateStructure(plan: AcceptancePlan, errors: string[]): void {
   // Fix 3: unknown fields on criterion objects
   const KNOWN_CRITERION_KEYS = new Set([
     "id", "title", "description", "contextMode", "steps", "dependsOn", "openQuestions",
+    "requirementRef", "expectedBehavior", "prerequisites",
   ]);
   for (const c of plan.criteria) {
     for (const key of Object.keys(c as unknown as Record<string, unknown>)) {
