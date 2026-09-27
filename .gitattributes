@@ -13,5 +13,6 @@ docs/judge-evidence/** -text
 examples/** -text
 docs/evidence/current-video/** -text whitespace=cr-at-eol
 submission/ming-demo.srt -text whitespace=cr-at-eol
+submission/ming-demo-own-voice.srt -text whitespace=cr-at-eol
 submission/archive/ming-demo-prototype.srt -text whitespace=cr-at-eol
 docs/submission/archive/video-notes-prototype.md -text whitespace=cr-at-eol
