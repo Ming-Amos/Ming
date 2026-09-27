@@ -1,0 +1,79 @@
+{
+  "startedAt": "2026-09-27T07:58:08.015Z",
+  "base": "http://127.0.0.1:4001",
+  "checks": [
+    {
+      "name": "Three inline modules initialize without waiting for three timeout windows",
+      "passed": true,
+      "detail": {
+        "elapsedMs": 208
+      }
+    },
+    {
+      "name": "Module exports, source order, and Unicode execute unchanged",
+      "passed": true
+    },
+    {
+      "name": "A fast module preview has no false timeout diagnostic",
+      "passed": true
+    },
+    {
+      "name": "Identical inline module blocks each execute instead of sharing a cached entry module",
+      "passed": true
+    },
+    {
+      "name": "A ZIP entry loads a local module with default and named dependency exports",
+      "passed": true
+    },
+    {
+      "name": "Local dependency loading needs no network exception or CSP relaxation",
+      "passed": true
+    },
+    {
+      "name": "A genuine module syntax error is reported instead of starting a preview",
+      "passed": true
+    },
+    {
+      "name": "A genuine module evaluation error remains visible in preview diagnostics",
+      "passed": true
+    },
+    {
+      "name": "A completed module does not acquire a false timeout warning four seconds later",
+      "passed": true,
+      "detail": {
+        "initial": {
+          "elements": [
+            {
+              "selector": "#ready",
+              "tag": "p",
+              "label": "Loaded",
+              "type": "",
+              "text": "Loaded"
+            }
+          ],
+          "warnings": []
+        },
+        "later": {
+          "elements": [
+            {
+              "selector": "#ready",
+              "tag": "p",
+              "label": "Loaded",
+              "type": "",
+              "text": "Loaded"
+            }
+          ],
+          "warnings": []
+        }
+      }
+    },
+    {
+      "name": "The regression makes no external or paid model requests",
+      "passed": true
+    }
+  ],
+  "outsideRequests": [],
+  "plannerCalls": 0,
+  "passed": true,
+  "finishedAt": "2026-09-27T07:58:14.658Z"
+}

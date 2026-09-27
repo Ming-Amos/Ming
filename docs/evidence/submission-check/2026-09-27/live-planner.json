@@ -1,0 +1,91 @@
+{
+  "status": 200,
+  "ok": true,
+  "draft": {
+    "steps": [
+      {
+        "id": "draft-1-5e71a053-c239-4436-ab41-328f219ddaa6",
+        "action": "fill",
+        "selector": "#taskName",
+        "value": "",
+        "description": "Enter empty text into the task name input field"
+      },
+      {
+        "id": "draft-2-67e4fe6c-cc6b-4e68-9adb-c6fd6508791a",
+        "action": "click",
+        "selector": "body > main > section > div:nth-of-type(1) > form > div > button",
+        "value": "",
+        "description": "Click the +Add task submit button"
+      },
+      {
+        "id": "draft-3-17c40acc-48e5-4625-97c0-c52707ba2269",
+        "action": "assertText",
+        "selector": "#notice",
+        "value": "Add a task name before continuing.",
+        "description": "Verify the required task name error notice is displayed"
+      },
+      {
+        "id": "draft-4-a4ffe093-42a4-4295-b68f-a0a0c8a568a0",
+        "action": "assertText",
+        "selector": "#taskCount",
+        "value": "0 tasks",
+        "description": "Verify the task count remains at 0 tasks after empty submission"
+      },
+      {
+        "id": "draft-5-3334784d-aada-438e-a2b6-4589c50c154a",
+        "action": "fill",
+        "selector": "#taskName",
+        "value": "Ming final review",
+        "description": "Enter 'Ming final review' into the task name input field"
+      },
+      {
+        "id": "draft-6-2b0d78d6-a490-4e7b-ab53-4223dd539ffc",
+        "action": "click",
+        "selector": "body > main > section > div:nth-of-type(1) > form > div > button",
+        "value": "",
+        "description": "Click the +Add task submit button to add the new task"
+      },
+      {
+        "id": "draft-7-25f03b7c-8252-40ac-b27d-8d0bdb349bac",
+        "action": "assertCount",
+        "selector": "#taskList > li",
+        "value": "1",
+        "description": "Verify there is 1 task in the task list"
+      },
+      {
+        "id": "draft-8-6a21d4fc-62ed-4b17-9128-e744ea266395",
+        "action": "assertText",
+        "selector": "#taskList > li",
+        "value": "Ming final review",
+        "description": "Verify the 'Ming final review' task appears in the task list"
+      },
+      {
+        "id": "draft-9-64c0e932-c3c1-4a09-9d6e-2d971c220a36",
+        "action": "reload",
+        "selector": "",
+        "value": "",
+        "description": "Reload the application page"
+      },
+      {
+        "id": "draft-10-b2f8bf01-b539-43dc-b0d0-afe426b4f400",
+        "action": "assertCount",
+        "selector": "#taskList > li",
+        "value": "1",
+        "description": "Verify there is still 1 task in the task list after reload"
+      },
+      {
+        "id": "draft-11-0b1684ac-3003-4f87-bcb3-950dd8e017b5",
+        "action": "assertText",
+        "selector": "#taskList > li",
+        "value": "Ming final review",
+        "description": "Verify the 'Ming final review' task still appears in the task list after reload"
+      }
+    ],
+    "openQuestions": []
+  },
+  "usage": {
+    "inputTokens": 968,
+    "outputTokens": 465
+  },
+  "modelId": "doubao-seed-2-0-pro-260215"
+}

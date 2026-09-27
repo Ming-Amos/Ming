@@ -1,0 +1,25 @@
+# Final submission workflow check — 2026-09-27
+
+One reproducible compatibility bug was found and fixed: a valid static page containing three inline ES modules waited for three missing load events and exceeded the preview's initialization deadline. Prepared modules now use local data URLs with real load/error events, a cleared timeout, and distinct entry identities. Local dependency resolution and the isolated preview policy remain unchanged. The focused regression passed 10/10 checks; three modules initialized in 208 ms.
+
+## Real deployed workflow
+
+These screenshots and observations were captured in this review, using the existing owner's authorized access to the deployed application. They establish application behavior, not anonymous judge access. The original deployed application used `index-eLFffDhU.js`; final module-fix validation below uses `index-DSflkOtZ.js`.
+
+1. **Welcome and Start — passed.** The selected animated artwork remains the entrance; Start opens the guided own-project workspace. [Welcome](evidence/submission-check/2026-09-27/01-welcome.png), [Add app](evidence/submission-check/2026-09-27/02-add-app.png).
+2. **Import and describe — passed.** Existing buggy Shipboard HTML rendered in the isolated preview. The user's three explicit requirements remained editable. [Description](evidence/submission-check/2026-09-27/03-description.png).
+3. **Generate and review — passed.** One genuine Doubao Seed 2.0 Pro request returned an eleven-step checklist with no unresolved questions. Nothing executed before approval. Provider usage: 968 input + 465 output = 1,433 tokens. [Reviewed checklist](evidence/submission-check/2026-09-27/04-live-review.png), [original model response](evidence/submission-check/2026-09-27/live-planner.json).
+4. **Run and report failure — passed.** Exactly those eleven steps were used. Nine actions passed; the post-reload task-count assertion failed; the dependent text assertion remained unchecked. This was an actual observed persistence defect. Report download and copying the failure brief worked. [Failure](evidence/submission-check/2026-09-27/05-real-failure.png), [repair brief](evidence/submission-check/2026-09-27/repair-brief.md).
+5. **Bring back a correction — passed.** The existing prepared corrected fixture passed all eleven steps without another model request. The plan fingerprint was unchanged, source fingerprint changed, and the original failed baseline remained byte-for-byte identical in the exported report. This check did not generate or apply a new source repair. [Corrected results](evidence/submission-check/2026-09-27/06-corrected-comparison.png).
+6. **Mobile results — passed.** At 390×844, report/copy controls and results remained available with no horizontal document overflow. [Mobile](evidence/submission-check/2026-09-27/07-results-mobile.png).
+7. **Real public GitHub import — passed.** The MDN beginner HTML site imported from pinned commit `6cf801f2ce32e60e3be46038b85f0ee5f9dd0ef9`. Its actual heading passed an explicitly authored browser assertion and exported with source provenance. This branch made no model request. [Imported app](evidence/submission-check/2026-09-27/08-github-import.png), [accepted check](evidence/submission-check/2026-09-27/09-github-passed.png).
+
+No application JavaScript exception occurred during the own-project and GitHub paths. An initial model click was intercepted by the review harness's own budget gate before reaching the provider; fixing that gate allowed the sole real request. The resulting 429 is a harness observation, not a production service failure. Error recovery retained the uploaded app and description.
+
+## Final-build regressions
+
+- [Module compatibility: 10/10](evidence/submission-check/2026-09-27/module-regression.json): source order, exports, Unicode, duplicate inline module entries, local ZIP dependencies, real syntax/runtime errors, cleared timeout, and no external/model requests.
+- [Guided workflow: 31/31](evidence/simple-workflow/2026-09-27T07-58-47-698Z-after-be2fd7e2/report.json) on final bundle `index-DSflkOtZ.js`. Covers real failure and revised pass, cancellation/retry, original baseline, stale drafts, unresolved questions, duplicate approval, unavailable-model fallback, manual checks, desktop/mobile layout. [Fresh screenshot review](evidence/simple-workflow/2026-09-27T07-58-47-698Z-after-be2fd7e2/visual-review.md).
+- [Hosted Worker/planner/checklist summary: 38/38](evidence/simple-workflow/2026-09-27T07-52-45-735Z-after-ebf7b708/unit-summary.json). These unchanged modules were checked once, not rerun after the isolated preview fix.
+
+The regression planner replies are explicit local fixtures; their displayed tokens are not provider consumption. This entire review used zero Bob calls and one real model request. The review does not prove support for arbitrary backend projects or complete accessibility compliance. Repository/site access remain private and must be resolved separately before submission. Final deployment verification is recorded alongside this report after publication.

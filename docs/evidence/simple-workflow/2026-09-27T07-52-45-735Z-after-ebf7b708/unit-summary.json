@@ -1,0 +1,18 @@
+{
+  "recordedAtUtc": "2026-09-27T07:53:54.0973764Z",
+  "command": "node --test scripts/public-demo/worker.test.mjs scripts/public-demo/upload-planner.test.mjs scripts/plan-summary.test.mjs",
+  "exitCode": 0,
+  "tests": 38,
+  "passed": 38,
+  "failed": 0,
+  "skipped": 0,
+  "cancelled": 0,
+  "durationMs": 154.1565,
+  "providerTransport": "Local fixtures and injected provider mocks only",
+  "paidModelCalls": 0,
+  "bobCalls": 0,
+  "warnings": [
+    "Node reparsed plan-summary.ts as an ES module because the package does not declare its module type. All tests passed."
+  ],
+  "scope": "Hosted routing, planner validation/security/cancellation, and readable plan summaries; not a live provider verification."
+}

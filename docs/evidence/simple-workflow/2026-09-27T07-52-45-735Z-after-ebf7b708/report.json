@@ -1,0 +1,350 @@
+{
+  "id": "ebf7b708-f928-497d-b80b-f1877651fa0f",
+  "mode": "after",
+  "base": "http://127.0.0.1:4392",
+  "startedAt": "2026-09-27T07:52:45.736Z",
+  "transport": "Explicit local draft fixture. Reported token counts are fixture data, not consumed provider tokens.",
+  "checks": [
+    {
+      "name": "Review uses the exact current compiled UI",
+      "passed": true
+    },
+    {
+      "name": "A new visit begins with source only",
+      "passed": true
+    },
+    {
+      "name": "Source on mobile has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "Loading source and writing requirements makes no model request",
+      "passed": true
+    },
+    {
+      "name": "Import opens description with one explicit creation action",
+      "passed": true
+    },
+    {
+      "name": "The potential AI charge is disclosed beside creation",
+      "passed": true
+    },
+    {
+      "name": "Only explicit creation sends one approved request with observed page elements",
+      "passed": true
+    },
+    {
+      "name": "Review displays one checklist and waits for approval",
+      "passed": true
+    },
+    {
+      "name": "Technical details and creation controls are absent from the normal review",
+      "passed": true
+    },
+    {
+      "name": "Checklist on mobile has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "The executing iframe stays laid out while checks run",
+      "passed": true
+    },
+    {
+      "name": "Approval runs exactly the reviewed five steps and observes the real persistence bug",
+      "passed": true
+    },
+    {
+      "name": "Recorded failure includes a nonzero DOM image with no second model call",
+      "passed": true
+    },
+    {
+      "name": "Failure results on mobile has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "Exact selector and raw observation stay inside a closed disclosure",
+      "passed": true
+    },
+    {
+      "name": "Repair instructions retain the actual requirement and observed failure",
+      "passed": true
+    },
+    {
+      "name": "A revision returns to the same checklist without regenerating",
+      "passed": true
+    },
+    {
+      "name": "Rapid repeated approval starts one revised run with unchanged baseline and plan",
+      "passed": true
+    },
+    {
+      "name": "Stopping preserves observations and leaves unexecuted steps unchecked",
+      "passed": true
+    },
+    {
+      "name": "A cancelled run can be explicitly retried without another model call",
+      "passed": true
+    },
+    {
+      "name": "Unresolved questions prevent approval even when an older valid plan exists",
+      "passed": true
+    },
+    {
+      "name": "Explicit baseline restoration replaces the questioned candidate but still requires a new approval",
+      "passed": true
+    },
+    {
+      "name": "Changing description makes the existing candidate stale and prevents old-plan fallback",
+      "passed": true
+    },
+    {
+      "name": "Changing project also leaves the candidate blocked until a new explicit request",
+      "passed": true
+    },
+    {
+      "name": "Cancelled generation cannot later install a draft or advance the flow",
+      "passed": true
+    },
+    {
+      "name": "Unavailable AI leaves creation disabled and a guided sample available",
+      "passed": true
+    },
+    {
+      "name": "Manual authoring is an explicit advanced choice",
+      "passed": true
+    },
+    {
+      "name": "A manual plan still executes real checks without using AI",
+      "passed": true
+    },
+    {
+      "name": "Every model transport was an explicit approved fixture request, never an automatic retry",
+      "passed": true
+    },
+    {
+      "name": "No external request or unapproved mutation was attempted",
+      "passed": true
+    },
+    {
+      "name": "No browser exception occurred",
+      "passed": true
+    }
+  ],
+  "requests": [
+    {
+      "path": "/api/upload/planner/draft",
+      "method": "POST",
+      "body": {
+        "confirmedUserAction": true,
+        "requirement": "Add a task named \"Keep the release notes\". It must appear immediately and remain visible after reloading the page.",
+        "projectName": "field-notes",
+        "entry": "field-notes.html",
+        "elements": [
+          {
+            "selector": "#taskForm",
+            "tag": "form",
+            "label": "Task name\nAdd task",
+            "type": "",
+            "text": "Task name\nAdd task"
+          },
+          {
+            "selector": "#taskName",
+            "tag": "input",
+            "label": "Task name",
+            "type": "",
+            "text": ""
+          },
+          {
+            "selector": "#addTask",
+            "tag": "button",
+            "label": "Add task",
+            "type": "",
+            "text": "Add task"
+          },
+          {
+            "selector": "#taskList",
+            "tag": "ul",
+            "label": "taskList",
+            "type": "",
+            "text": ""
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/upload/planner/draft",
+      "method": "POST",
+      "body": {
+        "confirmedUserAction": true,
+        "requirement": "Add a task named \"Keep the release notes\". It must appear immediately and remain visible after reloading the page.",
+        "projectName": "field-notes",
+        "entry": "field-notes.html",
+        "elements": [
+          {
+            "selector": "#taskForm",
+            "tag": "form",
+            "label": "Task name\nAdd task",
+            "type": "",
+            "text": "Task name\nAdd task"
+          },
+          {
+            "selector": "#taskName",
+            "tag": "input",
+            "label": "Task name",
+            "type": "",
+            "text": ""
+          },
+          {
+            "selector": "#addTask",
+            "tag": "button",
+            "label": "Add task",
+            "type": "",
+            "text": "Add task"
+          },
+          {
+            "selector": "#taskList",
+            "tag": "ul",
+            "label": "taskList",
+            "type": "",
+            "text": ""
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/upload/planner/draft",
+      "method": "POST",
+      "body": {
+        "confirmedUserAction": true,
+        "requirement": "Add a task named \"Keep the release notes\". It must appear immediately and remain visible after reloading the page.",
+        "projectName": "field-notes",
+        "entry": "field-notes.html",
+        "elements": [
+          {
+            "selector": "#taskForm",
+            "tag": "form",
+            "label": "Task name\nAdd task",
+            "type": "",
+            "text": "Task name\nAdd task"
+          },
+          {
+            "selector": "#taskName",
+            "tag": "input",
+            "label": "Task name",
+            "type": "",
+            "text": ""
+          },
+          {
+            "selector": "#addTask",
+            "tag": "button",
+            "label": "Add task",
+            "type": "",
+            "text": "Add task"
+          },
+          {
+            "selector": "#taskList",
+            "tag": "ul",
+            "label": "taskList",
+            "type": "",
+            "text": ""
+          }
+        ]
+      }
+    },
+    {
+      "path": "/api/upload/planner/draft",
+      "method": "POST",
+      "body": {
+        "confirmedUserAction": true,
+        "requirement": "Add a task named \"Keep the release notes\". It must appear immediately and remain visible after reloading the page. Also keep completed tasks visible.",
+        "projectName": "field-notes",
+        "entry": "field-notes.html",
+        "elements": [
+          {
+            "selector": "#taskForm",
+            "tag": "form",
+            "label": "Task name\nAdd task",
+            "type": "",
+            "text": "Task name\nAdd task"
+          },
+          {
+            "selector": "#taskName",
+            "tag": "input",
+            "label": "Task name",
+            "type": "",
+            "text": ""
+          },
+          {
+            "selector": "#addTask",
+            "tag": "button",
+            "label": "Add task",
+            "type": "",
+            "text": "Add task"
+          },
+          {
+            "selector": "#taskList",
+            "tag": "ul",
+            "label": "taskList",
+            "type": "",
+            "text": ""
+          }
+        ]
+      }
+    }
+  ],
+  "blockedRequests": [],
+  "errors": [],
+  "screenshots": [
+    "01-source-desktop.png",
+    "01b-source-mobile.png",
+    "02-requirements-desktop.png",
+    "03-draft-review-desktop.png",
+    "04-review-mobile.png",
+    "05-real-results-desktop.png",
+    "06-real-failure-mobile.png",
+    "07-revision-comparison-desktop.png",
+    "08-unresolved-questions.png",
+    "09-stale-candidate.png",
+    "10-before-and-after-comparison.png"
+  ],
+  "passed": true,
+  "bundle": "/assets/index-eLFffDhU.js",
+  "runs": [
+    {
+      "file": "actual-first-failure.json",
+      "id": "4f9b3bd3-d333-497e-812c-ec64b15e307f",
+      "status": "failed",
+      "planFingerprint": "d27440662d2f0183c3cde112b10665ecb86400ad8569d7a8d86649db8b475c9b",
+      "projectFingerprint": "65d4ea5447e6265dcd95c5ea41d0694a700fe404c24bfe2b21fbc7755554cb8b"
+    },
+    {
+      "file": "actual-revision-pass.json",
+      "id": "51cfd28c-8752-4df2-b856-91ba7a9e749d",
+      "status": "passed",
+      "planFingerprint": "d27440662d2f0183c3cde112b10665ecb86400ad8569d7a8d86649db8b475c9b",
+      "projectFingerprint": "7e6657961dcbcd31b5d3ef9a6f9f96748837cbf0d3ecf3bf1bc54f9709a6356b"
+    },
+    {
+      "file": "actual-cancelled.json",
+      "id": "1e079354-e5ec-49a8-a232-e7bb4cf9d740",
+      "status": "cancelled",
+      "planFingerprint": "d27440662d2f0183c3cde112b10665ecb86400ad8569d7a8d86649db8b475c9b",
+      "projectFingerprint": "7e6657961dcbcd31b5d3ef9a6f9f96748837cbf0d3ecf3bf1bc54f9709a6356b"
+    },
+    {
+      "file": "actual-retry-pass.json",
+      "id": "9bb771ef-ad7e-428f-bc74-d3161ef6671f",
+      "status": "passed",
+      "planFingerprint": "d27440662d2f0183c3cde112b10665ecb86400ad8569d7a8d86649db8b475c9b",
+      "projectFingerprint": "7e6657961dcbcd31b5d3ef9a6f9f96748837cbf0d3ecf3bf1bc54f9709a6356b"
+    },
+    {
+      "file": "actual-manual-pass.json",
+      "id": "98b50ce3-ced0-428d-bf63-4f5617546d14",
+      "status": "passed",
+      "planFingerprint": "77d6f336c92ff3a76502714077ebd8dab01847e1a599eceacbdd9d1c7cc686ec",
+      "projectFingerprint": "65d4ea5447e6265dcd95c5ea41d0694a700fe404c24bfe2b21fbc7755554cb8b"
+    }
+  ],
+  "finishedAt": "2026-09-27T07:52:59.150Z"
+}

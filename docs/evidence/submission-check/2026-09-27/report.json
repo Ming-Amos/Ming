@@ -1,0 +1,207 @@
+{
+  "startedAt": "2026-09-27T07:52:24.714Z",
+  "origin": "https://ming-acceptance-proof.amosming.chatgpt.site",
+  "errors": [],
+  "networkErrors": [
+    {
+      "url": "https://ming-acceptance-proof.amosming.chatgpt.site/api/upload/planner/draft",
+      "status": 429
+    }
+  ],
+  "checks": [
+    {
+      "name": "One real model draft; explicit review before execution",
+      "passed": true
+    },
+    {
+      "name": "Real execution detects lost task after reload; exactly the reviewed model plan executed",
+      "passed": true
+    },
+    {
+      "name": "Repair handoff retains actual requirement and observed failure",
+      "passed": true
+    },
+    {
+      "name": "Prepared corrected source passes identical eleven-step plan without a second model call",
+      "passed": true
+    },
+    {
+      "name": "Original failed baseline preserved unchanged in revised report",
+      "passed": true
+    },
+    {
+      "name": "Real public GitHub import, pinned source, executed heading assertion and evidence export",
+      "passed": true
+    }
+  ],
+  "screenshots": [
+    "C:\\Bob\\Projects\\Ming\\runtime\\submission-qa-2026-09-27T07-52-24-469Z\\01-welcome.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\submission-qa-2026-09-27T07-52-24-469Z\\02-add-app.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\submission-qa-2026-09-27T07-52-24-469Z\\03-description.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\submission-qa-2026-09-27T07-52-24-469Z\\04-review.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\submission-qa-2026-09-27T07-52-24-469Z\\04-live-review.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\submission-qa-2026-09-27T07-52-24-469Z\\05-real-failure.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\submission-qa-2026-09-27T07-52-24-469Z\\06-corrected-comparison.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\submission-qa-2026-09-27T07-52-24-469Z\\07-results-mobile.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\submission-qa-2026-09-27T07-52-24-469Z\\08-github-import.png",
+    "C:\\Bob\\Projects\\Ming\\runtime\\submission-qa-2026-09-27T07-52-24-469Z\\09-github-passed.png"
+  ],
+  "modelCalls": 1,
+  "planner": {
+    "status": 200,
+    "ok": true,
+    "draft": {
+      "steps": [
+        {
+          "id": "draft-1-5e71a053-c239-4436-ab41-328f219ddaa6",
+          "action": "fill",
+          "selector": "#taskName",
+          "value": "",
+          "description": "Enter empty text into the task name input field"
+        },
+        {
+          "id": "draft-2-67e4fe6c-cc6b-4e68-9adb-c6fd6508791a",
+          "action": "click",
+          "selector": "body > main > section > div:nth-of-type(1) > form > div > button",
+          "value": "",
+          "description": "Click the +Add task submit button"
+        },
+        {
+          "id": "draft-3-17c40acc-48e5-4625-97c0-c52707ba2269",
+          "action": "assertText",
+          "selector": "#notice",
+          "value": "Add a task name before continuing.",
+          "description": "Verify the required task name error notice is displayed"
+        },
+        {
+          "id": "draft-4-a4ffe093-42a4-4295-b68f-a0a0c8a568a0",
+          "action": "assertText",
+          "selector": "#taskCount",
+          "value": "0 tasks",
+          "description": "Verify the task count remains at 0 tasks after empty submission"
+        },
+        {
+          "id": "draft-5-3334784d-aada-438e-a2b6-4589c50c154a",
+          "action": "fill",
+          "selector": "#taskName",
+          "value": "Ming final review",
+          "description": "Enter 'Ming final review' into the task name input field"
+        },
+        {
+          "id": "draft-6-2b0d78d6-a490-4e7b-ab53-4223dd539ffc",
+          "action": "click",
+          "selector": "body > main > section > div:nth-of-type(1) > form > div > button",
+          "value": "",
+          "description": "Click the +Add task submit button to add the new task"
+        },
+        {
+          "id": "draft-7-25f03b7c-8252-40ac-b27d-8d0bdb349bac",
+          "action": "assertCount",
+          "selector": "#taskList > li",
+          "value": "1",
+          "description": "Verify there is 1 task in the task list"
+        },
+        {
+          "id": "draft-8-6a21d4fc-62ed-4b17-9128-e744ea266395",
+          "action": "assertText",
+          "selector": "#taskList > li",
+          "value": "Ming final review",
+          "description": "Verify the 'Ming final review' task appears in the task list"
+        },
+        {
+          "id": "draft-9-64c0e932-c3c1-4a09-9d6e-2d971c220a36",
+          "action": "reload",
+          "selector": "",
+          "value": "",
+          "description": "Reload the application page"
+        },
+        {
+          "id": "draft-10-b2f8bf01-b539-43dc-b0d0-afe426b4f400",
+          "action": "assertCount",
+          "selector": "#taskList > li",
+          "value": "1",
+          "description": "Verify there is still 1 task in the task list after reload"
+        },
+        {
+          "id": "draft-11-0b1684ac-3003-4f87-bcb3-950dd8e017b5",
+          "action": "assertText",
+          "selector": "#taskList > li",
+          "value": "Ming final review",
+          "description": "Verify the 'Ming final review' task still appears in the task list after reload"
+        }
+      ],
+      "openQuestions": []
+    },
+    "usage": {
+      "inputTokens": 968,
+      "outputTokens": 465
+    },
+    "modelId": "doubao-seed-2-0-pro-260215"
+  },
+  "harnessNotes": [
+    "The initial generation click was blocked by the test harness before reaching the provider; the user-facing recovery kept the app and description intact. Fixed the harness gate before the sole live call."
+  ],
+  "permitModel": false,
+  "baseline": {
+    "id": "fba67000-1651-43d9-89ef-fdc7e15fd681",
+    "status": "failed",
+    "steps": [
+      {
+        "action": "fill",
+        "status": "passed"
+      },
+      {
+        "action": "click",
+        "status": "passed"
+      },
+      {
+        "action": "assertText",
+        "status": "passed"
+      },
+      {
+        "action": "assertText",
+        "status": "passed"
+      },
+      {
+        "action": "fill",
+        "status": "passed"
+      },
+      {
+        "action": "click",
+        "status": "passed"
+      },
+      {
+        "action": "assertCount",
+        "status": "passed"
+      },
+      {
+        "action": "assertText",
+        "status": "passed"
+      },
+      {
+        "action": "reload",
+        "status": "passed"
+      },
+      {
+        "action": "assertCount",
+        "status": "failed"
+      },
+      {
+        "action": "assertText",
+        "status": "unchecked"
+      }
+    ],
+    "fingerprint": "1014f248b2ea23b3acab23e0a48e11121b2179179b5f83f1641a282ba5f39ba8"
+  },
+  "corrected": {
+    "id": "d6eb0d52-60dc-4da5-a8de-1f3491a08989",
+    "status": "passed",
+    "steps": 11,
+    "fingerprint": "1014f248b2ea23b3acab23e0a48e11121b2179179b5f83f1641a282ba5f39ba8"
+  },
+  "github": {
+    "url": "https://github.com/mdn/beginner-html-site",
+    "commit": "6cf801f2ce32e60e3be46038b85f0ee5f9dd0ef9",
+    "status": "passed"
+  }
+}

@@ -2,6 +2,7 @@
 (() => {
   const boot = document.currentScript.dataset.boot;
   const nativeTimeout = window.setTimeout.bind(window);
+  const nativeClearTimeout = window.clearTimeout.bind(window);
   const delay = ms => new Promise(resolve => nativeTimeout(resolve, ms));
   const diagnostics = [];
   const note = value => { if (diagnostics.length < 30) diagnostics.push(String(value).slice(0, 500)); };
@@ -141,11 +142,25 @@
       } catch (error) { send({ id, error: bounded(error.message || error) }); }
     };
     port.start();
-    for (const script of event.data.scripts) {
+    for (const [index, script] of event.data.scripts.entries()) {
       const element = document.createElement('script');
       if (script.module) {
-        element.type = 'module'; element.textContent = script.code;
-        await Promise.race([new Promise(resolve => { element.onload = resolve; element.onerror = () => { note('Module script failed to load.'); resolve(); }; document.body.append(element); }), delay(4000).then(() => note('Module initialization exceeded 4 seconds; review this app before relying on its checks.'))]);
+        // Inline module scripts do not reliably dispatch load. A data URL keeps
+        // the prepared module local while giving each script a real load/error
+        // lifecycle; the importer has already resolved its local dependencies.
+        element.type = 'module'; element.src = 'data:text/javascript;charset=utf-8,' + encodeURIComponent(script.code) + '#ming-' + boot + '-' + index;
+        await new Promise(resolve => {
+          let settled = false;
+          const finish = () => {
+            if (settled) return;
+            settled = true; nativeClearTimeout(timer);
+            element.onload = null; element.onerror = null; resolve();
+          };
+          const timer = nativeTimeout(() => { note('Module initialization exceeded 4 seconds; review this app before relying on its checks.'); finish(); }, 4000);
+          element.onload = finish;
+          element.onerror = () => { note('Module script failed to load.'); finish(); };
+          document.body.append(element);
+        });
       } else { element.textContent = script.code; document.body.append(element); }
     }
     document.dispatchEvent(new Event('DOMContentLoaded')); window.dispatchEvent(new Event('load'));
