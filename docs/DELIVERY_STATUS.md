@@ -8,6 +8,8 @@ Focused browser verification passed **31/31** checks, including an actual failed
 
 The full frontend type check/build passed. The behavioral review used `index-INkjc2n3.js`; one diagnostic-copy correction produced `index-eLFffDhU.js` with unchanged `index-Bpw9X5ez.css`, followed by a **7/7** focused final-bundle review. A passing checklist still covers only the approved checks. Copying repair instructions does not send them automatically or modify the source.
 
+Private publication succeeded at **2026-09-27 04:10:20 UTC**, application commit `94f4c98eb4617535c934c069787628ab1026f566`, deployment `appgdep_6ab8971de7708191b0985102bab444ff`. Authenticated production HTML and both compiled assets returned HTTP 200; JavaScript and stylesheet SHA-256 values match the reviewed local files exactly. The owner-private audience and secret revision 1 remain unchanged. The source review checked 616 candidates with no findings and verified all 60 historical evidence hashes and unchanged Bob records. A bounded exact-key scan checked 633 source/package files with no match. Local and deployed code both use the guided workflow.
+
 ## Restrained dark workspace — 2026-09-27 (Asia/Shanghai)
 
 The user clarified that the inner pages should share the cover's dark atmosphere with **only a little pixel decoration**. Upload, the guided trial, Evidence Studio and their dialogs now use midnight surfaces, blue/violet accents, normal sans-serif text and consistent semantic result colors. An 84-pixel inspector appears only in the upload empty state; no background animation was added to working forms. The actual uploaded application and original evidence images retain their own colors. All existing review, confirmation, execution and repair behavior is preserved.
