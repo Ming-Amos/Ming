@@ -1,0 +1,127 @@
+1
+00:00:00,000 --> 00:00:01,760
+The AI says, "It's done."
+
+2
+00:00:01,809 --> 00:00:02,206
+Great.
+
+3
+00:00:02,319 --> 00:00:08,760
+But I'm still clicking through the app, taking screenshots, and explaining what went wrong.
+
+4
+00:00:08,830 --> 00:00:10,483
+That's why I built Ming.
+
+5
+00:00:14,000 --> 00:00:17,419
+Let's try it with Shipboard, a small task app.
+
+6
+00:00:17,851 --> 00:00:20,291
+I've left a bug in this version.
+
+7
+00:00:20,489 --> 00:00:24,951
+I upload the HTML file, and there's my app, ready to check.
+
+8
+00:00:29,000 --> 00:00:36,568
+Here's what I need: reject an empty task, add a new one, and keep it after a refresh.
+
+9
+00:00:36,851 --> 00:00:40,547
+I just write those requirements in plain English.
+
+10
+00:00:46,000 --> 00:00:49,568
+Now I ask Seed two point zero Pro for a checklist.
+
+11
+00:00:49,979 --> 00:00:56,270
+It reads my requirements and the page, then suggests what to do and what should happen.
+
+12
+00:01:03,000 --> 00:01:05,845
+I can review the steps before anything runs.
+
+13
+00:01:06,021 --> 00:01:09,335
+Once they look right, I click Approve and check.
+
+14
+00:01:09,340 --> 00:01:12,483
+Ming carries out those actions in the browser.
+
+15
+00:01:20,000 --> 00:01:20,887
+There it is.
+
+16
+00:01:21,064 --> 00:01:24,866
+The task was added, but it's gone after the refresh.
+
+17
+00:01:25,319 --> 00:01:31,228
+Ming caught the failure, and saved what actually happened so I can inspect it.
+
+18
+00:01:36,000 --> 00:01:39,206
+Now I copy these instructions for my coding AI.
+
+19
+00:01:39,574 --> 00:01:43,015
+They include the steps and what went wrong.
+
+20
+00:01:43,468 --> 00:01:47,334
+Copying doesn't fix the code or contact an assistant.
+
+21
+00:01:47,745 --> 00:01:50,334
+I pass the brief over separately.
+
+22
+00:01:55,000 --> 00:01:58,398
+For this demo, I've prepared a corrected version.
+
+23
+00:01:58,660 --> 00:02:02,377
+I upload it and run the same checklist again.
+
+24
+00:02:02,511 --> 00:02:05,611
+This time, the task stays after the refresh.
+
+25
+00:02:05,915 --> 00:02:09,185
+Both results are kept, so I can compare them.
+
+26
+00:02:16,000 --> 00:02:23,655
+IBM Bob helped build the original browser runner, evidence history, model adapter, and repair
+
+27
+00:02:23,660 --> 00:02:24,440
+foundations.
+
+28
+00:02:24,894 --> 00:02:27,760
+Here is an original task summary.
+
+29
+00:02:28,064 --> 00:02:35,291
+After my trial quota ran out, I used other development tools to finish and refine the product.
+
+30
+00:02:37,000 --> 00:02:41,143
+Of course, passing these checks doesn't mean everything is perfect.
+
+31
+00:02:41,383 --> 00:02:48,526
+But now, I can give my coding AI clear evidence of what works and what needs fixing.
+
+32
+00:02:48,723 --> 00:02:49,653
+That's Ming.

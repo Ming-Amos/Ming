@@ -1,6 +1,6 @@
 # Problem & Solution Statement
 
-Review copy updated 2026-09-27 for the guided workflow and verified hosted model integration. Statement body: **383 English words** (whitespace-delimited; under 500). Copy only the text below the divider into the submission field. This file is not a submitted entry or an eligibility determination.
+Review copy updated 2026-09-27 for the guided workflow and verified hosted model integration. Statement body: **386 English words** (whitespace-delimited; under 500). Copy only the text below the divider into the submission field. This file is not a submitted entry or an eligibility determination.
 
 ---
 
@@ -14,6 +14,6 @@ Ming then performs actual browser actions and records expected versus observed b
 
 In a verified hosted Shipboard example, one real model request produced nine steps covering empty-input validation, task creation, and persistence after reload. The defective app lost its task after refresh. The corrected upload passed all nine unchanged steps while the failed baseline remained intact. This example used a prepared corrected source, not an AI-generated hosted repair.
 
-For local development, Ming also provides a Playwright runner and 12 MCP tools. In a separate recorded demonstration, Codex retrieved a failure through actual MCP, edited the same Shipboard target, and reran an unchanged, hand-authored plan. All three criteria passed with source-bound repair verification. Evidence Studio lets reviewers explore the original steps, screenshots, and comparison.
+For local development, Ming also provides a Playwright runner and 12 MCP tools. In a separate recorded demonstration, a coding assistant retrieved a failure through actual MCP, edited the same Shipboard target, and reran an unchanged, hand-authored plan. All three criteria passed with source-bound repair verification. Evidence Studio lets reviewers explore the original steps, screenshots, and comparison.
 
-The visual experience connects requirements to observable proof rather than asking users to interpret raw test scripts. The online preview supports static browser-ready projects, not arbitrary backends or external services. Passing proves only the approved checks; it does not certify every feature. IBM Bob built the initial execution, evidence, provider, and repair foundations; Codex completed the later product extensions.
+The visual experience connects requirements to observable proof rather than asking users to interpret raw test scripts. The online preview supports static browser-ready projects, not arbitrary backends or external services. Passing proves only the approved checks; it does not certify every feature. IBM Bob built the initial execution, evidence, provider, and repair foundations; subsequent development completed the later product extensions.

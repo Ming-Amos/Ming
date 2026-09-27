@@ -1,5 +1,5 @@
 /** Create the editable English submission deck from existing, unaltered project evidence.
- * Uses the installed Codex artifact runtime. Set RUNTIME_NODE_MODULES and PRESENTATION_SKILL_DIR.
+ * Uses the installed artifact runtime. Set RUNTIME_NODE_MODULES and PRESENTATION_SKILL_DIR.
  * Private build/validation products stay under runtime/submission-deck-20260927.
  */
 import fs from 'node:fs/promises';
@@ -68,7 +68,7 @@ const proof='docs/evidence/shipboard-doubao/2026-09-26T17-49-25-055Z-0db01f40';
 }
 // 4: Genuine DOM captures are unaltered and their source/result relationship is explicit.
 {
- const s=page('A real failure, then a passing revision',4,'Source: '+proof+'/production-report.json, buggy-evidence.json and corrected-evidence.json. One actual Doubao Seed 2.0 Pro call proposed nine steps covering blank-name validation, task creation and persistence. The browser executed the buggy upload and failed after reload. A prepared corrected source then passed all nine unchanged steps. These images are original DOM-rendered captures, not native screenshots. This hosted case uses a prepared correction and does not demonstrate autonomous AI repair. The separate local Codex MCP repair is documented in docs/judge-evidence/manifest.json.');
+ const s=page('A real failure, then a passing revision',4,'Source: '+proof+'/production-report.json, buggy-evidence.json and corrected-evidence.json. One actual Doubao Seed 2.0 Pro call proposed nine steps covering blank-name validation, task creation and persistence. The browser executed the buggy upload and failed after reload. A prepared corrected source then passed all nine unchanged steps. These images are original DOM-rendered captures, not native screenshots. This hosted case uses a prepared correction and does not demonstrate autonomous AI repair. The separate local coding-agent MCP repair is documented in docs/judge-evidence/manifest.json.');
  text(s,'After reload: task lost',64,134,455,38,26,C.red,true);
  text(s,'After correction: task remains',485,134,460,38,26,C.green,true);
  await image(s,proof+'/buggy-evidence-step-9.png',64,185,367,409);
@@ -80,7 +80,7 @@ const proof='docs/evidence/shipboard-doubao/2026-09-26T17-49-25-055Z-0db01f40';
 }
 // 5: Explain exactly how observed evidence reaches a coding agent.
 {
- const s=page('Evidence your coding AI can act on',5,'Sources: docs/UPLOADED_PROJECTS.md, docs/GITHUB_IMPORT.md, '+proof+'/repair-brief.txt, apps/web/src/upload/runtime.ts, README.md section Connect a coding agent, docs/judge-evidence/manifest.json. The hosted path copies a brief for the user to paste into their coding AI; it does not wake an editor or modify a repository. The local 12-tool MCP adapter supports authorized coding agents reading evidence and rerunning the confirmed standard. The actual local source repair was performed by Codex, not Bob.');
+ const s=page('Evidence your coding AI can act on',5,'Sources: docs/UPLOADED_PROJECTS.md, docs/GITHUB_IMPORT.md, '+proof+'/repair-brief.txt, apps/web/src/upload/runtime.ts, README.md section Connect a coding agent, docs/judge-evidence/manifest.json. The hosted path copies a brief for the user to paste into their coding AI; it does not wake an editor or modify a repository. The local 12-tool MCP adapter supports authorized coding agents reading evidence and rerunning the confirmed standard. The actual local source repair used an additional coding tool after Bob helped build the initial foundations.');
  text(s,'The handoff keeps the context',64,153,655,54,33,C.blue,true);
  text(s,'What the user expected\nWhat actually happened\nWhich actions led to the failure\nWhich source and checks produced it',64,236,625,245,30,C.text);
  text(s,'Online workflow',776,154,434,45,30,C.violet,true);
@@ -90,12 +90,12 @@ const proof='docs/evidence/shipboard-doubao/2026-09-26T17-49-25-055Z-0db01f40';
 }
 // 6: The unmodified Bob screen is shown as a consumption record, never a synthetic proof.
 {
- const s=page('IBM Bob built the initial foundation',6,'Original image: bob_sessions/ming_task03_stage_b_final_summary.png. Task ID bfa75e6b4e53cc8425e6754a8b69c8f3. The screenshot is a real task-consumption summary; it is not independent proof that every listed check passed. Bob contribution details and independent verification: docs/STAGE_B_RESULTS.md, docs/STAGE_C_STATUS.md, bob_sessions/README.md, bob_sessions/manifest.json. Bob implemented initial Stage A runner/service/UI, Stage B provider draft validation/confirmation, and partial Stage C repair/MCP foundations. Codex completed and extended the product after the trial quota ended. No watsonx.ai or watsonx Orchestrate was used.');
+ const s=page('IBM Bob built the initial foundation',6,'Original unaltered image: bob_sessions/ming_task02_stage_a_final_summary.png. Task ID 2b41a80061020f364f496c02d0c9c5e7. This Stage A task-consumption summary records real development activity and includes a failed command. It does not independently prove that every check passed. Bob contribution details and independent verification: docs/STAGE_B_RESULTS.md, docs/STAGE_C_STATUS.md, bob_sessions/README.md, bob_sessions/manifest.json. Bob implemented the initial Stage A runner/service/UI, Stage B provider draft validation/confirmation, and partial Stage C repair/MCP foundations. Subsequent development with additional tools completed and extended the product after the trial quota ended. No watsonx.ai or watsonx Orchestrate was used.');
  text(s,'Browser execution\nand evidence',64,154,370,80,31,C.blue,true);
  text(s,'Model drafts\nand confirmation',64,276,370,80,31,C.blue,true);
  text(s,'Repair and MCP\nfoundations',64,398,370,80,31,C.blue,true);
- text(s,'Codex completed the product\nand later refinements.',64,534,373,80,25,C.muted);
- await image(s,'bob_sessions/ming_task03_stage_b_final_summary.png',455,156,761,475);
+ text(s,'Additional tools supported\ncompletion and refinements.',64,534,373,80,25,C.muted);
+ await image(s,'bob_sessions/ming_task02_stage_a_final_summary.png',455,156,761,475);
 }
 // 7: Supported inputs and what the prototype actually changes in the workflow.
 {

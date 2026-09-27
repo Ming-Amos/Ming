@@ -1,5 +1,7 @@
 # Ming submission video — current guided workflow
 
+**Current narration edition:** use [ming-demo-own-voice.mp4](../../submission/ming-demo-own-voice.mp4) and [its English subtitles](../../submission/ming-demo-own-voice.srt). It replaces the narration with an authorized synthetic version of the project owner's voice while preserving this recording's picture timeline, application results, and original evidence. See [owner-voice edition notes](own-voice-video-notes.md) for its production and media status. The details below describe the preserved previous narration edition and the genuine take shared by both editions.
+
 Final deliverables: [ming-demo.mp4](../../submission/ming-demo.mp4) and [ming-demo.srt](../../submission/ming-demo.srt), **172 seconds (2:52)**. The [original 164-second video](../../submission/archive/ming-demo-prototype.mp4), [subtitles](../../submission/archive/ming-demo-prototype.srt), and [notes](archive/video-notes-prototype.md) are retained separately as historical material. The original notes are preserved byte-for-byte.
 
 The new video shows the current **Add app → Describe → Review → Results** interface, one genuine Seed 2.0 Pro checklist request, a real browser failure, a copied repair brief, and the unchanged plan passing against prepared corrected source. **122 seconds show actual application operation**, excluding the animated introduction, Bob summary still, and closing. It is below three minutes and exceeds the required 90 seconds of solution operation.
@@ -16,7 +18,7 @@ The new video shows the current **Add app → Describe → Review → Results** 
 | 1:20–1:36 | Inspect the failed persistence check and expand its original DOM-rendered capture. The newly created task disappeared after reload. |
 | 1:36–1:55 | Choose **Copy instructions for my AI** and inspect the actual copied brief. Copying does not contact an assistant or change the app. |
 | 1:55–2:16 | Choose **Check an updated app**, upload the explicitly identified **prepared corrected source**, approve the unchanged plan, and inspect its passing comparison. No AI source repair happens during this recording. |
-| 2:16–2:37 | Show the complete original Bob Stage B task-summary image. Explain Bob's initial foundations and Codex's later completion and extension of the product. |
+| 2:16–2:37 | Show the complete original Bob Stage B task-summary image. Explain Bob's initial foundations and the subsequent development that completed and extended the product. |
 | 2:37–2:52 | Close with the product promise: observable results, portable failure evidence, and the same standard after a change. |
 
 ## Genuine execution and evidence
@@ -31,7 +33,7 @@ The [recording metadata](../evidence/current-video/2026-09-27/recording.json), [
 - The failed and corrected files are `examples/shipboard/buggy/index.html` and `examples/shipboard/normal/index.html`. The correction was prepared before recording and is labelled accordingly.
 - The unchanged [Bob Stage B original](../../bob_sessions/ming_task03_stage_b_final_summary.png) has SHA-256 `ec5db2aa2586291610c11c531d5f1ab280be51689f02daaa4a811a3da859516c`. Showing this still makes no new Bob request.
 
-The earlier [nine-step hosted model verification](../PLANNER_FORMAT_INCIDENT.md), the [five-step workflow test fixture](../SIMPLE_WORKFLOW_REVIEW.md), and the [three-criterion local Codex MCP repair](../judge-evidence/README.md) remain separate evidence sets. None is substituted for this take's real ten-step provider response. The video demonstrates HTML upload; supported ZIP and public GitHub imports are not exercised on screen here.
+The earlier [nine-step hosted model verification](../PLANNER_FORMAT_INCIDENT.md), the [five-step workflow test fixture](../SIMPLE_WORKFLOW_REVIEW.md), and the [three-criterion local MCP repair](../judge-evidence/README.md) remain separate evidence sets. None is substituted for this take's real ten-step provider response. The video demonstrates HTML upload; supported ZIP and public GitHub imports are not exercised on screen here.
 
 ## Production and review status
 
