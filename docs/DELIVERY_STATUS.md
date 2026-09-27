@@ -1,5 +1,11 @@
 # Ming delivery status
 
+## Latest: formal hackathon submission completed — 2026-09-27
+
+Ming was submitted successfully at approximately 18:55 Asia/Shanghai. The platform displayed its successful-submission confirmation and published the [official entry](https://lablab.ai/ai-hackathons/ibm-bob-2-hackathon/ming/ming-every-done-comes-with-proof). The repository and application are now public, following explicit owner authorization. Anonymous application access passed 6/6 checks without a login gate or model request.
+
+The entry includes the English statements, cover, 172-second owner-voice demonstration, eight-slide PDF, public repository containing original Bob evidence, and application link. See the [submission record](submission/SUBMITTED.md) for actual fields and delivery evidence. Earlier private-access and pending-submission entries below describe historical checkpoints.
+
 ## Latest: final workflow bug sweep and module compatibility fix — 2026-09-27
 
 The submission workflow was exercised again on the deployed app: one genuine eleven-step model plan, real persistence failure, copied repair feedback, report export, and the prepared corrected source passing the unchanged plan. Real public GitHub import also passed. One compatibility bug was fixed: valid pages with several inline ES modules previously timed out while initializing. Three modules now initialize in 226 ms in the deployed verification.

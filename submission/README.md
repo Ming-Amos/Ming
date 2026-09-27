@@ -1,6 +1,6 @@
 # Ming submission package
 
-Current materials for the IBM Bob 2.0 Hackathon. The English presentation, statements, and narrated video describe the current product. The video records its guided workflow, real model request, and actual browser checks. This folder is a delivery package, not a submitted entry.
+Submitted materials for the IBM Bob 2.0 Hackathon. The English presentation, statements, and narrated video describe the current product. The video records its guided workflow, real model request, and actual browser checks. The platform confirmed successful submission on September 27, 2026. See the [official entry](https://lablab.ai/ai-hackathons/ibm-bob-2-hackathon/ming/ming-every-done-comes-with-proof) and [submission record](../docs/submission/SUBMITTED.md).
 
 ## Presentation and statements
 
@@ -37,11 +37,11 @@ Original images remain unchanged. The connected-tools view demonstrates registra
 | Earlier deck notes | [Archived prototype notes](../docs/submission/archive/deck-notes-prototype.md) | Preserved documentation of the previous five-slide presentation. |
 | Earlier presentation | [Archived prototype PDF](archive/ming-slides-prototype.pdf) | Original five-slide file preserved unchanged; use the current eight-slide deck above. |
 
-## Access and remaining work
+## Public access and submission
 
-The [application](https://ming-acceptance-proof.amosming.chatgpt.site) and [GitHub repository](https://github.com/Ming-Amos/Ming) are still private. They need authorized visibility changes and verification without the owner's session before use as public judging links.
+The [application](https://ming-acceptance-proof.amosming.chatgpt.site) and [GitHub repository](https://github.com/Ming-Amos/Ming) are public. Fresh anonymous browser checks confirmed that judges can open the welcome page, Start workflow, and guided sample without signing in.
 
-Remaining: verify judge access, confirm the organizer's account conditions, review the actual form, and submit the entry. No formal event submission or public visibility change is claimed here. See [delivery status](../docs/DELIVERY_STATUS.md) for the application and material checkpoints.
+The platform confirmed successful submission. See the [submission record](../docs/submission/SUBMITTED.md) for the official entry, selected files, and access verification. Submission confirmation does not establish the organizer's eligibility decision or judging outcome.
 
 ## Rebuilding the presentation
 
