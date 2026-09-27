@@ -10,7 +10,7 @@ daily-report project or its database.
 
 - Baseline: `65aece9c-b145-4045-8096-60331a4c6ae1`, AC-02 failed after reload.
 - Task: `7ed27f84-aa14-43f8-90e2-f84702dc21b0`.
-- Actor: **Codex via real stdio MCP**, after Bob's personal trial was exhausted.
+- Actor: **a separate coding assistant via real stdio MCP**, after Bob's personal trial was exhausted. This later repair is not attributed to Bob; the original tool responses retain the recorded actor identity.
 - Rerun: `2cf3cc33-507f-41c2-8b9f-6a16c712a7ae`, all three criteria passed.
 - Same target: `repair-demo` at the same logical URL.
 - Same plan: `660582f7fbabccc5`; same runner: `b3ad939dcb5d51b5`.
@@ -18,7 +18,7 @@ daily-report project or its database.
 - API comparison: `verifiedRepair: true`, no blockers, no new failures.
 
 `repair-process/` contains the real SDK tool responses, exact HTML before and
-after repair, and the source diff. Codex changed in-memory persistence to
+after repair, and the source diff. The coding assistant changed in-memory persistence to
 localStorage. It did not switch to the known-good sample or weaken the plan.
 The original `buggy` sample stays defective for repeatable detection demos.
 

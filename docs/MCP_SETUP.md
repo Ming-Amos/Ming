@@ -4,10 +4,11 @@ Start the built local server on port 4001. The stdio MCP adapter exposes bounded
 evidence and repair actions. It never writes target source itself: the connected
 coding agent uses its normal file-editing capabilities and calls Ming to verify.
 
-IBM Bob already discovered the adapter and its five tools. That connection
-screenshot is in `bob_sessions/ming_mcp_connected_tools.png`. Actual repair work
-after Bob's trial exhaustion is performed by Codex and must be attributed to
-Codex, not to a nonexistent Bob session.
+The original Bob connection screenshot records the adapter's earlier five-tool
+checkpoint in `bob_sessions/ming_mcp_connected_tools.png`. The current adapter
+offers 12 tools; see the [full connection guide](AI_CONNECTION.md). Later repair
+work after Bob's trial exhaustion was performed by a separate coding assistant
+and is documented separately from Bob's contributions.
 
 For another checkout, update the absolute paths in the local MCP settings:
 

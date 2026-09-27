@@ -37,7 +37,7 @@ Output is isolated at `dist/sites/client`, `dist/sites/server/index.js`, and `di
 
 The preview serves the exact compiled Worker and its static assets at `http://127.0.0.1:4182`; set `MING_PREVIEW_PORT` to change that port. It is separate from the local writable application and never starts the Express backend.
 
-After Sites creation has supplied a real project ID in the repository's `.openai/hosting.json`, rebuild and package:
+Deployment metadata is machine-local and ignored by Git. A fresh clone can build and preview without it. Archive publication requires the actual project ID supplied by the hosting service in the local `.openai/hosting.json`; keep that local association for subsequent deployments. Once it is available, rebuild and package:
 
 ```text
 node scripts/public-demo/build.mjs --archive C:\absolute\path\ming-sites.tar.gz

@@ -19,7 +19,7 @@ Ming exposes a local **stdio MCP server with 12 tools**. A connected coding agen
 }
 ```
 
-The existing [Bob project configuration](../.bob/mcp.json) also specifies this computer's Node executable and working directory. These paths must exist locally. The adapter defaults to `http://127.0.0.1:4001`; its optional `MING_BASE_URL` environment variable accepts another local HTTP origin, with no credentials, path, query or fragment. It does not connect to the private Sites viewer.
+The existing [Bob project configuration](../.bob/mcp.json) also specifies this computer's Node executable and working directory. These paths must exist locally. The adapter defaults to `http://127.0.0.1:4001`; its optional `MING_BASE_URL` environment variable accepts another local HTTP origin, with no credentials, path, query or fragment. It connects to your local Ming service, not the hosted application.
 
 After configuring the coding tool, verify it discovers the Ming tools. Opening the Ming webpage alone does not establish the MCP connection.
 
@@ -79,7 +79,7 @@ A self-contained HTML target runs from a captured source snapshot. A strict veri
 
 A running multi-file local URL is observed live. Even when its source folder has a fingerprint, that hash does not establish which exact code the development server executed. Its passing checks remain useful acceptance evidence; the comparison does not claim the stronger snapshot guarantee.
 
-Ming's browser and MCP tools do not call a language model. Optional plan generation and the coding agent's own reasoning/edits use their respective model accounts. No external provider has yet been configured or quality-tested in this project.
+Ming's browser and MCP tools do not call a language model. Optional plan generation and the coding agent's own reasoning/edits use their respective model accounts. The separate hosted checklist workflow has a configured Doubao Seed 2.0 Pro integration with bounded live-provider verification; see [planning and configuration](DOUBAO_PLANNING.md). Those checks do not establish general model quality.
 
 ## If connection fails
 
@@ -87,6 +87,6 @@ Ming's browser and MCP tools do not call a language model. Optional plan generat
 - Rebuild after changing MCP code, then restart/reload the server connection in the coding tool.
 - If no active confirmation exists, finish the plan review in Ming.
 - Keep the target app running. Its page, scripts and backend requests must be same-origin; use a development proxy for a separate backend. HTTP redirects and cross-origin requests are blocked.
-- The Sites preview is read-only and remains private; it cannot run checks on your computer.
+- The public hosted application runs static-project checks and the bundled sample in the visitor's browser. Its historical evidence API is read-only; it cannot connect to your local MCP service or run checks on your computer's development server.
 
-The English Codex MCP repair is recorded in [judge evidence](judge-evidence/README.md), with the earlier example retained in [demo evidence](demo-evidence/README.md). A passing live-URL rerun remains acceptance evidence requiring review, with `verifiedRepair: false`. Current validation is tracked separately in [delivery status](DELIVERY_STATUS.md).
+The English MCP repair performed by a separate coding assistant is recorded in [judge evidence](judge-evidence/README.md), with the earlier example retained in [demo evidence](demo-evidence/README.md). This later repair is not attributed to Bob. A passing live-URL rerun remains acceptance evidence requiring review, with `verifiedRepair: false`. Current validation is tracked separately in [delivery status](DELIVERY_STATUS.md).

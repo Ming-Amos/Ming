@@ -20,6 +20,9 @@ auth-state*.json
 
 # Raw local run data: publish only deliberately reviewed demo evidence
 /runtime/
+# Local deployment association and internal work notes
+/.openai/
+/.learnings/
 *.log
 *.tsbuildinfo
 .DS_Store

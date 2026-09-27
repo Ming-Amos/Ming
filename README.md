@@ -5,7 +5,7 @@
 
 Ming checks features built with AI against a standard you review. Connect your development app, save its requirements, edit and confirm an acceptance plan, then run real browser checks. Its English **Evidence Studio** connects those standards to recorded steps, original screenshots, and a repair handoff your coding agent can use to rerun the same checks.
 
-[Submission package](submission/README.md) · [Editable slides](submission/ming-slides.pptx) · [PDF slides](submission/ming-slides.pdf) · [English statements and form fields](docs/submission/fields.md) · [Original Bob records](bob_sessions/README.md)
+[Submitted entry](https://lablab.ai/ai-hackathons/ibm-bob-2-hackathon/ming/ming-every-done-comes-with-proof) · [Submission package](submission/README.md) · [Editable slides](submission/ming-slides.pptx) · [PDF slides](submission/ming-slides.pdf) · [English statements and form fields](docs/submission/fields.md) · [Original Bob records](bob_sessions/README.md)
 
 ## Start locally
 
@@ -74,7 +74,7 @@ The optional source folder helps the agent locate code and records a bounded sou
 
 ## Model settings and costs
 
-Open **Connect model** to save an OpenAI-compatible Chat Completions API root, model ID and API key. The adapter appends `/chat/completions`; include the provider's required version prefix in the root.
+Open **Connect model** to save a compatible Chat Completions API root, model ID and API key. The adapter appends `/chat/completions`; include the provider's required version prefix in the root.
 
 - Saving activates local settings without a restart and makes **no model call**.
 - The password field never reads a saved key back. Leave it blank to retain the existing key, replace it by entering a new one, or use **Delete local settings and key**.
@@ -96,7 +96,7 @@ The current English demonstration uses **Shipboard**, a task application with wo
 
 The [new judge evidence](docs/judge-evidence/README.md) records a real source repair. **A coding assistant used actual stdio MCP, changed only the same Shipboard repair target's persistence logic, and reran the unchanged plan.** Baseline `33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c` failed SHIP-02; rerun `74ed3133-b62c-44cf-8b4a-042156180db5` passed all three criteria. Task `bbc50e50-7838-4bec-8a2b-4ec386d98679` returned `verifiedRepair: true`, with matching plan and runner identities and no blockers. The [manifest](docs/judge-evidence/manifest.json) identifies four actual runs and hashes their evidence. The buggy variant remains defective.
 
-The hosted Evidence Studio APIs and `MING_PUBLIC_DEMO=1` startup use `docs/judge-evidence` for recorded proof. The separately bundled live sample executes independently in the visitor's browser. The earlier [daily-report/Focus bundle](docs/demo-evidence/README.md) remains byte-for-byte unchanged and available for provenance review.
+The hosted Evidence Studio APIs and `MING_PUBLIC_DEMO=1` startup use `docs/judge-evidence` for recorded proof. The separately bundled live sample executes independently in the visitor's browser. The earlier [daily-report/Focus execution records and screenshots](docs/demo-evidence/README.md) remain byte-for-byte unchanged and available for provenance review.
 
 ## Validation and delivery
 
@@ -112,7 +112,7 @@ The English own-project workflow covers registration, PRD upload, manual plans, 
 
 The current Evidence Studio and compiled read-only viewer passed **54/54 checks**, including the welcome-to-Start entry, recorded playback, focus, keyboard commands, direct image-slider interaction, original evidence identity and 390px layout. No browser errors, missing resources, external requests or mutation requests were observed. See the [current Studio report](docs/evidence/welcome-page/compiled-studio.json), [13-check welcome review](docs/evidence/welcome-page/report.json), and [32-check own-project workflow](docs/evidence/welcome-page/own-project-ui.json). Earlier reports remain their dated release checkpoints.
 
-The welcome scene uses the selected pixel-art atmosphere with seven independently animated visitors and a writing inspector. [Asset provenance](docs/WELCOME_ART_ASSETS.md) records the original artwork, generated layers, and their use. This is presentation artwork, not acceptance evidence. Animation can be paused and honors reduced-motion preferences. The **Start** link opens Ming; it does not authenticate users. The hosting platform's private access gate remains separate until the owner explicitly changes sharing.
+The welcome scene uses the selected pixel-art atmosphere with seven independently animated visitors and a writing inspector. [Asset provenance](docs/WELCOME_ART_ASSETS.md) records the original artwork, generated layers, and their use. This is presentation artwork, not acceptance evidence. Animation can be paused and honors reduced-motion preferences. The **Start** link opens Ming; it does not authenticate users. Public sharing is enabled, and a fresh anonymous browser verified that Start opens the upload workflow without a login gate.
 
 ```text
 pnpm typecheck
@@ -125,10 +125,10 @@ pnpm test:ui
 
 IBM Bob built the initial runner, evidence/history, provider, plan validation/confirmation and repair/MCP foundations. After its trial quota ended, the user authorized subsequent development with additional tools to complete and extend the application, including the new project workflow and model settings. [Original Bob session summaries](bob_sessions/README.md) remain unchanged; the later work and recorded source repair are not attributed to Bob.
 
-The [GitHub repository](https://github.com/Ming-Amos/Ming) and [Sites preview](https://ming-acceptance-proof.amosming.chatgpt.site) remain **private**. Sites serves actual static-project checks, the explicitly requested Seed 2.0 Pro checklist workflow, the live browser sample, and reviewed recorded evidence. It does not expose your computer or development environment; local runtime settings and keys are excluded. Public judge access has not been established.
+The [GitHub repository](https://github.com/Ming-Amos/Ming) and [hosted application](https://ming-acceptance-proof.amosming.chatgpt.site) are **public**. The application serves actual static-project checks, the explicitly requested Seed 2.0 Pro checklist workflow, the live browser sample, and reviewed recorded evidence. It does not expose your computer or development environment; local runtime settings and keys are excluded. Anonymous access checks verified the welcome page, Start workflow, and guided sample without signing in.
 
 The current [submission package](submission/README.md) includes an **eight-slide editable PowerPoint and matching PDF**, updated English statements, source references, original Bob task summaries and their hash manifest. The presentation shows the current guided workflow and genuine Shipboard model-to-browser evidence, and distinguishes the hosted copy handoff from the separate local MCP repair. [Speaker notes](docs/submission/deck-notes.md) provide the exact sources; the [previous five-slide notes](docs/submission/archive/deck-notes-prototype.md) are archived.
 
 [The current video](submission/ming-demo-own-voice.mp4) uses **authorized synthetic narration based on the project owner's voice**, with a shorter, more conversational English script and [English subtitles](submission/ming-demo-own-voice.srt). Its **172-second (2:52)** picture timeline retains **122 seconds of actual app operation**: one genuine Seed 2.0 Pro request returning ten steps, a real persistence failure, copied repair instructions, and prepared corrected source passing the unchanged plan. The narration update adds no new acceptance run, Bob call, or Doubao request. [Narration edition and media status](docs/submission/own-voice-video-notes.md) and [original recording evidence](docs/submission/video-notes.md) document these boundaries. The [previous 172-second narration edition](submission/ming-demo.mp4), [164-second prototype video](submission/archive/ming-demo-prototype.mp4), and their original evidence remain unchanged. The [concept cover](submission/ming-cover.png) is artwork, not execution evidence.
 
-Remaining submission work: obtain the necessary authorization and verify judge access to private links, confirm that the account setup meets the organizer's conditions, then review and submit the actual entry. [Delivery status](docs/DELIVERY_STATUS.md) records the latest application and material checkpoints. These material updates do not claim a new GitHub push, public publication, or formal competition submission.
+Ming was successfully submitted to the IBM Bob 2.0 hackathon on September 27, 2026. The [public event entry](https://lablab.ai/ai-hackathons/ibm-bob-2-hackathon/ming/ming-every-done-comes-with-proof) includes the selected video and presentation; the [submission record](docs/submission/SUBMITTED.md) documents their verified delivery and public links. [Delivery status](docs/DELIVERY_STATUS.md) retains the dated implementation and material checkpoints. Submission confirmation does not imply a judging outcome.

@@ -10,7 +10,7 @@ Ming's `/#trial` route lets a visitor run acceptance checks immediately on the b
 4. An independent sample session checks empty and whitespace-only submissions.
 5. The report retains actual observations, elapsed times, run identity and DOM-rendered captures. The report can be downloaded as JSON and failures copied into a repair brief.
 
-The deliberately defective application omits persistence; no assertion is hard-coded to fail. The **prepared fix** selects the supplied implementation that saves and restores its own session's tasks. The same acceptance standard is then executed again with a new run identity. Applying this fix does not call a model, modify a repository or establish an autonomous AI repair. The original separately recorded Codex/MCP repair remains available in Evidence Studio.
+The deliberately defective application omits persistence; no assertion is hard-coded to fail. The **prepared fix** selects the supplied implementation that saves and restores its own session's tasks. The same acceptance standard is then executed again with a new run identity. Applying this fix does not call a model, modify a repository or establish an autonomous AI repair. The original, separately recorded MCP repair by a coding assistant remains available in Evidence Studio; it was not performed by Bob.
 
 ## Capture and runtime limits
 
