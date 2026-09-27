@@ -1,0 +1,68 @@
+{
+  "startedAt": "2026-09-27T08:06:02.177Z",
+  "origin": "https://ming-acceptance-proof.amosming.chatgpt.site",
+  "checks": [
+    {
+      "name": "Production serves the exact final build",
+      "passed": true,
+      "detail": {
+        "bundle": "/assets/index-DSflkOtZ.js"
+      }
+    },
+    {
+      "name": "Start opens the current guided upload workflow",
+      "passed": true
+    },
+    {
+      "name": "A real three-module HTML import initializes without timeout",
+      "passed": true,
+      "detail": {
+        "elapsedMs": 226
+      }
+    },
+    {
+      "name": "The deployed runner checks module output and exports real evidence",
+      "passed": true
+    },
+    {
+      "name": "A real static ZIP resolves its local module dependency",
+      "passed": true
+    },
+    {
+      "name": "Guided sample produces its real expected failure",
+      "passed": true
+    },
+    {
+      "name": "Guided prepared fix passes the same plan",
+      "passed": true
+    },
+    {
+      "name": "Recorded evidence remains accessible and labelled",
+      "passed": true
+    },
+    {
+      "name": "No application JavaScript exception or model request occurred",
+      "passed": true
+    }
+  ],
+  "pageErrors": [],
+  "failedRequests": [],
+  "responses": [],
+  "platformRequests": [
+    {
+      "method": "POST",
+      "path": "/cdn-cgi/challenge-platform/…"
+    }
+  ],
+  "blockedMutations": [],
+  "screenshots": [
+    "01-modules-ready.png",
+    "02-modules-passed.png",
+    "03-zip-ready.png",
+    "04-guided-failure.png",
+    "05-guided-comparison.png",
+    "06-evidence-studio.png"
+  ],
+  "passed": true,
+  "finishedAt": "2026-09-27T08:07:02.943Z"
+}

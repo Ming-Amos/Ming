@@ -70,8 +70,9 @@ try{
  await page.getByText('3 passed · 0 failed',{exact:true}).waitFor({timeout:30000});const after=await exported('guided-after','Export evidence report');
  check('Guided prepared fix passes the same plan',after.comparison.samePlan&&after.comparison.allRerunCriteriaPassed);assert.deepEqual(after.baseline,before.currentRun);
  await page.locator('.trial-comparison').scrollIntoViewIfNeeded();await shot('05-guided-comparison');
- await page.getByRole('link',{name:'Evidence Studio',exact:true}).click();await page.getByRole('region',{name:'Recorded acceptance timeline'}).waitFor();
- check('Recorded evidence remains accessible and labelled',page.url().endsWith('#studio')&&(await page.locator('body').innerText()).includes('Recorded'));
+  await page.getByRole('link',{name:'Evidence Studio',exact:true}).click();await page.getByRole('region',{name:'Recorded acceptance timeline'}).waitFor();
+  check('Recorded evidence remains accessible and labelled',page.url().endsWith('#studio')&&(await page.locator('body').innerText()).includes('Recorded'));
+  await page.waitForFunction(()=>{const images=[...document.querySelectorAll('img')];return images.length>0&&images.every(image=>image.complete&&image.naturalWidth>0)});
  await page.evaluate(()=>scrollTo(0,0));await shot('06-evidence-studio');
  check('No application JavaScript exception or model request occurred',report.pageErrors.length===0&&report.blockedMutations.length===0);
  report.passed=true;

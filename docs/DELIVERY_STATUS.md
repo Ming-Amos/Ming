@@ -1,5 +1,11 @@
 # Ming delivery status
 
+## Latest: final workflow bug sweep and module compatibility fix — 2026-09-27
+
+The submission workflow was exercised again on the deployed app: one genuine eleven-step model plan, real persistence failure, copied repair feedback, report export, and the prepared corrected source passing the unchanged plan. Real public GitHub import also passed. One compatibility bug was fixed: valid pages with several inline ES modules previously timed out while initializing. Three modules now initialize in 226 ms in the deployed verification.
+
+Final validation: **31/31** guided-flow checks, **10/10** module checks, **38/38** unchanged hosted/planner/summary unit checks, and **9/9** deployed smoke checks. All final evidence images were inspected after load. The current private site serves `index-DSflkOtZ.js`, application commit `ae957631611cfcfb638e3cf5df1c5549f3000a36`; production publication succeeded at 08:05:38 UTC. This review used **zero Bob calls** and **one real Doubao request (1,433 reported tokens)**. [Full final check and fresh screenshots](SUBMISSION_FINAL_CHECK.md). Repository and site access remain private; no formal submission is claimed.
+
 ## Latest: authorized owner-voice narration edition — 2026-09-27 (Asia/Shanghai)
 
 The [current video](../submission/ming-demo-own-voice.mp4) and [English subtitles](../submission/ming-demo-own-voice.srt) use authorized synthetic narration based on the project owner's voice, with a more conversational English script. The picture timeline remains **172 seconds**, including **122 seconds of actual application operation**. The original failed run, same-plan passing comparison, and all application evidence are unchanged. The Bob still now uses the full original Stage A summary. Final decode, caption, and audio-level checks passed. This narration update makes no Bob or Doubao request and does not rerun acceptance checks.
