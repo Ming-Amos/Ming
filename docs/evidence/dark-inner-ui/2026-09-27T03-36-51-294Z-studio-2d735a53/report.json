@@ -1,0 +1,86 @@
+{
+  "id": "2d735a53-0e9a-4079-a841-72e2cb90a0e2",
+  "base": "http://127.0.0.1:4001",
+  "passed": false,
+  "scope": "Existing actual run records loaded through the local API. Only same-origin GET/HEAD requests; no replay, new run, provider call, or mutation.",
+  "checks": [
+    {
+      "name": "Evidence review uses the current compiled bundle",
+      "passed": true
+    },
+    {
+      "name": "Existing failed Shipboard records are available without running anything",
+      "passed": false
+    }
+  ],
+  "requests": [
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/assets/index-B8I6HpVZ.js",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/assets/index-C_AcDn7p.css",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/targets",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/provider/status",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/history",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/repair-tasks",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/capabilities",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/projects",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/plan",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/history",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/repair-tasks",
+      "method": "GET"
+    }
+  ],
+  "blockedRequests": [],
+  "errors": [],
+  "screenshots": [
+    "stopped-state.png"
+  ],
+  "bundle": "/assets/index-B8I6HpVZ.js",
+  "error": "AssertionError [ERR_ASSERTION]: Existing failed Shipboard records are available without running anything\n    at check (file:///C:/Bob/Projects/Ming/scripts/review-dark-studio-evidence.mjs:14:199)\n    at file:///C:/Bob/Projects/Ming/scripts/review-dark-studio-evidence.mjs:26:50",
+  "finishedAt": "2026-09-27T03:36:52.822Z"
+}

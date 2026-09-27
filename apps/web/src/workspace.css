@@ -857,3 +857,231 @@
     font-size: 11px;
   }
 }
+
+/* Project setup and editor surfaces share the quiet, dark evidence workbench. */
+.active-nav,
+.connect-project-button,
+.model-inline-note button {
+  color: var(--night-blue);
+}
+.hub-heading h1,
+.onboarding-empty h2,
+.project-card h2,
+.project-card h3,
+.sample-section h2,
+.manual-alternative strong,
+.editor-section-title {
+  color: var(--night-text);
+}
+.hub-heading h1 {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-weight: 600;
+  letter-spacing: -.035em;
+}
+.hub-heading p,
+.onboarding-steps li,
+.onboarding-empty,
+.onboarding-empty p,
+.project-kind,
+.project-url,
+.archive-row button,
+.archive-row > span,
+.sample-section > div > p,
+.sample-card,
+.sample-card small,
+.connection-advanced,
+.project-workflow-bar,
+.project-workflow-bar > button,
+.project-workflow-bar > span:first-child,
+.diagnostics-panel,
+.diagnostics-panel strong,
+.requirement-file-actions > span,
+.manual-alternative,
+.manual-alternative small,
+.plan-requirement,
+.plan-requirement pre,
+.criterion-editor-heading,
+.editable-step-heading,
+.editable-step .step-description-field,
+.editor-save-bar > span,
+.history-result-count {
+  color: var(--night-muted);
+}
+.onboarding-steps,
+.project-card,
+.sample-card,
+.report-export > div,
+.manual-alternative,
+.plan-requirement,
+.editable-step,
+.search-field {
+  background: var(--night-panel);
+  border-color: var(--night-border);
+}
+.onboarding-steps li > span {
+  background: #253657;
+  color: var(--night-blue);
+}
+.onboarding-steps li > svg {
+  color: #798cab;
+}
+.onboarding-empty {
+  background: #0d1322;
+  border-color: #465775;
+}
+.archive-row,
+.sample-section,
+.connection-advanced,
+.diagnostics-panel li {
+  border-color: var(--night-border);
+}
+.archive-row button:hover,
+.danger-text,
+.connection-result.unreachable {
+  color: var(--night-red);
+}
+.connection-result.reachable,
+.project-workflow-bar > .complete {
+  color: var(--night-green);
+}
+.project-workflow-bar > .current {
+  color: var(--night-blue);
+}
+.sample-card strong,
+.plan-editor-nav > button strong {
+  color: var(--night-text);
+}
+.sample-card:hover,
+.report-export a:hover {
+  background: var(--night-raised);
+  border-color: #6479a5;
+}
+.report-export > div {
+  box-shadow: 0 10px 32px #00000055;
+}
+.report-export a {
+  color: var(--night-blue);
+}
+.model-inline-note {
+  color: var(--night-amber);
+}
+.plan-editor-nav > button {
+  background: var(--night-panel);
+  border-color: var(--night-border);
+  color: var(--night-muted);
+}
+.plan-editor-nav > button.active {
+  background: #223250;
+  border-color: #647daa;
+  color: var(--night-blue);
+}
+.plan-editor-nav > button.active strong {
+  color: var(--night-blue);
+}
+.editor-save-bar {
+  background: var(--night-panel);
+  border-color: var(--night-border);
+}
+.search-field {
+  color: var(--night-muted);
+  border-color: #465470;
+}
+.search-field:focus-within {
+  outline: 2px solid var(--night-blue);
+  outline-offset: 2px;
+}
+.search-field input {
+  color: var(--night-text);
+}
+.sample-card:focus-visible,
+.manual-alternative:focus-visible,
+.plan-editor-nav > button:focus-visible,
+.report-export a:focus-visible,
+.archive-row button:focus-visible {
+  outline: 2px solid var(--night-blue);
+  outline-offset: 3px;
+}
+.plan-editor-nav > button:disabled,
+.manual-alternative:disabled {
+  opacity: 1;
+  color: #93a1b8;
+  border-color: #3d485f;
+  background: #202839;
+}
+
+/* Sheets may open from either the workspace or the evidence viewer. */
+.history-item,
+.mode-switch,
+.model-details,
+.compare-versions,
+.comparison-table,
+.prompt-text {
+  color: var(--night-text);
+  background: var(--night-panel);
+  border-color: var(--night-border);
+}
+.history-item:hover,
+.history-item.active {
+  background: #223250;
+  border-color: #647daa;
+}
+.history-item strong,
+.model-state h3 {
+  color: var(--night-text);
+}
+.history-item > div > span,
+.history-item > svg,
+.empty-list,
+.model-state,
+.model-state p,
+.model-details dt,
+.model-details dd,
+.compare-versions,
+.compare-versions code,
+.comparison-row {
+  color: var(--night-muted);
+}
+.mode-switch {
+  background: #0b1221;
+}
+.mode-switch button {
+  color: var(--night-muted);
+}
+.mode-switch button.active {
+  background: #253657;
+  color: var(--night-blue);
+  box-shadow: none;
+}
+.comparison-row {
+  border-color: var(--night-border);
+}
+.comparison-row.table-header {
+  background: var(--night-raised);
+  color: var(--night-muted);
+}
+.comparison-head.verified {
+  background: #15352d;
+  color: var(--night-green);
+}
+.comparison-head.unverified {
+  background: #352d20;
+  color: var(--night-amber);
+}
+.comparison-head.verified h3,
+.comparison-head.unverified h3 {
+  color: inherit;
+}
+.comparison-head p {
+  color: var(--night-muted);
+}
+.check-good {
+  color: var(--night-green);
+}
+.check-bad {
+  color: var(--night-amber);
+}
+@media (max-width: 760px) {
+  .connect-project-button {
+    background: #253657;
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "id": "f20f5afc-cf3b-4058-9dc6-83a771f64df9",
+  "base": "http://127.0.0.1:4001",
+  "passed": true,
+  "scope": "Exact saved judge-evidence response/screenshot replay through the existing read-only Worker policy, with the current compiled UI. No new acceptance run, provider call, or mutation.",
+  "checks": [
+    {
+      "name": "Evidence review uses the current compiled bundle",
+      "passed": true
+    },
+    {
+      "name": "Existing failed Shipboard records are available without running anything",
+      "passed": true
+    },
+    {
+      "name": "History dialog fits mobile",
+      "passed": true
+    },
+    {
+      "name": "Historical workspace presents failed and passed criterion states",
+      "passed": true
+    },
+    {
+      "name": "Historical evidence fits mobile",
+      "passed": true
+    },
+    {
+      "name": "No model, new-run, external, or mutation request was attempted",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "No browser exception occurred",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "requests": [
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/assets/index-B8I6HpVZ.js",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/assets/index-C_AcDn7p.css",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/targets",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/provider/status",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/history",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/repair-tasks",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/capabilities",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/projects",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/plan",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/run/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/screenshots/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c_SHIP-01_final.png",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/screenshots/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c_SHIP-02-S2_failed.png",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/plan",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/repair-tasks/bbc50e50-7838-4bec-8a2b-4ec386d98679/comparison",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/run/74ed3133-b62c-44cf-8b4a-042156180db5",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/run/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/history",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/repair-tasks",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/run/33f7bcfb-5ffc-4c9c-bf6b-eb76cd6cef4c",
+      "method": "GET"
+    }
+  ],
+  "blockedRequests": [],
+  "errors": [],
+  "screenshots": [
+    "01-failed-history-desktop.png",
+    "02-failed-history-mobile.png",
+    "03-recorded-workspace-desktop.png",
+    "04-failed-observation-desktop.png",
+    "05-failed-observation-mobile.png",
+    "06-passed-observation-desktop.png"
+  ],
+  "bundle": "/assets/index-B8I6HpVZ.js",
+  "selectedHistoryText": "Shipboard · AI repair workspace\n26/09/2026, 19:12:07 · 33f7bcfb-5\nFailed",
+  "workspaceText": "See what actually works.\n\nFrom a requirement to a real browser check. Every result comes with evidence.\n\n2\npassed\n1\nfailed\n0\nunchecked",
+  "finishedAt": "2026-09-27T03:38:50.241Z"
+}

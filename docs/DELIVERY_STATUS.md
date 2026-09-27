@@ -1,8 +1,14 @@
 # Ming delivery status
 
-## Latest: animated inspection welcome — 2026-09-27 (Asia/Shanghai)
+## Latest: restrained dark workspace — 2026-09-27 (Asia/Shanghai)
 
-The selected pixel-art welcome scene now has seven independent visitors approaching a blue inspector one at a time. The inspector writes on a clipboard; passing visitors enter and visitors needing a fix take a separate return route. The original Ming heading, Start entry and guided sample remain. The scene is explicitly illustrative, separate from actual project acceptance evidence. Animation playback uses no Bob or model calls. The inner workspace retains its existing appearance while the user's style preference is unresolved.
+The user clarified that the inner pages should share the cover's dark atmosphere with **only a little pixel decoration**. Upload, the guided trial, Evidence Studio and their dialogs now use midnight surfaces, blue/violet accents, normal sans-serif text and consistent semantic result colors. An 84-pixel inspector appears only in the upload empty state; no background animation was added to working forms. The actual uploaded application and original evidence images retain their own colors. All existing review, confirmation, execution and repair behavior is preserved.
+
+The full frontend build passed (`index-B8I6HpVZ.js`, `index-C_AcDn7p.css`). Focused browser review passed **35/35**, including an actual uploaded application's five-step failure followed by the same plan passing against a revised file. The saved Evidence Studio workspace and history received a separate **7/7** GET-only replay review. Desktop, 390px mobile, focus, dialogs, original target colors and preserved evidence were checked. [Review and evidence](DARK_INNER_UI_REVIEW.md). No Bob or paid model calls were made. Publication details will be recorded after deployment succeeds.
+
+## Animated inspection welcome — 2026-09-27 (Asia/Shanghai)
+
+The selected pixel-art welcome scene now has seven independent visitors approaching a blue inspector one at a time. The inspector writes on a clipboard; passing visitors enter and visitors needing a fix take a separate return route. The original Ming heading, Start entry and guided sample remain. The scene is explicitly illustrative, separate from actual project acceptance evidence. Animation playback uses no Bob or model calls. The inner workspace remained light at this historical checkpoint; the latest section records the clarified dark theme.
 
 The full frontend build passed. Browser review passed **27/27** checks for animation, distinct outcomes, pause/resume, reduced motion, entry routes, and desktop/mobile layout, followed by **11/11** targeted checks of the final mobile Start width and entry behavior. Final frontend: `index-D_bsmEyy.js`, stylesheet `index-a-pOcckO.css`. [Review and evidence](WELCOME_INSPECTION_REVIEW.md) · [Asset provenance](WELCOME_ART_ASSETS.md). Historical Bob evidence and the original welcome GIF remain unchanged.
 

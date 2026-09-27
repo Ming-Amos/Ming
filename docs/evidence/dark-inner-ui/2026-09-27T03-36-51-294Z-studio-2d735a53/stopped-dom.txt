@@ -1,0 +1,82 @@
+Ming
+Every done comes with proof.
+Check your app
+Live sample
+Jump to…
+Ctrl K
+Projects
+Connect project
+Model connected
+Run history
+Connect AI
+MING / ACCEPTANCE STUDIO
+01—03
+“Done” is a claim.
+Make it a fact.
+
+Your AI built the feature. Ming checks the promise.
+A clear path from requirements to browser evidence to a repair you can verify.
+
+Connect your project
+Try a real browser check
+Local-first. Human-approved. Evidence attached.
+FROM CLAIM TO PROOF
+HOW IT WORKS
+01
+Define
+02
+Inspect
+03
+Resolve
+YOUR REQUIREMENTS
+Define the promise
+
+Start with what the feature should do. Turn your PRD into a plan you can inspect, edit and approve.
+
+Your standard stays yours.
+WORK IN PROGRESS, WITH PROOF
+Your projects 00
+Your next project belongs here.
+
+Connect a local app, add your requirements and approve its first check. No model key is needed for a manual plan.
+
+Connect project
+A SMALL APP. A REAL FAILURE.
+Explore the proof lab
+Seeded defects / real browser execution
+
+Start with Shipboard. Add a task, refresh the page, and see whether “saved” actually means saved.
+
+01
+Shipboard · Working example
+Inspect a passing implementation
+02
+Shipboard · Persistence defect
+Find the persistence defect
+03
+Shipboard · AI repair workspace
+Follow a repair against the same plan
+Earlier sample projects · original-language evidence
+Ming Proof behind every “done”
+From “AI says it’s done” to “I saw it pass.”
+Run history
+
+Every run keeps its plan version, screenshots, and results. Revisit evidence or return to your project for another check.
+
+All results
+Passed
+Failed
+Run error
+All projects
+Daily Report · Working example (Chinese)
+Daily Report · Defective example (Chinese)
+Daily Report · AI repair workspace (Chinese)
+Focus · Working example (Chinese)
+Focus · Defective example (Chinese)
+Shipboard · Working example
+Shipboard · Persistence defect
+Shipboard · AI repair workspace
+
+0 runs
+
+No runs match these filters.

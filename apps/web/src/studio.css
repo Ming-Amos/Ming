@@ -1,4 +1,4 @@
-/* Evidence Studio builds on Ming's existing light Application X-ray palette. */
+/* Evidence Studio layout. The workbench palette below shares the welcome scene's night colors. */
 :root{--ink:#172336;--muted:#657084;--border:#dfe5eb;--blue:#315de6;background:#f7f8fa;color:var(--ink);font-family:"Segoe UI",Arial,sans-serif}
 body{background:#f7f8fa}h1,h2,h3{color:var(--ink)}.app-shell{max-width:1760px;padding:0 34px}.topbar{height:78px}.brand{font-size:34px}.brand span{font-size:11px}.topbar nav{gap:10px}.subtle-button{font-size:12px;min-height:36px;padding:8px}.active-nav{background:#edf1fc;border-radius:7px}.primary-button,.secondary-button{font-size:12px;min-height:39px}.primary-button:hover:not(:disabled){transform:translateY(-1px)}.primary-button:active:not(:disabled){transform:translateY(0)}h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-1.4px;line-height:1.1}.eyebrow{font-size:10px;letter-spacing:1.8px;color:#64728a}.studio-intro{padding:28px 0 25px}.studio-intro h1{font-size:43px;line-height:1.13;margin:12px 0}.studio-intro h1 em{font-weight:400;color:#315de6}.studio-intro p{font-size:13px;color:#66738a}.run-summary{box-shadow:none;padding:12px 0}.run-summary>span{padding:0 14px}.workspace-toolbar{gap:12px;margin-bottom:18px}.project-picker{min-width:210px;max-width:330px}.plan-origin{font-size:10px;line-height:1.5}.toolbar-actions{gap:8px}.xray-layout{grid-template-columns:minmax(225px,.85fr) minmax(450px,1.85fr) minmax(270px,1fr);gap:22px}.column-heading{margin-bottom:14px}.column-heading h2{font-size:12px}.panel{border-color:#dfe5ee;box-shadow:none}.requirement-panel h3{font-size:17px;line-height:1.4}.requirement-panel p{line-height:1.7;color:#657389}.criterion-title{font-size:12px;line-height:1.5}.criterion-button{padding:12px 8px;transition:background .18s,border-color .18s}.criterion-button.selected{border-color:#b6c8fb;box-shadow:inset 3px 0 #315de6}.step-list button:hover{background:#f0f4fc}.observation-label{font-size:10px;text-transform:uppercase;letter-spacing:1px}.expected-value,.actual-value{line-height:1.6}.handoff-list strong{font-size:12px}.frame-toolbar{background:#edf1f6}.frame-toolbar>span:first-child{letter-spacing:.6px;font-size:9px}.frame-address{font-size:9px}.evidence-frame{box-shadow:0 8px 24px #18243c06;animation:evidence-enter .2s ease-out}.evidence-frame figcaption{background:white}.image-viewport{background:#f1f3f7}.evidence-verdict{border-radius:9px}.trace-status-label{text-transform:capitalize}.comparison-table{margin-top:22px}.status{font-size:10px}.app-footer{font-size:11px}.sheet{max-height:88vh}.sheet-heading h2{font-family:Georgia,serif;font-weight:400;font-size:25px;letter-spacing:-.4px}.sheet-lead{font-size:13px;line-height:1.75}.sheet-content label{font-size:12px}.sheet-content textarea,.sheet-content input,.sheet-content select{font-size:13px}.sheet-heading{padding:23px 26px}.sheet-content{padding:22px 26px}
 .command-trigger{display:flex;align-items:center;gap:8px;border:1px solid #dce2eb;background:#fff;color:#788395;padding:8px 10px;border-radius:7px;font-size:11px}.command-trigger kbd{font:10px "Segoe UI",sans-serif;background:#f5f6f8;padding:2px 4px;border:1px solid #e2e5eb;border-radius:3px;margin-left:12px}.command-search{display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);padding-bottom:15px}.command-search input{border:0;background:transparent;padding:8px;font-size:16px}.command-results{display:flex;flex-direction:column;gap:5px;padding-top:14px}.command-results>button{display:flex;justify-content:space-between;align-items:center;text-align:left;padding:13px;border:1px solid transparent;border-radius:8px;background:white}.command-results>button.selected{background:#edf2ff;border-color:#d2dffd}.command-results strong,.command-results small{display:block}.command-results strong{font-size:13px;margin-bottom:5px}.command-results small{color:#6e7b8f;font-size:12px}.command-hint{padding-top:18px;font-size:11px;color:#798497}
@@ -16,3 +16,259 @@ body{background:#f7f8fa}h1,h2,h3{color:var(--ink)}.app-shell{max-width:1760px;pa
 .studio-sample strong{color:#344965}.studio-sample small,.legacy-samples{color:#62738a}
 .trace-note,.source-note,.capture-note,.context-note,.plan-origin,.trace-heading{color:#68778e}
 .packet-list small,.handoff-list small,.repair-footnote,.task-state small,.comparison-source-links{color:#66768c}
+
+/* A quiet night workbench: readable controls and evidence take precedence over decoration. */
+.studio-intro h1,
+.studio-hero h1,
+.method-explanation h2,
+.collection-heading h2,
+.comparison-intro h3,
+.sheet-heading h2 {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-weight: 600;
+  letter-spacing: -.035em;
+  color: var(--night-text);
+}
+.studio-intro h1 em,
+.studio-hero h1 em {
+  color: var(--night-violet);
+  font-style: normal;
+  font-weight: inherit;
+}
+.studio-intro p,
+.studio-hero-copy > p,
+.studio-edition,
+.studio-edition > span:last-child,
+.studio-hero-foot,
+.method-top,
+.method-top > span:last-child,
+.method-explanation p,
+.method-principle,
+.collection-heading h2 span,
+.studio-empty p,
+.sample-intro,
+.lab-meta,
+.legacy-samples,
+.trace-heading,
+.trace-caption,
+.trace-note,
+.source-note,
+.capture-note,
+.context-note,
+.plan-origin,
+.packet-list small,
+.handoff-list small,
+.repair-footnote,
+.task-state small,
+.comparison-source-links,
+.original-comparison {
+  color: var(--night-muted);
+}
+.studio-method,
+.studio-empty,
+.proof-timeline,
+.command-trigger,
+.command-results > button,
+.evidence-comparison {
+  background: var(--night-panel);
+  border-color: var(--night-border);
+  color: var(--night-text);
+  box-shadow: none;
+}
+.studio-hero,
+.method-top,
+.method-tabs,
+.command-search {
+  border-color: var(--night-border);
+}
+.method-tabs,
+.frame-toolbar {
+  background: var(--night-raised);
+}
+.method-tabs button {
+  color: var(--night-muted);
+}
+.method-tabs button.selected,
+.command-results > button.selected,
+.active-nav,
+.focus-mode .focus-toggle {
+  background: #223250;
+  border-color: #57729e;
+  color: var(--night-blue);
+}
+.method-explanation > svg,
+.method-principle svg,
+.studio-empty > svg,
+.comparison-intro > svg,
+.focus-toggle,
+.trace-heading > span:first-child,
+.trace-caption strong {
+  color: var(--night-blue);
+}
+.studio-hero-foot svg {
+  color: var(--night-green);
+}
+.studio-sample strong,
+.command-results strong,
+.studio-empty h3,
+.studio-hub .project-card h3 {
+  color: var(--night-text);
+}
+.studio-sample small,
+.command-results small,
+.command-hint,
+.sample-index {
+  color: var(--night-muted);
+}
+.studio-sample:hover {
+  background: var(--night-raised);
+  border-color: #6479a5;
+  box-shadow: 0 8px 22px #00000024;
+}
+.command-trigger kbd {
+  background: var(--night-raised);
+  color: var(--night-muted);
+  border-color: #46516a;
+}
+.command-search input {
+  color: var(--night-text);
+}
+.command-search input::placeholder {
+  color: var(--night-muted);
+}
+.criterion-button.selected {
+  border-color: #57729e;
+  box-shadow: inset 3px 0 var(--night-blue);
+}
+.step-list button:hover {
+  background: var(--night-raised);
+}
+.trace-play {
+  background: #263b63;
+  color: var(--night-blue);
+}
+.trace-play.active {
+  background: var(--night-blue);
+  color: #102344;
+}
+.trace-step {
+  background: var(--night-raised);
+  border-color: var(--night-border);
+  color: var(--night-muted);
+}
+.trace-step.trace-passed {
+  background: #15352d;
+  border-color: #356a57;
+  color: var(--night-green);
+}
+.trace-step.trace-failed,
+.trace-step.trace-error {
+  background: #3b222f;
+  border-color: #895261;
+  color: var(--night-red);
+}
+.trace-step.current {
+  outline: 2px solid var(--night-blue);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+.trace-rail {
+  padding-top: 4px;
+  padding-left: 4px;
+  scrollbar-color: #526485 var(--night-panel);
+}
+.trace-result.trace-passed {
+  color: var(--night-green);
+}
+.trace-result.trace-failed,
+.trace-result.trace-error {
+  color: var(--night-red);
+}
+.trace-scrubber,
+.evidence-comparison > input {
+  accent-color: var(--night-blue);
+}
+.evidence-frame {
+  box-shadow: 0 8px 24px #00000020;
+}
+.evidence-frame figcaption {
+  background: var(--night-panel);
+  color: var(--night-muted);
+  border-color: var(--night-border);
+}
+.image-viewport,
+.comparison-stage,
+.comparison-before {
+  background: #0b1020;
+  border-color: var(--night-border);
+}
+.comparison-label {
+  background: #101827ed;
+  color: var(--night-text);
+  border: 1px solid #45546d;
+}
+.comparison-divider,
+.comparison-divider > svg {
+  background: var(--night-blue);
+  color: #102344;
+}
+.comparison-source-links a,
+.original-comparison > summary {
+  color: var(--night-blue);
+}
+.sheet {
+  background: var(--night-panel);
+  color: var(--night-text);
+  border-color: #46516a;
+  box-shadow: 0 24px 100px #00000080;
+}
+.sheet::backdrop {
+  background: #030610b8;
+}
+.sheet-heading {
+  background: var(--night-panel);
+  border-color: var(--night-border);
+}
+.sheet-lead,
+.sheet-content label,
+.sheet-content .field,
+.sheet-content .field-help {
+  color: var(--night-muted);
+}
+.sheet-content input,
+.sheet-content textarea,
+.sheet-content select {
+  color: var(--night-text);
+  background: #0c1220;
+  border-color: #465470;
+}
+.sheet-content input::placeholder,
+.sheet-content textarea::placeholder {
+  color: #93a4c0;
+}
+.sheet-content .command-search input,
+.sheet-content .search-field input {
+  background: transparent;
+}
+.method-tabs button:focus-visible,
+.command-trigger:focus-visible,
+.command-results > button:focus-visible,
+.trace-play:focus-visible,
+.trace-step:focus-visible,
+.studio-sample:focus-visible {
+  outline: 2px solid var(--night-blue);
+  outline-offset: 3px;
+}
+.method-tabs button:disabled,
+.trace-play:disabled,
+.trace-step:disabled {
+  opacity: 1;
+  background: #202839;
+  color: #93a1b8;
+  border-color: #3d485f;
+}
+@media (max-width: 740px) {
+  .command-trigger {
+    background: transparent;
+  }
+}

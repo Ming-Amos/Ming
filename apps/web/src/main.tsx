@@ -7,6 +7,7 @@ import UploadStudio from "./components/UploadStudio";
 import "./index.css";
 import "./workspace.css";
 import "./studio.css";
+import "./workbench-theme.css";
 
 function MingEntry() {
   const [route, setRoute] = React.useState(() => window.location.hash);

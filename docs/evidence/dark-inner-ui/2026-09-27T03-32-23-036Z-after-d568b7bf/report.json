@@ -1,0 +1,2548 @@
+{
+  "id": "d568b7bf-0c2f-470a-a0c2-14650512c53a",
+  "mode": "after",
+  "startedAt": "2026-09-27T03:32:23.036Z",
+  "base": "http://127.0.0.1:4001",
+  "references": {
+    "homepage": "docs/evidence/welcome-inspection/2026-09-26T19-40-23-800Z-6d10f73d/02-desktop-return-for-fix-final.png",
+    "previousUI": "C:/Users/han20/AppData/Local/Temp/codex-clipboard-8eafab62-801c-44f2-801e-53908cc93eb1.png"
+  },
+  "passed": true,
+  "checks": [
+    {
+      "name": "Final review serves the exact current compiled application",
+      "passed": true
+    },
+    {
+      "name": "upload-desktop has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "upload-desktop uses a dark application canvas",
+      "passed": true,
+      "detail": "rgb(8, 11, 22)"
+    },
+    {
+      "name": "upload-mobile has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "upload-mobile uses a dark application canvas",
+      "passed": true,
+      "detail": "rgb(8, 11, 22)"
+    },
+    {
+      "name": "trial-desktop has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "trial-desktop uses a dark application canvas",
+      "passed": true,
+      "detail": "rgb(8, 11, 22)"
+    },
+    {
+      "name": "trial-mobile has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "trial-mobile uses a dark application canvas",
+      "passed": true,
+      "detail": "rgb(8, 11, 22)"
+    },
+    {
+      "name": "studio-desktop has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "studio-desktop uses a dark application canvas",
+      "passed": true,
+      "detail": "rgb(8, 11, 22)"
+    },
+    {
+      "name": "studio-mobile has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "studio-mobile uses a dark application canvas",
+      "passed": true,
+      "detail": "rgb(8, 11, 22)"
+    },
+    {
+      "name": "The manually defined checklist keeps technical fields collapsed",
+      "passed": true
+    },
+    {
+      "name": "The uploaded application retains its own light background",
+      "passed": true
+    },
+    {
+      "name": "manual-checklist-desktop has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "manual-checklist-desktop uses a dark application canvas",
+      "passed": true,
+      "detail": "rgb(8, 11, 22)"
+    },
+    {
+      "name": "The technical editor remains keyboard operable",
+      "passed": true
+    },
+    {
+      "name": "manual-checklist-mobile has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "manual-checklist-mobile uses a dark application canvas",
+      "passed": true,
+      "detail": "rgb(8, 11, 22)"
+    },
+    {
+      "name": "Real manual checks create the task and expose the reload defect",
+      "passed": true
+    },
+    {
+      "name": "The revised app passes the same actual five-step plan",
+      "passed": true
+    },
+    {
+      "name": "The original failed baseline remains immutable",
+      "passed": true
+    },
+    {
+      "name": "studio-model-dialog-mobile has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "studio-model-dialog-mobile uses a dark application canvas",
+      "passed": true,
+      "detail": "rgb(8, 11, 22)"
+    },
+    {
+      "name": "Own-project checks retain a working Cover link",
+      "passed": true
+    },
+    {
+      "name": "The original Start entry still opens own-project checks",
+      "passed": true
+    },
+    {
+      "name": "The original guided sample entry still opens the live trial",
+      "passed": true
+    },
+    {
+      "name": "The live trial retains a working Cover link",
+      "passed": true
+    },
+    {
+      "name": "No uncaught browser exceptions occurred",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "No external or mutation/model requests were attempted",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "screenshots": [
+    "01-upload-desktop.png",
+    "02-upload-mobile.png",
+    "01-trial-desktop.png",
+    "02-trial-mobile.png",
+    "01-studio-desktop.png",
+    "02-studio-mobile.png",
+    "03-manual-checklist-desktop.png",
+    "03b-technical-editor-focus.png",
+    "04-manual-checklist-mobile.png",
+    "05-real-failure-desktop.png",
+    "06-real-comparison-desktop.png",
+    "07-capture-dialog-desktop.png",
+    "08-studio-command-dialog.png",
+    "09-studio-model-dialog.png",
+    "10-studio-model-dialog-mobile.png",
+    "11-source-and-implementation-contact-sheet.png"
+  ],
+  "metrics": {
+    "upload-desktop": {
+      "viewport": {
+        "width": 1484,
+        "height": 1060
+      },
+      "documentWidth": 1484,
+      "bodyBackground": "rgb(8, 11, 22)",
+      "cards": [
+        {
+          "tag": "SECTION",
+          "text": "Your projectCHOOSE A SOURCELocal filesGitHubDrop your project her",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 705
+        },
+        {
+          "tag": "SECTION",
+          "text": "What should work?Import .md / .txtRequirementsThis text is the so",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 705
+        },
+        {
+          "tag": "SECTION",
+          "text": "Draft the checks with AIMANUAL PLAN AVAILABLERequesting a draft s",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(118, 98, 154) rgb(46, 58, 84) rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 705
+        },
+        {
+          "tag": "SECTION",
+          "text": "What Ming will checkNo checklist yetTurn your requirements into a",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 705
+        }
+      ],
+      "controls": [
+        {
+          "tag": "A",
+          "text": "MingEvery done comes with proof.",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "Georgia, serif",
+          "size": "40px",
+          "width": 283
+        },
+        {
+          "tag": "A",
+          "text": "Try a sample",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 88
+        },
+        {
+          "tag": "A",
+          "text": "Evidence Studio",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 106
+        },
+        {
+          "tag": "A",
+          "text": "Cover",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 31
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Local files",
+          "background": "rgb(35, 51, 80)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(67, 91, 133)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 322
+        },
+        {
+          "tag": "BUTTON",
+          "text": "GitHub",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgba(0, 0, 0, 0)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 322
+        },
+        {
+          "tag": "TEXTAREA",
+          "text": "Requirements",
+          "background": "rgb(11, 17, 32)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "13px",
+          "width": 659
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Generate draft with Doubao",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 659
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Create my checklist",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 133
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "background": "rgb(11, 17, 32)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "13px",
+          "width": 18
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Run acceptance checks",
+          "background": "rgb(148, 184, 255)",
+          "color": "rgb(11, 22, 43)",
+          "border": "rgb(148, 184, 255)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 659
+        },
+        {
+          "tag": "A",
+          "text": "Explore a guided sample",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(148, 184, 255)",
+          "border": "rgb(148, 184, 255)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "11px",
+          "width": 142
+        }
+      ],
+      "headings": [
+        {
+          "tag": "H1",
+          "text": "Bring your app.Check its promises.",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "51.94px",
+          "width": 655
+        },
+        {
+          "tag": "H2",
+          "text": "Your project",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 88
+        },
+        {
+          "tag": "H2",
+          "text": "What should work?",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 140
+        },
+        {
+          "tag": "H2",
+          "text": "Draft the checks with AI",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(192, 166, 255)",
+          "border": "rgb(192, 166, 255)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 173
+        },
+        {
+          "tag": "H2",
+          "text": "What Ming will check",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 156
+        },
+        {
+          "tag": "H2",
+          "text": "Your app belongs here.",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "23px",
+          "width": 240
+        }
+      ],
+      "visibleTechnicalFields": 0
+    },
+    "upload-mobile": {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "bodyBackground": "rgb(8, 11, 22)",
+      "cards": [
+        {
+          "tag": "SECTION",
+          "text": "Your projectCHOOSE A SOURCELocal filesGitHubDrop your project her",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 356
+        },
+        {
+          "tag": "SECTION",
+          "text": "What should work?Import .md / .txtRequirementsThis text is the so",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 356
+        },
+        {
+          "tag": "SECTION",
+          "text": "Draft the checks with AIMANUAL PLAN AVAILABLERequesting a draft s",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(118, 98, 154) rgb(46, 58, 84) rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 356
+        },
+        {
+          "tag": "SECTION",
+          "text": "What Ming will checkNo checklist yetTurn your requirements into a",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 356
+        }
+      ],
+      "controls": [
+        {
+          "tag": "A",
+          "text": "MingEvery done comes with proof.",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "Georgia, serif",
+          "size": "35px",
+          "width": 74
+        },
+        {
+          "tag": "A",
+          "text": "Try a sample",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "11px",
+          "width": 60
+        },
+        {
+          "tag": "A",
+          "text": "Evidence Studio",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "11px",
+          "width": 77
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Local files",
+          "background": "rgb(35, 51, 80)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(67, 91, 133)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 152
+        },
+        {
+          "tag": "BUTTON",
+          "text": "GitHub",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgba(0, 0, 0, 0)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 152
+        },
+        {
+          "tag": "TEXTAREA",
+          "text": "Requirements",
+          "background": "rgb(11, 17, 32)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 320
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Generate draft with Doubao",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 320
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Create my checklist",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 133
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "background": "rgb(11, 17, 32)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "13px",
+          "width": 18
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Run acceptance checks",
+          "background": "rgb(148, 184, 255)",
+          "color": "rgb(11, 22, 43)",
+          "border": "rgb(148, 184, 255)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 320
+        },
+        {
+          "tag": "A",
+          "text": "Explore a guided sample",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(148, 184, 255)",
+          "border": "rgb(148, 184, 255)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "11px",
+          "width": 356
+        }
+      ],
+      "headings": [
+        {
+          "tag": "H1",
+          "text": "Bring your app.Check its promises.",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "33.54px",
+          "width": 356
+        },
+        {
+          "tag": "H2",
+          "text": "Your project",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 88
+        },
+        {
+          "tag": "H2",
+          "text": "What should work?",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 140
+        },
+        {
+          "tag": "H2",
+          "text": "Draft the checks with AI",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(192, 166, 255)",
+          "border": "rgb(192, 166, 255)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 320
+        },
+        {
+          "tag": "H2",
+          "text": "What Ming will check",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 156
+        }
+      ],
+      "visibleTechnicalFields": 0
+    },
+    "trial-desktop": {
+      "viewport": {
+        "width": 1484,
+        "height": 1060
+      },
+      "documentWidth": 1484,
+      "bodyBackground": "rgb(8, 11, 22)",
+      "cards": [
+        {
+          "tag": "SECTION",
+          "text": "SHIPBOARD / TASK BOARD“Saved” shouldmean saved.A task should appe",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "14px",
+          "width": 299
+        },
+        {
+          "tag": "SECTION",
+          "text": "Acceptance criteria 0301A task appears on the boardAdd your task.",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "14px",
+          "width": 299
+        },
+        {
+          "tag": "SECTION",
+          "text": "NO CLAIMS WITHOUT A CHECKThe result startswith your click.Run the",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "14px",
+          "width": 365
+        },
+        {
+          "tag": "SECTION",
+          "text": "CLOSE THE LOOPA failure with a next step.Turn the failure into a ",
+          "background": "rgb(22, 27, 45)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(68, 65, 100)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "14px",
+          "width": 365
+        }
+      ],
+      "controls": [
+        {
+          "tag": "A",
+          "text": "MingEvery done comes with proof.",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "Georgia, serif",
+          "size": "42px",
+          "width": 295
+        },
+        {
+          "tag": "A",
+          "text": "Check your app",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 107
+        },
+        {
+          "tag": "A",
+          "text": "Evidence Studio",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 108
+        },
+        {
+          "tag": "A",
+          "text": "Cover",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 54
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "background": "rgb(11, 17, 32)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "13px",
+          "width": 259
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Run live checks",
+          "background": "rgb(148, 184, 255)",
+          "color": "rgb(11, 22, 43)",
+          "border": "rgb(148, 184, 255)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 259
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Copy repair brief",
+          "background": "rgb(24, 32, 52)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 329
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Apply prepared fix & rerun",
+          "background": "rgb(148, 184, 255)",
+          "color": "rgb(11, 22, 43)",
+          "border": "rgb(148, 184, 255)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 329
+        },
+        {
+          "tag": "A",
+          "text": "Check your own HTML or static ZIP",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(148, 184, 255)",
+          "border": "rgb(148, 184, 255)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "11px",
+          "width": 196
+        }
+      ],
+      "headings": [
+        {
+          "tag": "H1",
+          "text": "Don’t take “done”for an answer.",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "56.392px",
+          "width": 426
+        },
+        {
+          "tag": "H2",
+          "text": "“Saved” shouldmean saved.",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "24px",
+          "width": 259
+        },
+        {
+          "tag": "H2",
+          "text": "The result startswith your click.",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "23px",
+          "width": 167
+        },
+        {
+          "tag": "H2",
+          "text": "A failure with a next step.",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "21px",
+          "width": 329
+        }
+      ],
+      "visibleTechnicalFields": 0
+    },
+    "trial-mobile": {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "bodyBackground": "rgb(8, 11, 22)",
+      "cards": [
+        {
+          "tag": "SECTION",
+          "text": "SHIPBOARD / TASK BOARD“Saved” shouldmean saved.A task should appe",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "14px",
+          "width": 354
+        },
+        {
+          "tag": "SECTION",
+          "text": "NO CLAIMS WITHOUT A CHECKThe result startswith your click.Run the",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "14px",
+          "width": 354
+        },
+        {
+          "tag": "SECTION",
+          "text": "CLOSE THE LOOPA failure with a next step.Turn the failure into a ",
+          "background": "rgb(22, 27, 45)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(68, 65, 100)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "14px",
+          "width": 354
+        }
+      ],
+      "controls": [
+        {
+          "tag": "A",
+          "text": "MingEvery done comes with proof.",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "Georgia, serif",
+          "size": "36px",
+          "width": 76
+        },
+        {
+          "tag": "A",
+          "text": "Check your app",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "10px",
+          "width": 93
+        },
+        {
+          "tag": "A",
+          "text": "Evidence Studio",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "10px",
+          "width": 94
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "background": "rgb(11, 17, 32)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 312
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Run live checks",
+          "background": "rgb(148, 184, 255)",
+          "color": "rgb(11, 22, 43)",
+          "border": "rgb(148, 184, 255)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 312
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Copy repair brief",
+          "background": "rgb(24, 32, 52)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 318
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Apply prepared fix & rerun",
+          "background": "rgb(148, 184, 255)",
+          "color": "rgb(11, 22, 43)",
+          "border": "rgb(148, 184, 255)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 318
+        },
+        {
+          "tag": "A",
+          "text": "Check your own HTML or static ZIP",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(148, 184, 255)",
+          "border": "rgb(148, 184, 255)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "11px",
+          "width": 354
+        }
+      ],
+      "headings": [
+        {
+          "tag": "H1",
+          "text": "Don’t take “done”for an answer.",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "35.1px",
+          "width": 264
+        },
+        {
+          "tag": "H2",
+          "text": "“Saved” shouldmean saved.",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "26px",
+          "width": 312
+        },
+        {
+          "tag": "H2",
+          "text": "The result startswith your click.",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "23px",
+          "width": 167
+        },
+        {
+          "tag": "H2",
+          "text": "A failure with a next step.",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "23px",
+          "width": 318
+        }
+      ],
+      "visibleTechnicalFields": 0
+    },
+    "studio-desktop": {
+      "viewport": {
+        "width": 1484,
+        "height": 1060
+      },
+      "documentWidth": 1484,
+      "bodyBackground": "rgb(8, 11, 22)",
+      "cards": [],
+      "controls": [
+        {
+          "tag": "A",
+          "text": "Ming acceptance workspace",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "Georgia, \"Times New Roman\", serif",
+          "size": "34px",
+          "width": 270
+        },
+        {
+          "tag": "A",
+          "text": "Check your app",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(148, 184, 255)",
+          "border": "rgb(148, 184, 255)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 114
+        },
+        {
+          "tag": "A",
+          "text": "Live sample",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(148, 184, 255)",
+          "border": "rgb(148, 184, 255)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 93
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Open command menu",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "11px",
+          "width": 147
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Projects",
+          "background": "rgb(34, 50, 80)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(87, 114, 158)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 83
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Connect project",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 124
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Model connected",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 133
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Run history",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 101
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Connect AI",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 99
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Project setup",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "16px",
+          "width": 34
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Connect your project",
+          "background": "rgb(171, 196, 255)",
+          "color": "rgb(16, 24, 42)",
+          "border": "rgb(171, 196, 255)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 178
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Try a real browser check",
+          "background": "rgb(24, 32, 52)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 193
+        },
+        {
+          "tag": "BUTTON",
+          "text": "01Define",
+          "background": "rgb(34, 50, 80)",
+          "color": "rgb(148, 184, 255)",
+          "border": "rgb(87, 114, 158)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 182
+        },
+        {
+          "tag": "BUTTON",
+          "text": "02Inspect",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgba(0, 0, 0, 0)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 182
+        },
+        {
+          "tag": "BUTTON",
+          "text": "03Resolve",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgba(0, 0, 0, 0)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 182
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Connect project",
+          "background": "rgb(24, 32, 52)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 143
+        },
+        {
+          "tag": "BUTTON",
+          "text": "01Shipboard · Working exampleInspect a passing implementation",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "16px",
+          "width": 465
+        },
+        {
+          "tag": "BUTTON",
+          "text": "02Shipboard · Persistence defectFind the persistence defect",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "16px",
+          "width": 465
+        },
+        {
+          "tag": "BUTTON",
+          "text": "03Shipboard · AI repair workspaceFollow a repair against the same",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "16px",
+          "width": 465
+        }
+      ],
+      "headings": [
+        {
+          "tag": "H1",
+          "text": "“Done” is a claim.Make it a fact.",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "66.78px",
+          "width": 761
+        },
+        {
+          "tag": "H2",
+          "text": "Define the promise",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "27px",
+          "width": 529
+        },
+        {
+          "tag": "H2",
+          "text": "Your projects 00",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "26px",
+          "width": 210
+        },
+        {
+          "tag": "H2",
+          "text": "Explore the proof lab",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "26px",
+          "width": 229
+        }
+      ],
+      "visibleTechnicalFields": 0
+    },
+    "studio-mobile": {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "bodyBackground": "rgb(8, 11, 22)",
+      "cards": [],
+      "controls": [
+        {
+          "tag": "A",
+          "text": "Ming acceptance workspace",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "Georgia, \"Times New Roman\", serif",
+          "size": "28px",
+          "width": 59
+        },
+        {
+          "tag": "A",
+          "text": "Check your app",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(148, 184, 255)",
+          "border": "rgb(148, 184, 255)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 30
+        },
+        {
+          "tag": "A",
+          "text": "Live sample",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(148, 184, 255)",
+          "border": "rgb(148, 184, 255)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 30
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Open command menu",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "11px",
+          "width": 32
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Projects",
+          "background": "rgb(34, 50, 80)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(87, 114, 158)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 32
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Connect project",
+          "background": "rgb(37, 54, 87)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 32
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Model connected",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 32
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Run history",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 32
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Connect AI",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 32
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Project setup",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "16px",
+          "width": 30
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Connect your project",
+          "background": "rgb(171, 196, 255)",
+          "color": "rgb(16, 24, 42)",
+          "border": "rgb(171, 196, 255)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "11px",
+          "width": 157
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Try a real browser check",
+          "background": "rgb(24, 32, 52)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "11px",
+          "width": 170
+        },
+        {
+          "tag": "BUTTON",
+          "text": "01Define",
+          "background": "rgb(34, 50, 80)",
+          "color": "rgb(148, 184, 255)",
+          "border": "rgb(87, 114, 158)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 105
+        },
+        {
+          "tag": "BUTTON",
+          "text": "02Inspect",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgba(0, 0, 0, 0)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 105
+        },
+        {
+          "tag": "BUTTON",
+          "text": "03Resolve",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgba(0, 0, 0, 0)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 105
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Connect project",
+          "background": "rgb(24, 32, 52)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "11px",
+          "width": 135
+        },
+        {
+          "tag": "BUTTON",
+          "text": "01Shipboard · Working exampleInspect a passing implementation",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "16px",
+          "width": 356
+        },
+        {
+          "tag": "BUTTON",
+          "text": "02Shipboard · Persistence defectFind the persistence defect",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "16px",
+          "width": 356
+        },
+        {
+          "tag": "BUTTON",
+          "text": "03Shipboard · AI repair workspaceFollow a repair against the same",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "16px",
+          "width": 356
+        }
+      ],
+      "headings": [
+        {
+          "tag": "H1",
+          "text": "“Done” is a claim.Make it a fact.",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "52px",
+          "width": 356
+        },
+        {
+          "tag": "H2",
+          "text": "Define the promise",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "25px",
+          "width": 310
+        },
+        {
+          "tag": "H2",
+          "text": "Your projects 00",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "25px",
+          "width": 178
+        },
+        {
+          "tag": "H2",
+          "text": "Explore the proof lab",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "25px",
+          "width": 220
+        }
+      ],
+      "visibleTechnicalFields": 0
+    },
+    "manual-checklist-desktop": {
+      "viewport": {
+        "width": 1484,
+        "height": 1060
+      },
+      "documentWidth": 1484,
+      "bodyBackground": "rgb(8, 11, 22)",
+      "cards": [
+        {
+          "tag": "SECTION",
+          "text": "Your projectCHOOSE A SOURCELocal filesGitHubUpload revised filesP",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 705
+        },
+        {
+          "tag": "SECTION",
+          "text": "What should work?Import .md / .txtRequirementsAdd Dark theme proo",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 705
+        },
+        {
+          "tag": "SECTION",
+          "text": "Draft the checks with AIMANUAL PLAN AVAILABLERequesting a draft s",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(118, 98, 154) rgb(46, 58, 84) rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 705
+        },
+        {
+          "tag": "SECTION",
+          "text": "What Ming will check2 checks · 5 stepsRead the actions and expect",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 705
+        }
+      ],
+      "controls": [
+        {
+          "tag": "A",
+          "text": "MingEvery done comes with proof.",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "Georgia, serif",
+          "size": "40px",
+          "width": 283
+        },
+        {
+          "tag": "A",
+          "text": "Try a sample",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 88
+        },
+        {
+          "tag": "A",
+          "text": "Evidence Studio",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 106
+        },
+        {
+          "tag": "A",
+          "text": "Cover",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 31
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Local files",
+          "background": "rgb(35, 51, 80)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(67, 91, 133)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 322
+        },
+        {
+          "tag": "BUTTON",
+          "text": "GitHub",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgba(0, 0, 0, 0)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 322
+        },
+        {
+          "tag": "SELECT",
+          "text": "Entry HTML",
+          "background": "rgb(11, 17, 32)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "13px",
+          "width": 659
+        },
+        {
+          "tag": "TEXTAREA",
+          "text": "Requirements",
+          "background": "rgb(11, 17, 32)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "13px",
+          "width": 659
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Generate draft with Doubao",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 659
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "background": "rgb(11, 17, 32)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "13px",
+          "width": 18
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Run acceptance checks",
+          "background": "rgb(148, 184, 255)",
+          "color": "rgb(11, 22, 43)",
+          "border": "rgb(148, 184, 255)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 659
+        },
+        {
+          "tag": "A",
+          "text": "Explore a guided sample",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(148, 184, 255)",
+          "border": "rgb(148, 184, 255)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "11px",
+          "width": 142
+        }
+      ],
+      "headings": [
+        {
+          "tag": "H1",
+          "text": "Bring your app.Check its promises.",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "51.94px",
+          "width": 655
+        },
+        {
+          "tag": "H2",
+          "text": "Your project",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 88
+        },
+        {
+          "tag": "H2",
+          "text": "What should work?",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 140
+        },
+        {
+          "tag": "H2",
+          "text": "Draft the checks with AI",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(192, 166, 255)",
+          "border": "rgb(192, 166, 255)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 173
+        },
+        {
+          "tag": "H2",
+          "text": "What Ming will check",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 156
+        }
+      ],
+      "visibleTechnicalFields": 0
+    },
+    "manual-checklist-mobile": {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "bodyBackground": "rgb(8, 11, 22)",
+      "cards": [
+        {
+          "tag": "SECTION",
+          "text": "Your projectCHOOSE A SOURCELocal filesGitHubUpload revised filesP",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 356
+        },
+        {
+          "tag": "SECTION",
+          "text": "What should work?Import .md / .txtRequirementsAdd Dark theme proo",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 356
+        },
+        {
+          "tag": "SECTION",
+          "text": "Draft the checks with AIMANUAL PLAN AVAILABLERequesting a draft s",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(118, 98, 154) rgb(46, 58, 84) rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 356
+        },
+        {
+          "tag": "SECTION",
+          "text": "What Ming will check2 checks · 5 stepsRead the actions and expect",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 356
+        }
+      ],
+      "controls": [
+        {
+          "tag": "A",
+          "text": "MingEvery done comes with proof.",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "Georgia, serif",
+          "size": "35px",
+          "width": 74
+        },
+        {
+          "tag": "A",
+          "text": "Try a sample",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "11px",
+          "width": 60
+        },
+        {
+          "tag": "A",
+          "text": "Evidence Studio",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "11px",
+          "width": 77
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Local files",
+          "background": "rgb(35, 51, 80)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(67, 91, 133)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 152
+        },
+        {
+          "tag": "BUTTON",
+          "text": "GitHub",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgba(0, 0, 0, 0)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 152
+        },
+        {
+          "tag": "SELECT",
+          "text": "Entry HTML",
+          "background": "rgb(11, 17, 32)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 320
+        },
+        {
+          "tag": "TEXTAREA",
+          "text": "Requirements",
+          "background": "rgb(11, 17, 32)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 320
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Generate draft with Doubao",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 320
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "background": "rgb(11, 17, 32)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "13px",
+          "width": 18
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Run acceptance checks",
+          "background": "rgb(148, 184, 255)",
+          "color": "rgb(11, 22, 43)",
+          "border": "rgb(148, 184, 255)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "12px",
+          "width": 320
+        },
+        {
+          "tag": "A",
+          "text": "Explore a guided sample",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(148, 184, 255)",
+          "border": "rgb(148, 184, 255)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "11px",
+          "width": 356
+        }
+      ],
+      "headings": [
+        {
+          "tag": "H1",
+          "text": "Bring your app.Check its promises.",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "33.54px",
+          "width": 356
+        },
+        {
+          "tag": "H2",
+          "text": "Your project",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 88
+        },
+        {
+          "tag": "H2",
+          "text": "What should work?",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 140
+        },
+        {
+          "tag": "H2",
+          "text": "Draft the checks with AI",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(192, 166, 255)",
+          "border": "rgb(192, 166, 255)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 320
+        },
+        {
+          "tag": "H2",
+          "text": "What Ming will check",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", sans-serif",
+          "size": "16px",
+          "width": 156
+        }
+      ],
+      "visibleTechnicalFields": 0
+    },
+    "studio-model-dialog-mobile": {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "documentWidth": 390,
+      "bodyBackground": "rgb(8, 11, 22)",
+      "cards": [],
+      "controls": [
+        {
+          "tag": "A",
+          "text": "Ming acceptance workspace",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "Georgia, \"Times New Roman\", serif",
+          "size": "28px",
+          "width": 59
+        },
+        {
+          "tag": "A",
+          "text": "Check your app",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(148, 184, 255)",
+          "border": "rgb(148, 184, 255)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 30
+        },
+        {
+          "tag": "A",
+          "text": "Live sample",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(148, 184, 255)",
+          "border": "rgb(148, 184, 255)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 30
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Open command menu",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "11px",
+          "width": 32
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Projects",
+          "background": "rgb(34, 50, 80)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(87, 114, 158)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 32
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Connect project",
+          "background": "rgb(37, 54, 87)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 32
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Model connected",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 32
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Run history",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 32
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Connect AI",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 32
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Project setup",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "16px",
+          "width": 30
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Connect your project",
+          "background": "rgb(171, 196, 255)",
+          "color": "rgb(16, 24, 42)",
+          "border": "rgb(171, 196, 255)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "11px",
+          "width": 157
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Try a real browser check",
+          "background": "rgb(24, 32, 52)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "11px",
+          "width": 170
+        },
+        {
+          "tag": "BUTTON",
+          "text": "01Define",
+          "background": "rgb(34, 50, 80)",
+          "color": "rgb(148, 184, 255)",
+          "border": "rgb(87, 114, 158)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 105
+        },
+        {
+          "tag": "BUTTON",
+          "text": "02Inspect",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgba(0, 0, 0, 0)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 105
+        },
+        {
+          "tag": "BUTTON",
+          "text": "03Resolve",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgba(0, 0, 0, 0)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 105
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Connect project",
+          "background": "rgb(24, 32, 52)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "11px",
+          "width": 135
+        },
+        {
+          "tag": "BUTTON",
+          "text": "01Shipboard · Working exampleInspect a passing implementation",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "16px",
+          "width": 356
+        },
+        {
+          "tag": "BUTTON",
+          "text": "02Shipboard · Persistence defectFind the persistence defect",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "16px",
+          "width": 356
+        },
+        {
+          "tag": "BUTTON",
+          "text": "03Shipboard · AI repair workspaceFollow a repair against the same",
+          "background": "rgb(17, 23, 37)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(46, 58, 84)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "16px",
+          "width": 356
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Close model settings",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(167, 181, 209)",
+          "border": "rgb(167, 181, 209)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "16px",
+          "width": 34
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "background": "rgb(12, 18, 32)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(70, 84, 112)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "13px",
+          "width": 314
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "background": "rgb(12, 18, 32)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(70, 84, 112)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "13px",
+          "width": 314
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "background": "rgb(12, 18, 32)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(70, 84, 112)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "13px",
+          "width": 314
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "background": "rgb(12, 18, 32)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(70, 84, 112)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "13px",
+          "width": 314
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Save settings",
+          "background": "rgb(171, 196, 255)",
+          "color": "rgb(16, 24, 42)",
+          "border": "rgb(171, 196, 255)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "12px",
+          "width": 103
+        }
+      ],
+      "headings": [
+        {
+          "tag": "H1",
+          "text": "“Done” is a claim.Make it a fact.",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "52px",
+          "width": 356
+        },
+        {
+          "tag": "H2",
+          "text": "Define the promise",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "25px",
+          "width": 310
+        },
+        {
+          "tag": "H2",
+          "text": "Your projects 00",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "25px",
+          "width": 178
+        },
+        {
+          "tag": "H2",
+          "text": "Explore the proof lab",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "25px",
+          "width": 220
+        },
+        {
+          "tag": "H2",
+          "text": "Connect your model",
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(237, 241, 251)",
+          "border": "rgb(237, 241, 251)",
+          "font": "\"Segoe UI\", Arial, sans-serif",
+          "size": "25px",
+          "width": 215
+        }
+      ],
+      "visibleTechnicalFields": 0
+    }
+  },
+  "runs": [
+    {
+      "export": "manual-failure.json",
+      "id": "472c4503-9486-4ab1-ab6f-c599527592b3",
+      "status": "failed",
+      "planFingerprint": "a75e6429908e99da92e87415f3f0f223d3f49049555e6eee573de4e587d11027",
+      "projectFingerprint": "e8ffa4fe3ae7bd4af14be69aec7793d5974b269d22aa4d3ed83325569b434c00",
+      "steps": [
+        {
+          "id": "a94bc365-0046-4480-b2b7-a77a1d5edd2f",
+          "action": "fill",
+          "selector": "#taskName",
+          "value": "Dark theme proof d568b7bf",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed fill on #taskName",
+          "expected": "fill",
+          "durationMs": 275,
+          "capture": {
+            "bytes": 21284,
+            "sha256": "948b6bfc23113d1e65c369f0159cbe3c3a57a64ff3eb298cd19cc035895e58ca"
+          }
+        },
+        {
+          "id": "6fb4fe0a-bb25-4eaa-a844-22e43277a64c",
+          "action": "click",
+          "selector": "#addTask",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed click on #addTask",
+          "expected": "click",
+          "durationMs": 277,
+          "capture": {
+            "bytes": 23891,
+            "sha256": "183d93647f875cbe53dad3ae46efc0100469ed02b937bb4434c14068dae75b33"
+          }
+        },
+        {
+          "id": "1d8efdfe-dcfe-4670-bdf8-c6fee97791bd",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Dark theme proof d568b7bf",
+          "description": "",
+          "status": "passed",
+          "observed": "Dark theme proof d568b7bf",
+          "expected": "Visible text contains: Dark theme proof d568b7bf",
+          "durationMs": 11,
+          "capture": {
+            "bytes": 23891,
+            "sha256": "183d93647f875cbe53dad3ae46efc0100469ed02b937bb4434c14068dae75b33"
+          }
+        },
+        {
+          "id": "e01d2629-dde1-4c78-8586-75bcb80d659c",
+          "action": "reload",
+          "selector": "body",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Reopened the uploaded document with the same isolated storage adapter.",
+          "expected": "Reload the isolated page",
+          "durationMs": 154,
+          "capture": {
+            "bytes": 19152,
+            "sha256": "2f9853a9cccd3c22efd4c4ea55caabe344c38c9103e005fc5532b21777bdd3b1"
+          }
+        },
+        {
+          "id": "78272967-659f-44be-abad-2b3ec57973c2",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Dark theme proof d568b7bf",
+          "description": "",
+          "status": "failed",
+          "observed": "(no visible text)",
+          "expected": "Visible text contains: Dark theme proof d568b7bf",
+          "durationMs": 1501,
+          "capture": {
+            "bytes": 19152,
+            "sha256": "2f9853a9cccd3c22efd4c4ea55caabe344c38c9103e005fc5532b21777bdd3b1"
+          }
+        }
+      ]
+    },
+    {
+      "export": "manual-fixed.json",
+      "id": "2b8dbd89-d524-445d-b1de-a0364b0c6e2e",
+      "status": "passed",
+      "planFingerprint": "a75e6429908e99da92e87415f3f0f223d3f49049555e6eee573de4e587d11027",
+      "projectFingerprint": "c68f246ae51e7b07c992d5a9922e1e986d40d2ea46f8f4d2aaa933edaab1c90b",
+      "steps": [
+        {
+          "id": "a94bc365-0046-4480-b2b7-a77a1d5edd2f",
+          "action": "fill",
+          "selector": "#taskName",
+          "value": "Dark theme proof d568b7bf",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed fill on #taskName",
+          "expected": "fill",
+          "durationMs": 270,
+          "capture": {
+            "bytes": 21284,
+            "sha256": "948b6bfc23113d1e65c369f0159cbe3c3a57a64ff3eb298cd19cc035895e58ca"
+          }
+        },
+        {
+          "id": "6fb4fe0a-bb25-4eaa-a844-22e43277a64c",
+          "action": "click",
+          "selector": "#addTask",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Executed click on #addTask",
+          "expected": "click",
+          "durationMs": 273,
+          "capture": {
+            "bytes": 23891,
+            "sha256": "183d93647f875cbe53dad3ae46efc0100469ed02b937bb4434c14068dae75b33"
+          }
+        },
+        {
+          "id": "1d8efdfe-dcfe-4670-bdf8-c6fee97791bd",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Dark theme proof d568b7bf",
+          "description": "",
+          "status": "passed",
+          "observed": "Dark theme proof d568b7bf",
+          "expected": "Visible text contains: Dark theme proof d568b7bf",
+          "durationMs": 12,
+          "capture": {
+            "bytes": 23891,
+            "sha256": "183d93647f875cbe53dad3ae46efc0100469ed02b937bb4434c14068dae75b33"
+          }
+        },
+        {
+          "id": "e01d2629-dde1-4c78-8586-75bcb80d659c",
+          "action": "reload",
+          "selector": "body",
+          "value": "",
+          "description": "",
+          "status": "passed",
+          "observed": "Reopened the uploaded document with the same isolated storage adapter.",
+          "expected": "Reload the isolated page",
+          "durationMs": 148,
+          "capture": {
+            "bytes": 21778,
+            "sha256": "7596eabd81ac0b987376fc093a2edc165f0b2d79d22522587f51e24d5b4779dc"
+          }
+        },
+        {
+          "id": "78272967-659f-44be-abad-2b3ec57973c2",
+          "action": "assertText",
+          "selector": "#taskList",
+          "value": "Dark theme proof d568b7bf",
+          "description": "",
+          "status": "passed",
+          "observed": "Dark theme proof d568b7bf",
+          "expected": "Visible text contains: Dark theme proof d568b7bf",
+          "durationMs": 10,
+          "capture": {
+            "bytes": 21778,
+            "sha256": "7596eabd81ac0b987376fc093a2edc165f0b2d79d22522587f51e24d5b4779dc"
+          }
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "blockedRequests": [],
+  "requests": [
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/assets/index-B8I6HpVZ.js",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/assets/index-C_AcDn7p.css",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/welcome/inspection-cast.png",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/upload/planner/status",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/targets",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/provider/status",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/history",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/repair-tasks",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/capabilities",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/projects",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/plan",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/upload/planner/status",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/targets",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/provider/status",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/history",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/repair-tasks",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/capabilities",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/projects",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/plan",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/provider/status",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/api/upload/planner/status",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/assets/index-B8I6HpVZ.js",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/assets/index-C_AcDn7p.css",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/welcome/inspection-room.png",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/welcome/inspection-cast.png",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/assets/index-B8I6HpVZ.js",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/assets/index-C_AcDn7p.css",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/welcome/inspection-room.png",
+      "method": "GET"
+    },
+    {
+      "origin": "http://127.0.0.1:4001",
+      "path": "/welcome/inspection-cast.png",
+      "method": "GET"
+    }
+  ],
+  "browser": "Standalone Playwright fallback: in-app Browser bootstrap failed because its browser-service.mjs is missing.",
+  "scope": "Intentional dark-theme adaptation; normal readable controls, small pixel accents, manual five-step real browser acceptance. No paid generation, Bob, or external services.",
+  "bundle": "/assets/index-B8I6HpVZ.js",
+  "finishedAt": "2026-09-27T03:32:32.934Z"
+}
