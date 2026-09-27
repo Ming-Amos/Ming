@@ -1,34 +1,30 @@
-# Bob 任务会话摘要证据
+# IBM Bob task-session evidence
 
-已保存的真实摘要截图见下表；尚在执行的任务需要结束后继续采集。
+These eight original PNGs were captured from the IBM Bob IDE on September 26, 2026. They document four Bob tasks, three intermediate snapshots of those tasks, and one MCP connection check. The screenshots have not been cropped, annotated, regenerated, or otherwise altered for this evidence package.
 
-| 日期 | 文件 | Task ID | Bobcoins | 说明 |
-| --- | --- | --- | --- | --- |
-| 2026-09-26 | `ming_task01_stage_a_workspace_handoff_summary.png` | `6fbf911e3cfc7536758d59aec3e9fe17` | 1.29 | 阶段 A 首段任务。任务绑定“日报系统”工作区，但实现目标是 Ming；因工作区不匹配主动停止，保留已生成文件，切换到 Ming 新任务续接。本段尚未完成验证。 |
-| 2026-09-26 | `ming_task02_stage_a_final_summary.png` | `2b41a80061020f364f496c02d0c9c5e7` | 19.59 | 阶段 A 完成：真实浏览器执行、网页证据与历史、29 项异常断言和 26 项网页断言；本地提交 `c917ca7`，Codex 独立构建及复核通过。 |
-| 2026-09-26 | `ming_task03_stage_b_final_summary.png` | `bfa75e6b4e53cc8425e6754a8b69c8f3` | 17.51 | 阶段 B：可切换模型适配器、草案校验、确认和真实网页执行/重跑。Bob 实现核心；Codex 独立 HTTP、边界及网页复核通过，真实供应商生成仍待用户配置。详见 `docs/STAGE_B_RESULTS.md`。 |
-| 2026-09-26 | `ming_task04_stage_c_budget_stop_summary.png` | `df9086562f51a115ee3a91b661b0e968` | 10.12 | 阶段 C 部分实现：修复接口、MCP 适配器与合同。因免费试用额度耗尽中断，网页入口及关键验证约束尚未完成；不能算完整修复闭环。详见 `docs/STAGE_C_STATUS.md`。 |
+## Four task summaries
 
-各任务的 `pre_compaction` 与 `turn_limit` 图片是同一任务的中间摘要，不应重复计费。以上四项 IDE 显示值合计约 48.51 Bobcoins；不是账户总用量或剩余额度。摘要由 Codex 操作真实 Bob 窗口采集；界面及执行证据位于本机 `runtime/`，尚未发布。
+| Stage | Original screenshot | Task ID | Contribution and limit |
+| --- | --- | --- | --- |
+| A — initial handoff | [Task 01 summary](ming_task01_stage_a_workspace_handoff_summary.png) | `6fbf911e3cfc7536758d59aec3e9fe17` | Initial Ming foundation work. The task was attached to the earlier daily-report workspace and was deliberately stopped; continuation moved to the Ming workspace. This task was not a completed validation. |
+| A — implementation | [Task 02 summary](ming_task02_stage_a_final_summary.png) | `2b41a80061020f364f496c02d0c9c5e7` | Bob implemented the core browser runner, local service, initial interface, evidence/history and sample checks. Completion and independent review are recorded separately in [Stage A results](../docs/STAGE_A_RESULT.md). |
+| B — reviewed plans | [Task 03 summary](ming_task03_stage_b_final_summary.png) | `bfa75e6b4e53cc8425e6754a8b69c8f3` | Bob implemented the configurable model-provider adapter, draft validation, human confirmation and confirmed-plan execution. [Stage B results](../docs/STAGE_B_RESULTS.md) distinguish local fixture/transport validation from later live-provider work. |
+| C — interrupted foundation | [Task 04 summary](ming_task04_stage_c_budget_stop_summary.png) | `df9086562f51a115ee3a91b661b0e968` | Bob began repair-task contracts/routes and the stdio MCP adapter. The screenshot shows **Budget Exceeded** when the trial allowance ended. This was an incomplete handoff; see the [Stage C checkpoint and subsequent Codex takeover](../docs/STAGE_C_STATUS.md). |
 
-`ming_mcp_connected_tools.png` 是额外的真实 Bob 设置页面截图：本地 `ming-local` MCP 已连接并发现工具。它不证明 Bob 已调用这些工具或完成目标代码修复，也不代替上述任务摘要。
+The task ID, workspace and usage fields are visible in each image. A filename containing `final_summary` identifies the last retained summary snapshot for that task; it does not turn the conversation excerpt beneath it into proof that every command or test passed. Implementation and verification claims belong to the linked stage records.
 
-截图通过真实 Bob IDE 窗口直接采集，未改写画面。当前使用个人试用账号；主办方是否允许用于参赛仍待确认。原任务仍保留在 Bob Tasks 中，未删除。
+## Intermediate and connection records
 
-依据 2026-09-25 核实的[官方指南](https://lablab-ibm-bob-2-hackathon-guide.s3.us.cloud-object-storage.appdomain.cloud/index.html)：每位队员与提交作品相关的 Bob IDE 任务摘要截图，应放入项目仓库的 `bob_sessions` 目录。
+- [Stage A before compaction](ming_task02_stage_a_pre_compaction_summary.png) and [Stage A turn limit](ming_task02_stage_a_turn_limit_summary.png) are earlier snapshots of Task 02. The turn-limit image records a task-turn limit, distinct from the later Stage C trial-budget stop.
+- [Stage B before compaction](ming_task03_stage_b_pre_compaction_summary.png) is an earlier snapshot of Task 03.
+- [MCP connected and tool discovery](ming_mcp_connected_tools.png) shows Bob Settings reporting `ming-local` as **Connected**, with `ming_get_failed_run` visible. Codex performed this connection check after compiling the adapter. It establishes registration and discovery only; it does **not** show Bob calling a tool or repairing the target application.
 
-## 采集方法
+Displayed Bobcoins are retained verbatim in the images and transcribed individually in the [manifest](manifest.json). Multiple snapshots of one task are not separate charges and must not be added together. No account balance, remaining allowance or total billing claim is inferred.
 
-1. 打开 Bob IDE 的 Tasks，选择相关任务。
-2. 核对正确工作区；跨工作区可选 All 查找。
-3. 点击任务标题，展开 task session consumption summary。
-4. 截取完整摘要，优先 PNG。检查截图未包含凭证。
-5. 保存示例名称：`ming_task01_real_browser_check_summary.png`。
+## Attribution and preservation
 
-每个相关任务及时保存。可以附一份备注记录日期、任务、实际产出、提交号和验证结果；不能用备注、聊天结论或总余额截图代替任务摘要。可额外导出会话供追溯，但不能凭空生成 Bob 原始截图。
+Bob built the initial Stage A/B core and started the Stage C repair/MCP foundation. After the quota interruption, the user authorized Codex to complete and extend the product. Later Codex implementation, interface work, integrations and recorded repairs are attributed separately; the [Bob usage statement](../docs/submission/bob-usage.md) and [current delivery record](../docs/DELIVERY_STATUS.md) describe that division. Historical screenshot text describes the state at capture time, not the current provider configuration.
 
-## 开工前确认账号
+The manifest lists all eight images with SHA-256, dimensions, task mapping, category and original Git commit. A September 27 visual review found no visible API keys, passwords or authorization tokens. Each image's bytes also matched its first committed Git version. This review and documentation update made no Bob requests and consumed no Bob credits.
 
-检查注册邮箱收到的活动邀请，以及 Bob 当前选择的活动账户/实例；以邀请分配的信息为准，不凭名字相似猜选。官方指南说明活动账号自动配有 40 Bobcoins，达到 100% 后不补发；每阶段保存摘要并查看实际用量。
-
-Ming 后端所调用的模型 API 使用用户自己的模型账户，费用与 Bobcoins 分开。不要把 API key、密码或授权令牌写入本目录或聊天。
+For a presentation, use the complete [Stage B summary](ming_task03_stage_b_final_summary.png); the [Stage A summary](ming_task02_stage_a_final_summary.png) is an optional second image. Keep originals legible and describe their scope accurately. These files document Bob participation; they do not establish competition eligibility or imply that a final submission has been made.

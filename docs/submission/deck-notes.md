@@ -1,38 +1,31 @@
-# Ming submission deck
+# Ming submission presentation — current eight-slide edition
 
-Deliverable: `submission/ming-slides.pdf` - five English pages, 16:9 (960 x 540 points). This PDF is a static slide presentation. The reproducible source is `scripts/build-submission-deck.py`; it does not produce an editable PowerPoint file.
+Deliverables: [editable PowerPoint](../../submission/ming-slides.pptx) and [matching PDF](../../submission/ming-slides.pdf), eight English 16:9 slides. The PowerPoint uses native editable text and embedded original evidence images; the PDF is its static presentation companion. This edition replaces the earlier five-slide PDF at the delivery path. The [original prototype notes](archive/deck-notes-prototype.md) are archived byte-for-byte.
 
-## Speaker notes and evidence
+The deck follows the current guided workspace, verified hosted Seed 2.0 Pro example, and separate local MCP repair path. It makes no measured productivity claim or claim of formal submission. The repository and application links remain private at this checkpoint.
 
-1. **Ming.** Automatic acceptance for features built with AI. The existing `submission/ming-cover.png` is conceptual artwork, labelled as a concept cover on the slide. It is not a capture of the functioning application.
-2. **The work left after "done".** Explain the manual loop: open the page, inspect each case, record the failure, report it to the agent, then repeat after editing. Ming requires the user to review the acceptance plan before running it. A failure becomes evidence a coding agent can retrieve through MCP; a repair still needs that agent to claim and perform the work. The web page does not independently wake up or control an arbitrary AI editor.
-3. **A repair with the same acceptance plan.** These are actual browser screenshots from the same logical repair target. The baseline lost the report after refreshing. Codex retrieved and claimed its repair task through actual stdio MCP, edited the target source, and reran the unchanged plan. AC-02 passed; all three rerun criteria passed. The comparison records matching known plan and runner fingerprints, changed source content, matching target identity, and `verifiedRepair: true`. Full screenshot files are embedded without crops, annotations or pixel edits.
-4. **Built with IBM Bob.** The complete original Stage B task-summary screenshot remains visible. Bob implemented the initial real browser runner, evidence/history, provider adapter, plan confirmation, and repair/MCP foundations. Codex completed subsequent integrity checks, interface and second-sample work, and performed the recorded repair after Bob's trial quota ended. The slide does not imply Bob performed that later repair. Full task evidence is in `bob_sessions/`.
-5. **Prototype scope.** Two independently marked-up self-contained sample applications share the generic runner with separate acceptance plans. Local mode supports the full workflow. The public evidence mode is read-only and shows saved real runs. The model interface accepts compatible provider configuration, but this demonstration uses hand-authored fixtures; no live model invocation is claimed. Current snapshot guarantees cover the self-contained HTML document, not arbitrary remote applications, external assets or backend state.
+## Speaker notes and source map
 
-## Exact source references
+1. **Ming — Every “done” comes with proof.** Introduce the problem: AI-developed features still need observable acceptance evidence. The background is concept artwork from [inspection-room.png](../../apps/web/public/welcome/inspection-room.png), not a running application or a test result. [Asset provenance](../WELCOME_ART_ASSETS.md) documents its source.
 
-- Authoritative evidence manifest: `docs/demo-evidence/manifest.json`.
-- Baseline run: `65aece9c-b145-4045-8096-60331a4c6ae1`.
-- Repair task: `7ed27f84-aa14-43f8-90e2-f84702dc21b0`.
-- Rerun: `2cf3cc33-507f-41c2-8b9f-6a16c712a7ae`.
-- Before image: `docs/demo-evidence/runtime/screenshots/65aece9c-b145-4045-8096-60331a4c6ae1_AC-02-S2_failed.png`.
-- After image: `docs/demo-evidence/runtime/screenshots/2cf3cc33-507f-41c2-8b9f-6a16c712a7ae_AC-02_final.png`.
-- Second-project image: `docs/demo-evidence/runtime/screenshots/a35c69f6-cb5c-4293-90df-2a82d96eb067_TODO-03_final.png`.
-- Bob image: `bob_sessions/ming_task03_stage_b_final_summary.png`; original task ID `bfa75e6b4e53cc8425e6754a8b69c8f3`.
+2. **The work left after “done”.** Describe the repeated human work: open the app, repeat the steps, capture the failure, explain it to the coding assistant, and check again after an edit. The [Problem & Solution Statement](problem-solution.md) provides the product rationale. No percentage, stopwatch comparison, or general speedup is asserted.
 
-The builder verifies the three browser image hashes against the manifest before embedding them. It checks the manifest's positive repair comparison and preserves the source image proportions. It asserts the output page count/dimensions and renders every page for visual inspection. No project performance percentage, time-saving claim, live API result or invented evaluation result appears in the deck.
+3. **A checklist you approve once per run.** Explain Add app → Describe → Review → Results. The user provides a browser-ready project, describes expected behavior, requests a checklist, and explicitly chooses **Approve and check** after review. The [current review screenshot](../evidence/simple-workflow/2026-09-27T04-03-10-108Z-after-4187825e/03-draft-review-desktop.png) is shown whole. Its planner response was a local test fixture: this slide demonstrates the interface, not a live model request. The [workflow review](../SIMPLE_WORKFLOW_REVIEW.md) records actual browser execution and safeguards.
 
-## Review record
+4. **A real failure, then a passing revision.** This is the separate, genuine hosted-model case. One Seed 2.0 Pro request generated nine steps covering empty-name validation, task creation, and persistence. The original app lost its task after reload; a prepared corrected source passed the same nine steps. The [failed capture](../evidence/shipboard-doubao/2026-09-26T17-49-25-055Z-0db01f40/buggy-evidence-step-9.png) and [corrected capture](../evidence/shipboard-doubao/2026-09-26T17-49-25-055Z-0db01f40/corrected-evidence-step-9.png) are unaltered DOM-rendered images. The [production report](../evidence/shipboard-doubao/2026-09-26T17-49-25-055Z-0db01f40/production-report.json) records distinct runs, matching plan identities, and preservation of the failed baseline. The correction was prepared, not autonomously produced by the hosted model. Nine steps are not nine separate features. [Incident and verification context](../PLANNER_FORMAT_INCIDENT.md).
 
-Created with ReportLab; parsed with pypdf and rendered with PyMuPDF. The PDF skill operation marker ran successfully once before authoring. Presentation layout and writing guidance informed the design; the requested artifact is PDF, and the unavailable slide artifact runtime was not used.
+5. **Evidence your coding AI can act on.** The hosted app copies requirements, observed failure, actions, and source/plan identities into repair instructions. The user pastes those into their coding assistant and brings back revised files. It does not send instructions or change a repository automatically. Separately, the local [12-tool MCP connection](../AI_CONNECTION.md) lets an authorized coding agent retrieve evidence and rerun confirmed checks. The [local Shipboard evidence](../judge-evidence/README.md) records Codex performing a real source edit and passing the original three-criterion hand-authored plan with strict repair verification.
 
-All five rendered pages were visually reviewed. The final page's spacing was corrected and reviewed again. The original Bob screenshot remains fully visible; fine session text can be inspected by zooming the PDF or opening the source PNG. Render previews and extracted text are private intermediate files under `runtime/submission-deck-qa/` and are not additional submission deliverables.
+6. **IBM Bob built the initial foundation.** The full [original Stage B summary](../../bob_sessions/ming_task03_stage_b_final_summary.png) remains visible. Bob implemented Stage A execution, evidence and initial UI; Stage B provider drafts, validation and confirmation; and partial Stage C repair/MCP foundations. Codex completed and extended the product after the trial quota ended. A task-consumption screenshot documents the session; it is not independent proof that every check passed. [Original records](../../bob_sessions/README.md), [hash manifest](../../bob_sessions/manifest.json), [Stage B results](../STAGE_B_RESULTS.md), and [Stage C boundary](../STAGE_C_STATUS.md) preserve the attribution. Neither watsonx.ai nor watsonx Orchestrate was used.
 
-To rebuild in this Windows workspace:
+7. **Reusable checks replace repeated manual work.** The benefit shown is concrete: Ming repeats approved browser actions, records the result, and keeps the same standard for another run. Online scope is static HTML, built ZIPs, and public GitHub website folders; it does not install packages, run backends, or permit external preview requests. Local mode supports the documented development targets and their own dependencies. A passing result covers only the approved checks. Sources: [uploaded-project scope](../UPLOADED_PROJECTS.md), [Doubao planning](../DOUBAO_PLANNING.md), and [supported local targets](../../README.md#supported-targets).
 
-```powershell
-& 'C:/Users/han20/AppData/Local/Python/pythoncore-3.14-64/python.exe' scripts/build-submission-deck.py
-```
+8. **Project links.** The application and GitHub URLs are editable, clickable text. They identify the real project but remain owner-private/private during preparation. Enable and verify the intended judge access before submitting; do not imply a private link is already accessible. The title artwork remains illustrative.
 
-The script discovers the existing `runtime/media-tools` Python libraries. On another machine, install `reportlab`, `pypdf`, and `pymupdf` in the selected Python environment first. Georgia is used if installed; otherwise the deck falls back to the standard Times font. Reinspect page layouts after a font substitution.
+## Reproduction and verification boundary
+
+The presentation source is [build-submission-presentation.mjs](../../scripts/build-submission-presentation.mjs). It uses the installed presentation runtime, selected Arial/Georgia fonts, eight slide definitions, and original source images. The source contains the speaker notes, exact image paths, and project links.
+
+The finalized eight-slide package passed structural integrity, layout/font policy, and first-party import checks. These checks do not establish native Microsoft PowerPoint rendering on every machine. Presentation QA artifacts remain private build records under `runtime/submission-deck-20260927/`; they are not submission deliverables. Original evidence screenshots and Bob screenshots were not repainted or relabeled to imply newer execution.
+
+The [164-second video](../../submission/ming-demo.mp4) still documents the older prototype checkpoint. It is separate from this refreshed deck and needs a new recording to demonstrate the current interface. See [submission index](../../submission/README.md) and [delivery status](../DELIVERY_STATUS.md) for the remaining work.

@@ -1,5 +1,13 @@
 # Ming delivery status
 
+## Latest: current submission materials — 2026-09-27 (Asia/Shanghai)
+
+The [submission package](../submission/README.md) now includes an **eight-slide editable PowerPoint and matching PDF**, current English statements, form values, and speaker notes with exact evidence sources. Problem & Solution is **383 words**; IBM Bob Usage is **357 words**, each below 500. The deck covers the current guided workspace, real nine-step hosted Seed 2.0 Pro verification, the copyable repair handoff, and the separate local Codex MCP repair. Current-interface screenshots using fixture planner responses are distinguished from the actual hosted model evidence. No measured productivity improvement is invented.
+
+The presentation's eight-slide structural, layout/font-policy, and first-party import checks passed. Native PowerPoint rendering on other machines is not claimed. [Speaker notes](submission/deck-notes.md) link the exact original images and source reports. The previous five-slide [deck notes](submission/archive/deck-notes-prototype.md) are archived byte-for-byte. The original [Bob records](../bob_sessions/README.md) and [screenshot manifest](../bob_sessions/manifest.json) preserve four distinct tasks and eight unchanged screenshots, including partial Stage C and the connection-only view; later work remains attributed to Codex.
+
+The existing **164-second video remains historical** and needs a new recording for the current interface. Application and repository access remain private. Remaining submission work is the current video, authorized and verified judge access, confirmation of the organizer's account conditions, and the actual form submission. This material checkpoint does not claim a new GitHub push, public publication, or formal entry submission; application deployment remains recorded in the section below.
+
 ## Latest: simpler guided workflow — 2026-09-27 (Asia/Shanghai)
 
 The own-project workspace now presents **Add app → Describe → Review → Results**, showing one stage at a time. Users write what should work, explicitly request **Create my checklist**, review one readable checklist, and choose **Approve and check** once. This replaces separate draft adoption, confirmation checkbox and execution controls. Source settings, selectors and diagnostics remain available under disclosures. Results lead to **Copy instructions for my AI** and **Check an updated app**. The restrained dark workspace and animated cover are preserved.

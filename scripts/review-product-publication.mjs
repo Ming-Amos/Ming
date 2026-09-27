@@ -24,7 +24,44 @@ for(const directory of ['docs/demo-evidence','docs/judge-evidence']){
     if(actual!==expected)findings.push({file:`${directory}/${file}`,issue:'preserved evidence hash changed'});else verified++;
   }
 }
-const bobChanged=git(['diff','HEAD','--name-only','--','bob_sessions']).trim();if(bobChanged)findings.push({issue:'original Bob evidence changed'});
-const outcome={checkedAt:new Date().toISOString(),candidateFiles:files.length,verifiedEvidenceFiles:verified,bobEvidenceUnchanged:!bobChanged,findings,scope:'Bounded current-source candidate and preserved-evidence review; not a full history secret audit.'};
+// Protect original screenshot bytes, while allowing their README/index to improve.
+// HEAD is an independent baseline: editing a PNG and its manifest hash together
+// must not make a changed original pass this review.
+const bobOriginalImages=git(['ls-tree','-r','--name-only','-z','HEAD','--','bob_sessions'])
+  .split('\0').filter(file=>/^bob_sessions\/.*\.(?:png|jpe?g|gif|webp|avif|bmp|tiff?)$/i.test(file));
+const bobFindings=[];
+let verifiedBobEvidenceFiles=0;
+let bobManifest;
+try { bobManifest=JSON.parse(fs.readFileSync(path.join(root,'bob_sessions/manifest.json'),'utf8')); }
+catch { bobFindings.push({file:'bob_sessions/manifest.json',issue:'Bob screenshot manifest missing or unreadable'}); }
+const bobHashes=new Map();
+if(bobManifest){
+  if(!Array.isArray(bobManifest.files)||bobManifest.screenshotCount!==bobOriginalImages.length||bobManifest.files.length!==bobOriginalImages.length){
+    bobFindings.push({file:'bob_sessions/manifest.json',issue:'Bob screenshot manifest inventory does not match original images'});
+  }
+  for(const record of Array.isArray(bobManifest.files)?bobManifest.files:[]){
+    if(!record||typeof record.file!=='string'||record.file.includes('/')||record.file.includes('\\')||typeof record.sha256!=='string'||!/^[a-f0-9]{64}$/i.test(record.sha256)){
+      bobFindings.push({file:'bob_sessions/manifest.json',issue:'Invalid Bob screenshot manifest entry'});continue;
+    }
+    const file=`bob_sessions/${record.file}`;
+    if(bobHashes.has(file)||!bobOriginalImages.includes(file)){
+      bobFindings.push({file,issue:'Duplicate or unknown original Bob screenshot in manifest'});continue;
+    }
+    bobHashes.set(file,record.sha256.toLowerCase());
+  }
+}
+for(const file of bobOriginalImages){
+  const absolute=path.join(root,file);
+  if(!fs.existsSync(absolute)){bobFindings.push({file,issue:'original Bob screenshot deleted'});continue;}
+  const actual=createHash('sha256').update(fs.readFileSync(absolute)).digest('hex');
+  const committed=createHash('sha256').update(execFileSync('git',['show',`HEAD:${file}`],{cwd:root})).digest('hex');
+  const expected=bobHashes.get(file);
+  if(actual!==committed)bobFindings.push({file,issue:'original Bob screenshot differs from Git HEAD'});
+  if(!expected)bobFindings.push({file,issue:'original Bob screenshot missing from manifest'});
+  else if(actual!==expected)bobFindings.push({file,issue:'original Bob screenshot hash differs from manifest'});
+  if(actual===committed&&actual===expected)verifiedBobEvidenceFiles++;
+}
+findings.push(...bobFindings);
+const outcome={checkedAt:new Date().toISOString(),candidateFiles:files.length,verifiedEvidenceFiles:verified,verifiedBobEvidenceFiles,bobEvidenceUnchanged:bobFindings.length===0,findings,scope:'Bounded current-source candidate and preserved-evidence review; not a full history secret audit.'};
 fs.mkdirSync(path.join(root,'runtime'),{recursive:true});fs.writeFileSync(path.join(root,'runtime/product-publication-review.json'),JSON.stringify(outcome,null,2));
 console.log(JSON.stringify(outcome,null,2));if(findings.length)process.exitCode=1;

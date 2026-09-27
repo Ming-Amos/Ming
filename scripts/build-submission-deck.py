@@ -1,4 +1,6 @@
-"""Build Ming's five-slide PDF from genuine, unaltered local evidence.
+"""Build Ming's historical five-slide prototype PDF from unaltered local evidence.
+
+The current eight-slide deck uses build-submission-presentation.mjs instead.
 
 Requires reportlab, pypdf and PyMuPDF. Windows task environment has them in
 runtime/media-tools; use PYTHONPATH or install the packages in your environment.
@@ -25,7 +27,7 @@ from pypdf import PdfReader
 W, H = 960, 540
 BG, NAVY, GRAY = "#F8F7F4", "#10244D", "#647082"
 RED, GREEN = "#AD4234", "#256C55"
-OUT = ROOT / "submission/ming-slides.pdf"
+OUT = ROOT / "submission/archive/ming-slides-prototype.pdf"
 QA = ROOT / "runtime/submission-deck-qa"
 OUT.parent.mkdir(parents=True, exist_ok=True)
 QA.mkdir(parents=True, exist_ok=True)

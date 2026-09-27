@@ -5,6 +5,8 @@
 
 Ming checks features built with AI against a standard you review. Connect your development app, save its requirements, edit and confirm an acceptance plan, then run real browser checks. Its English **Evidence Studio** connects those standards to recorded steps, original screenshots, and a repair handoff your coding agent can use to rerun the same checks.
 
+[Submission package](submission/README.md) · [Editable slides](submission/ming-slides.pptx) · [PDF slides](submission/ming-slides.pdf) · [English statements and form fields](docs/submission/fields.md) · [Original Bob records](bob_sessions/README.md)
+
 ## Start locally
 
 Validated environment: **Node.js 24.14.0 / pnpm 11.2.2**.
@@ -80,7 +82,7 @@ Open **Connect model** to save an OpenAI-compatible Chat Completions API root, m
 - **Test connection** sends one real request, with up to 8 requested output tokens and a 10-second deadline. It may incur provider charges. Plan generation is a separate explicit request.
 - The interface records actual returned token counts for the latest 200 calls and marks missing usage. It does not invent prices or silently fall back to sample plans.
 
-No provider key has been supplied and no external live model has been quality-tested. Manual plans and sample runs need no model API or Bobcoins. Your coding agent's own analysis and edits use its separate service/account.
+The hosted upload workflow has a configured Seed 2.0 Pro integration and a verified real nine-step Shipboard example; see [live provider evidence](docs/PLANNER_FORMAT_INCIDENT.md). This bounded example does not establish model quality for arbitrary projects. Manual plans and sample runs need no model API or Bobcoins. Your coding agent's own analysis and edits use its separate service/account.
 
 ## Connect a coding agent
 
@@ -110,7 +112,7 @@ The English own-project workflow covers registration, PRD upload, manual plans, 
 
 The current Evidence Studio and compiled read-only viewer passed **54/54 checks**, including the welcome-to-Start entry, recorded playback, focus, keyboard commands, direct image-slider interaction, original evidence identity and 390px layout. No browser errors, missing resources, external requests or mutation requests were observed. See the [current Studio report](docs/evidence/welcome-page/compiled-studio.json), [13-check welcome review](docs/evidence/welcome-page/report.json), and [32-check own-project workflow](docs/evidence/welcome-page/own-project-ui.json). Earlier reports remain their dated release checkpoints.
 
-The welcome scene reuses the unchanged original platform illustration selected by the user; [asset provenance](docs/evidence/welcome-page/asset-provenance.json) records its source and hash. It is presentation artwork, not acceptance evidence. Animation can be paused and honors reduced-motion preferences. The **Start** link opens Ming; it does not authenticate users. The hosting platform's private access gate remains separate until the owner explicitly changes sharing.
+The welcome scene uses the selected pixel-art atmosphere with seven independently animated visitors and a writing inspector. [Asset provenance](docs/WELCOME_ART_ASSETS.md) records the original artwork, generated layers, and their use. This is presentation artwork, not acceptance evidence. Animation can be paused and honors reduced-motion preferences. The **Start** link opens Ming; it does not authenticate users. The hosting platform's private access gate remains separate until the owner explicitly changes sharing.
 
 ```text
 pnpm typecheck
@@ -123,8 +125,10 @@ pnpm test:ui
 
 IBM Bob built the initial runner, evidence/history, provider, plan validation/confirmation and repair/MCP foundations. After its trial quota ended, the user authorized **Codex** to complete and extend the application, including the new project workflow and model settings. [Original Bob session summaries](bob_sessions/README.md) remain unchanged; Codex's work and the recorded source repair are not attributed to Bob.
 
-The [GitHub repository](https://github.com/Ming-Amos/Ming) and [Sites preview](https://ming-acceptance-proof.amosming.chatgpt.site) remain **private, pending user approval to publish**. Sites serves the live browser sample and reviewed historical evidence. It does not expose your computer or development environment; local runtime settings and keys are excluded.
+The [GitHub repository](https://github.com/Ming-Amos/Ming) and [Sites preview](https://ming-acceptance-proof.amosming.chatgpt.site) remain **private**. Sites serves actual static-project checks, the explicitly requested Seed 2.0 Pro checklist workflow, the live browser sample, and reviewed recorded evidence. It does not expose your computer or development environment; local runtime settings and keys are excluded. Public judge access has not been established.
 
-[The 164-second video](submission/ming-demo.mp4) and [five-slide deck](submission/ming-slides.pdf) show the **previous prototype checkpoint**. They remain valid historical materials; a new recording and refreshed presentation are still needed to demonstrate the current English Evidence Studio and Shipboard repair. [Submission statements](docs/submission/fields.md), [concept cover](submission/ming-cover.png), and [delivery checklist](docs/DELIVERY_STATUS.md) are available for review. The cover is artwork, not execution evidence.
+The current [submission package](submission/README.md) includes an **eight-slide editable PowerPoint and matching PDF**, updated English statements, source references, original Bob task summaries and their hash manifest. The presentation shows the current guided workflow and genuine Shipboard model-to-browser evidence, and distinguishes the hosted copy handoff from the separate local Codex MCP repair. [Speaker notes](docs/submission/deck-notes.md) provide the exact sources; the [previous five-slide notes](docs/submission/archive/deck-notes-prototype.md) are archived.
 
-The private preview was updated to the live browser trial in **version 6**, on 2026-09-26. Authenticated production verification passed **12/12**, including newly executed failing/passing runs and preservation of original evidence. Remaining submission work: refresh the current media; choose and configure an external model if claiming live plan generation; obtain approval before making the repository/site public; confirm account eligibility with the organizer; then review and submit the actual entry. The project has not been submitted automatically.
+[The 164-second video](submission/ming-demo.mp4) still shows the **previous prototype checkpoint** and needs a new recording to represent the current interface. The [concept cover](submission/ming-cover.png) is artwork, not execution evidence. See [delivery status](docs/DELIVERY_STATUS.md) for the latest reviewed application deployment and material checkpoint.
+
+Remaining submission work: record the current demo video, obtain the necessary authorization and verify judge access to private links, confirm that the account setup meets the organizer's conditions, then review and submit the actual entry. The deck and statement updates do not constitute publication or formal competition submission.
