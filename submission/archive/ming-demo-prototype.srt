@@ -1,0 +1,148 @@
+1
+00:00:00,000 --> 00:00:01,872
+The AI says done.
+
+2
+00:00:01,872 --> 00:00:08,236
+But I still open the app, click through each requirement, capture failures, and explain them back.
+
+3
+00:00:08,236 --> 00:00:11,231
+After every edit, I repeat the work.
+
+4
+00:00:11,231 --> 00:00:14,600
+Ming keeps acceptance checks and their evidence together.
+
+5
+00:00:15,000 --> 00:00:20,284
+The requirement here is simple: submitted reports must survive a refresh.
+
+6
+00:00:20,284 --> 00:00:24,687
+I review the conditions and their dependencies before confirming.
+
+7
+00:00:24,687 --> 00:00:29,090
+This demonstration uses a clearly labeled, hand authored plan.
+
+8
+00:00:29,090 --> 00:00:31,291
+Browser execution is real.
+
+9
+00:00:32,000 --> 00:00:35,467
+This sample contains a deliberately seeded bug.
+
+10
+00:00:35,467 --> 00:00:39,800
+I start acceptance, and Ming operates a real browser.
+
+11
+00:00:39,800 --> 00:00:44,567
+Submission works, but persistence fails: the report disappears after refresh.
+
+12
+00:00:44,567 --> 00:00:47,600
+The other two checks still pass.
+
+13
+00:00:48,000 --> 00:00:53,685
+The interface connects the requirement to the actual steps, expected result, and observed failure.
+
+14
+00:00:53,685 --> 00:00:57,475
+I can inspect the screenshot and the failed assertion.
+
+15
+00:00:57,475 --> 00:01:02,781
+Each run retains its own evidence, so a later result cannot replace it.
+
+16
+00:01:04,000 --> 00:01:07,424
+I create a repair task from this failure.
+
+17
+00:01:07,424 --> 00:01:11,229
+It is waiting for an agent, not already repaired.
+
+18
+00:01:11,229 --> 00:01:15,415
+The English handoff contains the task, baseline and unchanged plan.
+
+19
+00:01:15,415 --> 00:01:19,600
+A connected coding agent retrieves the evidence through Ming MCP.
+
+20
+00:01:20,000 --> 00:01:25,805
+Now I open a repair recorded earlier, using the same logical target before and after.
+
+21
+00:01:25,805 --> 00:01:32,335
+Codex retrieved this evidence through the real MCP tools, claimed the task, and changed the
+application source.
+
+22
+00:01:32,335 --> 00:01:35,600
+This is a review of that saved repair.
+
+23
+00:01:36,000 --> 00:01:42,024
+The comparison checks that the plan and runner match, while the source fingerprint changes.
+
+24
+00:01:42,024 --> 00:01:44,836
+The original persistence failure now passes.
+
+25
+00:01:44,836 --> 00:01:51,262
+All three criteria pass, and the original failed run remains available beside the new result.
+
+26
+00:01:52,000 --> 00:01:55,317
+These are the original before and after browser images.
+
+27
+00:01:55,317 --> 00:01:58,966
+I can open the repaired run and inspect each criterion.
+
+28
+00:01:58,966 --> 00:02:01,951
+Ming verifies this repair against the registered scope.
+
+29
+00:02:01,951 --> 00:02:05,600
+It does not claim that every possible behavior is correct.
+
+30
+00:02:06,000 --> 00:02:11,272
+A separate task manager uses different markup and its own acceptance plan.
+
+31
+00:02:11,272 --> 00:02:16,139
+The same runner checks task creation, completion, and persistence after refresh.
+
+32
+00:02:16,139 --> 00:02:20,600
+This second project demonstrates reuse beyond the daily report sample.
+
+33
+00:02:21,000 --> 00:02:23,362
+The model provider is configurable.
+
+34
+00:02:23,362 --> 00:02:28,478
+No live model call or API charge is used in this demonstration.
+
+35
+00:02:30,000 --> 00:02:34,778
+Bob implemented the core runner, evidence history, model adapter and repair foundations.
+
+36
+00:02:34,778 --> 00:02:39,557
+Codex completed the interface and integrity checks, and performed the recorded repair.
+
+37
+00:02:39,557 --> 00:02:43,600
+The original Bob task summaries are included in the repository.

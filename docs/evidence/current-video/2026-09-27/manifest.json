@@ -1,0 +1,25 @@
+{
+  "kind": "actual-current-ui-recording",
+  "recordedDate": "2026-09-27",
+  "modelRequests": 1,
+  "bobCalls": 0,
+  "providerReportedUsage": {
+    "inputTokens": 965,
+    "outputTokens": 566
+  },
+  "checkSteps": 10,
+  "seconds": 172,
+  "actualApplicationOperationSeconds": 122,
+  "files": {
+    "failed-run.json": "c8b3823dea07dc0013768586f90fc52ada4121b0c194c7f6ad590ff1e92f44e8",
+    "passing-run.json": "823535347feeec5ef850c24d899f58c5e85b7cf421b9c02f010f28e1294b8ece",
+    "provider-draft.json": "2b521ed5567974668b76a44bd7edd25439ba6e7b521d0e6d41eeacc8cd1fe768",
+    "README.md": "6f74647ddd3a4c6e01a47cbdbec1b2b64cd5841f2672a03790c375d83b02c977",
+    "recording.json": "1757d740174851a725e54c0d2267b01e3be6c61018aec4feb9ca7f6dc7e0ecb2",
+    "repair-brief.txt": "4a223266444505d357c14f398fada6a84876a8f48100ee6cd808b4fd8516afca"
+  },
+  "deliverables": {
+    "submission/ming-demo.mp4": "6d36df368b24176e19c75fce050011580876875b676729058e0b6893239d912c",
+    "submission/ming-demo.srt": "415ae58c17c03655916019b6ea813219f59df075efa4136ceda2d8c80458e155"
+  }
+}

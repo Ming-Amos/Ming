@@ -1,6 +1,6 @@
 # Ming submission package
 
-Current materials for the IBM Bob 2.0 Hackathon. The English presentation and statements describe the current product; the video remains a clearly identified historical recording. This folder is a delivery package, not a submitted entry.
+Current materials for the IBM Bob 2.0 Hackathon. The English presentation, statements, and narrated video describe the current product. The video records its guided workflow, real model request, and actual browser checks. This folder is a delivery package, not a submitted entry.
 
 ## Presentation and statements
 
@@ -23,13 +23,16 @@ The deck distinguishes the current-interface screenshot from the separate real n
 
 Original images remain unchanged. The connected-tools view demonstrates registration, not a Bob source repair. Later product work and the recorded local repair are attributed to Codex.
 
-## Cover and historical video
+## Current video, cover, and archive
 
 | Material | File | Status |
 | --- | --- | --- |
 | Cover artwork | [ming-cover.png](ming-cover.png) | Prepared concept artwork; not browser execution evidence. |
-| Earlier demonstration video | [ming-demo.mp4](ming-demo.mp4) | **Historical prototype, 164 seconds (2:44).** English narration and captions. It does not show the current guided workflow or hosted model integration. |
-| Earlier video subtitles | [ming-demo.srt](ming-demo.srt) | Companion subtitles for the historical recording. |
+| Current demonstration video | [ming-demo.mp4](ming-demo.mp4) | **Completed, 172 seconds (2:52); final media checks passed.** Includes 122 seconds of actual app operation, one real ten-step model draft, a failed browser run, copied repair instructions, and the same plan passing against prepared corrected source. |
+| Current video subtitles | [ming-demo.srt](ming-demo.srt) | Thirty English caption cues timed from the measured offline narration. Captions are also included in the MP4. |
+| Current video sources and scene guide | [video-notes.md](../docs/submission/video-notes.md) | Exact timings, current compiled UI, genuine provider and browser-run identities, and the distinction from prior evidence. |
+| Earlier demonstration video | [Archived prototype MP4](archive/ming-demo-prototype.mp4) and [SRT](archive/ming-demo-prototype.srt) | Historical 164-second (2:44) prototype recording, retained separately from the current video. |
+| Earlier video notes | [Archived prototype video notes](../docs/submission/archive/video-notes-prototype.md) | Original notes preserved byte-for-byte. |
 | Earlier deck notes | [Archived prototype notes](../docs/submission/archive/deck-notes-prototype.md) | Preserved documentation of the previous five-slide presentation. |
 | Earlier presentation | [Archived prototype PDF](archive/ming-slides-prototype.pdf) | Original five-slide file preserved unchanged; use the current eight-slide deck above. |
 
@@ -37,7 +40,7 @@ Original images remain unchanged. The connected-tools view demonstrates registra
 
 The [application](https://ming-acceptance-proof.amosming.chatgpt.site) and [GitHub repository](https://github.com/Ming-Amos/Ming) are still private. They need authorized visibility changes and verification without the owner's session before use as public judging links.
 
-Remaining: record a current demonstration video, verify judge access, confirm the organizer's account conditions, review the actual form, and submit the entry. No formal submission or public publication is claimed here. See [delivery status](../docs/DELIVERY_STATUS.md) for the application and material checkpoints.
+Remaining: verify judge access, confirm the organizer's account conditions, review the actual form, and submit the entry. No formal event submission or public visibility change is claimed here. See [delivery status](../docs/DELIVERY_STATUS.md) for the application and material checkpoints.
 
 ## Rebuilding the presentation
 

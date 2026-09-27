@@ -1,44 +1,44 @@
-# Ming submission video
+# Ming submission video — current guided workflow
 
-Final deliverables: `submission/ming-demo.mp4` and `submission/ming-demo.srt`.
+Final deliverables: [ming-demo.mp4](../../submission/ming-demo.mp4) and [ming-demo.srt](../../submission/ming-demo.srt), **172 seconds (2:52)**. The [original 164-second video](../../submission/archive/ming-demo-prototype.mp4), [subtitles](../../submission/archive/ming-demo-prototype.srt), and [notes](archive/video-notes-prototype.md) are retained separately as historical material. The original notes are preserved byte-for-byte.
 
-The MP4 is **2 minutes 44 seconds**, 1600 × 900 at 30 fps, H.264 with AAC mono English narration at 48 kHz. English subtitles and scene labels are burned into a separate navy band below the original application recording. The SRT is supplied separately. Narration was synthesized offline with Microsoft Zira Desktop; no cloud speech service, Bob request, or model API call was used to produce the video.
+The new video shows the current **Add app → Describe → Review → Results** interface, one genuine Seed 2.0 Pro checklist request, a real browser failure, a copied repair brief, and the unchanged plan passing against prepared corrected source. **122 seconds show actual application operation**, excluding the animated introduction, Bob summary still, and closing. It is below three minutes and exceeds the required 90 seconds of solution operation.
 
-## What the video demonstrates
+## Scene guide
 
-| Time | Actual footage |
+| Time | Actual footage and narration boundary |
 | --- | --- |
-| 0:00–0:15 | The manual-checking problem, with the real Ming interface visible. |
-| 0:15–0:32 | Review the sample's clearly labelled hand-authored acceptance plan and dependencies. |
-| 0:32–0:48 | Confirm and execute a new real browser run against the deliberately buggy daily-report sample. Submission and blank-input checks pass; persistence fails. |
-| 0:48–1:04 | Inspect the real assertion and original screenshots. |
-| 1:04–1:20 | Create a real waiting repair task and inspect its English MCP handoff. Creating the task does not wake an agent or repair the source. |
-| 1:20–2:06 | Interactively review an **earlier, genuinely recorded Codex MCP repair**, its same-plan comparison, before/after screenshots and complete rerun. Narration and chapter labels explicitly identify this as an earlier recorded repair, not a live repair occurring during the video. |
-| 2:06–2:21 | Switch to the independent Focus task-manager sample; confirm and execute a new real browser run. Creation, completion and persistence checks pass. |
-| 2:21–2:30 | Show the real unconfigured-model status. The demo uses preset plans and makes no live model request. |
-| 2:30–2:44 | Show the complete, authentic Bob Stage B task-summary screenshot and explain Bob/Codex contributions. |
+| 0:00–0:14 | Animated welcome scene and the problem: an AI's “done” still leaves the developer with manual checking. Choose Start. The inspection animation is illustrative, not an acceptance result. |
+| 0:14–0:29 | Upload the deliberately buggy, self-contained Shipboard HTML app. |
+| 0:29–0:46 | Enter three requirements: reject an empty task name, create a named task, and retain that task after reload. |
+| 0:46–1:03 | Explicitly choose **Create my checklist**. One real Seed 2.0 Pro request returns ten actions and assertions. The model proposes checks; it does not decide their results. |
+| 1:03–1:20 | Read the proposed checklist and choose **Approve and check**. Real browser actions execute against the uploaded app. |
+| 1:20–1:36 | Inspect the failed persistence check and expand its original DOM-rendered capture. The newly created task disappeared after reload. |
+| 1:36–1:55 | Choose **Copy instructions for my AI** and inspect the actual copied brief. Copying does not contact an assistant or change the app. |
+| 1:55–2:16 | Choose **Check an updated app**, upload the explicitly identified **prepared corrected source**, approve the unchanged plan, and inspect its passing comparison. No AI source repair happens during this recording. |
+| 2:16–2:37 | Show the complete original Bob Stage B task-summary image. Explain Bob's initial foundations and Codex's later completion and extension of the product. |
+| 2:37–2:52 | Close with the product promise: observable results, portable failure evidence, and the same standard after a change. |
 
-**150 seconds show the actual working application, including interactive review of real historical evidence.** Excluding the first 15-second problem introduction leaves 135 seconds of solution operation/review. The final 14-second Bob summary still is not counted as application operation. The video is under three minutes and exceeds the required 90 seconds of solution demonstration.
+## Genuine execution and evidence
 
-## Evidence provenance
+The [recording metadata](../evidence/current-video/2026-09-27/recording.json), [provider response](../evidence/current-video/2026-09-27/provider-draft.json), [failed run](../evidence/current-video/2026-09-27/failed-run.json), [passing comparison](../evidence/current-video/2026-09-27/passing-run.json), and [copied repair brief](../evidence/current-video/2026-09-27/repair-brief.txt) document this take.
 
-- New live buggy run: `55488c50-5613-43a4-a96e-c1da5e1f60fe`.
-- New waiting task: `531406ff-7ead-4703-8714-10c47dad0194`. This task remains waiting; the video does not imply that it was repaired.
-- New live Focus run: `1f84019e-618b-4033-abd3-b66734e6e86f`.
-- Earlier repair baseline: `65aece9c-b145-4045-8096-60331a4c6ae1`.
-- Earlier repaired rerun: `2cf3cc33-507f-41c2-8b9f-6a16c712a7ae`.
-- Earlier repair task: `7ed27f84-aa14-43f8-90e2-f84702dc21b0`, performed by **Codex using the real stdio MCP tools**. Bob is not credited as the repair actor.
-- Genuine Bob image: `bob_sessions/ming_task03_stage_b_final_summary.png`, shown complete without changing its contents.
-- Recorded repair source/evidence references: `docs/demo-evidence/manifest.json` and its included runtime records.
+- Current compiled UI: `index-eLFffDhU.js`, recorded locally at `http://127.0.0.1:4386` from source commit `21b5235b599d649eaaa78ec4a594641c5d809f2c`. This is a new local UI recording with a genuine external provider request, not a new production-domain verification.
+- Exactly **one** recorded provider request, model `doubao-seed-2-0-pro-260215`: **965 input tokens and 566 output tokens**, as reported by the provider. The returned checklist has **ten steps for three requirements**, with no unanswered questions.
+- Baseline run: `32f65c6f-f44f-4375-86de-57f17b0f851d`. Nine steps passed; the last assertion failed because no task item matched `#taskList > li` after reload.
+- Revised run: `21b08592-0384-40d0-b2d3-96219fc13bd5`. All ten steps passed. The comparison records the same plan, entry, and source target, changed source bytes, and preservation of the original failed evidence.
+- Both runs use plan fingerprint `256f552586b173407e042b76a6898fd27f7bf51781823aae0b25a1ab76b7b4e9`. The runner is `isolated-browser-dom`; captures are **DOM renders**, and storage uses a session adapter. They are not native browser screenshots or a claim of complete application coverage.
+- The failed and corrected files are `examples/shipboard/buggy/index.html` and `examples/shipboard/normal/index.html`. The correction was prepared before recording and is labelled accordingly.
+- The unchanged [Bob Stage B original](../../bob_sessions/ming_task03_stage_b_final_summary.png) has SHA-256 `ec5db2aa2586291610c11c531d5f1ab280be51689f02daaa4a811a3da859516c`. Showing this still makes no new Bob request.
 
-Bob contributed the core runner, evidence history, model adapter and repair foundations. Codex completed the final interface/integrity work and the recorded repair. The demonstrated scope is registered self-contained sample web projects; no claim is made that arbitrary projects work without configuration, or that an unconfigured model generated these plans.
+The earlier [nine-step hosted model verification](../PLANNER_FORMAT_INCIDENT.md), the [five-step workflow test fixture](../SIMPLE_WORKFLOW_REVIEW.md), and the [three-criterion local Codex MCP repair](../judge-evidence/README.md) remain separate evidence sets. None is substituted for this take's real ten-step provider response. The video demonstrates HTML upload; supported ZIP and public GitHub imports are not exercised on screen here.
 
-## Production and checks
+## Production and review status
 
-Playwright recorded actual clicks in the local application at port 4000, using the real API at port 4001. It did not rewrite page results, substitute fabricated screenshots, or change sample source files. The new runs and waiting task are real ordinary UI mutations. The browser recording completed with zero uncaught page exceptions. Main application processes were left running.
+The successful ten-scene recording contains zero uncaught page errors, zero blocked requests, and one real checklist request. The final edit timeline is **172 seconds with no cuts to model waiting time**; actual application operation occupies 0:14–2:16. A separate locator rehearsal used an explicit provider fixture; that rehearsal was not used as the recorded model response.
 
-All frames and audio decoded successfully through FFmpeg. Twelve sampled frames at 0:04, 0:24, 0:40, 0:58, 1:10, 1:31, 1:46, 2:00, 2:16, 2:25, 2:38 and 2:43 were visually reviewed for readable captions, unclipped layouts, correct scene/provenance labels and unintended sensitive content. Final audio measurement was −16.4 dB mean and −1.2 dB peak, with no clipping. This is technical audio verification; no claim of an independent human listening review is made.
+The final video is 1600 × 900 at 30 fps, H.264 with AAC audio, with the original 1600 × 810 application capture above a separate caption band. English narration uses **Microsoft Zira Desktop offline**; the companion SRT has 30 cues timed from the measured sentence audio. Speech generation does not use a cloud speech service or Bob. This does not negate the one genuine, potentially billable model request made by the application on screen. Original app results, evidence images, and Bob records are not repainted.
 
-The final file is approximately 10 MB, below GitHub's 100 MB single-file limit. Private working material, including the raw recording, action timings, generated speech, subtitle source, probe output and QA frames, remains under ignored `runtime/submission-video/`.
+Final media checks passed: duration **172.0 seconds**; all frames and audio decoded without errors; 16 sampled frames were reviewed for readable captions, correct scenes, and unintended sensitive content. Measured audio was **−17.6 dB mean and −1.4 dB peak**, with no clipping. This is technical audio verification, not a claim of independent human listening review. The MP4 is **14,271,594 bytes (approximately 13.61 MiB)**, SHA-256 `6d36df368b24176e19c75fce050011580876875b676729058e0b6893239d912c`. Private working files and QA artifacts remain under ignored `runtime/current-submission-video/`.
 
-Reproduction scripts: `scripts/record-submission-demo.mjs`, `scripts/build-demo-narration.ps1`, and `scripts/build-demo-narration.py`. Re-recording creates new real sample runs and a waiting task; it should not be invoked merely to review the finished artifact.
+Reproduction sources: [record-current-demo.mjs](../../scripts/record-current-demo.mjs), [build-current-demo-voice.ps1](../../scripts/build-current-demo-voice.ps1), and [build-current-demo-video.py](../../scripts/build-current-demo-video.py). Recording again creates new real browser runs and, in record mode, a new billable provider request; reviewing the delivered video does neither.

@@ -1,0 +1,19 @@
+# Ming acceptance feedback
+Project: index
+Source fingerprint: fe5fff4fc84cd5b5d180867e830c32c9c2e1bfbd736aa24ab71faa00c7217ff1
+Plan fingerprint: 256f552586b173407e042b76a6898fd27f7bf51781823aae0b25a1ab76b7b4e9
+Run: 32f65c6f-f44f-4375-86de-57f17b0f851d (failed)
+Requirement: 1. Submit an empty task name. Show “Add a task name before continuing.” and keep the count at “0 tasks”.
+2. Add a task named “Ming acceptance test”. It must appear in the task list.
+3. Reload the application. “Ming acceptance test” must still appear in the task list.
+
+Observed in an isolated browser DOM check. Storage uses a session adapter; captures are DOM renders. No AI repair has been performed.
+
+Verify the 'Ming acceptance test' task is still present in the task list after reload [failed]
+Action: assertText
+Target: #taskList > li
+Value: Ming acceptance test
+Expected: Ming acceptance test
+Observed: No element matches #taskList > li
+
+Fix the uploaded source against these requirements, then rerun the same confirmed plan. Do not change assertions to hide failures.

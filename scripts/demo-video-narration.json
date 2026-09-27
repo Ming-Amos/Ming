@@ -1,0 +1,82 @@
+[
+  {
+    "start": 0,
+    "end": 14,
+    "title": "From AI completion to observable proof",
+    "scene": "Animated Ming cover; click Start near the end.",
+    "kind": "illustrative-cover",
+    "text": "The AI says the feature is finished. But someone still has to click, capture the failure, and explain it all again. Ming gives every done a checkable result."
+  },
+  {
+    "start": 14,
+    "end": 29,
+    "title": "Your actual app · deliberately seeded defect",
+    "scene": "Use Add app and open examples/shipboard/buggy/index.html. Show its live preview.",
+    "kind": "actual-ui",
+    "text": "I open Shipboard, a small task app with a deliberately planted persistence bug. Ming accepts browser-ready HTML, static ZIPs, or public GitHub website folders. This is my actual uploaded app."
+  },
+  {
+    "start": 29,
+    "end": 46,
+    "title": "Describe the behavior you expect",
+    "scene": "Enter the three requirements: reject empty task names, add a named task, retain the task after reload.",
+    "kind": "actual-ui",
+    "text": "My requirements are simple: reject an empty task, add a named task, and keep it after a refresh. These expectations become the standard for this run and the next."
+  },
+  {
+    "start": 46,
+    "end": 63,
+    "title": "One explicit Seed 2.0 Pro request",
+    "scene": "Click Create my checklist exactly once using the actual configured provider. Record the returned draft; do not mock or replay a response. If generation fails, do not continue with narration claiming success.",
+    "kind": "actual-ui",
+    "text": "I ask Seed two point zero Pro for a checklist. It reads the requirements and the app structure. The draft proposes actions and passing conditions; it does not decide the results."
+  },
+  {
+    "start": 63,
+    "end": 80,
+    "title": "Review, then explicitly approve the real check",
+    "scene": "Inspect the readable actions and passing conditions; click Approve and check. Record the actual new browser run.",
+    "kind": "actual-ui",
+    "text": "Before anything runs, I review what Ming will do and what counts as passing. I choose Approve and check. Ming now performs those actions against the app in my browser."
+  },
+  {
+    "start": 80,
+    "end": 96,
+    "title": "Actual persistence failure and observed evidence",
+    "scene": "Show the real failed persistence observation and expand its actual DOM-rendered capture. Do not substitute historical evidence.",
+    "kind": "actual-ui",
+    "text": "The task appears, but disappears after reload. That is a real failed check, not a preselected result. The saved image shows the observed page, alongside the expected behavior."
+  },
+  {
+    "start": 96,
+    "end": 115,
+    "title": "Copy evidence for your coding AI",
+    "scene": "Activate Copy instructions for my AI and inspect the actual repair brief. Do not imply an agent was contacted.",
+    "kind": "actual-ui",
+    "text": "I copy instructions for my coding AI. The brief includes the requirements, exact steps, observed failure, and source identity. Copying does not send anything or repair the code; the coding assistant handles that separately."
+  },
+  {
+    "start": 115,
+    "end": 136,
+    "title": "Prepared corrected source · unchanged checklist",
+    "scene": "Use Check an updated app. Upload examples/shipboard/normal/index.html; restore/review the original checklist, approve, and record its actual passing rerun and comparison.",
+    "kind": "actual-ui",
+    "text": "I now upload a prepared corrected version and keep the original checklist. Ming repeats the same browser actions. This time the task survives the refresh. The comparison preserves the first failure beside the passing revision."
+  },
+  {
+    "start": 136,
+    "end": 157,
+    "title": "Original IBM Bob task summary · honest contribution",
+    "scene": "Show the complete original bob_sessions/ming_task03_stage_b_final_summary.png without changing its contents.",
+    "kind": "original-evidence-still",
+    "text": "IBM Bob built Ming's original browser runner, evidence history, model adapter, and repair foundations. These are the genuine task records. After Bob's trial quota ended, Codex completed the product and later refinements."
+  },
+  {
+    "start": 157,
+    "end": 172,
+    "title": "Every done comes with proof",
+    "scene": "Return to the current completed comparison or Ming cover. Keep actual evidence and illustrative cover clearly separate.",
+    "kind": "closing",
+    "text": "Passing covers the checks we approved, not every possible behavior. Ming makes the next AI conversation start with evidence. Every done comes with proof."
+  }
+]

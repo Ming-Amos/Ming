@@ -1,0 +1,251 @@
+{
+  "startedAt": "2026-09-27T04:57:13.806Z",
+  "preflight": false,
+  "actualProvider": true,
+  "base": "http://127.0.0.1:4386",
+  "sourceCommit": "21b5235b599d649eaaa78ec4a594641c5d809f2c",
+  "requirements": "1. Submit an empty task name. Show “Add a task name before continuing.” and keep the count at “0 tasks”.\n2. Add a task named “Ming acceptance test”. It must appear in the task list.\n3. Reload the application. “Ming acceptance test” must still appear in the task list.",
+  "scenes": [
+    {
+      "index": 0,
+      "title": "From AI completion to observable proof",
+      "kind": "illustrative-cover",
+      "start": 0,
+      "targetDuration": 14,
+      "end": 14.004,
+      "duration": 14.004
+    },
+    {
+      "index": 1,
+      "title": "Your actual app · deliberately seeded defect",
+      "kind": "actual-ui",
+      "start": 14.004,
+      "targetDuration": 15,
+      "end": 29.014,
+      "duration": 15.01
+    },
+    {
+      "index": 2,
+      "title": "Describe the behavior you expect",
+      "kind": "actual-ui",
+      "start": 29.014,
+      "targetDuration": 17,
+      "end": 46.02,
+      "duration": 17.006000000000004
+    },
+    {
+      "index": 3,
+      "title": "One explicit Seed 2.0 Pro request",
+      "kind": "actual-ui",
+      "start": 46.02,
+      "targetDuration": 17,
+      "end": 63.023,
+      "duration": 17.003
+    },
+    {
+      "index": 4,
+      "title": "Review, then explicitly approve the real check",
+      "kind": "actual-ui",
+      "start": 63.023,
+      "targetDuration": 17,
+      "end": 80.026,
+      "duration": 17.002999999999993
+    },
+    {
+      "index": 5,
+      "title": "Actual persistence failure and observed evidence",
+      "kind": "actual-ui",
+      "start": 80.026,
+      "targetDuration": 16,
+      "end": 96.032,
+      "duration": 16.006
+    },
+    {
+      "index": 6,
+      "title": "Copy evidence for your coding AI",
+      "kind": "actual-ui",
+      "start": 96.032,
+      "targetDuration": 19,
+      "end": 115.044,
+      "duration": 19.012
+    },
+    {
+      "index": 7,
+      "title": "Prepared corrected source · unchanged checklist",
+      "kind": "actual-ui",
+      "start": 115.044,
+      "targetDuration": 21,
+      "end": 136.052,
+      "duration": 21.007999999999996
+    },
+    {
+      "index": 8,
+      "title": "Original IBM Bob task summary · honest contribution",
+      "kind": "original-evidence-still",
+      "start": 136.052,
+      "targetDuration": 21,
+      "end": 157.056,
+      "duration": 21.00400000000002
+    },
+    {
+      "index": 9,
+      "title": "Every done comes with proof",
+      "kind": "closing",
+      "start": 157.056,
+      "targetDuration": 15,
+      "end": 172.059,
+      "duration": 15.002999999999986
+    }
+  ],
+  "actions": [
+    {
+      "scene": 0,
+      "time": 11.004,
+      "name": "Open the workspace"
+    },
+    {
+      "scene": 1,
+      "time": 16.006,
+      "name": "Open the actual buggy HTML"
+    },
+    {
+      "scene": 1,
+      "time": 22.006,
+      "name": "Inspect the live app preview"
+    },
+    {
+      "scene": 2,
+      "time": 30.024,
+      "name": "Write three acceptance requirements"
+    },
+    {
+      "scene": 2,
+      "time": 41.023,
+      "name": "Locate checklist creation"
+    },
+    {
+      "scene": 3,
+      "time": 47.027,
+      "name": "Request one genuine provider checklist"
+    },
+    {
+      "scene": 3,
+      "time": 58.739,
+      "name": "Read proposed actions and passing conditions"
+    },
+    {
+      "scene": 4,
+      "time": 65.037,
+      "name": "Read the persistence condition"
+    },
+    {
+      "scene": 4,
+      "time": 70.025,
+      "name": "Approve the reviewed checklist and run"
+    },
+    {
+      "scene": 5,
+      "time": 80.026,
+      "name": "View the real failed observation"
+    },
+    {
+      "scene": 5,
+      "time": 82.031,
+      "name": "Read the exact failed observation"
+    },
+    {
+      "scene": 5,
+      "time": 85.027,
+      "name": "Open the original captured image"
+    },
+    {
+      "scene": 5,
+      "time": 91.038,
+      "name": "Return from the full captured image"
+    },
+    {
+      "scene": 5,
+      "time": 92.035,
+      "name": "Preserve the original execution report"
+    },
+    {
+      "scene": 6,
+      "time": 97.038,
+      "name": "Copy actual repair instructions"
+    },
+    {
+      "scene": 6,
+      "time": 105.042,
+      "name": "Inspect failure details in the repair brief"
+    },
+    {
+      "scene": 6,
+      "time": 111.035,
+      "name": "Return to the requirement context"
+    },
+    {
+      "scene": 7,
+      "time": 115.044,
+      "name": "Choose to check an updated app"
+    },
+    {
+      "scene": 7,
+      "time": 117.046,
+      "name": "Open the prepared corrected revision"
+    },
+    {
+      "scene": 7,
+      "time": 120.052,
+      "name": "Approve the exact original checklist"
+    },
+    {
+      "scene": 7,
+      "time": 126.056,
+      "name": "Preserve the passing revision report"
+    },
+    {
+      "scene": 7,
+      "time": 131.052,
+      "name": "Compare preserved failure with the passing revision"
+    }
+  ],
+  "errors": [],
+  "blockedRequests": [],
+  "draftRequests": 1,
+  "success": true,
+  "bundle": "/assets/index-eLFffDhU.js",
+  "trimStartSeconds": 0.812,
+  "modelWaitStart": 47.028,
+  "modelWaitEnd": 58.737,
+  "provider": {
+    "modelId": "doubao-seed-2-0-pro-260215",
+    "usage": {
+      "inputTokens": 965,
+      "outputTokens": 566
+    },
+    "steps": 10
+  },
+  "bobImage": {
+    "file": "bob_sessions\\ming_task03_stage_b_final_summary.png",
+    "sha256": "ec5db2aa2586291610c11c531d5f1ab280be51689f02daaa4a811a3da859516c"
+  },
+  "runs": {
+    "baseline": {
+      "id": "32f65c6f-f44f-4375-86de-57f17b0f851d",
+      "status": "failed",
+      "planFingerprint": "256f552586b173407e042b76a6898fd27f7bf51781823aae0b25a1ab76b7b4e9",
+      "projectFingerprint": "fe5fff4fc84cd5b5d180867e830c32c9c2e1bfbd736aa24ab71faa00c7217ff1"
+    },
+    "revision": {
+      "id": "21b08592-0384-40d0-b2d3-96219fc13bd5",
+      "status": "passed",
+      "planFingerprint": "256f552586b173407e042b76a6898fd27f7bf51781823aae0b25a1ab76b7b4e9",
+      "projectFingerprint": "bd5c1a2bc38bb671fbcf0d2cb9afb28a2d09cf2d5d200123f7166ef238063895"
+    },
+    "samePlan": true,
+    "sourceChanged": true,
+    "originalFailurePreserved": true
+  },
+  "rawVideo": "C:\\Bob\\Projects\\Ming\\runtime\\current-submission-video\\take\\raw\\page@268ee847779a242fd8ee7d8adcf8901d.webm",
+  "finishedAt": "2026-09-27T05:00:07.154Z"
+}
