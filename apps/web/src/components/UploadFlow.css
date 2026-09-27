@@ -1,0 +1,104 @@
+/* A short, guided path through the existing upload and acceptance workflow. */
+.upload-guided .upload-topbar {height:76px}
+.upload-flow-header {padding:30px 0 22px;max-width:780px}
+.upload-flow-header h1 {margin:0 0 10px;font:600 clamp(28px,3vw,38px)/1.2 "Segoe UI",sans-serif;letter-spacing:-1.2px;color:var(--night-text)}
+.upload-flow-header h1 em {font-style:normal;color:var(--night-blue)}
+.upload-flow-header p {margin:0;font-size:14px;line-height:1.75;color:var(--night-muted)}
+.upload-flow-nav {margin:0 0 24px}
+.upload-flow-nav ol {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;list-style:none;margin:0;padding:5px;border:1px solid var(--night-border);border-radius:11px;background:#0c1220}
+.upload-flow-nav li {min-width:0;margin:0;padding:0}
+.upload-flow-nav button {width:100%;min-height:47px;display:flex;align-items:center;justify-content:center;gap:9px;padding:10px 12px;border:1px solid transparent;border-radius:7px;background:transparent;color:var(--night-muted);font:500 13px/1.4 "Segoe UI",sans-serif;cursor:pointer}
+.upload-flow-nav button:hover:not(:disabled) {background:var(--night-raised);color:var(--night-text)}
+.upload-flow-nav button[aria-current="step"],.upload-flow-nav li[aria-current="step"] button {background:#21314d;border-color:#415b86;color:var(--night-text)}
+.upload-flow-nav button:disabled {opacity:.5;cursor:not-allowed}
+.upload-flow-nav button>span:first-child:not(:only-child) {color:var(--night-blue);font-size:11px;font-variant-numeric:tabular-nums}
+.upload-flow-nav button>svg {flex:none}
+.upload-flow-overview {display:flex;align-items:center;gap:11px;margin:0 0 22px;padding:12px 15px;border:1px solid var(--night-border);border-radius:9px;background:var(--night-panel);font-size:12px;line-height:1.65;color:var(--night-muted)}
+.upload-flow-overview>svg {flex:none;color:var(--night-blue)}
+.upload-flow-overview>div {flex:1;min-width:0}
+.upload-flow-overview strong {color:var(--night-text);font-weight:600;overflow-wrap:anywhere}
+.upload-flow-overview small {display:block;font-size:11px;color:var(--night-muted)}
+.upload-flow-overview>.upload-flow-text-button {margin-left:auto;flex:none}
+.upload-flow-stage {min-width:0}
+.upload-flow-stage[hidden] {display:none}
+.upload-flow-stage-heading {margin:0 0 20px}
+.upload-flow-stage-heading>span {display:block;margin-bottom:8px;font-size:10px;font-weight:600;letter-spacing:1.1px;color:var(--night-violet)}
+.upload-flow-stage-heading h2 {margin:0 0 9px;font:600 clamp(22px,2vw,27px)/1.3 "Segoe UI",sans-serif;letter-spacing:-.6px;color:var(--night-text)}
+.upload-flow-stage-heading p {margin:0;max-width:630px;font-size:13px;line-height:1.8;color:var(--night-muted)}
+.upload-flow-actions {display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:22px;padding-top:18px;border-top:1px solid var(--night-border)}
+.upload-flow-actions>.upload-primary {margin-left:auto;min-width:180px}
+.upload-flow-actions>.upload-primary:only-child {width:100%}
+.upload-flow-actions>p,.upload-flow-actions>.upload-help {flex-basis:100%;margin:0;font-size:12px;line-height:1.75;color:var(--night-muted)}
+.upload-flow-text-button {display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:8px 4px;border:0;border-radius:5px;background:transparent;color:var(--night-blue);font:500 12px/1.5 "Segoe UI",sans-serif;text-align:left;cursor:pointer}
+.upload-flow-text-button:hover:not(:disabled) {color:var(--night-text);text-decoration:underline;text-underline-offset:4px}
+.upload-flow-text-button:disabled {opacity:.5;cursor:not-allowed}
+.upload-flow-disclosure {margin:17px 0;border-top:1px solid var(--night-border);font-size:12px;line-height:1.8;color:var(--night-muted)}
+.upload-flow-disclosure>summary {display:list-item;min-height:42px;box-sizing:border-box;padding:11px 2px;color:var(--night-blue);cursor:pointer}
+.upload-flow-disclosure>p,.upload-flow-disclosure>div {margin:5px 0 13px}
+.upload-flow-disclosure ul {margin:8px 0 14px;padding-left:20px}
+.upload-flow-disclosure strong {font-weight:600;color:var(--night-text)}
+.upload-flow-cost {margin:12px 0 0;max-width:650px;font-size:11px;line-height:1.75;color:var(--night-muted)}
+.upload-flow-cost strong {font-weight:600;color:var(--night-text)}
+.upload-flow-example {margin:13px 0;padding:13px 15px;border-left:2px solid #647caf;border-radius:0 6px 6px 0;background:#141f32;color:var(--night-muted);font-size:12px;line-height:1.8}
+.upload-flow-example strong {display:block;margin-bottom:4px;font-size:11px;font-weight:600;color:var(--night-blue)}
+.upload-flow-example p {margin:0}
+.upload-flow-review-consent {margin:17px 0 0;font-size:12px;line-height:1.8;color:var(--night-muted)}
+.upload-flow-results-summary {display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;margin:0 0 22px;padding:21px 23px;border:1px solid var(--night-border);border-radius:12px;background:var(--night-panel)}
+.upload-flow-results-summary h2 {margin:0 0 9px;font:600 27px/1.3 "Segoe UI",sans-serif;letter-spacing:-.6px;color:var(--night-text)}
+.upload-flow-results-summary p {margin:0;font-size:13px;line-height:1.8;color:var(--night-muted)}
+.upload-flow-results-summary>div {min-width:0}
+.upload-flow-results-summary .upload-evidence-actions {align-items:center}
+.upload-flow-results-summary .upload-run-badge {font-size:11px}
+.upload-flow-result-next {display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:20px 0;padding:18px 20px;border:1px solid #424565;border-radius:10px;background:#181d30}
+.upload-flow-result-next>div {flex:1;min-width:180px}
+.upload-flow-result-next h3,.upload-flow-result-next strong {margin:0 0 6px;font-size:14px;font-weight:600;line-height:1.5;color:var(--night-text)}
+.upload-flow-result-next p {margin:0;font-size:12px;line-height:1.75;color:var(--night-muted)}
+.upload-flow-result-next button,.upload-flow-result-next .upload-revision-label {flex:none}
+.upload-flow-debug {margin:18px 0;border-top:1px solid var(--night-border);color:var(--night-muted);font-size:12px;line-height:1.8}
+.upload-flow-debug>summary {padding:11px 2px;min-height:42px;box-sizing:border-box;cursor:pointer;color:var(--night-blue)}
+.upload-flow-debug[open]>summary {margin-bottom:8px}
+.upload-flow-debug pre,.upload-flow-debug code {white-space:pre-wrap;overflow-wrap:anywhere}
+.upload-flow-result-list {min-width:0}
+.upload-guided .upload-layout {grid-template-columns:minmax(380px,1.04fr) minmax(330px,1fr);gap:26px}
+.upload-guided .upload-card {margin-bottom:18px}
+.upload-guided .upload-checklist {margin:15px 0}
+.upload-guided .upload-approve {margin-top:16px}
+.upload-guided .upload-evidence {margin-top:24px;padding-top:23px}
+.upload-guided .upload-requirement-text {min-height:155px}
+.upload-guided .upload-preview-column {top:20px}
+.upload-flow-nav button:focus-visible,.upload-flow-text-button:focus-visible,.upload-flow-disclosure>summary:focus-visible,.upload-flow-debug>summary:focus-visible {outline:2px solid var(--night-blue);outline-offset:3px}
+@media(max-width:1100px) {
+  .upload-guided .upload-layout {grid-template-columns:minmax(320px,1fr) minmax(300px,1fr);gap:20px}
+  .upload-guided .upload-preview-column {position:static}
+}
+@media(max-width:760px) {
+  .upload-guided .upload-topbar {height:66px}
+  .upload-flow-header {padding:24px 0 18px}
+  .upload-flow-header h1 {font-size:29px;letter-spacing:-.8px}
+  .upload-flow-header p {font-size:13px;line-height:1.7}
+  .upload-flow-nav {margin-bottom:20px}
+  .upload-flow-nav ol {gap:2px;padding:4px;border-radius:9px}
+  .upload-flow-nav button {min-height:46px;gap:5px;padding:9px 4px;font-size:11px;line-height:1.4}
+  .upload-flow-nav button>span:first-child:not(:only-child) {font-size:10px}
+  .upload-flow-nav button>svg {width:13px;height:13px}
+  .upload-flow-overview {gap:8px;padding:11px 12px;margin-bottom:19px;flex-wrap:wrap}
+  .upload-flow-overview>div {min-width:120px}
+  .upload-flow-overview .upload-flow-text-button {font-size:11px}
+  .upload-flow-stage-heading {margin-bottom:16px}
+  .upload-flow-stage-heading h2 {font-size:23px}
+  .upload-flow-stage-heading p {font-size:13px}
+  .upload-guided .upload-layout {grid-template-columns:1fr;gap:22px}
+  .upload-guided .upload-editor {grid-row:1}
+  .upload-guided .upload-preview-column {grid-row:2}
+  .upload-flow-actions {gap:10px;margin-top:18px;padding-top:16px}
+  .upload-flow-actions>.upload-primary {min-width:0;flex:1;min-height:46px}
+  .upload-flow-actions>.upload-flow-text-button {flex:none;min-height:44px;padding-right:12px}
+  .upload-flow-cost {font-size:11px}
+  .upload-flow-example {padding:12px;font-size:12px}
+  .upload-flow-results-summary {display:block;padding:18px}
+  .upload-flow-results-summary h2 {font-size:23px}
+  .upload-flow-results-summary .upload-evidence-actions {margin-top:15px;gap:9px}
+  .upload-flow-result-next {padding:16px;gap:13px}
+  .upload-flow-result-next>div {flex-basis:100%}
+  .upload-flow-result-next button,.upload-flow-result-next .upload-revision-label {flex:1;justify-content:center;min-height:44px}
+}

@@ -1,0 +1,74 @@
+Ming
+Every done comes with proof.
+Try a sample
+Past examples
+Home
+Is your app really ready?
+
+Add your app. Tell Ming what should work. Review the checks, then see the results.
+
+1
+Add app
+2
+Describe
+3
+Review
+4
+Results
+field-notes
+Ready to check
+Change app
+YOUR RESULTS
+These checks passed.
+
+field-notes · 12:01:11 · Run 625cb119-5ff
+
+Passed
+Copy instructions for my AI
+Download report
+01
+Enter the task name
+Passed
+02
+Add the task
+Passed
+03
+The task appears immediately
+Passed
+04
+Reload the page
+Passed
+05
+The same task survives a reload
+Passed
+Enter the task name
+Passed
+EXPECTED
+
+Enter "Keep the release notes" in the selected field
+
+WHAT HAPPENED
+
+This step matched the expected result.
+
+Show exact result
+CAPTURED DURING THIS CHECK
+Expand
+Rendered from the uploaded app’s observed DOM. This is not a native browser screenshot.
+Run details
+Ready for the next check?
+
+The checks you approved passed. You can check another feature or bring back an updated app.
+
+Check an updated app
+Change what to check
+The revised source passed the same plan.
+
+The project bytes changed and all approved checks passed for the same source target and entry page. The original baseline remains unchanged. This comparison does not prove who made the repair or that every feature is correct.
+
+Comparison details
+Previous checks from this visit
+
+Your results cover the checklist you approved. Copying instructions does not send them to your coding AI.
+
+Try a guided sample

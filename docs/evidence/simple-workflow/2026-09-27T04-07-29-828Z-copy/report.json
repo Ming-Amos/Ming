@@ -1,0 +1,45 @@
+{
+  "scope": "Final copy-only bundle and failure-recovery smoke. Provider response and token counts are fixtures.",
+  "checks": [
+    {
+      "name": "Exact final copy-only bundle is served",
+      "passed": true
+    },
+    {
+      "name": "No model request happens before the explicit action",
+      "passed": true
+    },
+    {
+      "name": "Failure stays in description and offers an explicit retry",
+      "passed": true
+    },
+    {
+      "name": "Expanded diagnostic names the current Try again and Advanced options controls",
+      "passed": true
+    },
+    {
+      "name": "Reported fixture usage is retained",
+      "passed": true
+    },
+    {
+      "name": "Mobile recovery has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "One explicit mocked request, no automatic retry or browser exception",
+      "passed": true
+    }
+  ],
+  "requests": 1,
+  "errors": [],
+  "passed": true,
+  "bundle": "/assets/index-eLFffDhU.js",
+  "originalFailureCapture": {
+    "width": 675,
+    "height": 450,
+    "kind": "dom-render",
+    "sourceRun": "b65fea15-77bb-4b66-9efd-1792a30acd6e"
+  },
+  "executionFrameEvidence": "The full behavior report separately asserted the running iframe bounding box was greater than 100 CSS pixels in both dimensions; it did not persist exact numeric dimensions.",
+  "finishedAt": "2026-09-27T04:07:31.835Z"
+}

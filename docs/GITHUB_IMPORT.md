@@ -5,10 +5,10 @@ Ming can retrieve a browser-ready static project from a public GitHub repository
 ## Use it
 
 1. Open Ming, choose **Start**, then **GitHub repository** in the project section.
-2. Paste the repository root URL, such as `https://github.com/owner/repository`. Use the separate optional fields for a branch, tag, commit or static folder. Repository `tree/...` page URLs are not accepted because branch names can contain slashes.
-3. Inspect the repository. Ming resolves the requested ref or default branch to a commit and lists candidate folders with HTML entries. Choose the folder that contains the finished website, usually a committed `dist`, `build`, `docs` or repository root.
-4. Import the selected folder and review the real isolated page. The UI shows the repository and exact commit used.
-5. Write requirements, define actions and assertions manually or review and apply an optional Doubao draft, confirm, and run acceptance checks. The report and repair brief include the repository, ref, commit and folder as well as source/plan fingerprints.
+2. Paste the repository root URL, such as `https://github.com/owner/repository`. Expand the optional settings for a branch, tag, commit or static folder. Repository `tree/...` page URLs are not accepted because branch names can contain slashes.
+3. Choose **Find website files**. Ming resolves the requested ref or default branch to a commit and lists candidate folders with HTML entries. Choose the folder that contains the finished website, usually a committed `dist`, `build`, `docs` or repository root.
+4. Choose **Use this folder** and review the real isolated page. The source details preserve the repository and exact commit used.
+5. Describe what should work, choose **Create my checklist**, review the proposed checks and choose **Approve and check**. Manual authoring is under **Advanced options**. The report and repair brief include the repository, ref, commit and folder as well as source/plan fingerprints.
 6. After fixing the repository, inspect and import again to retrieve the new commit. Review and rerun the original plan. The earlier result remains preserved. A comparison only treats two GitHub runs as the same source target when their repository and selected folder match.
 
 ## What is supported
@@ -27,4 +27,4 @@ Inspection performs anonymous read requests to `api.github.com`. Only after impo
 
 No repository credentials, local files or test results are sent to a Ming server. Importing communicates with GitHub; execution afterward uses the same opaque isolated preview and blocked external-resource policy as file uploads. GitHub's API supports browser cross-origin requests; anonymous access can be rate limited. See [GitHub CORS documentation](https://docs.github.com/en/rest/using-the-rest-api/using-cors-and-jsonp-to-make-cross-origin-requests).
 
-Ref inspection is a point-in-time operation. If the branch changes afterward, the pending import still fetches the already displayed commit; inspect again for the latest version. A passing run establishes the outcomes of the approved checks on the imported static snapshot, not full application correctness or automatic AI repair. Importing and running checks consumes no model API or Bobcoins. The optional **Generate draft with Doubao** action makes a separately disclosed, billable model request; see [Doubao planning](DOUBAO_PLANNING.md).
+Ref inspection is a point-in-time operation. If the branch changes afterward, the pending import still fetches the already displayed commit; inspect again for the latest version. A passing run establishes the outcomes of the approved checks on the imported static snapshot, not full application correctness or automatic AI repair. Importing and running checks consumes no model API or Bobcoins. **Create my checklist** makes a separately disclosed, billable model request; see [Doubao planning](DOUBAO_PLANNING.md).

@@ -1,0 +1,75 @@
+Ming
+Every done comes with proof.
+Try a sample
+Past examples
+Home
+Is your app really ready?
+
+Add your app. Tell Ming what should work. Review the checks, then see the results.
+
+1
+Add app
+2
+Describe
+3
+Review
+4
+Results
+field-notes
+Ready to check
+Change app
+Check cancelled. Completed observations are preserved; unfinished steps remain unchecked.
+YOUR RESULTS
+Every completed step is preserved.
+
+field-notes · 12:00:22 · Run b9a8874e-276
+
+Cancelled
+Copy instructions for my AI
+Download report
+01
+Enter the task name
+Unchecked
+02
+Add the task
+Unchecked
+03
+The task appears immediately
+Unchecked
+04
+Reload the page
+Unchecked
+05
+The same task survives a reload
+Unchecked
+Enter the task name
+Unchecked
+EXPECTED
+
+Enter "Keep the release notes" in the selected field
+
+WHAT HAPPENED
+
+This step has not been checked.
+
+Show exact result
+
+No DOM snapshot was captured for this step.
+
+Run details
+What to do next
+
+Copy the instructions above into Bob or your coding AI. When the app is fixed, bring back the updated files to check again.
+
+Check an updated app
+Change what to check
+The revision still needs review.
+
+The original run is preserved. Compare the source, plan, and results before deciding whether the intended issue is resolved.
+
+Comparison details
+Previous checks from this visit
+
+Your results cover the checklist you approved. Copying instructions does not send them to your coding AI.
+
+Try a guided sample

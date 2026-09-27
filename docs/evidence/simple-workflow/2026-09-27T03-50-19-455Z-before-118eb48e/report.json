@@ -1,0 +1,83 @@
+{
+  "id": "118eb48e-4ea8-4c35-8237-0b71c58971cc",
+  "mode": "before",
+  "base": "http://127.0.0.1:4001",
+  "startedAt": "2026-09-27T03:50:19.456Z",
+  "transport": "Explicit local draft fixture. Reported token counts are fixture data, not consumed provider tokens.",
+  "checks": [
+    {
+      "name": "Review uses the exact current compiled UI",
+      "passed": true
+    },
+    {
+      "name": "Loading source and writing requirements makes no model request",
+      "passed": true
+    },
+    {
+      "name": "Before baseline captures one explicitly requested draft without executing it",
+      "passed": true
+    },
+    {
+      "name": "No external request or unapproved mutation was attempted",
+      "passed": true
+    },
+    {
+      "name": "No browser exception occurred",
+      "passed": true
+    }
+  ],
+  "requests": [
+    {
+      "path": "/api/upload/planner/draft",
+      "method": "POST",
+      "body": {
+        "confirmedUserAction": true,
+        "requirement": "Add a task named \"Keep the release notes\". It must appear immediately and remain visible after reloading the page.",
+        "projectName": "field-notes",
+        "entry": "field-notes.html",
+        "elements": [
+          {
+            "selector": "#taskForm",
+            "tag": "form",
+            "label": "Task name\nAdd task",
+            "type": "",
+            "text": "Task name\nAdd task"
+          },
+          {
+            "selector": "#taskName",
+            "tag": "input",
+            "label": "Task name",
+            "type": "",
+            "text": ""
+          },
+          {
+            "selector": "#addTask",
+            "tag": "button",
+            "label": "Add task",
+            "type": "",
+            "text": "Add task"
+          },
+          {
+            "selector": "#taskList",
+            "tag": "ul",
+            "label": "taskList",
+            "type": "",
+            "text": ""
+          }
+        ]
+      }
+    }
+  ],
+  "blockedRequests": [],
+  "errors": [],
+  "screenshots": [
+    "01-source-desktop.png",
+    "02-requirements-desktop.png",
+    "03-draft-review-desktop.png",
+    "04-approved-plan-desktop.png",
+    "05-approved-plan-mobile.png"
+  ],
+  "passed": true,
+  "bundle": "/assets/index-B8I6HpVZ.js",
+  "finishedAt": "2026-09-27T03:50:21.667Z"
+}

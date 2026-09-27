@@ -1,6 +1,14 @@
 # Ming delivery status
 
-## Latest: restrained dark workspace — 2026-09-27 (Asia/Shanghai)
+## Latest: simpler guided workflow — 2026-09-27 (Asia/Shanghai)
+
+The own-project workspace now presents **Add app → Describe → Review → Results**, showing one stage at a time. Users write what should work, explicitly request **Create my checklist**, review one readable checklist, and choose **Approve and check** once. This replaces separate draft adoption, confirmation checkbox and execution controls. Source settings, selectors and diagnostics remain available under disclosures. Results lead to **Copy instructions for my AI** and **Check an updated app**. The restrained dark workspace and animated cover are preserved.
+
+Focused browser verification passed **31/31** checks, including an actual failed persistence check and an unchanged five-step plan passing against revised files, immutable baseline evidence, duplicate-approval protection, cancellation/retry, stale and unresolved draft blocking, late-response cancellation, and a manual no-model path. Desktop and 390px mobile states were captured and inspected. The executing iframe remains laid out and produces nonzero DOM captures. Planner responses were explicitly mocked; no Bob or paid model call was made. [Workflow review and exact build evidence](SIMPLE_WORKFLOW_REVIEW.md).
+
+The full frontend type check/build passed. The behavioral review used `index-INkjc2n3.js`; one diagnostic-copy correction produced `index-eLFffDhU.js` with unchanged `index-Bpw9X5ez.css`, followed by a **7/7** focused final-bundle review. A passing checklist still covers only the approved checks. Copying repair instructions does not send them automatically or modify the source.
+
+## Restrained dark workspace — 2026-09-27 (Asia/Shanghai)
 
 The user clarified that the inner pages should share the cover's dark atmosphere with **only a little pixel decoration**. Upload, the guided trial, Evidence Studio and their dialogs now use midnight surfaces, blue/violet accents, normal sans-serif text and consistent semantic result colors. An 84-pixel inspector appears only in the upload empty state; no background animation was added to working forms. The actual uploaded application and original evidence images retain their own colors. All existing review, confirmation, execution and repair behavior is preserved.
 

@@ -1,0 +1,156 @@
+{
+  "id": "dfeb1cd2-a838-4cbc-a715-6a684c7f2528",
+  "mode": "after",
+  "base": "http://127.0.0.1:4001",
+  "startedAt": "2026-09-27T04:01:05.101Z",
+  "transport": "Explicit local draft fixture. Reported token counts are fixture data, not consumed provider tokens.",
+  "checks": [
+    {
+      "name": "Review uses the exact current compiled UI",
+      "passed": true
+    },
+    {
+      "name": "A new visit begins with source only",
+      "passed": true
+    },
+    {
+      "name": "Source on mobile has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "Loading source and writing requirements makes no model request",
+      "passed": true
+    },
+    {
+      "name": "Import opens description with one explicit creation action",
+      "passed": true
+    },
+    {
+      "name": "The potential AI charge is disclosed beside creation",
+      "passed": true
+    },
+    {
+      "name": "Only explicit creation sends one approved request with observed page elements",
+      "passed": true
+    },
+    {
+      "name": "Review displays one checklist and waits for approval",
+      "passed": true
+    },
+    {
+      "name": "Technical details and creation controls are absent from the normal review",
+      "passed": true
+    },
+    {
+      "name": "Checklist on mobile has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "The executing iframe stays laid out while checks run",
+      "passed": true
+    },
+    {
+      "name": "Approval runs exactly the reviewed five steps and observes the real persistence bug",
+      "passed": true
+    },
+    {
+      "name": "Recorded failure includes a nonzero DOM image with no second model call",
+      "passed": true
+    },
+    {
+      "name": "Failure results on mobile has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "Exact selector and raw observation stay inside a closed disclosure",
+      "passed": true
+    },
+    {
+      "name": "Repair instructions retain the actual requirement and observed failure",
+      "passed": true
+    },
+    {
+      "name": "A revision returns to the same checklist without regenerating",
+      "passed": true
+    },
+    {
+      "name": "Rapid repeated approval starts one revised run with unchanged baseline and plan",
+      "passed": true
+    }
+  ],
+  "requests": [
+    {
+      "path": "/api/upload/planner/draft",
+      "method": "POST",
+      "body": {
+        "confirmedUserAction": true,
+        "requirement": "Add a task named \"Keep the release notes\". It must appear immediately and remain visible after reloading the page.",
+        "projectName": "field-notes",
+        "entry": "field-notes.html",
+        "elements": [
+          {
+            "selector": "#taskForm",
+            "tag": "form",
+            "label": "Task name\nAdd task",
+            "type": "",
+            "text": "Task name\nAdd task"
+          },
+          {
+            "selector": "#taskName",
+            "tag": "input",
+            "label": "Task name",
+            "type": "",
+            "text": ""
+          },
+          {
+            "selector": "#addTask",
+            "tag": "button",
+            "label": "Add task",
+            "type": "",
+            "text": "Add task"
+          },
+          {
+            "selector": "#taskList",
+            "tag": "ul",
+            "label": "taskList",
+            "type": "",
+            "text": ""
+          }
+        ]
+      }
+    }
+  ],
+  "blockedRequests": [],
+  "errors": [],
+  "screenshots": [
+    "01-source-desktop.png",
+    "01b-source-mobile.png",
+    "02-requirements-desktop.png",
+    "03-draft-review-desktop.png",
+    "04-review-mobile.png",
+    "05-real-results-desktop.png",
+    "06-real-failure-mobile.png",
+    "07-revision-comparison-desktop.png",
+    "stopped-state.png"
+  ],
+  "passed": false,
+  "bundle": "/assets/index-INkjc2n3.js",
+  "runs": [
+    {
+      "file": "actual-first-failure.json",
+      "id": "c2fdf253-107f-4aca-a1e2-bd67099e5781",
+      "status": "failed",
+      "planFingerprint": "d27440662d2f0183c3cde112b10665ecb86400ad8569d7a8d86649db8b475c9b",
+      "projectFingerprint": "65d4ea5447e6265dcd95c5ea41d0694a700fe404c24bfe2b21fbc7755554cb8b"
+    },
+    {
+      "file": "actual-revision-pass.json",
+      "id": "24716d0e-2737-4047-b1b9-6d01dc57009e",
+      "status": "passed",
+      "planFingerprint": "d27440662d2f0183c3cde112b10665ecb86400ad8569d7a8d86649db8b475c9b",
+      "projectFingerprint": "7e6657961dcbcd31b5d3ef9a6f9f96748837cbf0d3ecf3bf1bc54f9709a6356b"
+    }
+  ],
+  "error": "locator.click: Timeout 20000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Stop checks', exact: true })\u001b[22m\n\u001b[2m    - locator resolved to <button class=\"upload-secondary\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m  - element was detached from the DOM, retrying\u001b[22m\n\n    at C:\\Bob\\Projects\\Ming\\scripts\\review-simple-workflow.mjs:46:213",
+  "finishedAt": "2026-09-27T04:01:32.213Z"
+}

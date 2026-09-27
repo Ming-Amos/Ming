@@ -6,12 +6,12 @@ The `/#upload` workspace executes a visitor's own HTML, static ZIP or public Git
 
 1. Choose one self-contained HTML file or a ZIP of built static output. For a frontend source repository, build it first and ZIP the generated `dist` or `build` directory. The online preview does not install packages or start servers.
    Alternatively, choose **GitHub repository**, enter a public repository root URL and optionally a ref or static folder, inspect it and import the selected folder. The downloaded files are pinned to the displayed commit. See [GitHub import](GITHUB_IMPORT.md).
-2. Select an entry HTML page. Review the real page and the discovered element selectors.
-3. Paste requirements or import Markdown/plain text. Define actions and expected assertions manually, or explicitly choose **Generate draft with Doubao**. Review the generated steps and resolve any open questions before applying the draft. Generation does not run checks or replace your current plan automatically.
-4. Confirm the project, requirements and steps. Changing any of them invalidates confirmation.
-5. Run checks. The runtime opens a fresh isolated session, performs the specified operations, observes the page, records each step and stops at a failure. Cancelled or unfinished steps remain unchecked.
-6. Inspect expected/observed values and DOM snapshots. Export the report before closing the page, or copy the repair brief into a coding assistant.
-7. Upload a revised file, restore the original plan if necessary, confirm and rerun. Comparison identifies matching plans and entry pages, changed source fingerprints and the actual new outcome. It retains the original run rather than overwriting it.
+2. Ming shows the app preview and advances to **Describe**. If needed, return to **Add app** and expand **App details and page selection** to choose a different entry page.
+3. Paste requirements or import Markdown/plain text, then explicitly choose **Create my checklist**. Review one readable checklist and resolve any open questions. **Advanced options → Write checks myself** provides manual authoring. Generation does not execute checks or replace the active plan automatically.
+4. On **Review**, choose **Approve and check**. This approves a snapshot of exactly the displayed plan and starts execution. Stale or unresolved drafts cannot be approved and never fall back to an old plan.
+5. The runtime opens a fresh isolated session, performs the specified operations, observes the page, records each step and stops at a failure. **Stop checks** cancels remaining work; unfinished steps remain unchecked.
+6. **Results** shows readable outcomes and DOM snapshots, with exact technical observations in a disclosure. Choose **Download report** before closing the page, or **Copy instructions for my AI** and paste the handoff into a coding assistant.
+7. Choose **Check an updated app**, import revised files, review the original checks and approve again. **Reuse the original checks → Restore original plan** is available if needed. Comparison identifies matching plans and entry pages, changed source fingerprints and the actual new outcome. It retains the original run rather than overwriting it.
 
 ## Supported inputs and operations
 

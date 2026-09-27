@@ -1,5 +1,11 @@
 # Ming Application X-ray — design QA
 
+## Simple novice workflow — 2026-09-27
+
+**final result: passed.** Add app → Describe → Review → Results now presents one current task and one checklist. **Approve and check** explicitly approves the visible plan and runs it; technical fields remain optional. The [source/implementation comparison](docs/evidence/simple-workflow/2026-09-27T04-03-10-108Z-after-4187825e/10-before-and-after-comparison.png), all eleven final workflow screenshots and two diagnostic captures were opened and inspected. Dark branding, ordinary readable controls and the uploaded app's independent light theme remain intact at 1484×1060 and 390×844. No actionable P0/P1/P2 finding remains.
+
+**31/31 focused behavior checks** passed on `index-INkjc2n3.js`; **7/7 final copy-only checks** passed on `index-eLFffDhU.js`, both with `index-Bpw9X5ez.css`. Real uploaded source failed on reload, revised source passed the same approved plan, and the original baseline remained unchanged. Stale/questioned drafts, atomic approval, repeated clicks, cancellation/retry, optional manual checks and no automatic model calls were verified. The executing iframe remained laid out (>100×100 CSS pixels); the original failure's actual DOM capture is 675×450 pixels. Provider responses were local fixtures, with no paid calls or Bob credit used. [Review, exact reports, evidence links and limitations](docs/SIMPLE_WORKFLOW_REVIEW.md).
+
 ## Dark inner working pages — 2026-09-27
 
 **final result: passed.** The inner pages now use the welcome scene's dark navy, blue and lavender palette with ordinary readable forms and restrained pixel decoration. The source reference and rendered implementation were opened together in this [comparison sheet](docs/evidence/dark-inner-ui/2026-09-27T03-34-39-210Z-after-332bb5d8/11-source-and-implementation-contact-sheet.png), then inspected through desktop/mobile and focused state captures. This is an intentional theme adaptation, not a geometry clone.

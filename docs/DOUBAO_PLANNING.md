@@ -1,17 +1,16 @@
 # Optional Doubao acceptance drafts
 
-Ming's own-project workspace supports **Doubao Seed 2.0 Pro**, model `doubao-seed-2-0-pro-260215`, through Volcengine Ark's compatible chat API. The same review/apply/confirm workflow is available for HTML, static ZIP and public GitHub imports.
+Ming's own-project workspace supports **Doubao Seed 2.0 Pro**, model `doubao-seed-2-0-pro-260215`, through Volcengine Ark's compatible chat API. The same guided review and approval workflow is available for HTML, static ZIP and public GitHub imports.
 
 ## Use it
 
-1. Import a project and wait for its actual page elements to appear.
-2. Enter explicit requirements and expected outcomes.
-3. Choose **Generate draft with Doubao**, or **Create my checklist** in an empty plan. Both buttons invoke the same explicit draft-generation action. Only requesting a draft calls the model.
-4. Review the proposed steps and unresolved questions. Clarify requirements and regenerate if needed, or discard the draft and write a manual plan. An unresolved or stale draft cannot be applied.
-5. Review the plain-language cards: **Ming will** describes the actions and **Passes when** states the expected results. Choose **Use this checklist**, then confirm **These checks match my requirements.** The optional **Edit technical steps** disclosure contains the original selector/action editor. Editing a step updates the cards and requires confirmation again.
-6. Run acceptance checks. Ming executes browser operations, collects actual observations and creates DOM-rendered snapshots. The model does not decide which checks passed.
+1. **Add app:** import a supported project. Ming opens its preview and advances to the description.
+2. **Describe:** enter requirements and expected outcomes, then choose **Create my checklist**. Only this explicit action calls the model; its cost and data disclosure appear beside it.
+3. **Review:** read one checklist. **Ming will** describes the actions and **Passes when** states the expected results. Unresolved questions or a stale draft block approval. Edit the description and generate again, or explicitly discard the draft and use manual authoring under **Advanced options**.
+4. Choose **Approve and check**. This single action approves exactly the displayed checklist and executes its browser operations. The model does not decide which checks passed. Optional **Edit these steps myself** and **Edit technical steps** expose manual configuration before approval.
+5. **Results:** inspect the outcomes and captures. **Copy instructions for my AI** prepares a repair handoff; **Check an updated app** opens the revised-file import. Review and approve the same checks again to compare results.
 
-Opening the app, importing files, editing requirements, applying a draft, checking a project, comparing runs and exporting reports do not call a model. A pending draft also blocks accidentally running an older plan until it is applied or discarded. Changing the project, entry, requirements or steps requires renewed confirmation.
+Opening the app, importing files, editing requirements, approving a checklist, checking a project, comparing runs and exporting reports do not call a model. A pending draft blocks accidentally running an older plan; an invalid draft never falls back silently. Each execution requires a fresh **Approve and check** action on the current review screen.
 
 ## Configuration and cost
 
@@ -27,7 +26,7 @@ The request contains requirements, project name, entry path and up to 80 observe
 
 Generated output is treated as an untrusted draft, validated against the supported browser-action schema, and never executed as JavaScript or shell commands. Both the provider's closed JSON Schema and Ming's independent parser/validator must accept it. Ming does not guess-repair malformed JSON, remove unsupported actions, or execute a partial response. Drafts may still miss a requirement or choose an unsuitable selector: the review step is part of the product. Each run preserves its plan origin and source identity. A passing result proves only that the confirmed checks passed on that imported snapshot.
 
-If generation fails, the workspace preserves the project, requirements, current plan, confirmation and previous evidence. The failure card displays provider-reported usage (or Unknown), expandable diagnostics and a copy button. No retry is made automatically. Error diagnostics contain only status, fixed error codes and numeric usage, without project content or the provider key.
+If generation fails, the workspace preserves the project, requirements, current plan and previous evidence. **Details for troubleshooting** contains provider-reported usage (or Unknown), diagnostics and a copy button. **Try again** is explicit; no retry is made automatically. Error diagnostics contain only status, fixed error codes and numeric usage, without project content or the provider key.
 
 Model and API references: [Volcengine model list](https://docs.volcengine.com/docs/ark/model-list?lang=zh), [chat API](https://docs.volcengine.com/docs/ark/chat-api?lang=zh&redirect=1).
 

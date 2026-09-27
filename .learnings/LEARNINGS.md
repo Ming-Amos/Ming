@@ -1,5 +1,23 @@
 # Project learnings
 
+## [LRN-20260927-UX3] correction
+
+**Logged**: 2026-09-27
+**Priority**: high
+**Status**: resolved
+**Area**: frontend
+
+### Summary
+Readable labels alone do not remove an overly complicated workflow.
+
+### Details
+The user still found the workspace difficult after readable checklists were added. Presenting importing, describing, draft adoption, confirmation, execution and technical details together required unnecessary decisions. Use progressive Add app, Describe, Review and Results stages. Show exactly one checklist and combine its explicit approval with execution. Keep manual editing, source settings and diagnostics available through disclosures. An unresolved or stale candidate must remain blocked, never silently replaced with an old plan.
+
+### Metadata
+- Source: user_feedback
+- Related Files: apps/web/src/components/UploadStudio.tsx, apps/web/src/components/UploadFlow.css
+- Pattern-Key: ux.one-current-step-one-explicit-approval
+
 ## [LRN-20260927-UX2] correction
 
 **Logged**: 2026-09-27

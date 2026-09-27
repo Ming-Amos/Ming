@@ -1,0 +1,163 @@
+{
+  "id": "954668cc-7f0c-4c92-80c9-26b5675fb08a",
+  "mode": "after",
+  "base": "http://127.0.0.1:4001",
+  "startedAt": "2026-09-27T04:00:16.381Z",
+  "transport": "Explicit local draft fixture. Reported token counts are fixture data, not consumed provider tokens.",
+  "checks": [
+    {
+      "name": "Review uses the exact current compiled UI",
+      "passed": true
+    },
+    {
+      "name": "A new visit begins with source only",
+      "passed": true
+    },
+    {
+      "name": "Source on mobile has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "Loading source and writing requirements makes no model request",
+      "passed": true
+    },
+    {
+      "name": "Import opens description with one explicit creation action",
+      "passed": true
+    },
+    {
+      "name": "The potential AI charge is disclosed beside creation",
+      "passed": true
+    },
+    {
+      "name": "Only explicit creation sends one approved request with observed page elements",
+      "passed": true
+    },
+    {
+      "name": "Review displays one checklist and waits for approval",
+      "passed": true
+    },
+    {
+      "name": "Technical details and creation controls are absent from the normal review",
+      "passed": true
+    },
+    {
+      "name": "Checklist on mobile has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "Approval runs exactly the reviewed five steps and observes the real persistence bug",
+      "passed": true
+    },
+    {
+      "name": "Recorded failure includes a real DOM image with no second model call",
+      "passed": true
+    },
+    {
+      "name": "Failure results on mobile has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "Exact selector and raw observation stay inside a closed disclosure",
+      "passed": true
+    },
+    {
+      "name": "Repair instructions retain the actual requirement and observed failure",
+      "passed": true
+    },
+    {
+      "name": "A revision returns to the same checklist without regenerating",
+      "passed": true
+    },
+    {
+      "name": "Rapid repeated approval starts one revised run with unchanged baseline and plan",
+      "passed": true
+    },
+    {
+      "name": "Stopping preserves observations and leaves unexecuted steps unchecked",
+      "passed": false
+    }
+  ],
+  "requests": [
+    {
+      "path": "/api/upload/planner/draft",
+      "method": "POST",
+      "body": {
+        "confirmedUserAction": true,
+        "requirement": "Add a task named \"Keep the release notes\". It must appear immediately and remain visible after reloading the page.",
+        "projectName": "field-notes",
+        "entry": "field-notes.html",
+        "elements": [
+          {
+            "selector": "#taskForm",
+            "tag": "form",
+            "label": "Task name\nAdd task",
+            "type": "",
+            "text": "Task name\nAdd task"
+          },
+          {
+            "selector": "#taskName",
+            "tag": "input",
+            "label": "Task name",
+            "type": "",
+            "text": ""
+          },
+          {
+            "selector": "#addTask",
+            "tag": "button",
+            "label": "Add task",
+            "type": "",
+            "text": "Add task"
+          },
+          {
+            "selector": "#taskList",
+            "tag": "ul",
+            "label": "taskList",
+            "type": "",
+            "text": ""
+          }
+        ]
+      }
+    }
+  ],
+  "blockedRequests": [],
+  "errors": [],
+  "screenshots": [
+    "01-source-desktop.png",
+    "01b-source-mobile.png",
+    "02-requirements-desktop.png",
+    "03-draft-review-desktop.png",
+    "04-review-mobile.png",
+    "05-real-results-desktop.png",
+    "06-real-failure-mobile.png",
+    "07-revision-comparison-desktop.png",
+    "stopped-state.png"
+  ],
+  "passed": false,
+  "bundle": "/assets/index-INkjc2n3.js",
+  "runs": [
+    {
+      "file": "actual-first-failure.json",
+      "id": "2763c979-47cd-477e-8b10-1421cb5cb436",
+      "status": "failed",
+      "planFingerprint": "d27440662d2f0183c3cde112b10665ecb86400ad8569d7a8d86649db8b475c9b",
+      "projectFingerprint": "65d4ea5447e6265dcd95c5ea41d0694a700fe404c24bfe2b21fbc7755554cb8b"
+    },
+    {
+      "file": "actual-revision-pass.json",
+      "id": "7c977b0f-9de9-44e6-ae6f-84a60be7b013",
+      "status": "passed",
+      "planFingerprint": "d27440662d2f0183c3cde112b10665ecb86400ad8569d7a8d86649db8b475c9b",
+      "projectFingerprint": "7e6657961dcbcd31b5d3ef9a6f9f96748837cbf0d3ecf3bf1bc54f9709a6356b"
+    },
+    {
+      "file": "actual-cancelled.json",
+      "id": "b9a8874e-2764-4aa5-900b-d0405ff36b56",
+      "status": "cancelled",
+      "planFingerprint": "d27440662d2f0183c3cde112b10665ecb86400ad8569d7a8d86649db8b475c9b",
+      "projectFingerprint": "7e6657961dcbcd31b5d3ef9a6f9f96748837cbf0d3ecf3bf1bc54f9709a6356b"
+    }
+  ],
+  "error": "AssertionError [ERR_ASSERTION]: Stopping preserves observations and leaves unexecuted steps unchecked\n    at check (file:///C:/Bob/Projects/Ming/scripts/review-simple-workflow.mjs:24:170)\n    at file:///C:/Bob/Projects/Ming/scripts/review-simple-workflow.mjs:46:278",
+  "finishedAt": "2026-09-27T04:00:22.798Z"
+}
