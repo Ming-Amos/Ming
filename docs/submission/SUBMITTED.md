@@ -8,7 +8,7 @@
 - [Public application](https://ming-acceptance-proof.amosming.chatgpt.site).
 - [Public source repository](https://github.com/Ming-Amos/Ming).
 
-The submission confirmation screenshot is retained locally, outside the tracked delivery files: `C:\Bob\Projects\Ming\runtime\submission-success.png`.
+The [original submission confirmation screenshot](submission-success.png) is archived in this repository. The unchanged capture from September 27 was added on October 1, 2026 before the local workspace was removed.
 
 ## Form selections
 
